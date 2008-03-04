@@ -69,17 +69,25 @@ print.RcppExample()
 
 params <- list(method='BFGS',
                tolerance=1.0e-8,
-               maxIter=1000)
+               maxIter=1000,
+               startDate=as.Date("7/15/2006", "\%m/\%d/\%Y"))
 
 nlist <- list(ibm = 80.50, hp = 53.64, c = 45.41)
 
-vec <- seq(1,5)
+numvec <- seq(1,5) # numerical vector
 
-mat <- matrix(seq(1,20),4,5)
+nummat <- matrix(seq(1,20),4,5) # numerical matrix
 
-df <- data.frame(a=c(TRUE, TRUE, FALSE), b=I(c('a','b','c')), c=c('beta', 'beta', 'gamma'))
+stringvec <- c("hello", "world", "fractal") # string vector
 
-result <- RcppExample(params, nlist, vec, mat, df)
+# Note that we need to escape '%' in the .Rd file with a backslash...
+datestr <- c("6/10/2006", "7/1/2006", "1/1/1970")
+datevec <- as.Date(datestr, "\%m/\%d/\%Y") # date vector
+
+df <- data.frame(a=c(TRUE, TRUE, FALSE), b=I(c('a','b','c')),
+c=c('beta', 'beta', 'gamma'), dates=datevec)
+
+result <- RcppExample(params, nlist, numvec, nummat, df, datevec, stringvec)
 
 result
 
