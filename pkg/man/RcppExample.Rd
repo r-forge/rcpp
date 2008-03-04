@@ -7,16 +7,23 @@
   interface class library is used.
 }
 \usage{
-RcppExample(params, nlist, vec, mat, df)
-print.RcppExample()
+RcppExample(params, nlist, numvec, nummat, df, datevec, stringvec,
+fnvec, fnlist)
+print.RcppExample(x,...)
 }
 \arguments{
   \item{params}{A heterogeneous list specifying \code{method} (string),
-    \code{tolerance} (double), \code{maxIter} (int)}
-  \item{nlist}{a list of named numeric values (double or int)}
-  \item{vec}{a numeric 1D vector (double or int)}
-  \item{mat}{a numeric 2D matrix (double or int)}
-  \item{df}{a data frame}
+    \code{tolerance} (double), \code{maxIter} (int).}
+  \item{nlist}{a list of named numeric values (double or int).}
+  \item{numvec}{a numeric 1D vector (double or int).}
+  \item{nummat}{a numeric 2D matrix (double or int).}
+  \item{df}{a data frame.}
+  \item{datevec}{a vector of Date's.}
+  \item{stringvec}{a vector of strings.}
+  \item{fnvec}{an R function with numeric vector argument.}
+  \item{fnlist}{an R function with list argument.}
+  \item{x}{Object of type \code{RcppExample}.}
+  \item{...}{Extra named parameters.}
   }
 \details{
 
@@ -70,7 +77,7 @@ print.RcppExample()
 params <- list(method='BFGS',
                tolerance=1.0e-8,
                maxIter=1000,
-               startDate=as.Date("7/15/2006", "\%m/\%d/\%Y"))
+               startDate=as.Date('2006-7-15'))
 
 nlist <- list(ibm = 80.50, hp = 53.64, c = 45.41)
 
@@ -80,14 +87,22 @@ nummat <- matrix(seq(1,20),4,5) # numerical matrix
 
 stringvec <- c("hello", "world", "fractal") # string vector
 
-# Note that we need to escape '%' in the .Rd file with a backslash...
-datestr <- c("6/10/2006", "7/1/2006", "1/1/1970")
-datevec <- as.Date(datestr, "\%m/\%d/\%Y") # date vector
+# Note that we need to escape the percent sign here...
+datestr <- c('2006-6-10', '2006-7-12', '2006-8-10')
+datevec <- as.Date(datestr, "\%Y-\%m-\%d") # date vector
 
 df <- data.frame(a=c(TRUE, TRUE, FALSE), b=I(c('a','b','c')),
 c=c('beta', 'beta', 'gamma'), dates=datevec)
 
-result <- RcppExample(params, nlist, numvec, nummat, df, datevec, stringvec)
+fnvec <- function(x) { sum(x) } # Add up components of vector
+
+fnlist <- function(l) { # Return vector with 1 added to each component
+  vec <- c(l$alpha + 1, l$beta + 1, l$gamma + 1)
+  vec
+}
+
+result <- RcppExample(params, nlist, numvec, nummat, df, datevec,
+                      stringvec, fnvec, fnlist)
 
 result
 
