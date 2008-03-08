@@ -328,6 +328,12 @@ public:
 	return v[i];
     }
     int size() { return length; }
+    inline vector<string> stlVector() {
+        vector<string> tmp(length);
+        for(int i = 0; i < length; i++)
+           tmp[i] = v[i];
+        return tmp;
+    }
 private:
     string *v;
     int length;
