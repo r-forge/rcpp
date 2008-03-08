@@ -1,6 +1,7 @@
 // Rcpp.hpp: Part of the R/C++ interface class library, Version 5.0
 //
 // Copyright (C) 2005-2006 Dominick Samperi
+// Copyright (C) 2008      Dirk Eddelbuettel
 //
 // This library is free software; you can redistribute it and/or modify it 
 // under the terms of the GNU Lesser General Public License as published by 
@@ -248,6 +249,8 @@ public:
 	}
 	table.push_back(rowData);
     }
+    int rows() { return table.size(); }
+    int cols() { return table[0].size(); }
 };
 
 class RcppNumList {
