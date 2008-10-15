@@ -21,16 +21,16 @@ AC_REQUIRE_CPP
 dnl configure include/load flags and copy sample source to inst/doc
 AC_SUBST([CPPFLAGS],["${CPPFLAGS} -I../RcppSrc"])
 AC_SUBST([LDFLAGS],["${LDFLAGS} -L../RcppSrc -lRcpp"])
-echo "Building libRcpp.a in RcppSrc..."
-cd RcppSrc
-make RHOME=${R_HOME}
-cd ..
-if test \! -d inst
-then
-    mkdir inst
-fi
-cp RcppSrc/LICENSE-Rcpp.txt inst
+dnl echo "Building libRcpp.a in RcppSrc..."
+dnl cd RcppSrc
+dnl make RHOME=${R_HOME}
+dnl cd ..
+dnl if test \! -d inst
+dnl then
+dnl     mkdir inst
+dnl fi
+dnl cp RcppSrc/LICENSE-Rcpp.txt inst
 
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
-AC_OUTPUT(src/Makevars)
+dnl AC_OUTPUT(src/Makevars)
