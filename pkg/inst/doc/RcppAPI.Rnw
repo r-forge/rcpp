@@ -1,6 +1,8 @@
+
 \documentclass{article}
 
 %\VignetteIndexEntry{R/C++ Interface API Documentation}
+%\VignettePackage{Rcpp}
 
 \usepackage{vmargin}
 \setmargrb{1in}{1in}{1in}{1in}
