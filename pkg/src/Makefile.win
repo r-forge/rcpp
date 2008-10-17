@@ -1,26 +1,44 @@
-# Project: RcppTemplate
-# Makefile created by Dev-C++ 4.9.9.2
-# modified bei UL in order to fit mingw and R requirements, 16.09.2005
+# -*- tab-width: 8 -*-
+#
+# Makefile.win for Rcpp
+#
+# Copyright (C) 2008    Dirk Eddelbuettel <edd@debian.org>
+#
+# Contributions from an older Makefile.win are
+# (C) Dominick Samperi and Uwe Ligges and gratefully acknowledged
 
-#This include causes many warnings and other issues, and doesn't seem to be needed!
-#include $(RHOME)/src/gnuwin32/MkRules
 
-OBJ = RcppExample.o
-LINKOBJ  = RcppExample.o $(RES)
-DLLLIBS = -s -L../RcppSrc -lRcpp -L"$(RHOME)/bin" -lR --no-export-all-symbols --add-stdcall-alias
-BIN  = RcppTemplate.dll
-CXXFLAGS = -I../RcppSrc -I"$(RHOME)/include" -Wall -O2 -DBUILDING_DLL=1
-RM = rm -f
+RCPPFLAGS	= $(shell R CMD config --cppflags)
+RLDFLAGS	= $(shell R CMD config --ldflags)
 
-.PHONY: all clean
+## the 'package' library contains both Rcpp.{cpp,h} and the RcppExample used to demonstrate the package
+## it is loaded via library(Rcpp) but is not used for compiling / linking against
+PKGLIB 		= Rcpp.dll
+PKGOBJ 		= RcppExample.o Rcpp.o
+PKGLDFLAGS 	= -s $(RLDFLAGS)
 
-all: RcppTemplate.dll
+## the 'pure' library contains only Rcpp.{cpp,h} and is was users need for their projects
+PURELIB		= ../inst/lib/Rcpp.dll
+PUREOBJ		= Rcpp.o
+
+DLLLIBS 	= -s -L"$(RHOME)/bin" -lR --no-export-all-symbols --add-stdcall-alias
+
+CXXFLAGS 	= -I. $(RCPPFLAGS) -Wall -O2
+RM 			= rm -f
+
+.PHONY: 	all clean
+
+all: 		$(PURELIB) $(PKGLIB)
 
 clean:
-	${RM} $(LINKOBJ) $(BIN)
+			${RM} $(PKGOBJ) $(PKGLIB)
 
-$(BIN): $(LINKOBJ)
-	$(CXX) -shared $(LINKOBJ) $(DLLLIBS) -o $(BIN)
+$(PKGLIB): 	$(PKGOBJ)
+			$(CXX) -shared -o $(PKGLIB) $(PKGOBJ) $(PKGLDFLAGS)
 
-RcppExample.o: RcppExample.cpp
-	$(CXX) -c RcppExample.cpp -o RcppExample.o $(CXXFLAGS)
+$(PURELIB):	$(PUREOBJ)
+			$(CXX) -shared -o $(PURELIB) $(PUREOBJ) $(DLLLIBS)
+			cp -vax Rcpp.h ../inst/lib
+
+
+
