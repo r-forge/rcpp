@@ -14,4 +14,3 @@ Description: R/C++ interface class library and package template.
 Depends: R (>= 2.0.0)
 SystemRequirements: None
 License: LGPL (>= 2.1)
-Packaged: Thu Jan 10 22:17:56 2008; dsamperi
