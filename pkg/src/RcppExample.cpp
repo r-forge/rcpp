@@ -124,7 +124,7 @@ RcppExport SEXP Rcpp_Example(SEXP params, SEXP nlist,
 	RcppDate startDate = rparam.getDateValue("startDate");
 
 	// The output of commands like this may not appear under Windows.
-	Rprintf("Start Date: %d/%d/%d\n", 
+	Rprintf("Parsing start date argument: %d/%d/%d\n", 
 		startDate.getMonth(),
 		startDate.getDay(),
 		startDate.getYear());
@@ -275,13 +275,13 @@ RcppExport SEXP Rcpp_Example(SEXP params, SEXP nlist,
 	for(int i=0; i < n; i++)
 	    vecInput[i] = i;
 	double vecSum = vfunc.getSum(vecInput);
-	Rprintf("vecSum = %lf\n", vecSum);
+	Rprintf("Testing vector function argument: vecSum = %lf\n", vecSum);
 	
 	// Test MyRListFunction defined above...
 	MyRListFunc lfunc(fnlist);
 	double alpha=1, beta=2, gamma=3;
 	vector<double> vecOut = lfunc.addOne(alpha, beta, gamma);
-	Rprintf("vecOut: %lf, %lf, %lf\n", vecOut[0], vecOut[1], vecOut[2]);
+	Rprintf("Testing list function argument: %lf, %lf, %lf\n", vecOut[0], vecOut[1], vecOut[2]);
 
 	RcppDate aDate(12, 25, 1999);
 
