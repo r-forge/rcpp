@@ -5,29 +5,70 @@ RcppExample <- function(params, nlist, numvec, nummat, df, datevec, stringvec,
     ## necessary because it is done in the Rcpp code.
 
     ## Check that params is properly formatted.
-    if(!is.list(params) || length(params) == 0) {
-        stop("The params parameter must be a non-empty list");
+    if (missing(params)) {
+        cat("Setting default argument for params\n")
+        params <- list(method='BFGS',
+                       tolerance=1.0e-8,
+                       maxIter=1000,
+                       startDate=as.Date('2006-7-15'))
     }
 
     ## Check nlist
-    if(!is.list(nlist) || length(nlist) == 0) {
-        stop("The nlist parameter must be a non-empty list");
-    }
-    if(length(nlist) != length(names(nlist))) {
-        stop("The values in nlist must be named")
-    }
-    if(!is.numeric(unlist(nlist))) {
+    if (missing(nlist)) {
+        cat("Setting default argument for nlist\n")
+        nlist <- list(ibm = 80.50, hp = 53.64, c = 45.41)
+    } else if (!is.numeric(unlist(nlist))) {
         stop("The values in nlist must be numeric")
     }
 
-    ## Check numvec argument
-    if(!is.vector(numvec)) {
+    ## Check numvec
+    if (missing(numvec)) {
+        cat("Setting default argument for numvec\n")
+        numvec <- seq(1,5) 			# numerical vector
+    } else if (!is.vector(numvec)) {         ## Check numvec argument
         stop("numvec must be a vector");
     }
 
-    ## Check nummat argument
-    if(!is.matrix(nummat)) {
+    ## Check nummat
+    if (missing(nummat)) {
+        cat("Setting default argument for nummat\n")
+        nummat <- matrix(seq(1,20),4,5) # numerical matrix
+    } else if (!is.matrix(nummat)) {
         stop("nummat must be a matrix");
+    }
+
+    ## Check df
+    if (missing(df)) {
+        cat("Setting default argument for data frame\n")
+        df <- data.frame(a=c(TRUE, TRUE, FALSE), b=I(c('a','b','c')))
+    }
+
+    ## Check datevec
+    if (missing(datevec)) {
+        cat("Setting default argument for date vector\n")
+        datestr <- c('2006-6-10', '2006-7-12', '2006-8-10')
+        datevec <- as.Date(datestr, "%Y-%m-%d") # date vector
+    }
+
+    ## Check stringvec
+    if (missing(stringvec)) {
+        cat("Setting default argument for string vector\n")
+        stringvec <- c("hello", "world", "fractal") # string vector
+    }
+
+    ## Check fnvec
+    if (missing(fnvec)) {
+        cat("Setting default argument for function vector\n")
+        fnvec <- function(x) { sum(x) } # Add up components of vector
+    }
+
+    ## Check fnlist
+    if (missing(fnlist)) {
+        cat("Setting default argument for function list\n")
+        fnlist <- function(l) { # Return vector with 1 added to each component
+            vec <- c(l$alpha + 1, l$beta + 1, l$gamma + 1)
+            vec
+        }
     }
 
     ## Finally ready to make the call...
@@ -51,6 +92,6 @@ print.RcppExample <- function(x,...) {
     cat('(Use result$name to access)\n')
     namevec <- names(x)
     for(i in 1:length(namevec))
-        cat(i, ': ', namevec[i], '\n')
+        cat(format(i, width=2), ': ', namevec[i], '\n')
 }
 
