@@ -1,4 +1,4 @@
-# -*- tab-width: 8 -*-
+# Emacs please make this -*- mode: makefile; tab-width: 8 -*-
 #
 # Makefile.win for Rcpp
 #
@@ -17,28 +17,30 @@ PKGLIB 		= Rcpp.dll
 PKGOBJ 		= RcppExample.o Rcpp.o
 PKGLDFLAGS 	= -s $(RLDFLAGS)
 
-## the 'pure' library contains only Rcpp.{cpp,h} and is was users need for their projects
-PURELIB		= ../inst/lib/Rcpp.dll
-PUREOBJ		= Rcpp.o
+## the 'user' library contains only Rcpp.{cpp,h} and is what users need for their projects
+## we place it inside the inst/ directory so that it gets installed 
+USERDIR		= ../inst/lib
+USERLIB		= $(USERDIR)/Rcpp.dll
+USEROBJ		= Rcpp.o
 
 DLLLIBS 	= -s -L"$(RHOME)/bin" -lR --no-export-all-symbols --add-stdcall-alias
 
 CXXFLAGS 	= -I. $(RCPPFLAGS) -Wall -O2
-RM 			= rm -f
+RM 		= rm -f
 
 .PHONY: 	all clean
 
-all: 		$(PURELIB) $(PKGLIB)
+all: 		$(USERLIB) $(PKGLIB)
 
 clean:
-			${RM} $(PKGOBJ) $(PKGLIB)
+		${RM} $(PKGOBJ) $(PKGLIB)
 
 $(PKGLIB): 	$(PKGOBJ)
-			$(CXX) -shared -o $(PKGLIB) $(PKGOBJ) $(PKGLDFLAGS)
+		$(CXX) -shared -o $(PKGLIB) $(PKGOBJ) $(PKGLDFLAGS)
 
-$(PURELIB):	$(PUREOBJ)
-			$(CXX) -shared -o $(PURELIB) $(PUREOBJ) $(DLLLIBS)
-			cp -vax Rcpp.h ../inst/lib
+$(USERLIB):	$(USEROBJ)
+		$(CXX) -shared -o $(USERLIB) $(USEROBJ) $(DLLLIBS)
+		cp -vax Rcpp.h $(USERDIR)
 
 
 
