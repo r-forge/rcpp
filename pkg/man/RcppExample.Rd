@@ -1,7 +1,7 @@
 \name{RcppExample}
 \alias{RcppExample}
 \alias{print.RcppExample}
-\title{Rcpp R/C++ interface example}
+\title{Rcpp R / C++ interface example}
 \description{
   \code{RcppExample} illustrates how the \code{Rcpp} R/C++
   interface class library is used.
@@ -61,7 +61,8 @@ fnvec, fnlist)
   \item{params}{input parameter list (this is redundant because we returned the input parameters above)}
   }
 
-\author{Dominick Samperi}
+\author{Dominick Samperi wrote most of Rcpp during 2005 and 2006.  Dirk
+  Eddelbuettel made some additions, and became maintainer in 2008.}
 
 \references{
   Samperi, D., (2006) \emph{Rcpp: R/C++ Interface Classes:
