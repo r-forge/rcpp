@@ -1,2 +1,3 @@
 RcppExample             Rcpp R/C++ interface example
-RcppVersion		Display version and license information
+Rcpp-package            R / C++ interface
+RcppVersion             Display version info for package and for Rcpp
