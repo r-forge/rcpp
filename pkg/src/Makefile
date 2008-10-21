@@ -12,13 +12,15 @@ RLDFLAGS	= $(shell R CMD config --ldflags)
 
 ## the 'package' library contains both Rcpp.{cpp,h} and the RcppExample used to demonstrate the package
 ## it is loaded via library(Rcpp) but is not used for compiling / linking against
-PKGLIB 		= Rcpp.so
+PKGLIB 		= Rcpp$(DYLIB_EXT)
 PKGOBJ 		= RcppExample.o Rcpp.o
 PKGLDFLAGS 	= -s $(RLDFLAGS) 
 
-## the 'pure' library contains only Rcpp.{cpp,h} and is was users need for their projects
-PURELIB		= ../inst/lib/libRcpp.so
-PUREOBJ		= Rcpp.o
+## the 'user' library contains only Rcpp.{cpp,h} and is what users need for their projects
+## we place it inside the inst/ directory so that it gets installed 
+USERDIR		= ../inst/lib
+USERLIB		= $(USERDIR)/libRcpp$(DYLIB_EXT)
+USEROBJ		= Rcpp.o
 
 ## more correct version of shared library build
 #		= gcc -shared -Wl,-soname,librcpp.so.5 \
@@ -30,21 +32,21 @@ RM 		= rm -f
 
 .PHONY: 	all clean
 
-all: 		$(PURELIB) $(PKGLIB)
+all: 		$(USERLIB) $(PKGLIB)
 
 clean:
-		${RM} $(PKGOBJ) $(PKGLIB)
+		${RM} $(PKGOBJ) $(PKGLIB) $(USERLIB) $(USEROBJ)
 
 $(PKGLIB): 	$(PKGOBJ)
 		$(CXX) -shared -o $(PKGLIB) $(PKGOBJ) $(PKGLDFLAGS)
 
-$(PURELIB):	$(PUREOBJ)
-		$(CXX) -shared -o $(PURELIB) $(PUREOBJ) 
-		cp -vax Rcpp.h ../inst/lib
+$(USERLIB):	$(USEROBJ)
+		$(CXX) -shared -o $(USERLIB) $(USEROBJ) 
+		@cp -vax Rcpp.h $(USERDIR)
 		@echo "****"
 		@echo "**** You may need to execute the following command as root"
 		@echo "**** so that the libRcpp library will get found by R at runtime"
-		@echo "     cp -vax $(PURELIB) $(RLIBDIR)"
+		@echo "     cp -vax $(USERLIB) $(RLIBDIR)"
 		@echo "**** with a similar copy of Rcpp.h to R's include directory"
 		@echo "****"
 
