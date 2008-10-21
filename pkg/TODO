@@ -2,6 +2,6 @@
  * Doxygen documentation
 
  * better build system: would like to create a shared library libRcpp but how
-   do we get it to $prefix/local/lib/ ?
+   do we get it to $prefix/local/lib/ ?  R CMD INSTALL should really support this
 
  * maybe support big memory matrices like ff or bigmemoRy ?
