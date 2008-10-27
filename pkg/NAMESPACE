@@ -2,4 +2,5 @@ useDynLib(Rcpp)
 
 export(RcppExample,
        print.RcppExample,
-       RcppVersion)
+       RcppVersion,
+       RcppParamsExample)
