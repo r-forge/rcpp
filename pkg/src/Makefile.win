@@ -7,7 +7,6 @@
 # Contributions from an older Makefile.win are
 # (C) Dominick Samperi and Uwe Ligges and gratefully acknowledged
 
-
 RCPPFLAGS	= $(shell R CMD config --cppflags)
 RLDFLAGS	= $(shell R CMD config --ldflags)
 
@@ -19,11 +18,10 @@ PKGLDFLAGS 	= -s $(RLDFLAGS)
 
 ## the 'user' library contains only Rcpp.{cpp,h} and is what users need for their projects
 ## we place it inside the inst/ directory so that it gets installed 
+## use 'Rscript -e 'cat(system.file("lib", "Rcpp.a", package="Rcpp", "\n")'  to get location
 USERDIR		= ../inst/lib
-USERLIB		= $(USERDIR)/Rcpp.dll
+USERLIB		= $(USERDIR)/Rcpp.a
 USEROBJ		= Rcpp.o
-
-DLLLIBS 	= -s -L"$(RHOME)/bin" -lR --no-export-all-symbols --add-stdcall-alias
 
 CXXFLAGS 	= -I. $(RCPPFLAGS) -Wall -O2
 RM 		= rm -f
@@ -39,7 +37,8 @@ $(PKGLIB): 	$(PKGOBJ)
 		$(CXX) -shared -o $(PKGLIB) $(PKGOBJ) $(PKGLDFLAGS)
 
 $(USERLIB):	$(USEROBJ)
-		$(CXX) -shared -o $(USERLIB) $(USEROBJ) $(DLLLIBS)
+		ar r $(USERLIB) $(USEROBJ)
+		ranlib $(USERLIB)
 		cp -vax Rcpp.h $(USERDIR)
 
 
