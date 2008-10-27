@@ -224,10 +224,10 @@ RcppDate RcppParams::getDateValue(string name) {
 RcppDateVector::RcppDateVector(SEXP vec) {
     int i;
     if(!isNumeric(vec) || isMatrix(vec) || isLogical(vec))
-	throw std::range_error("RcppVector: invalid numeric vector in constructor");
+	throw std::range_error("RcppDateVector: invalid numeric vector in constructor");
     int len = length(vec);
     if(len == 0)
-	throw std::range_error("RcppVector: null vector in constructor");
+	throw std::range_error("RcppDateVector: null vector in constructor");
     v = new RcppDate[len];
     for(i = 0; i < len; i++)
 	v[i] = RcppDate((int)REAL(vec)[i]);
@@ -237,12 +237,12 @@ RcppDateVector::RcppDateVector(SEXP vec) {
 RcppStringVector::RcppStringVector(SEXP vec) {
     int i;
     if(isMatrix(vec) || isLogical(vec))
-	throw std::range_error("RcppVector: invalid numeric vector in constructor");
+	throw std::range_error("RcppStringVector: invalid numeric vector in constructor");
     if(!isString(vec))
 	throw std::range_error("RcppStringVector: invalid string");
     int len = length(vec);
     if(len == 0)
-	throw std::range_error("RcppVector: null vector in constructor");
+	throw std::range_error("RcppStringVector: null vector in constructor");
     v = new string[len];
     for(i = 0; i < len; i++)
 	v[i] = string(CHAR(STRING_ELT(vec,i)));
