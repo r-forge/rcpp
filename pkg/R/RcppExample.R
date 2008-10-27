@@ -88,10 +88,38 @@ RcppExample <- function(params, nlist, numvec, nummat, df, datevec, stringvec,
 }
 
 print.RcppExample <- function(x,...) {
-    cat('Names defined in RcppExample return list:\n')
-    cat('(Use result$name to access)\n')
+    cat('\nIn R, names defined in RcppExample return list:\n')
+    cat('(Use result$name or result[[i]] to access)\n')
     namevec <- names(x)
     for(i in 1:length(namevec))
-        cat(format(i, width=2), ': ', namevec[i], '\n')
+        cat(format(i, width=2), ': ',
+            format(namevec[i], width=12),
+            ifelse(is.atomic(x[[i]]) & length(x[[i]])==1, format(x[[i]]), "..."),
+            '\n')
 }
 
+RcppParamsExample <- function(params) {
+
+    ## Check that params is properly set.
+    if (missing(params)) {
+        cat("\nIn R, setting default argument for params\n")
+        params <- list(method='BFGS',
+                       tolerance=1.0e-8,
+                       maxIter=1000,
+                       startDate=as.Date('2006-7-15'))
+    }
+
+    ## Make the call...
+    val <- .Call("RcppParamsExample",
+                 params,
+                 PACKAGE="Rcpp")
+
+    ## Define a class for the return value so we can control what gets
+    ## printed when a variable assigned this value is typed on a line by itself.
+    ## This has the effect of calling the function print.RcppExample(). The
+    ## function (defined below) simply prints the names of the fields that are
+    ## available. Access each field with val$name.
+    class(val) <- "RcppExample"
+
+    val
+}
