@@ -1,4 +1,6 @@
-// Rcpp.hpp: Part of the R/C++ interface class library, Version 5.0
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; -*-
+//
+// Rcpp.h: Part of the R/C++ interface class library, Version 5.0
 //
 // Copyright (C) 2005-2006 Dominick Samperi
 // Copyright (C) 2008      Dirk Eddelbuettel
@@ -66,9 +68,9 @@ public:
     RcppDate(int month_, int day_, int year_) : month(month_), 
 						day(day_),
 						year(year_) { 
-	if(month < 1 || month > 12 || day < 1 || day > 31)
+        if(month < 1 || month > 12 || day < 1 || day > 31)
 	    throw std::range_error("RcppDate: invalid date");
-	mdy2jdn();
+        mdy2jdn();
     }
     int getMonth() const { return month; }
     int getDay()  const  { return day; }
@@ -96,6 +98,63 @@ public:
 #endif
 };
 
+class RcppDatetime {
+private:
+    double m_d;
+    bool m_parsed;
+    int m_us;					// microseconds giving us fractional seconds
+    struct tm m_tm;
+    void parseTime() {
+	time_t tt;
+	tt = floor(m_d);			// time_t is the number of seconds, so ignore the fractional microseconds
+	m_us = round( (m_d - tt) * 1e6);	// fractional (micro)seconds is difference between (fractional) m_d and m_tt
+	m_tm = *localtime(&tt);			// parse time type into time structure 
+	m_parsed = true;			// and note that we parsed the time type
+	//printf("Time is %s %20u %8u\n", ctime(&m_tt), (unsigned int) m_tt, m_us);
+    };
+
+protected:
+    double getFractionalTimestamp(void) const { return m_d; }
+    friend class RcppResultSet;
+
+public:
+    RcppDatetime(void) : m_d(0), m_parsed(false), m_us(0) { };
+    RcppDatetime(const double d) : m_d(d), m_parsed(false), m_us(0) { };
+
+    int getYear(void)     { if (!m_parsed) parseTime(); return m_tm.tm_year + 1900; }
+    int getMonth(void)    { if (!m_parsed) parseTime(); return m_tm.tm_mon + 1; }
+    int getDay(void)      { if (!m_parsed) parseTime(); return m_tm.tm_mday; } 
+    int getWeekday(void)  { if (!m_parsed) parseTime(); return m_tm.tm_wday; } 
+    int getHour(void)     { if (!m_parsed) parseTime(); return m_tm.tm_hour; } 
+    int getMinute(void)   { if (!m_parsed) parseTime(); return m_tm.tm_min; } 
+    int getSecond(void)   { if (!m_parsed) parseTime(); return m_tm.tm_sec; } 
+    int getMicroSec(void) { if (!m_parsed) parseTime(); return m_us; } 
+
+    friend RcppDatetime operator+(const RcppDatetime &date,   double offset) {
+	RcppDatetime tmp(date.m_d);
+	tmp.m_d += offset;
+	tmp.m_parsed = false;
+	return tmp;
+    }
+    friend double       operator-(const RcppDatetime& dt1,  const RcppDatetime& dt2) { return dt2.m_d -  dt1.m_d; }
+    friend bool         operator<(const RcppDatetime &dt1,  const RcppDatetime& dt2) { return dt1.m_d <  dt2.m_d; }
+    friend bool         operator<=(const RcppDatetime &dt1, const RcppDatetime& dt2) { return dt1.m_d <= dt2.m_d; }
+    friend bool         operator>(const RcppDatetime &dt1,  const RcppDatetime& dt2) { return dt1.m_d >  dt2.m_d; }
+    friend bool         operator>=(const RcppDatetime &dt1, const RcppDatetime& dt2) { return dt1.m_d >= dt2.m_d; }
+    friend bool         operator==(const RcppDatetime &dt1, const RcppDatetime& dt2) { return dt1.m_d == dt2.m_d; }  // remember float math...
+
+    friend std::ostream& operator<<(std::ostream& os, const RcppDatetime &datetime) {
+	RcppDatetime dt(datetime);
+	dt.parseTime();
+	char buf[32], usec[16];
+	strftime(buf, 31, "%Y-%m-%d %H:%M:%S", &dt.m_tm);
+	snprintf(usec, 15, ".%.06d", dt.m_us);
+	os << buf << usec;
+	return os;
+    }
+
+};
+
 class RcppParams {
 public:
     RcppParams(SEXP params);
@@ -105,6 +164,7 @@ public:
     string getStringValue(string name);
     bool   getBoolValue(string name);
     RcppDate getDateValue(string name);
+    RcppDatetime getDatetimeValue(string name);
 private:
     map<string, int> pmap;
     SEXP _params;
@@ -359,6 +419,26 @@ private:
     int length;
 };
 
+class RcppDatetimeVector {
+public:
+    RcppDatetimeVector(SEXP vec);
+    ~RcppDatetimeVector() {
+	delete [] v;
+    }
+    inline RcppDatetime &operator()(int i) {
+	if (i < 0 || i >= length) {
+	    std::ostringstream oss;
+	    oss << "RcppDatetimeVector: subscript out of range: " << i;
+	    throw std::range_error(oss.str());
+	}
+	return v[i];
+    }
+    int size() { return length; }
+private:
+    RcppDatetime *v;
+    int length;
+};
+
 template <typename T>
 class RcppMatrix {
 public:
@@ -425,6 +505,8 @@ public:
     void add(string, int **, int, int);
     void add(string, RcppDate&);
     void add(string, RcppDateVector&);
+    void add(string, RcppDatetime&);
+    void add(string, RcppDatetimeVector&);
     void add(string, RcppStringVector&);
     void add(string, vector<double>&);
     void add(string, vector<int>&);
