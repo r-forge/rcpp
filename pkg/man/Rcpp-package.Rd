@@ -47,7 +47,58 @@
   RcppStringVector, RcppVector of int or doube, RcppMatrix of int or
   double, RcppFrame}
 }
+\section{Usage for package building}{
+  \pkg{Rcpp} provides a header file and a library inside the installed
+  package in the directory \code{lib}. From within \R, you can compute
+  the directory location via \code{system.file("lib", "Rcpp.h", 
+    package="Rcpp")}. For Windows, it will be a static library
+  \sQuote{Rcpp.a}. For Linux and Mac OS X, it will be \sQuote{libRcpp.so}.
 
+  To use \code{Rcpp} in another package, you need to include the header
+  during compilation. This typically requires use of the \code{-I} to
+  provide the location as in \code{-I/usr/local/lib/R/site-library/Rcpp/lib}.
+  Similarly, for linking we need to provide the location of the library
+  via \code{-L} as well as the actual library. An example for Linux
+  would be \code{-L/usr/local/lib/R/site-library/Rcpp/lib -lRcpp}.
+
+  But that still requires telling the dynamic linker about the library
+  locations -- whereas a link in, say, \code{/usr/local/lib} frees us
+  from the \code{-L} switch and the need to tell the dynamic linker.
+  Therefore, on Linux, I found it convenient to provide these files via
+  copies or links from the usual locations like
+  \sQuote{/usr/local/include} and \sQuote{/usr/local/lib} which
+  alleviates the need for explicit location flags like \sQuote{-I} or
+  \sQuote{-L}. Remember to also run \code{ldconfig} after creating the
+  link for the library.  Alternatively, you can hardcode the dynamic 
+  library location using the \code{rpath} linker directive:
+
+  \preformatted{
+  # We need to know where libRcpp.so and Rcpp.h reside:
+  RCPP_DIR     = $(shell Rscript -e 'cat(system.file("lib", package="Rcpp"))')
+
+  # pass header file diretory to R
+  PKG_CPPFLAGS = -I$(RCPP_DIR)
+
+  # pass dynamic library to R, and strip
+  PKG_LIBS     = -L$(RCPP_DIR) -Wl,-rpath,$(RCPP_DIR) -lRcpp
+  } 
+
+  On  Windows, we simply include the static library with its full path
+  as in \code{C:/R/library/Rcpp/lib/Rcpp.a} (provided one uses
+  \code{R:/R/library} for add-on \R packages). This be automated in a file
+  \code{src/Makevars.win} provided \code{Rscript} is in the path:
+
+  \preformatted{
+  # We need to know where Rcpp.a and Rcpp.h reside:
+  RCPP_DIR     = $(shell Rscript -e 'cat(system.file("lib", package="Rcpp"))')
+
+  # pass header file diretory to R
+  PKG_CPPFLAGS = -I$(RCPP_DIR) -DBUILDING_DLL=1
+
+  # pass static library to R, and strip
+  PKG_LIBS     = $(RCPP_DIR)/Rcpp.a -s
+  }
+}
 \author{Dominick Samperi wrote most of Rcpp during 2005 and 2006.  Dirk
   Eddelbuettel made some additions, and became maintainer in 2008.}
 \keyword{package}
