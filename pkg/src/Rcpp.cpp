@@ -1,3 +1,5 @@
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; -*-
+//
 // Rcpp.cpp: Part of the R/C++ interface class library, Version 5.0
 //
 // Copyright (C) 2005-2006 Dominick Samperi
@@ -221,6 +223,28 @@ RcppDate RcppParams::getDateValue(string name) {
     return RcppDate(d);
 }
 
+RcppDatetime RcppParams::getDatetimeValue(string name) {
+    map<string,int>::iterator iter = pmap.find(name);
+    if (iter == pmap.end()) {
+        string mesg = "getDatetimeValue: no such name: ";
+	throw std::range_error(mesg+name);
+    }
+    int posn = iter->second;
+    SEXP elt = VECTOR_ELT(_params, posn);
+    if (!isNumeric(elt) || length(elt) != 1) {
+	string mesg = "getDateValue: invalide date: ";
+	throw std::range_error(mesg+name);
+    }
+    double d;
+    if (isReal(elt)) 	// R stores POSIXt as a double
+	d = REAL(elt)[0];
+    else {
+	string mesg = "getDatetimeValue: invalid value for: ";
+	throw std::range_error(mesg+name);
+    }
+    return RcppDatetime(d);
+}
+
 RcppDateVector::RcppDateVector(SEXP vec) {
     int i;
     if(!isNumeric(vec) || isMatrix(vec) || isLogical(vec))
@@ -231,6 +255,19 @@ RcppDateVector::RcppDateVector(SEXP vec) {
     v = new RcppDate[len];
     for(i = 0; i < len; i++)
 	v[i] = RcppDate((int)REAL(vec)[i]);
+    length = len;
+}
+
+RcppDatetimeVector::RcppDatetimeVector(SEXP vec) {
+    int i;
+    if (!isNumeric(vec) || isMatrix(vec) || isLogical(vec))
+	throw std::range_error("RcppDatetimeVector: invalid numeric vector in constructor");
+    int len = length(vec);
+    if (len == 0)
+	throw std::range_error("RcppDateVector: null vector in constructor");
+    v = new RcppDatetime[len];
+    for (i = 0; i < len; i++)
+	v[i] = RcppDatetime(REAL(vec)[i]);
     length = len;
 }
 
@@ -385,6 +422,18 @@ void RcppResultSet::add(string name, RcppDate& date) {
     values.push_back(make_pair(name, value));
 }
 
+void RcppResultSet::add(string name, RcppDatetime& datetime) {
+    SEXP value = PROTECT(allocVector(REALSXP, 1));
+    numProtected++;
+    REAL(value)[0] = datetime.getFractionalTimestamp();
+    SEXP datetimeclass = PROTECT(allocVector(STRSXP,2));
+    numProtected++;
+    SET_STRING_ELT(datetimeclass, 0, mkChar("POSIXt"));
+    SET_STRING_ELT(datetimeclass, 1, mkChar("POSIXct"));
+    setAttrib(value, R_ClassSymbol, datetimeclass); 
+    values.push_back(make_pair(name, value));
+}
+
 void RcppResultSet::add(string name, double x) {
     SEXP value = PROTECT(allocVector(REALSXP, 1));
     numProtected++;
@@ -426,6 +475,20 @@ void RcppResultSet::add(string name, RcppDateVector& datevec) {
     numProtected++;
     SET_STRING_ELT(dateclass, 0, mkChar("Date"));
     setAttrib(value, R_ClassSymbol, dateclass); 
+    values.push_back(make_pair(name, value));
+}
+
+void RcppResultSet::add(string name, RcppDatetimeVector &dtvec) {
+    SEXP value = PROTECT(allocVector(REALSXP, dtvec.size()));
+    numProtected++;
+    for (int i = 0; i < dtvec.size(); i++) {
+	REAL(value)[i] = dtvec(i).getFractionalTimestamp();
+    }
+    SEXP datetimeclass = PROTECT(allocVector(STRSXP,2));
+    numProtected++;
+    SET_STRING_ELT(datetimeclass, 0, mkChar("POSIXt"));
+    SET_STRING_ELT(datetimeclass, 1, mkChar("POSIXct"));
+    setAttrib(value, R_ClassSymbol, datetimeclass); 
     values.push_back(make_pair(name, value));
 }
 
