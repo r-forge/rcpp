@@ -43,10 +43,10 @@ $(PKGLIB): 	$(PKGOBJ)
 $(USERLIB):	$(USEROBJ)
 		$(CXX) -shared -o $(USERLIB) $(USEROBJ) 
 		@cp -vax Rcpp.h $(USERDIR)
-		@echo "****"
-		@echo "**** You may need to execute the following command as root"
-		@echo "**** so that the libRcpp library will get found by R at runtime"
-		@echo "     cp -vax $(USERLIB) $(RLIBDIR)"
-		@echo "**** with a similar copy of Rcpp.h to R's include directory"
-		@echo "****"
+#		@echo "****"
+#		@echo "**** You may need to execute the following command as root"
+#		@echo "**** so that the libRcpp library will get found by R at runtime"
+#		@echo "     cp -vax $(USERLIB) $(RLIBDIR)"
+#		@echo "**** with a similar copy of Rcpp.h to R's include directory"
+#		@echo "****"
 
