@@ -952,8 +952,8 @@ void RcppFunction::appendToRList(string name, RcppDatetime& datetime) {
     REAL(valsxp)[0] = datetime.getFractionalTimestamp();
     SEXP datetimeclass = PROTECT(allocVector(STRSXP, 2));
     numProtected++;
-    SET_STRING_ELT(dateclass, 0, mkChar("POSIXt"));
-    SET_STRING_ELT(dateclass, 1, mkChar("POSIXct"));
+    SET_STRING_ELT(datetimeclass, 0, mkChar("POSIXt"));
+    SET_STRING_ELT(datetimeclass, 1, mkChar("POSIXct"));
     setAttrib(valsxp, R_ClassSymbol, datetimeclass);
     SET_VECTOR_ELT(listArg, currListPosn++, valsxp);
     names.push_back(name);

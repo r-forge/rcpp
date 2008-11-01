@@ -117,6 +117,7 @@ protected:
     double getFractionalTimestamp(void) const { return m_d; }
     friend class RcppResultSet;
     friend class ColDatum;
+    friend class RcppFunction;
 
 public:
     RcppDatetime(void) : m_d(0), m_parsed(false), m_us(0) { };
