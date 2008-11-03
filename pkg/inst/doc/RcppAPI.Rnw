@@ -29,7 +29,12 @@ Version 5.0}
 \author{Dominick Samperi\footnote{Email: dsamperi@DecisionSynergy.com. 
 I am grateful for helpful comments
 from Dirk Eddelbuettel, Hin-Tak Leung, Uwe Ligges, Duncan Murdoch, Brian Ripley, and
-Paul Roebuck.}}
+Paul Roebuck.}\footnote{This document, now part of a the package maintained
+by Dirk Eddelbuettel, has not been updated. As just one example, RcppTemplate
+should generally read Rcpp now, both standalone and as a substring.  Also,
+the package layout has been changed so that the description in this document
+may no longer be current. We intend to fix this in due course.  However, the
+general discription is still accurate as the API has not been altered.}}  
 
 \newcommand{\R}{{\bf R}}
 \newcommand{\Rcpp}{{\bf Rcpp}}
