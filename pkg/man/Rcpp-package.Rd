@@ -4,30 +4,31 @@
 \docType{package}
 \title{R / C++ interface}
 \description{The \pkg{Rcpp} package provides C++ classes that
-  greatly facilitate interfacing C or C++ code in R packages using
-  the \code{.Call} interface provided by R.
+  greatly facilitate interfacing C or C++ code in \R packages using
+  the \code{.Call} interface provided by \R.
 
   Detailed information is provided in the vignette \sQuote{RcppAPI} that
   can be invoked from \R via \code{vignette("RcppAPI")}.
 }
 \section{Overview}{
   \pkg{Rcpp} provides matching C++ classes for a large number of
-  basic R data types. Hence, a package author can keep his data in
+  basic \R data types. Hence, a package author can keep his data in
   normal R data structure without having to worry about translation or
   transfer to C++. At the same time, the data structures can be accessed
   as easily at the C++ level, and used in the normal manner.
 
   The mapping of data types works in both directions. It is as
   straightforward to pass data from R to C++, as it is it return data
-  from C++ to R.  The following two sections list supported data types.
+  from C++ to \R.  The following two sections list supported data types.
 }
 \section{Transfer from R to C++}{
   Standard \R datatypes that are understood are
   \enumerate{
     \item named lists containing numeric (i.e. floating point), integer,
-    character, logical (i.e. boolean) or Date arguments;
+    character, logical (i.e. boolean) or Date and Datetime
+    (i.e. POSIXct) arguments;
     \item data frames containing numeric, integer, logical, character,
-    Date or Factor columns;
+    Date, Datetime or Factor columns;
     \item named vectors containing numeric or integer values,
     \item vectors and matrices of different values
     \item character strings
@@ -43,9 +44,9 @@
     \item string,
     \item STL vector types and vector<vector> types of int and double
     \item STL vector of strings
-    \item internal Rcpp types RcppDate, RcppDateVector,
-  RcppStringVector, RcppVector of int or doube, RcppMatrix of int or
-  double, RcppFrame}
+    \item internal Rcpp types RcppDate, RcppDateVector, RcppDatetime,
+  RcppDatetimeVector, RcppStringVector, RcppVector of int or doube,
+  RcppMatrix of int or double, RcppFrame}
 }
 \section{Usage for package building}{
   \pkg{Rcpp} provides a header file and a library inside the installed
@@ -101,5 +102,5 @@
 }
 \author{Dominick Samperi wrote most of Rcpp during 2005 and 2006.  Dirk
   Eddelbuettel made some additions, and became maintainer in 2008.}
-\keyword{package}
+\keyword{programming}
 \keyword{interface}
