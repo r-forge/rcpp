@@ -1,6 +1,6 @@
 \name{RcppResultSet}
 \alias{RcppResultSet}
-\title{C++ class for sending C++ objects to \R}
+\title{C++ class for sending C++ objects back to R}
 \description{
   \code{RcppResultSet} is a C++ class defined in \code{Rcpp.h} that can
   assign any number of C++ objects to \R in a single named list object 
