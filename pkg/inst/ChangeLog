@@ -1,8 +1,6 @@
-2008-10-16  Dirk Eddelbuettel  <edd@debian.org>
+2008-11-05  Dirk Eddelbuettel  <edd@debian.org>
 
-	* (unreleased)
-
-	* Release 5.4
+	* Release 0.6.0
 
 	* New maintainer
 
@@ -15,10 +13,10 @@
 
 	* src/Rcpp.{cpp,h}: Add new type RcppDatetime corresponding to
   	  POSIXct in with full support for microsecond time resolution
-	  between R and C++ 
+	  between R and C++
 
 	* man/*: Several new manual pages added
-	
+
 	* configure{,.in,.win}: Removed as src/Makefile* can handle this more
 	  easily
 
