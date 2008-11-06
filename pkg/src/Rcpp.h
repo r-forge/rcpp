@@ -1,4 +1,4 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; -*-
+// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
 // Rcpp.h: Part of the R/C++ interface class library, Version 5.0
 //
@@ -114,14 +114,15 @@ private:
     };
 
 protected:
-    double getFractionalTimestamp(void) const { return m_d; }
-    friend class RcppResultSet;
+    //friend class RcppResultSet;
     friend class ColDatum;
-    friend class RcppFunction;
+    //friend class RcppFunction;
 
 public:
     RcppDatetime(void) : m_d(0), m_parsed(false), m_us(0) { };
     RcppDatetime(const double d) : m_d(d), m_parsed(false), m_us(0) { };
+
+    double getFractionalTimestamp(void) const { return m_d; }
 
     int getYear(void)     { if (!m_parsed) parseTime(); return m_tm.tm_year + 1900; }
     int getMonth(void)    { if (!m_parsed) parseTime(); return m_tm.tm_mon + 1; }
