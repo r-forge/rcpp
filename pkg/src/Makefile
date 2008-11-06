@@ -4,11 +4,8 @@
 #
 # Copyright (C) 2008    Dirk Eddelbuettel <edd@debian.org>
 
-RHOME		= $(shell R RHOME)
-RLIBDIR		= $(RHOME)/$(shell R CMD config LIBnn)
-
-RCPPFLAGS	= $(shell R CMD config --cppflags)
-RLDFLAGS	= $(shell R CMD config --ldflags)
+RCPPFLAGS	= `${R_HOME}/bin/R CMD config --cppflags`
+RLDFLAGS	= `${R_HOME}/bin/R CMD config --ldflags`
 
 ## the 'package' library contains both Rcpp.{cpp,h} and the RcppExample used to demonstrate the package
 ## it is loaded via library(Rcpp) but is not used for compiling / linking against
@@ -43,6 +40,9 @@ $(PKGLIB): 	$(PKGOBJ)
 $(USERLIB):	$(USEROBJ)
 		$(CXX) -shared -o $(USERLIB) $(USEROBJ) 
 		@cp -vax Rcpp.h $(USERDIR)
+
+#RLIBnn		= `${R_HOME}/bin/R CMD config`
+#RLIBDIR	= ${R_HOME}/$(RLIBnn)
 #		@echo "****"
 #		@echo "**** You may need to execute the following command as root"
 #		@echo "**** so that the libRcpp library will get found by R at runtime"
