@@ -7,8 +7,8 @@
 # Contributions from an older Makefile.win are
 # (C) Dominick Samperi and Uwe Ligges and gratefully acknowledged
 
-RCPPFLAGS	= $(shell R CMD config --cppflags)
-RLDFLAGS	= $(shell R CMD config --ldflags)
+RCPPFLAGS	= `${R_HOME}/bin/R CMD config --cppflags`
+RLDFLAGS	= `${R_HOME}/bin/R CMD config --ldflags`
 
 ## the 'package' library contains both Rcpp.{cpp,h} and the RcppExample used to demonstrate the package
 ## it is loaded via library(Rcpp) but is not used for compiling / linking against
