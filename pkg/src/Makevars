@@ -1,0 +1,28 @@
+# -*- mode: Makefile; tab-width: 8 -*- 
+#
+# Makefile for Rcpp 
+#
+# Copyright (C) 2008    Dirk Eddelbuettel <edd@debian.org>
+
+## $(SHLIB) is the usual default target that is built automatically from all source 
+## files in this directory. userLibrary is an additional target for the second library
+## that will be installed in ../inst/lib$(R_ARCH) and which users can link against.
+
+all: 		$(SHLIB) userLibrary
+
+USERLIB	=	libRcpp$(DYLIB_EXT)
+USERDIR =	../inst/lib
+
+userLibrary: 	$(USERLIB)
+		-@if test ! -e $(USERDIR)$(R_ARCH); then mkdir -p $(USERDIR)$(R_ARCH); fi
+		cp $(USERLIB) $(USERDIR)$(R_ARCH)
+		cp Rcpp.h $(USERDIR)
+
+$(USERLIB): 	Rcpp.o
+		$(SHLIB_CXXLD) -o $(USERLIB) $^ $(SHLIB_CXXLDFLAGS) $(ALL_LIBS)
+
+.PHONY: 	all clean userLibrary 
+
+clean:
+		rm -f $(OBJECTS) $(SHLIB) $(USERLIB)
+
