@@ -45,7 +45,7 @@
     \item STL vector types and vector<vector> types of int and double
     \item STL vector of strings
     \item internal Rcpp types RcppDate, RcppDateVector, RcppDatetime,
-  RcppDatetimeVector, RcppStringVector, RcppVector of int or doube,
+  RcppDatetimeVector, RcppStringVector, RcppVector of int or double,
   RcppMatrix of int or double, RcppFrame}
 }
 \section{Usage for package building}{
@@ -86,7 +86,7 @@
 
   On  Windows, we simply include the static library with its full path
   as in \code{C:/R/library/Rcpp/lib/Rcpp.a} (provided one uses
-  \code{R:/R/library} for add-on \R packages). This be automated in a file
+  \code{C:/R/library} for add-on \R packages). This be automated in a file
   \code{src/Makevars.win} provided \code{Rscript} is in the path:
 
   \preformatted{
