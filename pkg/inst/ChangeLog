@@ -1,3 +1,23 @@
+2008-11-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* Release 0.6.1 (to be finalised)
+
+	* src/Makevars: Added, replacing src/Makefile: thanks to Simon for a
+	rewrite that provides OS X support
+	* src/Makefile: Retired
+
+	* src/Rcpp.{cpp,h}: Removed #ifdef statements related to QuantLib and
+	Date ops as we no longer need to split this off -- one build for all
+	uses; also added another date offset for the difference between the 
+	Unix epoch of Jan 1, 1970 and what certain spreadsheets use (which is
+	what QuantLib) follows.  With this change, Rcpp is completely
+	decoupled from QuantLib headers, yet can be used from QuantLib 0.2.10
+	or later
+
+	* R/RcppLdPath.R: Adds new functions RcppLdPath() to return lib/
+	directory path, and RcppLdFlags() to return arguments, including the
+	optional rpath settings on Linux
+
 2008-11-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* Release 0.6.0
