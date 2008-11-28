@@ -51,8 +51,8 @@ private:
     int jdn; // Julian day number
 
 public:
-    static const int Jan1970Offset;
-    static const int QLtoJan1970Offset;
+    static const int Jan1970Offset;	// offset between Jan 1, 1970 and Julian Day Number
+    static const int QLtoJan1970Offset;	// offset between Jan 1, 1970 and QuantLib BaseDate
     RcppDate() { month=1, day=1, year=1970; mdy2jdn(); }
     RcppDate(int Rjdn) { jdn = Rjdn+Jan1970Offset; jdn2mdy(); }
     RcppDate(int month_, int day_, int year_) : month(month_), 
