@@ -14,11 +14,11 @@ RcppLdPath <- function() {
 ## location.  This is not needed on OS X where we encode this as library
 ## built time (see src/Makevars) or Windows where we use a static library
 RcppLdFlags <- function(static=FALSE) {
-    flags <- "-lRcpp"				## general default
+    rcppdir <- RcppLdPath()
+    flags <- paste("-L", rcppdir, " -lRcpp", sep="")	## general default
     if (.Platform$OS.type == "unix") {
-        if(length(grep("^linux",R.version$os))) {
+        if (length(grep("^linux",R.version$os))) {
             if (static==FALSE) {		## on Linux with dyn. linking, use rpath too
-                rcppdir <- RcppLdPath()
                 flags <- paste("-lRcpp -Wl,-rpath,", rcppdir, sep="")
             }
         }
