@@ -76,7 +76,7 @@ PKG_LIBS=`Rscript -e 'cat(Rcpp:::RcppLdFlags())'`
 }
 
   Alternatively, one can also encode the test for these variables using
-  the \code{GNU autoconf} system. The \code{\link{RQuantLib}} package
+  the \code{GNU autoconf} system. The \code{RQuantLib} package
   provides an example of that.
 
   Lastly, on Linux, and during development, it can convenient to simply
@@ -87,21 +87,9 @@ PKG_LIBS=`Rscript -e 'cat(Rcpp:::RcppLdFlags())'`
   link for the library.  Alternatively, you can hardcode the dynamic 
   library location using the \code{rpath} linker directive:
 
-  On  Windows, we simply include the static library with its full path
-  as in \code{C:/R/library/Rcpp/lib/Rcpp.a} (provided one uses
-  \code{C:/R/library} for add-on \R packages). This be automated in a file
-  \code{src/Makevars.win} provided \code{Rscript} is in the path:
-
-  \preformatted{
-  # We need to know where Rcpp.a and Rcpp.h reside:
-  RCPP_DIR     = `Rscript -e 'cat(system.file("lib", package="Rcpp"))'`
-
-  # pass header file diretory to R
-  PKG_CPPFLAGS = -I$(RCPP_DIR) -DBUILDING_DLL=1
-
-  # pass static library to R, and strip
-  PKG_LIBS     = $(RCPP_DIR)/Rcpp.a -s
-  }
+  Use on Windows is identical to the use in Linux. However only a static
+  library is provided. The two \code{\link{Rcpp}} functions detailed
+  above provide the relevant content.
 }
 \author{Dominick Samperi wrote most of Rcpp during 2005 and 2006.  Dirk
   Eddelbuettel made some additions, and became maintainer in 2008.}
