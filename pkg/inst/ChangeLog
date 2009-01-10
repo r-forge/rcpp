@@ -1,4 +1,4 @@
-2009-01-07  Dirk Eddelbuettel  <edd@debian.org>
+2009-01-09  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.6.3
 
@@ -6,6 +6,8 @@
 	  LdFlags() which cat() the longer forms RcppCxxFlags() and
 	  RcppLdFlags() to further simplify use via litter or Rscript in
 	  Makefile or Makevars
+
+	* man/Rcpp-package.Rd: Mention short form CxxFlags() and LdFlags()
 
 	* src/Makevars: Applied another build correction for OS X suggested 
 	  by Simon Urbanek
