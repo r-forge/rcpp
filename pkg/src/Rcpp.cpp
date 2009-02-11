@@ -1,9 +1,9 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Rcpp.cpp: Part of the R/C++ interface class library, Version 5.0
+// Rcpp.cpp: R/C++ interface class library
 //
-// Copyright (C) 2005-2006 Dominick Samperi
-// Copyright (C) 2008      Dirk Eddelbuettel
+// Copyright (C) 2005 - 2006 Dominick Samperi
+// Copyright (C) 2008 - 2009 Dirk Eddelbuettel
 //
 // This library is free software; you can redistribute it and/or modify it 
 // under the terms of the GNU Lesser General Public License as published by 
@@ -41,7 +41,7 @@ void RcppParams::checkNames(char *inputNames[], int len) {
     for (int i = 0; i < len; i++) {
 	map<string,int>::iterator iter = pmap.find(inputNames[i]);
 	if (iter == pmap.end()) {
-	    string mesg = "checkNames: missing required parameter ";
+	    string mesg = "RcppParams::checkNames: missing required parameter ";
 	    throw range_error(mesg+inputNames[i]);
 	}
     }
@@ -123,13 +123,13 @@ RcppFrame::RcppFrame(SEXP df) {
 double RcppParams::getDoubleValue(string name) {
     map<string,int>::iterator iter = pmap.find(name);
     if (iter == pmap.end()) {
-	string mesg = "getDoubleValue: no such name: ";
+	string mesg = "RcppParams::getDoubleValue: no such name: ";
 	throw std::range_error(mesg+name);
     }
     int posn = iter->second;
     SEXP elt = VECTOR_ELT(_params,posn);
     if (!isNumeric(elt) || length(elt) != 1) {
-	string mesg = "getDoubleValue: must be scalar ";
+	string mesg = "RcppParams::getDoubleValue: must be scalar ";
 	throw std::range_error(mesg+name);
     }
     if (isInteger(elt))
@@ -137,7 +137,7 @@ double RcppParams::getDoubleValue(string name) {
     else if (isReal(elt))
 	return REAL(elt)[0];
     else {
-	string mesg = "getDoubleValue: invalid value for ";
+	string mesg = "RcppParams::getDoubleValue: invalid value for ";
 	throw std::range_error(mesg+name);
     }
     return 0; // never get here
@@ -146,13 +146,13 @@ double RcppParams::getDoubleValue(string name) {
 int RcppParams::getIntValue(string name) {
     map<string,int>::iterator iter = pmap.find(name);
     if (iter == pmap.end()) {
-	string mesg = "getIntValue: no such name: ";
+	string mesg = "RcppParams::getIntValue: no such name: ";
 	throw std::range_error(mesg+name);
     }
     int posn = iter->second;
     SEXP elt = VECTOR_ELT(_params,posn);
     if (!isNumeric(elt) || length(elt) != 1) {
-	string mesg = "getIntValue: must be scalar: ";
+	string mesg = "RcppParams::getIntValue: must be scalar: ";
 	throw std::range_error(mesg+name);
     }
     if (isInteger(elt))
@@ -160,7 +160,7 @@ int RcppParams::getIntValue(string name) {
     else if (isReal(elt))
 	return (int)REAL(elt)[0];
     else {
-	string mesg = "getIntValue: invalid value for: ";
+	string mesg = "RcppParams::getIntValue: invalid value for: ";
 	throw std::range_error(mesg+name);
     }
     return 0; // never get here
@@ -169,7 +169,7 @@ int RcppParams::getIntValue(string name) {
 bool RcppParams::getBoolValue(string name) {
     map<string,int>::iterator iter = pmap.find(name);
     if (iter == pmap.end()) {
-	string mesg = "getBoolValue: no such name: ";
+	string mesg = "RcppParams::getBoolValue: no such name: ";
 	throw std::range_error(mesg+name);
     }
     int posn = iter->second;
@@ -177,7 +177,7 @@ bool RcppParams::getBoolValue(string name) {
     if (isLogical(elt))
 	return INTEGER(elt)[0];
     else {
-	string mesg = "getBoolValue: invalid value for: ";
+	string mesg = "RcppParams::getBoolValue: invalid value for: ";
 	throw std::range_error(mesg+name);
     }
     return false; // never get here
@@ -186,7 +186,7 @@ bool RcppParams::getBoolValue(string name) {
 string RcppParams::getStringValue(string name) {
     map<string,int>::iterator iter = pmap.find(name);
     if (iter == pmap.end()) {
-	string mesg = "getStringValue: no such name: ";
+	string mesg = "RcppParams::getStringValue: no such name: ";
 	throw std::range_error(mesg+name);
     }
     int posn = iter->second;
@@ -194,7 +194,7 @@ string RcppParams::getStringValue(string name) {
     if (isString(elt))
 		return string(CHAR(STRING_ELT(elt,0)));
     else {
-	string mesg = "getStringValue: invalid value for: ";
+	string mesg = "RcppParams::getStringValue: invalid value for: ";
 	throw std::range_error(mesg+name);
     }
     return ""; // never get here
@@ -203,13 +203,13 @@ string RcppParams::getStringValue(string name) {
 RcppDate RcppParams::getDateValue(string name) {
     map<string,int>::iterator iter = pmap.find(name);
     if (iter == pmap.end()) {
-	string mesg = "getDateValue: no such name: ";
+	string mesg = "RcppParams::getDateValue: no such name: ";
 	throw std::range_error(mesg+name);
     }
     int posn = iter->second;
     SEXP elt = VECTOR_ELT(_params,posn);
     if (!isNumeric(elt) || length(elt) != 1) {
-	string mesg = "getDateValue: invalide date: ";
+	string mesg = "RcppParams::getDateValue: invalide date: ";
 	throw std::range_error(mesg+name);
     }
 
@@ -217,7 +217,7 @@ RcppDate RcppParams::getDateValue(string name) {
     if (isReal(elt)) // R stores julian value in a double.
 	d = (int)REAL(elt)[0];
     else {
-	string mesg = "getDateValue: invalid value for: ";
+	string mesg = "RcppParams::getDateValue: invalid value for: ";
 	throw std::range_error(mesg+name);
     }
     return RcppDate(d);
@@ -226,20 +226,20 @@ RcppDate RcppParams::getDateValue(string name) {
 RcppDatetime RcppParams::getDatetimeValue(string name) {
     map<string,int>::iterator iter = pmap.find(name);
     if (iter == pmap.end()) {
-        string mesg = "getDatetimeValue: no such name: ";
+        string mesg = "RcppParams::getDatetimeValue: no such name: ";
 	throw std::range_error(mesg+name);
     }
     int posn = iter->second;
     SEXP elt = VECTOR_ELT(_params, posn);
     if (!isNumeric(elt) || length(elt) != 1) {
-	string mesg = "getDateValue: invalide date: ";
+	string mesg = "RcppParams::getDateValue: invalide date: ";
 	throw std::range_error(mesg+name);
     }
     double d;
     if (isReal(elt)) 	// R stores POSIXt as a double
 	d = REAL(elt)[0];
     else {
-	string mesg = "getDatetimeValue: invalid value for: ";
+	string mesg = "RcppParams::getDatetimeValue: invalid value for: ";
 	throw std::range_error(mesg+name);
     }
     return RcppDatetime(d);
@@ -264,7 +264,7 @@ RcppDatetimeVector::RcppDatetimeVector(SEXP vec) {
 	throw std::range_error("RcppDatetimeVector: invalid numeric vector in constructor");
     int len = length(vec);
     if (len == 0)
-	throw std::range_error("RcppDateVector: null vector in constructor");
+	throw std::range_error("RcppDatetimeVector: null vector in constructor");
     v = new RcppDatetime[len];
     for (i = 0; i < len; i++)
 	v[i] = RcppDatetime(REAL(vec)[i]);
@@ -441,12 +441,12 @@ template class RcppMatrixView<double>;
 RcppStringVectorView::RcppStringVectorView(SEXP vec) {
     int i;
     if (isMatrix(vec) || isLogical(vec))
-	throw std::range_error("RcppStringVector: invalid numeric vector in constructor");
+	throw std::range_error("RcppStringVectorView: invalid numeric vector in constructor");
     if (!isString(vec))
-	throw std::range_error("RcppStringVector: invalid string");
+	throw std::range_error("RcppStringVectorView: invalid string");
     int len = length(vec);
     if (len == 0)
-	throw std::range_error("RcppStringVector: null vector in constructor");
+	throw std::range_error("RcppStringVectorView: null vector in constructor");
     //v = new (char *)[len];
     //for (i = 0; i < len; i++)
     //	v[i] = string(CHAR(STRING_ELT(vec,i)));
@@ -876,9 +876,9 @@ void RcppDate::jdn2mdy() {
 
 SEXP RcppFunction::listCall() {
     if (names.size() != (unsigned)listSize)
-	throw std::range_error("listCall: no. of names != no. of items");
+	throw std::range_error("RcppFunction::listCall: no. of names != no. of items");
     if (currListPosn != listSize)
-	throw std::range_error("listCall: list has incorrect size");
+	throw std::range_error("RcppFunction::listCall: list has incorrect size");
     SEXP nm = PROTECT(allocVector(STRSXP,listSize));
     numProtected++;
     for (int i=0; i < listSize; i++)
@@ -896,7 +896,7 @@ SEXP RcppFunction::listCall() {
 
 SEXP RcppFunction::vectorCall() {
     if (vectorArg == R_NilValue)
-	throw std::range_error("vectorCall: vector has not been set");
+	throw std::range_error("RcppFunction::vectorCall: vector has not been set");
     SEXP R_fcall;
     PROTECT(R_fcall = lang2(fn, R_NilValue));
     numProtected++;
@@ -921,7 +921,7 @@ void RcppFunction::setRListSize(int n) {
 
 void RcppFunction::appendToRList(string name, double value) {
     if (currListPosn < 0 || currListPosn >= listSize)
-	throw std::range_error("appendToRList(double): list posn out of range");
+	throw std::range_error("RcppFunction::appendToRList(double): list posn out of range");
     SEXP valsxp = PROTECT(allocVector(REALSXP,1));
     numProtected++;
     REAL(valsxp)[0] = value;
@@ -931,7 +931,7 @@ void RcppFunction::appendToRList(string name, double value) {
 
 void RcppFunction::appendToRList(string name, int value) {
     if (currListPosn < 0 || currListPosn >= listSize)
-	throw std::range_error("appendToRlist(int): posn out of range");
+	throw std::range_error("RcppFunction::appendToRlist(int): posn out of range");
     SEXP valsxp = PROTECT(allocVector(INTSXP,1));
     numProtected++;
     INTEGER(valsxp)[0] = value;
@@ -941,7 +941,7 @@ void RcppFunction::appendToRList(string name, int value) {
 
 void RcppFunction::appendToRList(string name, string value) {
     if (currListPosn < 0 || currListPosn >= listSize)
-	throw std::range_error("appendToRlist(string): posn out of range");
+	throw std::range_error("RcppFunction::appendToRlist(string): posn out of range");
     SEXP valsxp = PROTECT(allocVector(STRSXP,1));
     numProtected++;
     SET_STRING_ELT(valsxp, 0, mkChar(value.c_str()));
@@ -951,7 +951,7 @@ void RcppFunction::appendToRList(string name, string value) {
 
 void RcppFunction::appendToRList(string name, RcppDate& date) {
     if (currListPosn < 0 || currListPosn >= listSize)
-	throw std::range_error("appendToRlist(RcppDate): list posn out of range");
+	throw std::range_error("RcppFunction::appendToRlist(RcppDate): list posn out of range");
     SEXP valsxp = PROTECT(allocVector(REALSXP,1));
     numProtected++;
     REAL(valsxp)[0] = date.getJDN() - RcppDate::Jan1970Offset;
@@ -965,7 +965,7 @@ void RcppFunction::appendToRList(string name, RcppDate& date) {
 
 void RcppFunction::appendToRList(string name, RcppDatetime& datetime) {
     if (currListPosn < 0 || currListPosn >= listSize)
-	throw std::range_error("appendToRlist(RcppDatetime): list posn out of range");
+	throw std::range_error("RcppFunction::appendToRlist(RcppDatetime): list posn out of range");
     SEXP valsxp = PROTECT(allocVector(REALSXP,1));
     numProtected++;
     REAL(valsxp)[0] = datetime.getFractionalTimestamp();

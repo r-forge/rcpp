@@ -1,9 +1,9 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; -*-
 //
-// RcppExample.cpp: Part of the R/C++ interface class library, Version 5.0
+// RcppExample.cpp: R/C++ interface class library example
 //
-// Copyright (C) 2005-2006 Dominick Samperi
-// Copyright (C) 2008      Dirk Eddelbuettel
+// Copyright (C) 2005 - 2006 Dominick Samperi
+// Copyright (C) 2008 - 2009 Dirk Eddelbuettel
 //
 // This library is free software; you can redistribute it and/or modify it 
 // under the terms of the GNU Lesser General Public License as published by 

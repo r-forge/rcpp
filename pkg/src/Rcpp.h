@@ -1,9 +1,9 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Rcpp.h: Part of the R/C++ interface class library, Version 5.0
+// Rcpp.h: R/C++ interface class library
 //
-// Copyright (C) 2005-2006 Dominick Samperi
-// Copyright (C) 2008      Dirk Eddelbuettel
+// Copyright (C) 2005 - 2006 Dominick Samperi
+// Copyright (C) 2008 - 2009 Dirk Eddelbuettel
 //
 // This library is free software; you can redistribute it and/or modify it 
 // under the terms of the GNU Lesser General Public License as published by 
@@ -204,7 +204,7 @@ public:
     void setIntValue(int val) { i = val; type = COLTYPE_INT; }
     void setLogicalValue(int val) { 
 	if (val != 0 && val != 1)
-	    throw std::range_error("ColDatum: logical values must be 0/1.");
+	    throw std::range_error("ColDatum::setLogicalValue: logical values must be 0/1.");
 	i = val; type = COLTYPE_LOGICAL; 
     }
     void setStringValue(string val) { s = val; type = COLTYPE_STRING; }
@@ -218,7 +218,7 @@ public:
     }
     void setFactorValue(string *names, int numNames, int factorLevel) {
 	if (factorLevel < 1 || factorLevel > numNames)
-	    throw range_error("setFactorValue: factor level out of range");
+	    throw range_error("ColDatum::setFactorValue: factor level out of range");
 	level = factorLevel;
 	numLevels = numNames;
 	levelNames = new string[numLevels];
@@ -229,27 +229,27 @@ public:
 
     double getDoubleValue() { 
 	if (type != COLTYPE_DOUBLE)
-	    throw std::range_error("RcppFrame: wrong data type in getDoubleValue");
+	    throw std::range_error("ColDatum::getDoubleValue: wrong data type in getDoubleValue");
 	return x; 
     }
     int    getIntValue() { 
 	if (type != COLTYPE_INT)
-	    throw std::range_error("RcppFrame: wrong data type in getIntValue");
+	    throw std::range_error("ColDatum::getIntValue: wrong data type in getIntValue");
 	return i; 
     }
     int    getLogicalValue() { 
 	if (type != COLTYPE_LOGICAL)
-	    throw std::range_error("RcppFrame: wrong data type in getLogicalValue");
+	    throw std::range_error("ColDatum::getLogicalValue: wrong data type in getLogicalValue");
 	return i; 
     }
     string getStringValue() { 
 	if (type != COLTYPE_STRING)
-	    throw std::range_error("RcppFrame: wrong data type in getStringValue");
+	    throw std::range_error("ColDatum::getStringValue: wrong data type in getStringValue");
 	return s; 
     }
     RcppDate getDateValue() {
 	if (type != COLTYPE_DATE)
-	    throw std::range_error("RcppFrame: wrong data type in getDateValue");
+	    throw std::range_error("ColDatum::getDateValue: wrong data type in getDateValue");
 	return d; 
     }
     double getDateRCode() { 
@@ -257,13 +257,13 @@ public:
     }
     RcppDatetime getDatetimeValue() {
 	if (type != COLTYPE_DATETIME)
-	    throw std::range_error("RcppFrame: wrong data type in getDatetimeValue");
+	    throw std::range_error("ColDatum::getDatetimeValue: wrong data type in getDatetimeValue");
 	return RcppDatetime(x); 
     }
 
     void checkFactorType() {
 	if (type != COLTYPE_FACTOR)
-	    throw std::range_error("RcppFrame: wrong data type in getFactor...");
+	    throw std::range_error("ColDatun::checkFactorType: wrong data type in getFactor...");
     }
     int    getFactorNumLevels() { checkFactorType(); return numLevels; }
     int    getFactorLevel() { checkFactorType(); return level; }
