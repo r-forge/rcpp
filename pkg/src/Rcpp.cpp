@@ -439,7 +439,7 @@ template class RcppMatrixView<int>;
 template class RcppMatrixView<double>;
 
 RcppStringVectorView::RcppStringVectorView(SEXP vec) {
-    int i;
+    //int i;
     if (isMatrix(vec) || isLogical(vec))
 	throw std::range_error("RcppStringVectorView: invalid numeric vector in constructor");
     if (!isString(vec))
