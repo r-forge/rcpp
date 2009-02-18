@@ -437,7 +437,7 @@ RcppExport SEXP RcppVectorExample(SEXP vector) {
 	std::vector<double> res(n);
 	
 	for (int i=0; i<n; i++) {
-	    res[i] = sqrt(vec(i));
+	    res[i] = sqrt(static_cast<double>(vec(i)));
 	}
 
 	// Build result set to be returned as a list to R.
