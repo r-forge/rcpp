@@ -95,7 +95,7 @@ private:
     void parseTime() {
 	time_t tt;
 	tt = floor(m_d);			// time_t is the number of seconds, so ignore the fractional microseconds
-	m_us = round( (m_d - tt) * 1e6);	// fractional (micro)seconds is difference between (fractional) m_d and m_tt
+	m_us = round( (m_d - tt) * 1.0e6);	// fractional (micro)seconds is difference between (fractional) m_d and m_tt
 	m_tm = *localtime(&tt);			// parse time type into time structure 
 	m_parsed = true;			// and note that we parsed the time type
 	//printf("Time is %s %20u %8u\n", ctime(&m_tt), (unsigned int) m_tt, m_us);
