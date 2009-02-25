@@ -1,7 +1,12 @@
+2009-02-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/Makevars.win: Renamed from Makefile.win, added missing mkdir
+	* cleanup: Remove a few more Windows files
+
 2009-02-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* doxyfile,inst/doc/{html,latex,man}: Added new Doxygen-generated
-	  documentation of the C++ classes
+        * inst/doc/{html,latex,man}: Added new documentation of the C++ classes
+	* doxyfile: Added Doxygen configuration file for doc generation
 
 2009-02-22  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -11,9 +16,9 @@
 
 2009-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/Rcpp.{h,cpp}: Added a few explicit casts, and removed unused 
+	* src/Rcpp.{h,cpp}: Added a few explicit casts, and removed unused
 	  loop variable; all to make 'g++ -Wall' happy
-	
+
 2009-02-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/Rcpp.{cpp,h}: Expanded a few of the throw() messages
@@ -29,7 +34,7 @@
 
 	* man/Rcpp-package.Rd: Mention short form CxxFlags() and LdFlags()
 
-	* src/Makevars: Applied another build correction for OS X suggested 
+	* src/Makevars: Applied another build correction for OS X suggested
 	  by Simon Urbanek
 
 	* src/Rcpp.{cpp,h}: Added 'view-only' classes RcppVectorView,
