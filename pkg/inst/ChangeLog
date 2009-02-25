@@ -1,3 +1,19 @@
+2009-02-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* doxyfile,inst/doc/{html,latex,man}: Added new Doxygen-generated
+	  documentation of the C++ classes
+
+2009-02-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/Rcpp.{h,cpp}: cleaner use of namespace 'std' by formal prefix
+	  rather than via 'using namespace std'
+	* src/Rcpp.h: define R_NO_MAP and use Rf_* form of R API functions
+
+2009-02-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/Rcpp.{h,cpp}: Added a few explicit casts, and removed unused 
+	  loop variable; all to make 'g++ -Wall' happy
+	
 2009-02-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/Rcpp.{cpp,h}: Expanded a few of the throw() messages
