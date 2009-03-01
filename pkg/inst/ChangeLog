@@ -1,3 +1,9 @@
+2009-03-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.6.4
+
+	* .Rbuildignore: Added to exclude debian/ from source tarball
+	
 2009-02-25  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/Makevars.win: Renamed from Makefile.win, added missing mkdir
