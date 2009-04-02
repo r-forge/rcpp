@@ -1,3 +1,9 @@
+2009-04-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.6.5
+
+	* COPYING: Added
+
 2009-03-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/Makevars: Add $(R_ARCH) to target directory path when copying
