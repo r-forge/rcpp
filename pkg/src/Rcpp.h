@@ -449,6 +449,8 @@ public:
     RcppMatrix(int nx, int ny);
     int getDim1() { return dim1; }
     int getDim2() { return dim2; }
+    int rows() { return dim1; }
+    int cols() { return dim2; }
     inline T& operator()(int i, int j) {
 	if (i < 0 || i >= dim1 || j < 0 || j >= dim2) {
 	    std::ostringstream oss;
@@ -491,6 +493,8 @@ public:
     RcppMatrixView(SEXP mat);
     inline int dim1() const { return d1; }
     inline int dim2() const { return d2; }
+    inline int rows() { return dim1; }
+    inline int cols() { return dim2; }
     inline T operator()(int i, int j) const {
 	if (i < 0 || i >= d1 || j < 0 || j >= d2) {
 	    std::ostringstream oss;
