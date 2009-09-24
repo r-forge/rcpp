@@ -94,7 +94,7 @@ private:
     int m_us;					// microseconds giving us fractional seconds
     struct tm m_tm;
     void parseTime() {
-	time t tt = static_cast<time_t>(floor(m_d));		// time_t is the nb of seconds, ignore the fractional microseconds
+	time_t tt = static_cast<time_t>(floor(m_d));		// time_t is the nb of seconds, ignore the fractional microseconds
 	m_us = static_cast<int>(round( (m_d - tt) * 1.0e6));	// fractional (micro)secs is diff. between (fractional) m_d and m_tt
 	m_tm = *localtime(&tt);			// parse time type into time structure 
 	m_parsed = true;			// and note that we parsed the time type
@@ -492,8 +492,8 @@ public:
     RcppMatrixView(SEXP mat);
     inline int dim1() const { return d1; }
     inline int dim2() const { return d2; }
-    inline int rows() { return dim1; }
-    inline int cols() { return dim2; }
+    inline int rows() { return d1; }
+    inline int cols() { return d2; }
     inline T operator()(int i, int j) const {
 	if (i < 0 || i >= d1 || j < 0 || j >= d2) {
 	    std::ostringstream oss;
