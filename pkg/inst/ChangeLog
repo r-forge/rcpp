@@ -1,3 +1,8 @@
+2009-09-29  Dirk Eddelbuettel  <edd@dexter>
+
+	* inst/examples/functionCallback/*: Added simple C++ / R example of
+	  defining an R function that is passed to and called from C++ 
+
 2009-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.6.6
