@@ -36,6 +36,8 @@
 #include <R.h>
 #include <Rinternals.h>
 
+#include <RcppList.h>
+
 // #ifdef BUILDING_DLL
 // #define RcppExport extern "C" __declspec(dllexport)
 // #else
@@ -583,6 +585,7 @@ public:
     void add(std::string, RcppMatrix<int>&);
     void add(std::string, RcppMatrix<double>&);
     void add(std::string, RcppFrame&);
+    void add(std::string, RcppList&);
     void add(std::string, SEXP, bool isProtected);
     SEXP getReturnList();
 protected:
