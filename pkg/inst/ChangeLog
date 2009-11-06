@@ -1,7 +1,22 @@
+2009-11-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.6.7
+
+	* src/RcppList.{h,cppp}: Added a simple class to accept list()
+	  objects in order to cope with non-rectangular data-types -- this
+	  comes from the RProtoBuf code currently only on r-forge where
+	  we need accept lists that are potentially nested.
+	  The API for RcppList is not fully fleshed out and needs a few
+	  more append() member functions. Also length is currently fixed.
+
+	* inst/README: Added short README about history and status
+	
+	* inst/doc/: Updated doxygen documentation
+
 2009-09-29  Dirk Eddelbuettel  <edd@dexter>
 
 	* inst/examples/functionCallback/*: Added simple C++ / R example of
-	  defining an R function that is passed to and called from C++ 
+	  defining an R function that is passed to and called from C++
 
 2009-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
