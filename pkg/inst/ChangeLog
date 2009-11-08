@@ -1,6 +1,11 @@
-2009-11-06  Dirk Eddelbuettel  <edd@debian.org>
+2009-11-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.6.7
+
+	* man/RcppVector.Rd: Remove erraneous use of \R in \title{} section
+	  noticed by the Rd parser in R-devel (with thanks to Kurt Hornik)
+
+2009-11-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppList.{h,cppp}: Added a simple class to accept list()
 	  objects in order to cope with non-rectangular data-types -- this
@@ -9,8 +14,10 @@
 	  The API for RcppList is not fully fleshed out and needs a few
 	  more append() member functions. Also length is currently fixed.
 
+	* cleanup: Change header file removal to Rcpp*.h
+
 	* inst/README: Added short README about history and status
-	
+
 	* inst/doc/: Updated doxygen documentation
 
 2009-09-29  Dirk Eddelbuettel  <edd@dexter>
