@@ -26,22 +26,7 @@
 #include <RcppDate.h>
 #include <RcppDatetime.h>
 #include <RcppList.h>
-
-class RcppParams {
-public:
-    RcppParams(SEXP params);
-    void   	checkNames(char *inputNames[], int len);
-    bool	exists(std::string name);
-    double 	getDoubleValue(std::string name);
-    int    	getIntValue(std::string name);
-    std::string getStringValue(std::string name);
-    bool   	getBoolValue(std::string name);
-    RcppDate 	getDateValue(std::string name);
-    RcppDatetime getDatetimeValue(std::string name);
-private:
-    std::map<std::string, int> pmap;
-    SEXP _params;
-};
+#include <RcppParams.h>
 
 // Supported data frame column types.
 enum ColType { COLTYPE_DOUBLE, COLTYPE_INT, COLTYPE_STRING,
