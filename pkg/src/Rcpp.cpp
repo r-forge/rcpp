@@ -19,7 +19,7 @@
 // along with this library; if not, write to the Free Software Foundation, 
 // Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
 
-#include "Rcpp.h"
+#include <Rcpp.h>
 
 RcppParams::RcppParams(SEXP params) {
     if (!Rf_isNewList(params))
@@ -798,94 +798,6 @@ SEXP RcppResultSet::getReturnList() {
     Rf_setAttrib(rl, R_NamesSymbol, nm);
     UNPROTECT(numProtected+2);
     return rl;
-}
-
-// Print an RcppDate.
-std::ostream& operator<<(std::ostream& os, const RcppDate& date) {
-    os << date.getYear() << "-" << date.getMonth() << "-" << date.getDay();
-    return os;
-}
-
-// A few basic date operations.
-RcppDate operator+(const RcppDate& date, int offset) {
-    RcppDate temp(date.month, date.day, date.year);
-    temp.jdn += offset;
-    temp.jdn2mdy();
-    return temp;
-}
-
-int operator-(const RcppDate& date2, const RcppDate& date1) {
-    return date2.jdn - date1.jdn;
-}
-
-bool  operator<(const RcppDate &date1, const RcppDate& date2) {
-    return date1.jdn < date2.jdn;
-}
-
-bool  operator>(const RcppDate &date1, const RcppDate& date2) {
-    return date1.jdn > date2.jdn;
-}
-
-bool  operator>=(const RcppDate &date1, const RcppDate& date2) {
-    return date1.jdn >= date2.jdn;
-}
-
-bool  operator<=(const RcppDate &date1, const RcppDate& date2) {
-    return date1.jdn <= date2.jdn;
-}
-
-bool  operator==(const RcppDate &date1, const RcppDate& date2) {
-    return date1.jdn == date2.jdn;
-}
-
-// Offset used to convert from R date representation to Julian day number.
-const int RcppDate::Jan1970Offset = 2440588;
-
-// Offset used to convert between R / Unix date of Jan 1, 1970 and the QL base date
-const int RcppDate::QLtoJan1970Offset = 25569; 
-
-// The Julian day number (jdn) is the number of days since Monday,
-// Jan 1, 4713BC (year = -4712). Here 1BC is year 0, 2BC is year -1, etc.
-// On the other hand, R measures days since Jan 1, 1970, and these dates are
-// converted to jdn's by adding Jan1970Offset.
-//
-// mdy2jdn and jdn2mdy are inverse functions for dates back to 
-// year = -4799 (4800BC).
-//
-// See the Wikipedia entry on Julian day number for more information 
-// on these algorithms.
-//
-
-// Transform month/day/year to Julian day number.
-void RcppDate::mdy2jdn() {
-    int m = month, d = day, y = year;
-    int a = (14 - m)/12;
-    y += 4800 - a;
-    m += 12*a - 3;
-    jdn = (d + (153*m + 2)/5 + 365*y
-	   + y/4 - y/100 + y/400 - 32045);
-}
-
-// Transform from Julian day number to month/day/year.
-void RcppDate::jdn2mdy() {
-    int jul = jdn + 32044;
-    int g = jul/146097;
-    int dg = jul % 146097;
-    int c = (dg/36524 + 1)*3/4;
-    int dc = dg - c*36524;
-    int b = dc/1461;
-    int db = dc % 1461;
-    int a = (db/365 + 1)*3/4;
-    int da = db - a*365;
-    int y = g*400 + c*100 + b*4 + a;
-    int m = (da*5 + 308)/153 - 2;
-    int d = da - (m + 4)*153 /5 + 122;
-    y = y - 4800 + (m + 2)/12;
-    m = (m + 2) % 12 + 1;
-    d = d + 1;
-    month = m;
-    day   = d;
-    year  = y;
 }
 
 SEXP RcppFunction::listCall() {
