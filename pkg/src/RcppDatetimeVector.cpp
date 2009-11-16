@@ -37,7 +37,7 @@ RcppDatetimeVector::~RcppDatetimeVector() {
     delete [] v;
 }
 
-inline RcppDatetime & RcppDatetimeVector::operator()(int i) const {
+RcppDatetime & RcppDatetimeVector::operator()(int i) const {
     if (i < 0 || i >= length) {
 	std::ostringstream oss;
 	oss << "RcppDatetimeVector: subscript out of range: " << i;

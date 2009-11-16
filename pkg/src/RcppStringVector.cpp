@@ -40,7 +40,7 @@ RcppStringVector::~RcppStringVector() {
     delete [] v;
 }
 
-inline std::string& RcppStringVector::operator()(int i) const {
+std::string& RcppStringVector::operator()(int i) const {
     if (i < 0 || i >= length) {
 	std::ostringstream oss;
 	oss << "RcppStringVector: subscript out of range: " << i;
