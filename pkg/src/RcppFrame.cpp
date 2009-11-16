@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// RcppFrame.cpp: Rcpp R/C++ interface class library -- data.framee support
+// RcppFrame.cpp: Rcpp R/C++ interface class library -- data.frame support
 //
 // Copyright (C) 2005 - 2006 Dominick Samperi
 // Copyright (C) 2008 - 2009 Dirk Eddelbuettel
