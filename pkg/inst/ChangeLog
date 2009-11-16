@@ -1,3 +1,18 @@
+2009-11-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppDateVector.{cpp,h}: Moved out of Rcpp.{h,cpp}
+	* src/RcppDatetimeVector.{cpp,h}: idem
+	* src/RcppFunction.{cpp,h}: idem
+	* src/RcppMatrix.{cpp,h}: idem
+	* src/RcppMatrixView.{cpp,h}: idem
+	* src/RcppNumList.{cpp,h}: idem
+	* src/RcppResultSet.{cpp,h}: idem
+	* src/RcppStringVector.{cpp,h}: idem
+	* src/RcppStringVectorView.{cpp,h}: idem
+	* src/RcppVector.{cpp,h}: idem
+	* src/RcppVectorView.{cpp,h}: idem
+	* src/RcppCommon.cpp: takes remaining utility function from Rcpp.cpp
+
 2009-11-09  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.6.8
@@ -17,7 +32,7 @@
 
 2009-11-06  Dirk Eddelbuettel  <edd@debian.org>
 
-	* src/RcppList.{h,cppp}: Added a simple class to accept list()
+	* src/RcppList.{h,cpp}: Added a simple class to accept list()
 	  objects in order to cope with non-rectangular data-types -- this
 	  comes from the RProtoBuf code currently only on r-forge where
 	  we need accept lists that are potentially nested.
