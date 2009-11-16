@@ -1,7 +1,8 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Rcpp.h: R/C++ interface class library
+// RcppCommon.cpp: R/C++ interface class library -- common functions
 //
+// Copyright (C) 2005 - 2006 Dominick Samperi
 // Copyright (C) 2008 - 2009 Dirk Eddelbuettel
 //
 // This library is free software; you can redistribute it and/or modify it 
@@ -18,25 +19,19 @@
 // along with this library; if not, write to the Free Software Foundation, 
 // Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
 
-#ifndef Rcpp_hpp
-#define Rcpp_hpp
+#include <Rcpp.h>
+#include <cstring>
 
-#include <RcppCommon.h>
-#include <RcppDate.h>
-#include <RcppDateVector.h>
-#include <RcppDatetime.h>
-#include <RcppDatetimeVector.h>
-#include <RcppFrame.h>
-#include <RcppFunction.h>
-#include <RcppList.h>
-#include <RcppMatrix.h>
-#include <RcppMatrixView.h>
-#include <RcppNumList.h>
-#include <RcppParams.h>
-#include <RcppResultSet.h>
-#include <RcppStringVector.h>
-#include <RcppStringVectorView.h>
-#include <RcppVector.h>
-#include <RcppVectorView.h>
+// Paul Roebuck has observed that the memory used by an exception message
+// is not reclaimed if error() is called inside of a catch block (due to
+// a setjmp() call), and he suggested the following work-around.
+char *copyMessageToR(const char* const mesg) {
+    char* Rmesg;
+    const char* prefix = "Exception: ";
+    void* Rheap = R_alloc(strlen(prefix)+strlen(mesg)+1,sizeof(char));
+    Rmesg = static_cast<char*>(Rheap);
+    strcpy(Rmesg, prefix);
+    strcat(Rmesg, mesg);
+    return Rmesg;
+}
 
-#endif
