@@ -2,7 +2,8 @@ Package: Rcpp
 Title: Rcpp R/C++ interface package
 Version: 0.6.8.1
 Date: $Date$
-Author: Dirk Eddelbuettel with contributions by Simon Urbanek and David Reiss
+Author: Dirk Eddelbuettel with contributions by Simon Urbanek and David Reiss;
+ based on code written during 2005 and 2006 by Dominick Samperi 
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: R/C++ interface classes and examples
  The Rcpp library maps data types betweeen R and C++, and includes support

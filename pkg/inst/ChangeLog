@@ -1,3 +1,12 @@
+2009-11-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Add Dominick back into Authors per his new request
+	  reversing his requests to be removed from last December
+
+2009-11-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* man/RcppParams.Rd: applied patch by Frank S. Thomas to fix example
+
 2009-11-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppDateVector.{cpp,h}: Moved out of Rcpp.{h,cpp}
