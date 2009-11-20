@@ -46,6 +46,6 @@ inline const char * RcppStringVectorView::operator()(int i) const {
     return CHAR(STRING_ELT(v,i));
 }
 
-int RcppStringVectorView::size() const { 
+inline int RcppStringVectorView::size() const { 
     return length; 
 }

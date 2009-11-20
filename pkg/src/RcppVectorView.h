@@ -28,8 +28,8 @@ template <typename T>
 class RcppVectorView {
 public:
     RcppVectorView(SEXP vec);
-    inline int size() const;
-    inline T operator()(int i) const;
+    int size() const;
+    T operator()(int i) const;
 private:
     int len;
     T *v;
