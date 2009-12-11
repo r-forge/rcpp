@@ -10,7 +10,7 @@ Description: R/C++ interface classes and examples
  for R types real, integer, character, vector, matrix, Date, datetime (i.e.
  POSIXct) at microsecond resolution, data frame, and function. It also
  supports calling R functions from C++. Several examples are included.
-Depends: R (>= 2.0.0)
+Depends: R (>= 2.0.0), methods
 SystemRequirements: None
 URL: http://dirk.eddelbuettel.com/code/rcpp.html
 License: LGPL (>= 2.1)
