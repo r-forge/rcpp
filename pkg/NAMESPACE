@@ -4,15 +4,10 @@ export(RcppExample,
        print.RcppExample,
        RcppDateExample,
        RcppParamsExample,
-       RcppVectorExample)
-
-## from inline
-import("methods")
-
-export(
-  "cfunction"
+       RcppVectorExample,
+       cfunction 		## from inline and adapted
 )
 
 exportMethods(
-  "setCMethod"
+       setCMethod
 )
