@@ -5,3 +5,14 @@ export(RcppExample,
        RcppDateExample,
        RcppParamsExample,
        RcppVectorExample)
+
+## from inline
+import("methods")
+
+export(
+  "cfunction"
+)
+
+exportMethods(
+  "setCMethod"
+)

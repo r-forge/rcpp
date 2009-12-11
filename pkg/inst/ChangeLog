@@ -1,5 +1,13 @@
 2009-12-11  Dirk Eddelbuettel  <edd@debian.org>
 
+	* R/RcppInline.R: Imported function 'cfunction' from the inline
+  	  package, along with small patch to directly support Rcpp. The
+	  inclusion may be temporary -- if our patch is integrated into
+	  inline we may just depend on that package
+        * man/RcppInline.Rd: Imported from inline, plus change for Rcpp
+        * inst/examples/RcppInline/RcppInlineExample.r: Small example
+	  taken from the 'Intro to HPC with R' tutorials
+	
 	* R/RcppVersion.R: Removed as unused as redundant given read.dcf() in R
 	* man/RcppVersion.R: idem
 	* NAMESPACE: updated accordingly
