@@ -1,3 +1,10 @@
+2009-12-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppVersion.R: Removed as unused as redundant given read.dcf() in R
+	* man/RcppVersion.R: idem
+	* NAMESPACE: updated accordingly
+	* INDEX: idem
+
 2009-11-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Add Dominick back into Authors per his new request
