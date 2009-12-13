@@ -14,7 +14,8 @@ setClass("CFunc",
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 cfunction <- function(sig=character(), body=character(), includes=character(), otherdefs=character(),
                       language=c("C++", "C", "Fortran", "F95", "ObjectiveC", "ObjectiveC++"),
-                      verbose=FALSE, convention=c(".Call", ".C", ".Fortran"), Rcpp=FALSE) {
+                      verbose=FALSE, convention=c(".Call", ".C", ".Fortran"), Rcpp=FALSE,
+                      compileargs=character(), linkargs=character()) {
 
   convention <- match.arg(convention)
 
@@ -36,12 +37,23 @@ cfunction <- function(sig=character(), body=character(), includes=character(), o
 
   if (Rcpp) {
       includes <- paste(includes, "\n#include <Rcpp.h>\n", sep="")
-      cxxflags <- paste("PKG_CXXFLAGS=\"", Rcpp:::RcppCxxFlags(), "\"", sep="")
-      ldflags <- paste("PKG_LIBS=\"", Rcpp:::RcppLdFlags(), "\"", sep="")
-      pkgargs <- paste(cxxflags, ldflags, " ", sep=" ")
+      cxxflags <- paste("PKG_CXXFLAGS=\"",
+                        Rcpp:::RcppCxxFlags(), 		# information from Rcpp
+                        paste(compileargs,collapse=" "),# headers from users if any
+                        "\"", collapse=" ", sep=" ")
+      ldflags <-  paste("PKG_LIBS=\"",
+                        Rcpp:::RcppLdFlags(),
+                        paste(linkargs, collapse=" "), # libraries from users if any
+                        "\"", collapse=" ", sep=" ")
   } else {
-      pkgargs <- character()
+      cxxflags <- paste("PKG_CXXFLAGS=\"",
+                        paste(compileargs,collapse=" "),# headers from users if any
+                        "\"", sep="")
+      ldflags <-  paste("PKG_LIBS=\"",
+                        paste(linkargs, collapse=" "), # libraries from users if any
+                        "\"", sep="")
   }
+  pkgargs <-  paste(c(cxxflags, ldflags, ""), collapse=" ")
 
   ## GENERATE THE CODE
   for ( i in seq_along(sig) ) {
@@ -231,7 +243,12 @@ compileCode <- function(f, code, language, verbose, pkgargs="") {
   if ( file.exists(libLFile) ) file.remove( libLFile )
   if ( file.exists(libLFile2) ) file.remove( libLFile2 )
 
-  compiled <- system(paste(pkgargs, R.home(component="bin"), "/R CMD SHLIB ", libCFile, sep=""), intern=!verbose)
+  cmd <- paste(pkgargs, R.home(component="bin"), "/R CMD SHLIB ", libCFile, sep="")
+  if (verbose) {
+      cat("Compilation argument:\n")
+      cat(" ", cmd)
+  }
+  compiled <- system(cmd, intern=!verbose)
 
   if ( !file.exists(libLFile) && file.exists(libLFile2) ) libLFile <- libLFile2
   if ( !file.exists(libLFile) ) {
