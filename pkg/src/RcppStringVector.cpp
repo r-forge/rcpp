@@ -53,7 +53,7 @@ int RcppStringVector::size() const {
     return length; 
 }
 
-inline std::vector<std::string> RcppStringVector::stlVector() const {
+std::vector<std::string> RcppStringVector::stlVector() const {
     std::vector<std::string> tmp(length);
     for (int i = 0; i < length; i++)
 	tmp[i] = v[i];

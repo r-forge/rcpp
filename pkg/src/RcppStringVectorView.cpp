@@ -22,7 +22,6 @@
 #include <RcppStringVectorView.h>
 
 RcppStringVectorView::RcppStringVectorView(SEXP vec) {
-    //int i;
     if (Rf_isMatrix(vec) || Rf_isLogical(vec))
 	throw std::range_error("RcppStringVectorView: invalid numeric vector in constructor");
     if (!Rf_isString(vec))
@@ -30,14 +29,11 @@ RcppStringVectorView::RcppStringVectorView(SEXP vec) {
     int len = Rf_length(vec);
     if (len == 0)
 	throw std::range_error("RcppStringVectorView: null vector in constructor");
-    //v = new (char *)[len];
-    //for (i = 0; i < len; i++)
-    //	v[i] = string(CHAR(STRING_ELT(vec,i)));
     length = len;
     v = vec;
 }
 
-inline const char * RcppStringVectorView::operator()(int i) const {
+const char* RcppStringVectorView::operator()(int i) const {
     if (i < 0 || i >= length) {
 	std::ostringstream oss;
 	oss << "RcppStringVector: subscript out of range: " << i;
@@ -46,6 +42,6 @@ inline const char * RcppStringVectorView::operator()(int i) const {
     return CHAR(STRING_ELT(v,i));
 }
 
-inline int RcppStringVectorView::size() const { 
+int RcppStringVectorView::size() const { 
     return length; 
 }
