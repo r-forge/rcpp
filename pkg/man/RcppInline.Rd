@@ -19,7 +19,8 @@
             language=c("C++", "C", "Fortran", "F95", "ObjectiveC", "ObjectiveC++"),
             verbose=FALSE, 
             convention=c(".Call", ".C", ".Fortran"),
-            Rcpp=FALSE)
+            Rcpp=FALSE,
+            compileargs=character(), linkargs=character())
 
   ## S4 methods for signatures
   #  f='character', sig='list', body='list'
@@ -75,7 +76,18 @@
   variables \code{PKG_CXXFLAGS} and \code{PKG_LIBS} accordingly so that
   the R / C++ interface provided by the \code{Rcpp} package can be
   used. Default value is \code{FALSE}.}
-  
+
+  \item{compileargs}{Optional character vector of tokens to be passed to
+  the compiler via the \code{PKG_CXXFLAGS} environment
+  variable. Elements should be fully formed as for example
+  \code{c("-I/usr/local/lib/foo", "-DDEBUG")} and are passed along verbatim.}
+
+  \item{linkargs}{Optional character vector of tokens to be passed to
+  the compiler via the \code{PKG_CXXFLAGS} environment
+  variable. Elements should be fully formed as for example
+  \code{c("-L/usr/local/lib/foo -lfoo", "--lpthread")} and are passed
+  along verbatim.}
+    
   \item{...}{ Reserved.}
 }
 
