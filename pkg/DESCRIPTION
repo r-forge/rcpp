@@ -1,6 +1,6 @@
 Package: Rcpp
 Title: Rcpp R/C++ interface package
-Version: 0.6.8.2
+Version: 0.6.8.3
 Date: $Date$
 Author: Dirk Eddelbuettel with contributions by Simon Urbanek and David Reiss;
  based on code written during 2005 and 2006 by Dominick Samperi 
@@ -13,4 +13,4 @@ Description: R/C++ interface classes and examples
 Depends: R (>= 2.0.0), methods
 SystemRequirements: None
 URL: http://dirk.eddelbuettel.com/code/rcpp.html
-License: LGPL (>= 2.1)
+License: GPL (>= 2)
