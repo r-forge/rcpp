@@ -44,7 +44,6 @@ public:
     int getJDN()  const  { return jdn; }
 
     // Minimal set of date operations.
-    // These operators tend to conflict with QuantLib's
     friend RcppDate operator+(const RcppDate &date, int offset);
     friend int      operator-(const RcppDate& date1, const RcppDate& date2);
     friend bool     operator<(const RcppDate &date1, const RcppDate& date2);
@@ -54,11 +53,6 @@ public:
     friend bool     operator<=(const RcppDate &date1, const RcppDate& date2);
 
     friend std::ostream& operator<<(std::ostream& os, const RcppDate& date);
-// #ifdef USING_QUANTLIB
-//     // Conversions from/to a QuantLib Date.
-//     RcppDate(Date dateQL);
-//     operator Date() const;
-// #endif
 };
 
 #endif

@@ -1,9 +1,8 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Rcpp.h: R/C++ interface class library
+// RcppSexp.h: Rcpp R/C++ interface class library -- SEXP support
 //
-// Copyright (C) 2005 - 2006 Dominick Samperi
-// Copyright (C) 2008 - 2009 Dirk Eddelbuettel
+// Copyright (C) 2009 Dirk Eddelbuettel
 //
 // This file is part of Rcpp.
 //
@@ -20,26 +19,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef Rcpp_hpp
-#define Rcpp_hpp
+#ifndef RcppSexp_h
+#define RcppSexp_h
 
 #include <RcppCommon.h>
-#include <RcppDate.h>
-#include <RcppDateVector.h>
-#include <RcppDatetime.h>
-#include <RcppDatetimeVector.h>
-#include <RcppFrame.h>
-#include <RcppFunction.h>
-#include <RcppList.h>
-#include <RcppMatrix.h>
-#include <RcppMatrixView.h>
-#include <RcppNumList.h>
-#include <RcppParams.h>
-#include <RcppResultSet.h>
-#include <RcppSexp.h>
-#include <RcppStringVector.h>
-#include <RcppStringVectorView.h>
-#include <RcppVector.h>
-#include <RcppVectorView.h>
+
+class RcppSexp {
+public:
+    RcppSexp(SEXP sexp, int numprot=0) : m_sexp(sexp), m_nprot(numprot) {}
+    RcppSexp() : m_sexp(R_NilValue), m_nprot(0) {}
+    RcppSexp(const double & v);
+    RcppSexp(const int & v);
+    RcppSexp(const std::string & v);
+    ~RcppSexp();
+
+    double asDouble() const;
+    int asInt() const;
+    std::string asStdString() const;
+    SEXP asSexp() const;
+
+private:
+    SEXP m_sexp;
+    int m_nprot;
+};
 
 #endif
