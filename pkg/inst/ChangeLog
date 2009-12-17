@@ -1,7 +1,21 @@
+2009-12-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppSexp.{h,cpp}: Added simple RcppSexp class for simple
+	  conversion from and to single-element SEXPs -- currently limited
+	  to int, double, std::string
+	* inst/examples/RcppInline/RcppSexpTests.r: Simple tests for this
+
+2009-12-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: License changed to 'GPL (>= 2)'
+	* COPYING: Changed from LGPL 2.1 to GPL 2 (or later)
+	* src/*.{h,cpp}: Relicensed under GPL 2 (or later)
+
 2009-12-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/RcppInline.R: Extended to for additional header and library
 	  arguments so that we can work with arbitrary other projects
+	* man/RcppInline.Rd: Added documentation for these arguments
         * inst/examples/RcppInline/RcppInlineWithLibsExamples.r: New
 	  examples using GNU GSL to show how to compile + link via inline
 

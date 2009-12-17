@@ -26,22 +26,22 @@ const int RcppDate::Jan1970Offset = 2440588;    // Offset from R date representa
 const int RcppDate::QLtoJan1970Offset = 25569;  // Offset between R / Unix epoch date and the QL base date
 
 RcppDate::RcppDate() : month(1), 
-				   day(1), 
-				   year(1970) { 
-	mdy2jdn(); 
+		       day(1), 
+		       year(1970) { 
+    mdy2jdn(); 
 }
 
 RcppDate::RcppDate(int Rjdn) { 
-	jdn = Rjdn+Jan1970Offset; 
-	jdn2mdy(); 
+    jdn = Rjdn+Jan1970Offset; 
+    jdn2mdy(); 
 }
 
 RcppDate::RcppDate(int month_, int day_, int year_) : month(month_), 
-													  day(day_), 
-													  year(year_) { 
-	if (month < 1 || month > 12 || day < 1 || day > 31)
-		throw std::range_error("RcppDate: invalid date");
-	mdy2jdn();
+						      day(day_), 
+						      year(year_) { 
+    if (month < 1 || month > 12 || day < 1 || day > 31)
+	throw std::range_error("RcppDate: invalid date");
+    mdy2jdn();
 }
 
 // Print an RcppDate.
