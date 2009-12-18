@@ -20,7 +20,7 @@
             verbose=FALSE, 
             convention=c(".Call", ".C", ".Fortran"),
             Rcpp=FALSE,
-            compileargs=character(), linkargs=character())
+            cppargs=character(), cxxargs=character(), libargs=character())
 
   ## S4 methods for signatures
   #  f='character', sig='list', body='list'
@@ -77,16 +77,20 @@
   the R / C++ interface provided by the \code{Rcpp} package can be
   used. Default value is \code{FALSE}.}
 
-  \item{compileargs}{Optional character vector of tokens to be passed to
+  \item{cppargs}{Optional character vector of tokens to be passed to
+  the compiler via the \code{PKG_CPPFLAGS} environment
+  variable. Elements should be fully formed as for example
+  \code{c("-I/usr/local/lib/foo", "-DDEBUG")} and are passed along verbatim.}
+
+  \item{cxxargs}{Optional character vector of tokens to be passed to
   the compiler via the \code{PKG_CXXFLAGS} environment
   variable. Elements should be fully formed as for example
   \code{c("-I/usr/local/lib/foo", "-DDEBUG")} and are passed along verbatim.}
 
-  \item{linkargs}{Optional character vector of tokens to be passed to
-  the compiler via the \code{PKG_CXXFLAGS} environment
-  variable. Elements should be fully formed as for example
-  \code{c("-L/usr/local/lib/foo -lfoo", "--lpthread")} and are passed
-  along verbatim.}
+  \item{libargs}{Optional character vector of tokens to be passed to the
+  compiler via the \code{PKG_LIBS} environment variable. Elements should
+  be fully formed as for example \code{c("-L/usr/local/lib/foo -lfoo",
+  "--lpthread")} and are passed along verbatim.}
     
   \item{...}{ Reserved.}
 }
