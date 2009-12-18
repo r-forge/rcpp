@@ -1,3 +1,8 @@
+2009-12-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppInline.R: Another improvement for Rcpp use
+        * inst/examples/RcppInline/RcppSimpleExamples.r: Another simple case
+
 2009-12-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/RcppInline.R: Improved / simplified in light of getting it to
