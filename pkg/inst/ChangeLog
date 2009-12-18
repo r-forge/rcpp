@@ -1,3 +1,11 @@
+2009-12-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppInline.R: Improved / simplified in light of getting it to
+ 	  work on Windoze too so switched to setting env var explicitly;
+	  also split into three args for CPPFLAGS, CXXFLAGS and LIBS
+	* man/RcppInline.Rd: Updated accordingly to reflect new args
+        * inst/examples/RcppInline/RcppInlineWithLibsExamples.r: Idem
+
 2009-12-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppSexp.{h,cpp}: Added simple RcppSexp class for simple
