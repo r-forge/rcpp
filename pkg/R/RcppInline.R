@@ -15,7 +15,7 @@ setClass("CFunc",
 cfunction <- function(sig=character(), body=character(), includes=character(), otherdefs=character(),
                       language=c("C++", "C", "Fortran", "F95", "ObjectiveC", "ObjectiveC++"),
                       verbose=FALSE, convention=c(".Call", ".C", ".Fortran"), Rcpp=FALSE,
-                      compileargs=character(), linkargs=character()) {
+                      cppargs=character(), cxxargs=character(), libargs=character()) {
 
   convention <- match.arg(convention)
 
@@ -37,23 +37,24 @@ cfunction <- function(sig=character(), body=character(), includes=character(), o
 
   if (Rcpp) {
       includes <- paste(includes, "\n#include <Rcpp.h>\n", sep="")
-      cxxflags <- paste("PKG_CXXFLAGS=\"",
-                        Rcpp:::RcppCxxFlags(), 		# information from Rcpp
-                        paste(compileargs,collapse=" "),# headers from users if any
-                        "\"", collapse=" ", sep=" ")
-      ldflags <-  paste("PKG_LIBS=\"",
-                        Rcpp:::RcppLdFlags(),
-                        paste(linkargs, collapse=" "), # libraries from users if any
-                        "\"", collapse=" ", sep=" ")
-  } else {
-      cxxflags <- paste("PKG_CXXFLAGS=\"",
-                        paste(compileargs,collapse=" "),# headers from users if any
-                        "\"", sep="")
-      ldflags <-  paste("PKG_LIBS=\"",
-                        paste(linkargs, collapse=" "), # libraries from users if any
-                        "\"", sep="")
+      cxxargs <- c(Rcpp:::RcppCxxFlags(), cxxargs)	# prepend information from Rcpp
+      libargs <- c(Rcpp:::RcppLdFlags(), libargs)	# prepend information from Rcpp
   }
-  pkgargs <-  paste(c(cxxflags, ldflags, ""), collapse=" ")
+  if (length(cppargs) != 0) {
+      args <- paste(cppargs, collapse=" ")
+      if (verbose) cat("Setting PKG_CPPFLAGS to", args, "\n")
+      Sys.setenv(PKG_CPPFLAGS=args)
+  }
+  if (length(cxxargs) != 0) {
+      args <- paste(cxxargs, collapse=" ")
+      if (verbose) cat("Setting PKG_CXXFLAGS to", args, "\n")
+      Sys.setenv(PKG_CXXFLAGS=args)
+  }
+  if (length(libargs) != 0) {
+      args <- paste(libargs, collapse=" ")
+      if (verbose) cat("Setting PKG_LIBS to", args, "\n")
+      Sys.setenv(PKG_LIBS=args)
+  }
 
   ## GENERATE THE CODE
   for ( i in seq_along(sig) ) {
@@ -149,7 +150,7 @@ cfunction <- function(sig=character(), body=character(), includes=character(), o
   } ## for along signatures
 
   ## WRITE AND COMPILE THE CODE
-  libLFile <- compileCode(f, code, language, verbose, pkgargs)
+  libLFile <- compileCode(f, code, language, verbose)
 
   ## SET A FINALIZER TO PERFORM CLEANUP
   cleanup <- function(env) {
@@ -171,7 +172,7 @@ cfunction <- function(sig=character(), body=character(), includes=character(), o
     ## important here: all variables are kept in the local environment
     fn <- function(arg) {
    	  if ( !file.exists(libLFile) )
-   	    libLFile <<- compileCode(f, code, language, verbose, pkgargs)
+   	    libLFile <<- compileCode(f, code, language, verbose)
    	  if ( !( f %in% names(getLoadedDLLs()) ) ) dyn.load(libLFile)
     }
 
@@ -217,7 +218,7 @@ cfunction <- function(sig=character(), body=character(), includes=character(), o
 }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-compileCode <- function(f, code, language, verbose, pkgargs="") {
+compileCode <- function(f, code, language, verbose) {
   ## Prepare temp file names
   if ( .Platform$OS.type == "windows" ) {
     ## windows files
@@ -243,11 +244,8 @@ compileCode <- function(f, code, language, verbose, pkgargs="") {
   if ( file.exists(libLFile) ) file.remove( libLFile )
   if ( file.exists(libLFile2) ) file.remove( libLFile2 )
 
-  cmd <- paste(pkgargs, R.home(component="bin"), "/R CMD SHLIB ", libCFile, sep="")
-  if (verbose) {
-      cat("Compilation argument:\n")
-      cat(" ", cmd)
-  }
+  cmd <- paste(R.home(component="bin"), "/R CMD SHLIB ", libCFile, sep="")
+  if (verbose) cat("Compilation argument:\n", cmd, "\n")
   compiled <- system(cmd, intern=!verbose)
 
   if ( !file.exists(libLFile) && file.exists(libLFile2) ) libLFile <- libLFile2

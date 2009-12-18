@@ -23,8 +23,8 @@ firstExample <- function() {
     funx <- cfunction(signature(ignored="numeric"), gslrng,
                       includes="#include <gsl/gsl_rng.h>",
                       Rcpp=FALSE,
-                      compileargs="-I/usr/include",
-                      linkargs="-lgsl -lgslcblas")
+                      cppargs="-I/usr/include",
+                      libargs="-lgsl -lgslcblas")
 
     cat("Calling first example\n")
     funx(0)
@@ -66,16 +66,16 @@ secondExample <- function() {
     funx <- cfunction(signature(par="numeric"), gslrng,
                       includes="#include <gsl/gsl_rng.h>",
                       Rcpp=TRUE,
-                      compileargs="-I/usr/include",
-                      linkargs="-lgsl -lgslcblas")
+                      cppargs="-I/usr/include",
+                      libargs="-lgsl -lgslcblas")
     cat("\n\nCalling second example without -DBeSilent set\n")
     print(funx(0)["value"])
 
     funx <- cfunction(signature(par="numeric"), gslrng,
                       includes="#include <gsl/gsl_rng.h>",
                       Rcpp=TRUE,
-                      compileargs="-I/usr/include -DBeSilent",
-                      linkargs="-lgsl -lgslcblas")
+                      cppargs="-I/usr/include -DBeSilent",
+                      libargs="-lgsl -lgslcblas")
     cat("\n\nCalling second example with -DBeSilent set\n")
     print(funx(1)["value"])
 
@@ -118,7 +118,7 @@ thirdExample <- function() {
                       includes="#include <gsl/gsl_rng.h>",
                       Rcpp=TRUE,
                       compileargs="-I/usr/include",
-                      linkargs="-lgsl -lgslcblas")
+                      libargs="-lgsl -lgslcblas")
     cat("\n\nCalling second example without -DBeSilent set\n")
     print(funx(0)["value"])
 
@@ -126,7 +126,7 @@ thirdExample <- function() {
                       includes="#include <gsl/gsl_rng.h>",
                       Rcpp=TRUE,
                       compileargs="-I/usr/include -DBeSilent",
-                      linkargs="-lgsl -lgslcblas")
+                      libargs="-lgsl -lgslcblas")
     cat("\n\nCalling second example with -DBeSilent set\n")
     print(funx(1)["value"])
 
