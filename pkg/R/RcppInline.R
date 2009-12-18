@@ -36,7 +36,6 @@ cfunction <- function(sig=character(), body=character(), includes=character(), o
     stop("mismatch between the number of functions declared in 'sig' and the number of function bodies provided in 'body'")
 
   if (Rcpp) {
-      includes <- paste(includes, "\n#include <Rcpp.h>\n", sep="")
       cxxargs <- c(Rcpp:::RcppCxxFlags(), cxxargs)	# prepend information from Rcpp
       libargs <- c(Rcpp:::RcppLdFlags(), libargs)	# prepend information from Rcpp
   }
@@ -62,8 +61,10 @@ cfunction <- function(sig=character(), body=character(), includes=character(), o
     if ( convention == ".Call" ) {
   	  ## include R includes, also error
   	  if (i == 1) {
-	      code <- paste("#include <R.h>\n#include <Rdefines.h>\n",
-	                    "#include <R_ext/Error.h>\n", sep="");
+	      code <- ifelse(Rcpp,
+                         "#include <Rcpp.h>\n",
+                         paste("#include <R.h>\n#include <Rdefines.h>\n",
+                               "#include <R_ext/Error.h>\n", sep=""));
 	      ## include further includes
 	      code <- paste(c(code, includes, ""), collapse="\n")
 	      ## include further definitions
@@ -83,14 +84,16 @@ cfunction <- function(sig=character(), body=character(), includes=character(), o
   	  ## add code, split lines
   	  code <- paste( code, paste(body[[i]], collapse="\n"), sep="")
   	  ## CLOSE function, add return and warning in case the user forgot it
-  	  code <- paste( code, "\n  warning(\"your C program does not return anything!\");\n  return R_NilValue;\n}\n", sep="");
+  	  code <- paste(code, "\n  ",
+                    ifelse(Rcpp, "Rf_warning", "warning"),
+                    "(\"your C program does not return anything!\");\n  return R_NilValue;\n}\n", sep="");
     }
 
     ## C/C++ with .C convention ************************************************
     else if ( convention == ".C" ) {
   	  if (i == 1) {
 	      ## include only basic R includes
-	      code <- "#include <R.h>\n"
+	      code <- ifelse(Rcpp,"#include <Rcpp.h>\n", "#include <R.h>\n")
 	      ## include further includes
 	      code <- paste(c(code, includes, ""), collapse="\n")
 	      ## include further definitions
