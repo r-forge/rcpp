@@ -1,6 +1,9 @@
-Rcpp-package            R / C++ interface
-RcppDate                C++ classes for date and datetime R objects in C++
+cfunction               Inline C, C++, Fortran function calls from R
+RcppDate                C++ classes for receiving date and datetime R
+                        objects in C++
 RcppExample             Rcpp R / C++ interface example
-RcppParams              C++ class for receiving (scalar) parameters from R
+Rcpp-package            R / C++ interface
+RcppParams              C++ class for receiving (scalar) parameters
+                        from R
 RcppResultSet           C++ class for sending C++ objects back to R
-RcppVector              C++ classes for receiving \R object in C++
+RcppVector              C++ classes for receiving R object in C++
