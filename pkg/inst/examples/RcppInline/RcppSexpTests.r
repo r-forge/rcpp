@@ -48,19 +48,18 @@ foo <- '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=2:5))
 
-## does not work
-#cat("\n===Int Vector\n")
-#foo <- '
-#        std::vector<int> iv = RcppSexp(x).asStdVectorInt();
-#	std::cout << "Returning twice the value of vector : ";
-#        for (size_t i=0; i<iv.size(); i++) {
-#            iv[i] = 2*iv[i];
-#        }
-#        RcppSexp t = RcppSexp( iv );
-#	return(t.asSexp());
-#        '
-#funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
-#print(funx(x=2:5))
+cat("\n===Int Vector\n")
+foo <- '
+        std::vector<int> iv = RcppSexp(x).asStdVectorInt();
+	std::cout << "Returning twice the value of vector : ";
+        for (size_t i=0; i<iv.size(); i++) {
+            iv[i] = 2*iv[i];
+        }
+        RcppSexp t = RcppSexp( iv );
+	return(t.asSexp());
+        '
+funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=2:5))
 
 
 cat("\n===Double Vector via RcppResultSet.getSEXP\n")
