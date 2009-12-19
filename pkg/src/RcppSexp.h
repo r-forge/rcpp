@@ -32,6 +32,8 @@ public:
     RcppSexp(const int & v);
     RcppSexp(const std::string & v);
     RcppSexp(const std::vector<int> & v);
+    RcppSexp(const std::vector<double> & v);
+    RcppSexp(const std::vector<std::string> & v);
     ~RcppSexp();
 
     double                   asDouble() const;

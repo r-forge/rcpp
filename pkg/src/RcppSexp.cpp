@@ -52,6 +52,26 @@ RcppSexp::RcppSexp(const std::vector<int> & v) {
     }	
 }
 
+RcppSexp::RcppSexp(const std::vector<double> & v) {
+    logTxt("RcppSexp from double vector\n");
+    int n = v.size();
+    m_sexp = Rf_allocVector(REALSXP, n);
+    R_PreserveObject(m_sexp);
+    for (int i = 0; i < n; i++) {
+	REAL(m_sexp)[i] = v[i];
+    }	
+}
+
+RcppSexp::RcppSexp(const std::vector<std::string> & v) {
+    logTxt("RcppSexp from std::string vector\n");
+    int n = v.size();
+    m_sexp = Rf_allocVector(STRSXP, n);
+    R_PreserveObject(m_sexp);
+    for (int i = 0; i < n; i++) {
+	SET_STRING_ELT(m_sexp, i, Rf_mkChar(v[i].c_str()));
+    }	
+}
+
 RcppSexp::~RcppSexp() {
     logTxt("dtor");
     R_ReleaseObject(m_sexp);
