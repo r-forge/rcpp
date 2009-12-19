@@ -65,6 +65,7 @@ public:
     void add(std::string, RcppList&);
     void add(std::string, SEXP, bool isProtected);
     SEXP getReturnList();
+    SEXP getSEXP();
 protected:
     int numProtected;
     std::list<std::pair<std::string,SEXP> > values;
