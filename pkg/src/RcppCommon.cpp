@@ -36,3 +36,6 @@ char *copyMessageToR(const char* const mesg) {
     return Rmesg;
 }
 
+inline void logTxtFunction(const char* file, const int line, const char* expression) {
+    Rprintf("%s:%d %s\n", file, line, expression);
+}
