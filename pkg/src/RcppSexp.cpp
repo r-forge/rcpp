@@ -22,24 +22,39 @@
 #include <RcppSexp.h>
 
 RcppSexp::RcppSexp(const double & v) {
+    logTxt("RcppSexp from double\n");
     m_sexp = PROTECT(Rf_allocVector(REALSXP, 1));
     m_nprot++;
     REAL(m_sexp)[0] = v;
 }
 
 RcppSexp::RcppSexp(const int & v) {
+    logTxt("RcppSexp from int\n");
     m_sexp = PROTECT(Rf_allocVector(INTSXP, 1));
     m_nprot++;
     INTEGER(m_sexp)[0] = v;
 }
 
 RcppSexp::RcppSexp(const std::string & v) {
+    logTxt("RcppSexp from std::string\n");
     m_sexp = PROTECT(Rf_allocVector(STRSXP, 1));
     m_nprot++;
     SET_STRING_ELT(m_sexp, 0, Rf_mkChar(v.c_str()));
 }
 
+RcppSexp::RcppSexp(const std::vector<int> & v) {
+    logTxt("RcppSexp from int vector\n");
+    int n = v.size();
+    m_sexp = PROTECT(Rf_allocVector(INTSXP, n));
+    m_nprot++;
+    for (int i = 0; i < n; i++) {
+	Rprintf("%d\n", v[i]);
+	INTEGER(m_sexp)[i] = v[i];
+    }	
+}
+
 RcppSexp::~RcppSexp() {
+    logTxt("dtor");
     UNPROTECT(m_nprot);
 }
 
@@ -88,6 +103,51 @@ std::string RcppSexp::asStdString() const {
 }
 
 SEXP RcppSexp::asSexp() const {
-    return m_sexp;
+    SEXP val = m_sexp;
+    return val;
+}
+
+std::vector<int> RcppSexp::asStdVectorInt() const {
+    int n = Rf_length(m_sexp);
+    std::vector<int> v(n);
+    if (Rf_isInteger(m_sexp)) {
+	for (int i = 0; i < n; i++) {
+	    v[i] = INTEGER(m_sexp)[i];
+	}
+    } else if (Rf_isReal(m_sexp)) {
+	for (int i = 0; i < n; i++) {
+	    v[i] = (int)REAL(m_sexp)[i];
+	}
+    }
+    return v;
+}
+
+
+std::vector<double> RcppSexp::asStdVectorDouble() const {
+    int n = Rf_length(m_sexp);
+    std::vector<double> v(n);
+    if (Rf_isInteger(m_sexp)) {
+	for (int i = 0; i < n; i++) {
+	    v[i] = (double)INTEGER(m_sexp)[i];
+	}
+    } else if (Rf_isReal(m_sexp)) {
+	for (int i = 0; i < n; i++) {
+	    v[i] = REAL(m_sexp)[i];
+	}
+    }
+    return v;
+}
+
+
+std::vector<std::string> RcppSexp::asStdVectorString() const {
+    int n = Rf_length(m_sexp);
+    std::vector<std::string> v(n);
+    if (!Rf_isString(m_sexp)) {
+	throw std::range_error("RcppSexp::asStdVectorString expects string");
+    }
+    for (int i = 0; i < n; i++) {
+	v[i] = std::string(CHAR(STRING_ELT(m_sexp,i)));
+    }
+    return v;
 }
 

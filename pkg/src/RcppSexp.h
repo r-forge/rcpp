@@ -26,18 +26,22 @@
 
 class RcppSexp {
 public:
-    RcppSexp(SEXP sexp, int numprot=0) : m_sexp(sexp), m_nprot(numprot) {}
-    RcppSexp() : m_sexp(R_NilValue), m_nprot(0) {}
+    RcppSexp(SEXP sexp, int numprot=0) : m_sexp(sexp), m_nprot(numprot) { }
+    RcppSexp() : m_sexp(R_NilValue), m_nprot(0) { }
     RcppSexp(const double & v);
     RcppSexp(const int & v);
     RcppSexp(const std::string & v);
+    RcppSexp(const std::vector<int> & v);
     ~RcppSexp();
 
-    double asDouble() const;
-    int asInt() const;
-    std::string asStdString() const;
-    SEXP asSexp() const;
-
+    double                   asDouble() const;
+    int                      asInt() const;
+    std::string              asStdString() const;
+    std::vector<int>         asStdVectorInt() const;
+    std::vector<double>      asStdVectorDouble() const;
+    std::vector<std::string> asStdVectorString() const;
+    SEXP                     asSexp() const;
+    
 private:
     SEXP m_sexp;
     int m_nprot;
