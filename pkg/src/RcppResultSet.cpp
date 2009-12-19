@@ -360,3 +360,12 @@ SEXP RcppResultSet::getReturnList() {
     return rl;
 }
 
+SEXP RcppResultSet::getSEXP() {
+    if (values.size() != 1) {
+	throw std::range_error("RcppResultSet::getSEXP only sensible for single return arguments");
+    }
+    SEXP val = values.begin()->second;
+    UNPROTECT(numProtected);
+    return val;
+}
+

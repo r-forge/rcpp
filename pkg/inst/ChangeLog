@@ -1,3 +1,8 @@
+2009-12-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppResultsSetp.{h,cpp}: Added simple single SEXP return
+	* src/RcppCommon.{h,cpp}: Adding simple logging facility
+
 2009-12-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/RcppInline.R: Another improvement for Rcpp use
