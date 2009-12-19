@@ -1,5 +1,7 @@
 2009-12-19  Dirk Eddelbuettel  <edd@debian.org>
 
+	* src/RcppSexp.{h,cpp}: Switch to R_ProtectObject and R_ReleaseObject
+	  with a big thanks to Romain for the most appropriate suggestion
 	* src/RcppSexp.{h,cpp}: Added converters for vectors of
 	  int, double, and std::string vectors
 	* src/RcppResultsSetp.{h,cpp}: Added simple single SEXP return

@@ -23,39 +23,38 @@
 
 RcppSexp::RcppSexp(const double & v) {
     logTxt("RcppSexp from double\n");
-    m_sexp = PROTECT(Rf_allocVector(REALSXP, 1));
-    m_nprot++;
+    m_sexp = Rf_allocVector(REALSXP, 1);
+    R_PreserveObject(m_sexp);
     REAL(m_sexp)[0] = v;
 }
 
 RcppSexp::RcppSexp(const int & v) {
     logTxt("RcppSexp from int\n");
-    m_sexp = PROTECT(Rf_allocVector(INTSXP, 1));
-    m_nprot++;
+    m_sexp = Rf_allocVector(INTSXP, 1);
+    R_PreserveObject(m_sexp);
     INTEGER(m_sexp)[0] = v;
 }
 
 RcppSexp::RcppSexp(const std::string & v) {
     logTxt("RcppSexp from std::string\n");
-    m_sexp = PROTECT(Rf_allocVector(STRSXP, 1));
-    m_nprot++;
+    m_sexp = Rf_allocVector(STRSXP, 1);
+    R_PreserveObject(m_sexp);
     SET_STRING_ELT(m_sexp, 0, Rf_mkChar(v.c_str()));
 }
 
 RcppSexp::RcppSexp(const std::vector<int> & v) {
     logTxt("RcppSexp from int vector\n");
     int n = v.size();
-    m_sexp = PROTECT(Rf_allocVector(INTSXP, n));
-    m_nprot++;
+    m_sexp = Rf_allocVector(INTSXP, n);
+    R_PreserveObject(m_sexp);
     for (int i = 0; i < n; i++) {
-	Rprintf("%d\n", v[i]);
 	INTEGER(m_sexp)[i] = v[i];
     }	
 }
 
 RcppSexp::~RcppSexp() {
     logTxt("dtor");
-    UNPROTECT(m_nprot);
+    R_ReleaseObject(m_sexp);
 }
 
 double RcppSexp::asDouble() const {
@@ -103,8 +102,7 @@ std::string RcppSexp::asStdString() const {
 }
 
 SEXP RcppSexp::asSexp() const {
-    SEXP val = m_sexp;
-    return val;
+    return m_sexp;
 }
 
 std::vector<int> RcppSexp::asStdVectorInt() const {

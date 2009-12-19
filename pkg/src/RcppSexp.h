@@ -26,8 +26,8 @@
 
 class RcppSexp {
 public:
-    RcppSexp(SEXP sexp, int numprot=0) : m_sexp(sexp), m_nprot(numprot) { }
-    RcppSexp() : m_sexp(R_NilValue), m_nprot(0) { }
+    RcppSexp(SEXP sexp, int numprot=0) : m_sexp(sexp) { }
+    RcppSexp() : m_sexp(R_NilValue) { }
     RcppSexp(const double & v);
     RcppSexp(const int & v);
     RcppSexp(const std::string & v);
@@ -44,7 +44,6 @@ public:
     
 private:
     SEXP m_sexp;
-    int m_nprot;
 };
 
 #endif
