@@ -1,5 +1,10 @@
 2009-12-19  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION: Release 0.7.0
+
+	* DESCRIPTION: Descrition fields reworded and expanded to explicitly
+	  mention 'inlining' ability as well as simple SEXP support.
+
 	* src/RcppSexp.{h,cpp}: Switch to R_ProtectObject and R_ReleaseObject
 	  with a big thanks to Romain for the most appropriate suggestion
 	* src/RcppSexp.{h,cpp}: Added converters for vectors of
