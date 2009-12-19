@@ -55,38 +55,33 @@ foo <- '
         for (size_t i=0; i<iv.size(); i++) {
             iv[i] = 2*iv[i];
         }
-        RcppSexp t = RcppSexp( iv );
-	return(t.asSexp());
+	return(RcppSexp( iv ).asSexp());
         '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=2:5))
 
 
-cat("\n===Double Vector via RcppResultSet.getSEXP\n")
+cat("\n===Double Vector\n")
 foo <- '
         std::vector<double> iv = RcppSexp(x).asStdVectorDouble();
 	std::cout << "Returning twice the value of vector : ";
         for (size_t i=0; i<iv.size(); i++) {
             iv[i] = 2*iv[i];
         }
-        RcppResultSet rs;
-        rs.add("", iv);
-        return(rs.getSEXP());
+ 	return(RcppSexp( iv ).asSexp());
         '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=0.1+2:5))
 
 
-cat("\n===String Vector via RcppResultSet.getSEXP\n")
+cat("\n===String Vector\n")
 foo <- '
         std::vector<std::string> iv = RcppSexp(x).asStdVectorString();
 	std::cout << "Returning twice the value of vector : ";
         for (size_t i=0; i<iv.size(); i++) {
             iv[i] = iv[i] + iv[i];
         }
-        RcppResultSet rs;
-        rs.add("", iv);
-        return(rs.getSEXP());
+ 	return(RcppSexp( iv ).asSexp());
         '
 funx <- cfunction(signature(x="character"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=c("foo", "bar")))
