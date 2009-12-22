@@ -30,18 +30,22 @@ public:
     RcppSexp() : m_sexp(R_NilValue) { }
     RcppSexp(const double & v);
     RcppSexp(const int & v);
+    RcppSexp(const Rbyte & v);
     RcppSexp(const std::string & v);
     RcppSexp(const std::vector<int> & v);
     RcppSexp(const std::vector<double> & v);
     RcppSexp(const std::vector<std::string> & v);
+    RcppSexp(const std::vector<Rbyte> & v);
     ~RcppSexp();
 
     double                   asDouble() const;
     int                      asInt() const;
+    Rbyte                    asRaw() const;
     std::string              asStdString() const;
     std::vector<int>         asStdVectorInt() const;
     std::vector<double>      asStdVectorDouble() const;
     std::vector<std::string> asStdVectorString() const;
+    std::vector<Rbyte>       asStdVectorRaw() const;
     SEXP                     asSexp() const;
     
 private:
