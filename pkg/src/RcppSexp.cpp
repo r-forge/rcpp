@@ -35,6 +35,12 @@ RcppSexp::RcppSexp(const int & v) {
     INTEGER(m_sexp)[0] = v;
 }
 
+RcppSexp::RcppSexp(const Rbyte & v) {
+    logTxt("RcppSexp from raw\n");
+    m_sexp = Rf_ScalarRaw(v);
+    R_PreserveObject(m_sexp);
+}
+
 RcppSexp::RcppSexp(const std::string & v) {
     logTxt("RcppSexp from std::string\n");
     m_sexp = Rf_allocVector(STRSXP, 1);
@@ -59,6 +65,16 @@ RcppSexp::RcppSexp(const std::vector<double> & v) {
     R_PreserveObject(m_sexp);
     for (int i = 0; i < n; i++) {
 	REAL(m_sexp)[i] = v[i];
+    }	
+}
+
+RcppSexp::RcppSexp(const std::vector<Rbyte> & v) {
+    logTxt("RcppSexp from vector<Rbyte> \n");
+    int n = v.size();
+    m_sexp = Rf_allocVector(RAWSXP, n);
+    R_PreserveObject(m_sexp);
+    for (int i = 0; i < n; i++) {
+	RAW(m_sexp)[i] = v[i];
     }	
 }
 
@@ -111,6 +127,23 @@ int RcppSexp::asInt() const {
     return 0; 	// never reached
 }
 
+Rbyte RcppSexp::asRaw() const {
+    if (Rf_length(m_sexp) != 1) {
+	throw std::range_error("RcppSexp::asRaw expects single value");
+    }
+    switch( TYPEOF(m_sexp) ){
+    	case RAWSXP:
+    		return RAW(m_sexp)[0] ;
+    	case INTSXP:
+    		return (Rbyte)INTEGER(m_sexp)[0] ;
+    	case REALSXP:
+    		return (Rbyte)REAL(m_sexp)[0] ;
+    	default:
+    		throw std::range_error("RcppSexp::asRaw expects raw, double or int");
+    }
+    return (Rbyte)0; 	// never reached
+}
+
 std::string RcppSexp::asStdString() const {
     if (Rf_length(m_sexp) != 1) {
 	throw std::range_error("RcppSexp::asStdString expects single value");
@@ -140,6 +173,34 @@ std::vector<int> RcppSexp::asStdVectorInt() const {
     return v;
 }
 
+std::vector<Rbyte> RcppSexp::asStdVectorRaw() const {
+    int n = Rf_length(m_sexp);
+    std::vector<Rbyte> v(n);
+    switch( TYPEOF(m_sexp) ){
+    case RAWSXP:
+    	{
+    		v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
+    		break ;
+    	}
+    case REALSXP:
+    	{
+    		for (int i = 0; i < n; i++) {
+			    v[i] = (Rbyte)REAL(m_sexp)[i];
+			}
+			break ;
+    	}
+    case INTSXP:
+    	{
+    		for (int i = 0; i < n; i++) {
+			    v[i] = (Rbyte)INTEGER(m_sexp)[i];
+			}
+    		break;
+    	}
+    default:
+    	std::range_error("RcppSexp::asStdVectorRaw expects raw, double or int");
+    }
+    return v;
+}
 
 std::vector<double> RcppSexp::asStdVectorDouble() const {
     int n = Rf_length(m_sexp);

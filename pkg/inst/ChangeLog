@@ -1,3 +1,9 @@
+2009-12-21  Romain Francois <francoisromain@free.fr>
+	* src/RcppSexp.{h,cpp} : support for raw vector added into RcppSexp
+
+	* inst/examples/RcppInline/RcppSexpTests.r: examples of raw vector
+	support
+
 2009-12-20  Dirk Eddelbuettel  <edd@debian.org>
 
         * inst/examples/RcppInline/RcppInlineWithLibsExamples.r: Minor
@@ -10,7 +16,7 @@
 	* DESCRIPTION: Descrition fields reworded and expanded to explicitly
 	  mention 'inlining' ability as well as simple SEXP support.
 
-	* src/RcppSexp.{h,cpp}: Switch to R_ProtectObject and R_ReleaseObject
+	* src/RcppSexp.{h,cpp}: Switch to R_PreserveObject and R_ReleaseObject
 	  with a big thanks to Romain for the most appropriate suggestion
 	* src/RcppSexp.{h,cpp}: Added converters for vectors of
 	  int, double, and std::string vectors

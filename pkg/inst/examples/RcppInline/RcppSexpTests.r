@@ -34,6 +34,16 @@ foo <- '
 funx <- cfunction(signature(x="character"), foo, Rcpp=TRUE, verbose=FALSE)
 cat(funx(x="abc"), "\n")
 
+cat("\n===Raw (bytes)\n")
+foo <- '
+        Rbyte i = RcppSexp(x).asRaw();
+	std::cout << "Returning twice the value of " << i << " : ";
+	return(RcppSexp( (Rbyte)(2*i) ).asSexp());
+        '
+funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+cat( funx(x=as.raw(2)), "\n")
+
+
 cat("\n===Int Vector via RcppResultSet.getSEXP\n")
 foo <- '
         std::vector<int> iv = RcppSexp(x).asStdVectorInt();
@@ -73,6 +83,17 @@ foo <- '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=0.1+2:5))
 
+cat("\n===Raw Vector\n")
+foo <- '
+        std::vector<Rbyte> iv = RcppSexp(x).asStdVectorRaw();
+	std::cout << "Returning twice the value of vector : ";
+        for (size_t i=0; i<iv.size(); i++) {
+            iv[i] = 2*iv[i];
+        }
+ 	return(RcppSexp( iv ).asSexp());
+        '
+funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=as.raw(0:9)))
 
 cat("\n===String Vector\n")
 foo <- '
