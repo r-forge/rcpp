@@ -24,6 +24,8 @@ foo <- '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
 cat(funx(x=2), "\n")
 cat(funx(x=2.2), "\n")
+funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
+cat(funx(x=as.raw(2)), "\n")
 
 cat("\n===String\n")
 foo <- '
@@ -37,10 +39,14 @@ cat(funx(x="abc"), "\n")
 cat("\n===Raw (bytes)\n")
 foo <- '
         Rbyte i = RcppSexp(x).asRaw();
-	std::cout << "Returning twice the value of " << i << " : ";
+	std::cout << "Returning twice the value of " << (int)i << " : ";
 	return(RcppSexp( (Rbyte)(2*i) ).asSexp());
         '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+cat( funx(x=2), "\n")
+funx <- cfunction(signature(x="integer"), foo, Rcpp=TRUE, verbose=FALSE)
+cat( funx(x=2L), "\n")
+funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
 cat( funx(x=as.raw(2)), "\n")
 
 
@@ -57,6 +63,10 @@ foo <- '
         '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=2:5))
+funx <- cfunction(signature(x="integer"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=2:5))
+funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=as.raw(2:5)))
 
 cat("\n===Int Vector\n")
 foo <- '
@@ -68,7 +78,11 @@ foo <- '
 	return(RcppSexp( iv ).asSexp());
         '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=2:5+.1))
+funx <- cfunction(signature(x="integer"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=2:5))
+funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=as.raw(2:5)))
 
 
 cat("\n===Double Vector\n")
@@ -82,6 +96,10 @@ foo <- '
         '
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=0.1+2:5))
+funx <- cfunction(signature(x="integer"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=2:5))
+funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=as.raw(2:5)))
 
 cat("\n===Raw Vector\n")
 foo <- '
@@ -92,8 +110,12 @@ foo <- '
         }
  	return(RcppSexp( iv ).asSexp());
         '
-funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=as.raw(0:9)))
+funx <- cfunction(signature(x="integer"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=0:9))
+funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=0:9+.1))
 
 cat("\n===String Vector\n")
 foo <- '
