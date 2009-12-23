@@ -1,4 +1,5 @@
 2009-12-21  Romain Francois <francoisromain@free.fr>
+	
 	* src/RcppSexp.{h,cpp} : support for raw vector added into RcppSexp
 
 	* inst/examples/RcppInline/RcppSexpTests.r: examples of raw vector
