@@ -77,12 +77,60 @@ RcppSexp::RcppSexp(const std::vector<std::string> & v) {
     int n = v.size();
     m_sexp = Rf_allocVector(STRSXP, n);
     R_PreserveObject(m_sexp);
-    // maybe we can use transform here
-    // but this might involve creating an iterator over R character vector
-    for (int i = 0; i < n; i++) {
-	SET_STRING_ELT(m_sexp, i, Rf_mkChar(v[i].c_str()));
-    }	
+    int i=0; 
+    std::vector<std::string>::const_iterator it = v.begin() ;
+    while( i<n ){
+    	SET_STRING_ELT(m_sexp, i, Rf_mkChar(it->c_str()));
+    	i++ ;
+    	it++; 
+    }
 }
+
+/* sets */
+
+RcppSexp::RcppSexp(const std::set<int> & v) {
+    logTxt("RcppSexp from set<int>\n");
+    int n = v.size();
+    m_sexp = Rf_allocVector(INTSXP, n);
+    R_PreserveObject(m_sexp);
+    copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
+}
+
+RcppSexp::RcppSexp(const std::set<double> & v) {
+    logTxt("RcppSexp from set<double>\n");
+    int n = v.size();
+    m_sexp = Rf_allocVector(REALSXP, n);
+    R_PreserveObject(m_sexp);
+    copy( v.begin(), v.end(), REAL(m_sexp) ) ;
+}
+
+RcppSexp::RcppSexp(const std::set<Rbyte> & v) {
+    logTxt("RcppSexp from set<Rbyte> \n");
+    int n = v.size();
+    m_sexp = Rf_allocVector(RAWSXP, n);
+    R_PreserveObject(m_sexp);
+    // copy the content of the byte vector 
+    // into the raw vector
+    copy( v.begin(), v.end(), RAW(m_sexp) ) ;
+}
+
+RcppSexp::RcppSexp(const std::set<std::string> & v) {
+    logTxt("RcppSexp from set<string>\n");
+    int n = v.size();
+    m_sexp = Rf_allocVector(STRSXP, n);
+    R_PreserveObject(m_sexp);
+    int i=0; 
+    std::set<std::string>::iterator it = v.begin(); 
+    while( i<n ){
+    	SET_STRING_ELT(m_sexp, i, Rf_mkChar(it->c_str()));
+    	i++ ;
+    	it++; 
+    }
+}
+
+
+
+
 
 RcppSexp::~RcppSexp() {
     logTxt("dtor");

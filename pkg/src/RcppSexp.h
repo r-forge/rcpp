@@ -23,6 +23,7 @@
 #define RcppSexp_h
 
 #include <RcppCommon.h>
+#include <set>
 
 class RcppSexp {
 public:
@@ -36,6 +37,12 @@ public:
     RcppSexp(const std::vector<double> & v);
     RcppSexp(const std::vector<std::string> & v);
     RcppSexp(const std::vector<Rbyte> & v);
+    
+    RcppSexp(const std::set<int> & v);
+    RcppSexp(const std::set<double> & v);
+    RcppSexp(const std::set<std::string> & v);
+    RcppSexp(const std::set<Rbyte> & v);
+    
     ~RcppSexp();
 
     double                   asDouble() const;
