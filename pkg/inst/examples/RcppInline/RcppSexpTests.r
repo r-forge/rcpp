@@ -128,3 +128,49 @@ foo <- '
         '
 funx <- cfunction(signature(x="character"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=c("foo", "bar")))
+
+### using std::set
+cat("\n=== set<int>\n")
+foo <- '
+std::set<int> iv ;
+iv.insert( 0 ) ;
+iv.insert( 1 ) ;
+iv.insert( 0 ) ;
+return RcppSexp( iv ).asSexp();'
+funx <- cfunction(signature(), foo, Rcpp=TRUE, verbose=FALSE, includes = "#include <set>" )
+print(res <- funx())
+stopifnot( identical( res, 0:1 ) )
+
+cat("\n=== set<double>\n")
+foo <- '
+std::set<double> ds;
+ds.insert( 0.0 ); 
+ds.insert( 1.0 );
+ds.insert( 0.0 );
+return(RcppSexp( iv ).asSexp()); '
+funx <- cfunction(signature(), foo, Rcpp=TRUE, verbose=FALSE, includes = "#include <set>")
+print( res <- funx() )
+stopifnot( identical( res, as.numeric(0:1)))
+
+cat("\n=== set<raw>\n")
+foo <- '
+std::set<Rbyte> bs ;
+bs.insert( (Rbyte)0 ) ;
+bs.insert( (Rbyte)1 ) ;
+bs.insert( (Rbyte)0 ) ;
+return(RcppSexp( bs ).asSexp()); '
+funx <- cfunction(signature(), foo, Rcpp=TRUE, verbose=FALSE, includes = "#include <set>")
+print( res <- funx() )
+stopifnot( identical( res, as.raw(0:1)))
+
+cat("\n=== set<string> \n")
+foo <- '
+std::set<std::string> ss ;
+ss.insert( "foo" ) ;
+ss.insert( "bar" ) ;
+ss.insert( "foo" ) ;
+return(RcppSexp( ss ).asSexp()); '
+funx <- cfunction(signature(), foo, Rcpp=TRUE, verbose=FALSE, include = "#include <set>" )
+print( res <- funx() )
+stopifnot( identical( res, c("bar","foo")) )
+
