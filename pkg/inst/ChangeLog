@@ -1,3 +1,9 @@
+2009-12-26  Romain Francois <francoisromain@free.fr>
+	* src/RcppSexp.{h,cpp} : added std::set<{int,double,Rbyte,string}> as
+	accepted input type for the RcppSexp class (needed by RProtoBuf)
+
+	* inst/examples/RcppInline/RcppSexpTests.r: examples/tests of the above
+
 2009-12-21  Romain Francois <francoisromain@free.fr>
 	
 	* src/RcppSexp.{h,cpp} : support for raw vector added into RcppSexp
