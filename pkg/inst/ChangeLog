@@ -1,4 +1,13 @@
+2009-12-27  Romain Francois <francoisromain@free.fr>
+
+	* src/RcppSexp.{h,cpp} : added RcppSexp(bool), RcppSexp(vector<bool>)
+	constructors and RcppSexp.asBool(), RcppSexp.asStdVectorBool() methods
+
+	* inst/examples/RcppInline/RcppSexpTests.r: examples/tests of the
+	above
+
 2009-12-26  Romain Francois <francoisromain@free.fr>
+
 	* src/RcppSexp.{h,cpp} : added std::set<{int,double,Rbyte,string}> as
 	accepted input type for the RcppSexp class (needed by RProtoBuf)
 
