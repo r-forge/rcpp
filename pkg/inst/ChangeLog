@@ -9,6 +9,9 @@
 	* R/exceptions.R : added R side of the exception management, unexported
 	as it is only used by internal C++ code
 	
+	* inst/examples/RcppInline/UncaughtExceptions.r: demo of the 
+	uncaught exception system
+	
 	* src/RcppSexp.{h,cpp} : added method isNULL to test if the 
 	underlying SEXP is NULL
 	
