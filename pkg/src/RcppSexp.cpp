@@ -343,3 +343,35 @@ std::vector<std::string> RcppSexp::asStdVectorString() const {
     return v;
 }
 
+std::vector<std::string> RcppSexp::attributeNames() const {
+	/* inspired from do_attributes@attrib.c */
+	
+	std::vector<std::string> v ;
+	SEXP attrs = ATTRIB(m_sexp);
+    while( attrs != R_NilValue ){
+    	v.push_back( std::string(CHAR(PRINTNAME(TAG(attrs)))) ) ;
+    	attrs = CDR( attrs ) ;
+    }
+    return v ;
+}
+
+bool RcppSexp::hasAttribute( const std::string& attr) const {
+	SEXP attrs = ATTRIB(m_sexp);
+    while( attrs != R_NilValue ){
+    	if( attr == CHAR(PRINTNAME(TAG(attrs))) ){
+    		return true ;
+    	}
+    	attrs = CDR( attrs ) ;
+    }
+    return false; /* give up */
+}
+
+RcppSexp RcppSexp::attr( const std::string& name) const{
+	SEXP att = Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) );
+	return RcppSexp( att ) ;
+}
+
+bool RcppSexp::isNULL() const{
+	return m_sexp == R_NilValue ;
+}
+

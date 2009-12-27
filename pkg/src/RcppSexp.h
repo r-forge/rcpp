@@ -60,6 +60,14 @@ public:
     std::vector<bool>        asStdVectorBool() const;
     SEXP                     asSexp() const;
     
+    /* attributes */
+    std::vector<std::string> attributeNames() const ;
+    bool hasAttribute( const std::string& attr) const ; 
+    RcppSexp attr( const std::string& name) const ;
+    
+    /* NULL */
+    bool isNULL() const ;
+    
 private:
     SEXP m_sexp;
 };
