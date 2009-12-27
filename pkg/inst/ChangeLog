@@ -1,5 +1,14 @@
 2009-12-27  Romain Francois <francoisromain@free.fr>
 	
+	* src/RcppCommon.{h,cpp} : added experimental uncaught exception
+	management
+	
+	* R/zzz.R : added .onAttach, used to register the uncaught exception
+	management on package attach
+	
+	* R/exceptions.R : added R side of the exception management, unexported
+	as it is only used by internal C++ code
+	
 	* src/RcppSexp.{h,cpp} : added method isNULL to test if the 
 	underlying SEXP is NULL
 	

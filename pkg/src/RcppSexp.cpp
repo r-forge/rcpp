@@ -3,6 +3,7 @@
 // RcppSexp.h: Rcpp R/C++ interface class library -- SEXP support
 //
 // Copyright (C) 2009 Dirk Eddelbuettel
+// Copyright (C) 2009 Romain Francois
 //
 // This file is part of Rcpp.
 //

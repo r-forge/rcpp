@@ -4,6 +4,7 @@
 //
 // Copyright (C) 2005 - 2006 Dominick Samperi
 // Copyright (C) 2008 - 2009 Dirk Eddelbuettel
+// Copyright (C)        2009 Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -23,6 +24,7 @@
 #ifndef RcppCommon_h
 #define RcppCommon_h
 
+#include <exception>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -50,5 +52,8 @@ inline void logTxtFunction(const char* file, const int line, const char* express
 
 //#define logTxt(x) logTxtFunction(__FILE__, __LINE__, x);
 #define logTxt(x) 
+
+void forward_uncaught_exceptions_to_r() ;
+RcppExport SEXP initUncaughtExceptionHandler() ; 
 
 #endif
