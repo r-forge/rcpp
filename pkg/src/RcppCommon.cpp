@@ -39,3 +39,19 @@ char *copyMessageToR(const char* const mesg) {
 inline void logTxtFunction(const char* file, const int line, const char* expression) {
     Rprintf("%s:%d %s\n", file, line, expression);
 }
+
+void forward_uncaught_exceptions_to_r(){
+	/* we don't bother unprotecting */
+	SEXP m = PROTECT( Rf_mkString( "uncaught C++ exception" ) ) ;
+	SEXP call = PROTECT( Rf_lang2( Rf_install("uncaught_cpp_exception"), m ) ) ;
+	Rf_eval( call, R_FindNamespace(Rf_mkString("Rcpp")) ) ; 
+	
+	/* but this is never actually called since the call eventually calls stop */
+	UNPROTECT(1);
+}
+SEXP initUncaughtExceptionHandler(){
+	void (*old_terminate)() = std::set_terminate(forward_uncaught_exceptions_to_r);
+	return R_NilValue ;
+}
+
+
