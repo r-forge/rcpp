@@ -33,10 +33,13 @@ public:
     RcppSexp(const int & v);
     RcppSexp(const Rbyte & v);
     RcppSexp(const std::string & v);
+    RcppSexp(const bool & v);
+    
     RcppSexp(const std::vector<int> & v);
     RcppSexp(const std::vector<double> & v);
     RcppSexp(const std::vector<std::string> & v);
     RcppSexp(const std::vector<Rbyte> & v);
+    RcppSexp(const std::vector<bool> & v);
     
     RcppSexp(const std::set<int> & v);
     RcppSexp(const std::set<double> & v);
@@ -45,6 +48,7 @@ public:
     
     ~RcppSexp();
 
+    bool                     asBool() const;
     double                   asDouble() const;
     int                      asInt() const;
     Rbyte                    asRaw() const;
@@ -53,6 +57,7 @@ public:
     std::vector<double>      asStdVectorDouble() const;
     std::vector<std::string> asStdVectorString() const;
     std::vector<Rbyte>       asStdVectorRaw() const;
+    std::vector<bool>        asStdVectorBool() const;
     SEXP                     asSexp() const;
     
 private:

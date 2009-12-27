@@ -22,6 +22,12 @@
 #include <RcppSexp.h>
 #include <algorithm>
 
+RcppSexp::RcppSexp(const bool & v) {
+    logTxt("RcppSexp from bool\n");
+    m_sexp = Rf_ScalarLogical(v);
+    R_PreserveObject(m_sexp);
+}
+
 RcppSexp::RcppSexp(const double & v) {
     logTxt("RcppSexp from double\n");
     m_sexp = Rf_ScalarReal(v);
@@ -44,6 +50,14 @@ RcppSexp::RcppSexp(const std::string & v) {
     logTxt("RcppSexp from std::string\n");
     m_sexp = Rf_mkString(v.c_str());
     R_PreserveObject(m_sexp);
+}
+
+RcppSexp::RcppSexp(const std::vector<bool> & v) {
+    logTxt("RcppSexp from bool vector\n");
+    int n = v.size();
+    m_sexp = Rf_allocVector(LGLSXP, n);
+    R_PreserveObject(m_sexp);
+    copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
 }
 
 RcppSexp::RcppSexp(const std::vector<int> & v) {
@@ -142,6 +156,8 @@ double RcppSexp::asDouble() const {
 	throw std::range_error("RcppSexp::asDouble expects single value");
     }
     switch( TYPEOF(m_sexp) ){
+    	case LGLSXP:
+    		return LOGICAL(m_sexp)[0] ? 1.0 : 0.0 ; 
     	case REALSXP:
     		return REAL(m_sexp)[0] ; 
     	case INTSXP:
@@ -159,6 +175,8 @@ int RcppSexp::asInt() const {
 	throw std::range_error("RcppSexp::asInt expects single value");
     }
     switch( TYPEOF(m_sexp)){
+    	case LGLSXP:
+    		return LOGICAL(m_sexp)[0] ? 1 : 0 ; 
     	case REALSXP:
     		return (int)REAL(m_sexp)[0] ; // some of this might be lost
     	case INTSXP:
@@ -176,6 +194,8 @@ Rbyte RcppSexp::asRaw() const {
 	throw std::range_error("RcppSexp::asRaw expects single value");
     }
     switch( TYPEOF(m_sexp) ){
+    	case LGLSXP:
+    		return LOGICAL(m_sexp)[0] ? (Rbyte)1 : (Rbyte)0 ; 
     	case REALSXP:
     		return (Rbyte)REAL(m_sexp)[0] ;
     	case INTSXP:
@@ -186,6 +206,25 @@ Rbyte RcppSexp::asRaw() const {
     		throw std::range_error("RcppSexp::asRaw expects raw, double or int");
     }
     return (Rbyte)0; 	// never reached
+}
+
+bool RcppSexp::asBool() const {
+    if (Rf_length(m_sexp) != 1) {
+	throw std::range_error("RcppSexp::asRaw expects single value");
+    }
+    switch( TYPEOF(m_sexp) ){
+    	case LGLSXP:
+    		return LOGICAL(m_sexp)[0] ? true : false ; 
+    	case REALSXP:
+    		return (bool)REAL(m_sexp)[0] ;
+    	case INTSXP:
+    		return (bool)INTEGER(m_sexp)[0] ;
+    	case RAWSXP:
+    		return (bool)RAW(m_sexp)[0] ;
+    	default:
+    		throw std::range_error("RcppSexp::asRaw expects raw, double or int");
+    }
+    return false; 	// never reached
 }
 
 std::string RcppSexp::asStdString() const {
@@ -202,10 +241,36 @@ SEXP RcppSexp::asSexp() const {
     return m_sexp;
 }
 
+std::vector<bool> RcppSexp::asStdVectorBool() const {
+    int n = Rf_length(m_sexp);
+    std::vector<bool> v(n);
+    switch( TYPEOF(m_sexp) ){
+    case LGLSXP:
+    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
+    	break ;
+    case INTSXP:
+    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
+    	break;
+    case REALSXP:
+    	v.assign( REAL(m_sexp), REAL(m_sexp)+n ) ;
+    	break;
+    case RAWSXP:
+    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
+    	break;
+    default:
+    		throw std::range_error( "RcppSexp::asStdVectorBool(): invalid R type" ) ; 
+    }
+    return v;
+}
+
+
 std::vector<int> RcppSexp::asStdVectorInt() const {
     int n = Rf_length(m_sexp);
     std::vector<int> v(n);
     switch( TYPEOF(m_sexp) ){
+    case LGLSXP:
+    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
+    	break;
     case INTSXP:
     	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
     	break;
@@ -225,6 +290,9 @@ std::vector<Rbyte> RcppSexp::asStdVectorRaw() const {
     int n = Rf_length(m_sexp);
     std::vector<Rbyte> v(n);
     switch( TYPEOF(m_sexp) ){
+    case LGLSXP:
+    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
+    	break ;
     case RAWSXP:
     	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
     	break ;
@@ -244,6 +312,9 @@ std::vector<double> RcppSexp::asStdVectorDouble() const {
     int n = Rf_length(m_sexp);
     std::vector<double> v(n);
     switch( TYPEOF(m_sexp) ){
+    case LGLSXP:
+    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
+    	break ;
     case RAWSXP:
     	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
     	break ;

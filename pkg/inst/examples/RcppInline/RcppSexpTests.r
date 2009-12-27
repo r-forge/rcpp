@@ -49,6 +49,26 @@ cat( funx(x=2L), "\n")
 funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
 cat( funx(x=as.raw(2)), "\n")
 
+cat("\n=== logical \n")
+foo <- '
+bool b = RcppSexp(x).asBool();
+std::cout << "flip  " << ( b ? "TRUE" : "FALSE" ) << " : ";
+return(RcppSexp( !b ).asSexp());
+'
+funx <- cfunction(signature(x="logical"), foo, Rcpp=TRUE, verbose=FALSE)
+cat( res <- funx(x=TRUE) , "\n")  ; stopifnot( !res )
+cat( res <- funx(x=FALSE), "\n" ) ; stopifnot( res)
+funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+cat( res <- funx(x=2)  , "\n")   ; stopifnot( !res )
+cat( res <- funx(x=0.0), "\n")   ; stopifnot( res)
+funx <- cfunction(signature(x="integer"), foo, Rcpp=TRUE, verbose=FALSE)
+cat( res <- funx(x=2L), "\n")    ; stopifnot( !res )
+cat( res <- funx(x=0L), "\n")    ; stopifnot( res)
+funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
+cat( res <- funx(x=as.raw(2)), "\n") ; stopifnot( !res )
+cat( res <- funx(x=as.raw(0)), "\n") ; stopifnot( res)
+
+### vectors
 
 cat("\n===Int Vector via RcppResultSet.getSEXP\n")
 foo <- '
@@ -116,6 +136,25 @@ funx <- cfunction(signature(x="integer"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=0:9))
 funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
 print(funx(x=0:9+.1))
+
+cat("\n=== vector<bool>\n")
+foo <- '
+std::vector<bool> bv = RcppSexp(x).asStdVectorBool();
+std::cout << "Flip the value of vector : ";
+for (size_t i=0; i<bv.size(); i++) {
+    bv[i].flip() ;
+}
+return(RcppSexp( bv ).asSexp());
+'
+funx <- cfunction(signature(x="logical"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=c(TRUE,FALSE)))
+funx <- cfunction(signature(x="raw"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=as.raw(0:9)))
+funx <- cfunction(signature(x="integer"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=0:9))
+funx <- cfunction(signature(x="numeric"), foo, Rcpp=TRUE, verbose=FALSE)
+print(funx(x=as.numeric(0:9)))
+
 
 cat("\n===String Vector\n")
 foo <- '
