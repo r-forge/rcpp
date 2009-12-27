@@ -1,20 +1,31 @@
+2009-12-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppInline.R: Removed as we now use cfunction() from inline (>= 0.3.4)
+        * man/{RcppInline,internals}.Rd: idem
+
+	* NAMESPACE: removed entries related to cfunction and methods
+
+	* DESCRIPTION: Added 'Suggests: inline (>= 0.3.4)
+
+	* inst/examples/RcppInline/*R: Add library(inline) or require(inline)
+
 2009-12-27  Romain Francois <francoisromain@free.fr>
-	
+
 	* src/RcppCommon.{h,cpp} : added experimental uncaught exception
 	management
-	
+
 	* R/zzz.R : added .onAttach, used to register the uncaught exception
 	management on package attach
-	
+
 	* R/exceptions.R : added R side of the exception management, unexported
 	as it is only used by internal C++ code
-	
-	* inst/examples/RcppInline/UncaughtExceptions.r: demo of the 
+
+	* inst/examples/RcppInline/UncaughtExceptions.r: demo of the
 	uncaught exception system
-	
-	* src/RcppSexp.{h,cpp} : added method isNULL to test if the 
+
+	* src/RcppSexp.{h,cpp} : added method isNULL to test if the
 	underlying SEXP is NULL
-	
+
 	* src/RcppSexp.{h,cpp} : added some methods to deal with attributes
 	attributeNames : the names of the attributes as a vector<string>
 	hasAttribute   : test whether the SEXP has the given attribute
@@ -34,7 +45,7 @@
 	* inst/examples/RcppInline/RcppSexpTests.r: examples/tests of the above
 
 2009-12-21  Romain Francois <francoisromain@free.fr>
-	
+
 	* src/RcppSexp.{h,cpp} : support for raw vector added into RcppSexp
 
 	* inst/examples/RcppInline/RcppSexpTests.r: examples of raw vector
