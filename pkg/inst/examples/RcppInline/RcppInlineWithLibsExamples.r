@@ -1,6 +1,7 @@
 #!/usr/bin/r -t
 
 suppressMessages(library(Rcpp))
+suppressMessages(library(inline))
 
 firstExample <- function() {
     ## a really simple C program calling three functions from the GSL

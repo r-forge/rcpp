@@ -1,7 +1,6 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2009 Dirk Eddelbuettel
-# Copyright (C) 2009 Romain Francois
+# Copyright (C) 2009 Dirk Eddelbuettel and Romain Francois
 #
 # This file is part of Rcpp.
 #
@@ -19,6 +18,7 @@
 # along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 suppressMessages(library(Rcpp))
+suppressMessages(library(inline))
 
 cat("===Doubles\n")
 foo <- '
@@ -201,7 +201,7 @@ stopifnot( identical( res, 0:1 ) )
 cat("\n=== set<double>\n")
 foo <- '
 std::set<double> ds;
-ds.insert( 0.0 ); 
+ds.insert( 0.0 );
 ds.insert( 1.0 );
 ds.insert( 0.0 );
 return(RcppSexp( iv ).asSexp()); '
@@ -232,7 +232,7 @@ print( res <- funx() )
 stopifnot( identical( res, c("bar","foo")) )
 
 
-#========= attributes 
+#========= attributes
 
 funx <- cfunction(
 	signature(x="data.frame"), '

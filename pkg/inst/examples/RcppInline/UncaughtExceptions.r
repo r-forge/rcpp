@@ -17,7 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-require( Rcpp)
+require(Rcpp)
+require(inline)
 funx <- cfunction(signature(), '
 throw std::range_error("boom") ;
 return R_NilValue ;
