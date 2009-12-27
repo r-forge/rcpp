@@ -1,10 +1,18 @@
 2009-12-27  Romain Francois <francoisromain@free.fr>
+	
+	* src/RcppSexp.{h,cpp} : added method isNULL to test if the 
+	underlying SEXP is NULL
+	
+	* src/RcppSexp.{h,cpp} : added some methods to deal with attributes
+	attributeNames : the names of the attributes as a vector<string>
+	hasAttribute   : test whether the SEXP has the given attribute
+	attr           : extract the attribute (might return NULL)
 
 	* src/RcppSexp.{h,cpp} : added RcppSexp(bool), RcppSexp(vector<bool>)
 	constructors and RcppSexp.asBool(), RcppSexp.asStdVectorBool() methods
 
 	* inst/examples/RcppInline/RcppSexpTests.r: examples/tests of the
-	above
+	above items
 
 2009-12-26  Romain Francois <francoisromain@free.fr>
 

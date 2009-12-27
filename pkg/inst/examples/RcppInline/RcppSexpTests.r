@@ -213,3 +213,39 @@ funx <- cfunction(signature(), foo, Rcpp=TRUE, verbose=FALSE, include = "#includ
 print( res <- funx() )
 stopifnot( identical( res, c("bar","foo")) )
 
+
+#========= attributes 
+
+funx <- cfunction(
+	signature(x="data.frame"), '
+std::vector<std::string> iv = RcppSexp(x).attributeNames();
+return(RcppSexp( iv ).asSexp());
+', Rcpp=TRUE, verbose=FALSE)
+res <- funx( iris )
+stopifnot( all( c("names", "row.names", "class" ) %in% res ) )
+
+funx <- cfunction(signature(x="data.frame"), '
+bool has_class = RcppSexp(x).hasAttribute( "class" ) ;
+return RcppSexp( has_class ).asSexp() ;
+', Rcpp=TRUE, verbose=FALSE)
+res <- funx( iris )
+stopifnot( res )
+
+funx <- cfunction(signature(x="data.frame"), '
+return RcppSexp(x).attr( "row.names" ).asSexp() ;
+', Rcpp=TRUE, verbose=FALSE)
+res <- funx( iris )
+stopifnot( identical(res, 1:150) )
+
+#============ NULL
+funx <- cfunction(signature(x="ANY"), '
+bool is_null = RcppSexp(x).isNULL() ;
+return RcppSexp( is_null ).asSexp() ;
+', Rcpp=TRUE, verbose=FALSE)
+res <- funx( iris )
+stopifnot( !res )
+res <- funx( NULL )
+stopifnot( res )
+
+
+
