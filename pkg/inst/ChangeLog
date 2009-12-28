@@ -1,3 +1,15 @@
+2009-12-28  Romain Francois <francoisromain@free.fr>
+
+	* R/exceptions.R: s/uncaught_cpp_exception/cpp_exception/ and added a
+	'class' argument to hold the class name of the C++ exception
+	(range_error, etc ...)
+
+	* inst/examples/RcppInline/UncaughtExceptions.r: extend examples to
+	show how to grab details of the C++ exception
+
+	* src/exception_handling.cpp: factored out from RcppCommon.cpp, now
+	able to grab the class name of the exception and its message. 
+
 2009-12-27  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/RcppInline.R: Removed as we now use cfunction() from inline (>= 0.3.4)

@@ -24,8 +24,13 @@ throw std::range_error("boom") ;
 return R_NilValue ;
 ', Rcpp=TRUE, verbose=FALSE)
 tryCatch(  funx(), "C++Error" = function(e){
-	print( "gotcha" )
+	cat( sprintf( "C++ exception of class '%s' : %s\n", class(e)[1L], e$message  ) )
 } )
+# or using a direct handler 
+tryCatch(  funx(), "std::range_error" = function(e){
+        cat( sprintf( "C++ exception of class '%s' : %s\n", class(e)[1L], e$message  ) )
+} )
+# just to check things carry on
 print( rnorm(10) )
 
 
