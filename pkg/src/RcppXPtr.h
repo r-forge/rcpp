@@ -106,6 +106,12 @@ class RcppXPtr {
   		 */
   		SEXP asSexp();
     	
+  		/**
+   	     * implicit conversion to SEXP. So that we can return these 
+   	     * objects to the R side directly
+   	     */
+   	    operator SEXP() const ;
+   	    
   	private:
   		
   		/**
@@ -173,6 +179,11 @@ SEXP RcppXPtr<T>::getTag(){
 
 template<typename T>
 SEXP RcppXPtr<T>::asSexp(){
+	return m_sexp ;
+}
+
+template<typename T>
+RcppXPtr<T>::operator SEXP() const {
 	return m_sexp ;
 }
 

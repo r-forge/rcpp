@@ -48,7 +48,12 @@ public:
     RcppSexp(const std::set<Rbyte> & v);
     
     ~RcppSexp();
-
+    
+    /**
+     * implicit conversion to SEXP
+     */
+    operator SEXP() const ;
+    
     bool                     asBool() const;
     double                   asDouble() const;
     int                      asInt() const;

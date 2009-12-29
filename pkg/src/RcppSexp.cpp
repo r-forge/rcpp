@@ -376,3 +376,7 @@ bool RcppSexp::isNULL() const{
 	return m_sexp == R_NilValue ;
 }
 
+RcppSexp::operator SEXP() const{
+	return m_sexp ;
+}
+
