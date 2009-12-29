@@ -22,42 +22,43 @@
 
 #include <RcppSexp.h>
 #include <algorithm>
+#include <RcppSuperClass.h>
 
 RcppSexp::RcppSexp(const bool & v) {
     logTxt("RcppSexp from bool\n");
     m_sexp = Rf_ScalarLogical(v);
-    R_PreserveObject(m_sexp);
+    protect() ;
 }
 
 RcppSexp::RcppSexp(const double & v) {
     logTxt("RcppSexp from double\n");
     m_sexp = Rf_ScalarReal(v);
-    R_PreserveObject(m_sexp);
+    protect() ;
 }
 
 RcppSexp::RcppSexp(const int & v) {
     logTxt("RcppSexp from int\n");
     m_sexp = Rf_ScalarInteger(v);
-    R_PreserveObject(m_sexp);
+    protect() ;
 }
 
 RcppSexp::RcppSexp(const Rbyte & v) {
     logTxt("RcppSexp from raw\n");
     m_sexp = Rf_ScalarRaw(v);
-    R_PreserveObject(m_sexp);
+    protect() ;
 }
 
 RcppSexp::RcppSexp(const std::string & v) {
     logTxt("RcppSexp from std::string\n");
     m_sexp = Rf_mkString(v.c_str());
-    R_PreserveObject(m_sexp);
+    protect() ;
 }
 
 RcppSexp::RcppSexp(const std::vector<bool> & v) {
     logTxt("RcppSexp from bool vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(LGLSXP, n);
-    R_PreserveObject(m_sexp);
+    protect() ;
     copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
 }
 
@@ -65,7 +66,7 @@ RcppSexp::RcppSexp(const std::vector<int> & v) {
     logTxt("RcppSexp from int vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(INTSXP, n);
-    R_PreserveObject(m_sexp);
+    protect() ;
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
 }
 
@@ -73,7 +74,7 @@ RcppSexp::RcppSexp(const std::vector<double> & v) {
     logTxt("RcppSexp from double vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(REALSXP, n);
-    R_PreserveObject(m_sexp);
+    protect() ;
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
 }
 
@@ -81,9 +82,7 @@ RcppSexp::RcppSexp(const std::vector<Rbyte> & v) {
     logTxt("RcppSexp from vector<Rbyte> \n");
     int n = v.size();
     m_sexp = Rf_allocVector(RAWSXP, n);
-    R_PreserveObject(m_sexp);
-    // copy the content of the byte vector 
-    // into the raw vector
+    protect() ;
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
 }
 
@@ -91,7 +90,7 @@ RcppSexp::RcppSexp(const std::vector<std::string> & v) {
     logTxt("RcppSexp from std::string vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(STRSXP, n);
-    R_PreserveObject(m_sexp);
+    protect() ;
     int i=0; 
     std::vector<std::string>::const_iterator it = v.begin() ;
     while( i<n ){
@@ -107,7 +106,7 @@ RcppSexp::RcppSexp(const std::set<int> & v) {
     logTxt("RcppSexp from set<int>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(INTSXP, n);
-    R_PreserveObject(m_sexp);
+    protect() ;
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
 }
 
@@ -115,7 +114,7 @@ RcppSexp::RcppSexp(const std::set<double> & v) {
     logTxt("RcppSexp from set<double>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(REALSXP, n);
-    R_PreserveObject(m_sexp);
+    protect() ;
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
 }
 
@@ -123,9 +122,7 @@ RcppSexp::RcppSexp(const std::set<Rbyte> & v) {
     logTxt("RcppSexp from set<Rbyte> \n");
     int n = v.size();
     m_sexp = Rf_allocVector(RAWSXP, n);
-    R_PreserveObject(m_sexp);
-    // copy the content of the byte vector 
-    // into the raw vector
+    protect() ;
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
 }
 
@@ -133,8 +130,8 @@ RcppSexp::RcppSexp(const std::set<std::string> & v) {
     logTxt("RcppSexp from set<string>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(STRSXP, n);
-    R_PreserveObject(m_sexp);
-    int i=0; 
+    protect() ;
+    int i=0;
     std::set<std::string>::iterator it = v.begin(); 
     while( i<n ){
     	SET_STRING_ELT(m_sexp, i, Rf_mkChar(it->c_str()));
@@ -143,13 +140,8 @@ RcppSexp::RcppSexp(const std::set<std::string> & v) {
     }
 }
 
-
-
-
-
 RcppSexp::~RcppSexp() {
-    logTxt("dtor");
-    R_ReleaseObject(m_sexp);
+    logTxt("~RcppSexp");
 }
 
 double RcppSexp::asDouble() const {
@@ -236,10 +228,6 @@ std::string RcppSexp::asStdString() const {
 	throw std::range_error("RcppSexp::asStdString expects string");
     }
     return std::string(CHAR(STRING_ELT(m_sexp,0)));
-}
-
-SEXP RcppSexp::asSexp() const {
-    return m_sexp;
 }
 
 std::vector<bool> RcppSexp::asStdVectorBool() const {
@@ -344,6 +332,28 @@ std::vector<std::string> RcppSexp::asStdVectorString() const {
     return v;
 }
 
+
+
+
+
+RcppSexp::~RcppSexp() {
+    logTxt( "~RcppSexp" ) ;
+	release() ;
+}
+
+void RcppSexp::protect(){
+	if( !isProtected ){
+		isProtected = true ;
+		R_PreserveObject( m_sexp ); 
+	}
+}
+
+void RcppSexp::release(){
+	if( isProtected ){
+		R_ReleaseObject(m_sexp); 
+	}
+}
+
 std::vector<std::string> RcppSexp::attributeNames() const {
 	/* inspired from do_attributes@attrib.c */
 	
@@ -367,16 +377,7 @@ bool RcppSexp::hasAttribute( const std::string& attr) const {
     return false; /* give up */
 }
 
-RcppSexp RcppSexp::attr( const std::string& name) const{
-	SEXP att = Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) );
-	return RcppSexp( att ) ;
-}
-
-bool RcppSexp::isNULL() const{
-	return m_sexp == R_NilValue ;
-}
-
-RcppSexp::operator SEXP() const{
-	return m_sexp ;
+SEXP RcppSexp::attr( const std::string& name) const{
+	return Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) );
 }
 
