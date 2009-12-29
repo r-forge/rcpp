@@ -29,13 +29,12 @@ funx <- cfunction(signature(), '
 	/* wrap the pointer as an external pointer */
 	/* this automatically protected the external pointer from R garbage 
 	   collection until p goes out of scope. */
-	RcppXPtr< std::vector<int> > p(v) ;
+	Rcpp::XPtr< std::vector<int> > p(v) ;
 	
 	/* return it back to R, since p goes out of scope after the return 
 	   the external pointer is no more protected by p, but it gets 
 	   protected by being on the R side */
-	return( p.asSexp() ) ;
-	
+	return( p ) ;
 ', Rcpp=TRUE, verbose=FALSE)
 xp <- funx()
 stopifnot( identical( typeof( xp ), "externalptr" ) )
@@ -46,13 +45,13 @@ funx <- cfunction(signature(x = "externalptr" ), '
 	/* The SEXP based constructor does not protect the SEXP from 
 	   garbage collection automatically, it is already protected 
 	   because it comes from the R side, however if you want to keep 
-	   the RcppXPtr object on the C(++) side
+	   the Rcpp::XPtr object on the C(++) side
 	   and return something else to R, you need to protect the external
 	   pointer, by using the protect member function */
-	RcppXPtr< std::vector<int> > p(x) ;
+	Rcpp::XPtr< std::vector<int> > p(x) ;
 	
 	/* just return the front of the vector as a SEXP */
-	return( RcppSexp( p->front() ).asSexp() ) ;
+	return( Rcpp::RObject( p->front() ) ) ;
 ', Rcpp=TRUE, verbose=FALSE)
 front <- funx(xp)
 stopifnot( identical( front, 1L ) )

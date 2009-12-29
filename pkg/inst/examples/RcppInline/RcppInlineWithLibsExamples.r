@@ -1,4 +1,22 @@
 #!/usr/bin/r -t
+#
+# Copyright (C) 2009 - 2010	Dirk Eddelbuettel
+# Copyright (C) 2009 - 2010	Romain Francois
+#
+# This file is part of Rcpp.
+#
+# Rcpp is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# Rcpp is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 suppressMessages(library(Rcpp))
 suppressMessages(library(inline))
@@ -38,7 +56,7 @@ secondExample <- function() {
 
     ## now use Rcpp to pass down a parameter for the seed
     gslrng <- '
-    int seed = RcppSexp(par).asInt();
+    int seed = Rcpp::RObject(par).asInt();
 
     gsl_rng *r;
     gsl_rng_env_setup();
@@ -56,7 +74,7 @@ secondExample <- function() {
     #endif
 
     gsl_rng_free(r);
-    return RcppSexp(v).asSexp();
+    return Rcpp::RObject(v) ;
     '
 
     ## turn into a function that R can call
@@ -85,8 +103,8 @@ thirdExample <- function() {
 
     ## now use Rcpp to pass down a parameter for the seed, and a vector size
     gslrng <- '
-    int seed = RcppSexp(s).asInt();
-    int len = RcppSexp(n).asInt();
+    int seed = Rcpp::RObject(s).asInt();
+    int len = Rcpp::RObject(n).asInt();
 
     gsl_rng *r;
     gsl_rng_env_setup();
@@ -100,7 +118,7 @@ thirdExample <- function() {
     }
     gsl_rng_free(r);
 
-    return RcppSexp(v).asSexp();
+    return Rcpp::RObject(v) ;
     '
 
     ## turn into a function that R can call

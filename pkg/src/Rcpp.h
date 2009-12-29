@@ -36,11 +36,13 @@
 #include <RcppNumList.h>
 #include <RcppParams.h>
 #include <RcppResultSet.h>
-#include <RcppSexp.h>
 #include <RcppStringVector.h>
 #include <RcppStringVectorView.h>
 #include <RcppVector.h>
 #include <RcppVectorView.h>
-#include <RcppXPtr.h>
+
+/* new api */
+#include <Rcpp_RObject.h>
+#include <Rcpp_XPtr.h>
 
 #endif

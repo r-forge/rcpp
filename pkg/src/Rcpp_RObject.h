@@ -1,9 +1,9 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// RcppSexp.h: Rcpp R/C++ interface class library -- SEXP support
+// Rcpp_RObject.h: Rcpp R/C++ interface class library -- super class of all R objects wrapped in C++ classes
 //
-// Copyright (C) 2009 Dirk Eddelbuettel
-// Copyright (C) 2009 Romain Francois
+// Copyright (C) 2009 - 2010	Dirk Eddelbuettel
+// Copyright (C) 2009 - 2010	Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -20,13 +20,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef RcppSexp_h
-#define RcppSexp_h
+#ifndef Rcpp_RObject_h
+#define Rcpp_RObject_h
 
 #include <RcppCommon.h>
 #include <set>
 
-class RcppSexp {
+namespace Rcpp{ 
+
+class RObject{
 public:
 	
 	/**
@@ -37,31 +39,31 @@ public:
 	 * the SEXP from garbage collection, and release to 
 	 * remove the protection
 	 */
-	RcppSexp(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp) {};
+	RObject(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp) {};
     
     /**
 	 * if this object is protected rom R's GC, then it is released
 	 * and become subject to garbage collection. See protect 
 	 * and release member functions.
 	 */
-    ~RcppSexp() ;
+    ~RObject() ;
 	
-    RcppSexp(const double & v);
-    RcppSexp(const int & v);
-    RcppSexp(const Rbyte & v);
-    RcppSexp(const std::string & v);
-    RcppSexp(const bool & v);
+    RObject(const double & v);
+    RObject(const int & v);
+    RObject(const Rbyte & v);
+    RObject(const std::string & v);
+    RObject(const bool & v);
     
-    RcppSexp(const std::vector<int> & v);
-    RcppSexp(const std::vector<double> & v);
-    RcppSexp(const std::vector<std::string> & v);
-    RcppSexp(const std::vector<Rbyte> & v);
-    RcppSexp(const std::vector<bool> & v);
+    RObject(const std::vector<int> & v);
+    RObject(const std::vector<double> & v);
+    RObject(const std::vector<std::string> & v);
+    RObject(const std::vector<Rbyte> & v);
+    RObject(const std::vector<bool> & v);
     
-    RcppSexp(const std::set<int> & v);
-    RcppSexp(const std::set<double> & v);
-    RcppSexp(const std::set<std::string> & v);
-    RcppSexp(const std::set<Rbyte> & v);
+    RObject(const std::set<int> & v);
+    RObject(const std::set<double> & v);
+    RObject(const std::set<std::string> & v);
+    RObject(const std::set<Rbyte> & v);
     
     
     /* we don't provide implicit converters because 
@@ -157,5 +159,7 @@ protected:
 	bool isProtected ;    
     
 };
+
+} // namespace Rcpp
 
 #endif

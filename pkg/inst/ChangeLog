@@ -1,5 +1,27 @@
 2009-12-29  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp_RObject.{h,cpp}: new namespace Rcpp and new class
+	Rcpp::RObject to replace RcppSexp with the same functionality.
+	
+	* src/Rcpp_XPtr.h: replaces RcppXPtr.h and the class is now 
+	Rcpp::XPtr<> and extends Rcpp::RObject
+	
+	* inst/examples/RcppInline/external_pointer.r: use the new namespace
+	
+	* inst/examples/RcppInline/RcppInlineWithLibsExamples.r: idem
+	
+	* inst/examples/RcppInline/RcppSexpTests.r: idem
+	
+	* DESCRIPTION: marked as version 0.7.0.5
+	
+	* inst/doc/*: fake (empty) vignette and unit test trigger
+	
+	* inst/unitTests/*: prepare the space for unit tests
+	
+	* tests/doRUnit.R : added the usual RUnit tests trigger
+
+2009-12-29  Romain Francois <francoisromain@free.fr>
+
 	* src/RcppXPtr.h: now RcppXPtr extends RcppSexp and RcppSexp manages
 	garbarge collection, attributes, etc ...
 	
