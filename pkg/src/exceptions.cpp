@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// exception_handling.cpp: R/C++ interface class library -- common functions
+// exceptions.cpp: R/C++ interface class library -- common functions
 //
 // Copyright (C) 2009 - 2010 Romain Francois
 //

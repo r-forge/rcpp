@@ -22,7 +22,6 @@
 
 #include <RcppSexp.h>
 #include <algorithm>
-#include <RcppSuperClass.h>
 
 RcppSexp::RcppSexp(const bool & v) {
     logTxt("RcppSexp from bool\n");
@@ -141,6 +140,7 @@ RcppSexp::RcppSexp(const std::set<std::string> & v) {
 }
 
 RcppSexp::~RcppSexp() {
+	release() ;
     logTxt("~RcppSexp");
 }
 
@@ -334,12 +334,6 @@ std::vector<std::string> RcppSexp::asStdVectorString() const {
 
 
 
-
-
-RcppSexp::~RcppSexp() {
-    logTxt( "~RcppSexp" ) ;
-	release() ;
-}
 
 void RcppSexp::protect(){
 	if( !isProtected ){

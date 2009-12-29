@@ -1,5 +1,14 @@
 2009-12-29  Romain Francois <francoisromain@free.fr>
 
+	* src/RcppXPtr.h: now RcppXPtr extends RcppSexp and RcppSexp manages
+	garbarge collection, attributes, etc ...
+	
+	* src/exceptions.cpp: replaces src/exception_handling.cpp
+	
+	* DESCRIPTION: now suggesting RUnit.
+
+2009-12-29  Romain Francois <francoisromain@free.fr>
+
 	* src/RcppXPtr.h: added operator SEXP() to class
 	RcppXPtr to ease implicit conversion from RcppXPtr to SEXP.
 	This means we can directly return the RcppXPtr object to R when the 

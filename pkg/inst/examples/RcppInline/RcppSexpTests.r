@@ -204,7 +204,7 @@ std::set<double> ds;
 ds.insert( 0.0 );
 ds.insert( 1.0 );
 ds.insert( 0.0 );
-return(RcppSexp( iv ).asSexp()); '
+return(RcppSexp( ds ).asSexp()); '
 funx <- cfunction(signature(), foo, Rcpp=TRUE, verbose=FALSE, includes = "#include <set>")
 print( res <- funx() )
 stopifnot( identical( res, as.numeric(0:1)))
@@ -250,7 +250,7 @@ res <- funx( iris )
 stopifnot( res )
 
 funx <- cfunction(signature(x="data.frame"), '
-return RcppSexp(x).attr( "row.names" ).asSexp() ;
+return RcppSexp(x).attr( "row.names" ) ;
 ', Rcpp=TRUE, verbose=FALSE)
 res <- funx( iris )
 stopifnot( identical(res, 1:150) )

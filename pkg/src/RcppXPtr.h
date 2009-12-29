@@ -35,7 +35,7 @@ void delete_finalizer(SEXP p){
 }
 
 template <typename T>
-class RcppXPtr : public RcppSuperClass {
+class RcppXPtr : public RcppSexp {
 	public:
 		
 		/** 
@@ -43,7 +43,7 @@ class RcppXPtr : public RcppSuperClass {
 		 *
 		 * @param xp external pointer to wrap
 		 */
-		 explicit RcppXPtr(SEXP m_sexp) : RcppSuperClass::RcppSuperClass(m_sexp){} ;
+		 explicit RcppXPtr(SEXP m_sexp) : RcppSexp::RcppSexp(m_sexp){} ;
 		
 		/**
 		 * creates a new external pointer wrapping the dumb pointer p. 
@@ -89,8 +89,18 @@ class RcppXPtr : public RcppSuperClass {
   		
 };
 
+
+template <typename T>
+void delete_finalizer(SEXP p) {
+	if( TYPEOF(p) == EXTPTRSXP ){
+		T* ptr = (T*) EXTPTR_PTR(p) ;
+		delete ptr ;
+	}
+}
+
+
 template<typename T>
-RcppXPtr<T>::RcppXPtr(T* p, bool set_delete_finalizer = true) : RcppSuperClass::RcppSuperClass() {
+RcppXPtr<T>::RcppXPtr(T* p, bool set_delete_finalizer = true) : RcppSexp::RcppSexp() {
 	m_sexp = R_MakeExternalPtr( (void*)p , R_NilValue, R_NilValue) ;
 	if( set_delete_finalizer ){
 		setDeleteFinalizer() ;
@@ -122,5 +132,6 @@ template<typename T>
 SEXP RcppXPtr<T>::getTag(){
 	return EXTPTR_TAG(m_sexp) ;
 }
+
 
 #endif
