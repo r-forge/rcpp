@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// RcppCommon.cpp: R/C++ interface class library -- common functions
+// exception_handling.cpp: R/C++ interface class library -- common functions
 //
 // Copyright (C) 2009 - 2010 Romain Francois
 //
@@ -66,8 +66,11 @@ void forward_uncaught_exceptions_to_r(){
     }
     
 	Rf_eval( 
-		Rf_lang3( Rf_install("cpp_exception"), Rf_mkString(exception_what.c_str()), has_exception_class ? Rf_mkString(exception_class.c_str()) : R_NilValue ), 
-		R_FindNamespace(Rf_mkString("Rcpp"))
+		Rf_lang3( 
+			Rf_install("cpp_exception"), 
+			Rf_mkString(exception_what.c_str()), 
+			has_exception_class ? Rf_mkString(exception_class.c_str()) : R_NilValue
+		), R_FindNamespace(Rf_mkString("Rcpp"))
 	) ; 
 }
 SEXP initUncaughtExceptionHandler(){

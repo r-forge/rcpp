@@ -41,5 +41,6 @@
 #include <RcppStringVectorView.h>
 #include <RcppVector.h>
 #include <RcppVectorView.h>
+#include <RcppXPtr.h>
 
 #endif
