@@ -1,8 +1,8 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// RcppXPtr.h: Rcpp R/C++ interface class library -- smart external pointers
+// XPtr.h: Rcpp R/C++ interface class library -- smart external pointers
 //
-// Copyright (C) 2009 Romain Francois
+// Copyright (C) 2009 - 2010	Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -19,12 +19,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef RcppXPtr_h
-#define RcppXPtr_h
+#ifndef Rcpp_XPtr_h
+#define Rcpp_XPtr_h
 
 #include <RcppCommon.h>
-#include <RcppSexp.h>
+#include <Rcpp_RObject.h>
 
+namespace Rcpp{
 
 template <typename T>
 void delete_finalizer(SEXP p){
@@ -35,15 +36,15 @@ void delete_finalizer(SEXP p){
 }
 
 template <typename T>
-class RcppXPtr : public RcppSexp {
+class XPtr : public RObject {
 	public:
 		
 		/** 
-		 * constructs a RcppXPtr wrapping the external pointer (EXTPTRSXP SEXP)
+		 * constructs a XPtr wrapping the external pointer (EXTPTRSXP SEXP)
 		 *
 		 * @param xp external pointer to wrap
 		 */
-		 explicit RcppXPtr(SEXP m_sexp) : RcppSexp::RcppSexp(m_sexp){} ;
+		 explicit XPtr(SEXP m_sexp) : RObject::RObject(m_sexp){} ;
 		
 		/**
 		 * creates a new external pointer wrapping the dumb pointer p. 
@@ -57,7 +58,7 @@ class RcppXPtr : public RcppSexp {
 		 *        is merely a call to the delete operator or the pointer
 		 *        so you need to make sure the pointer can be deleted. 
 		 */
-  		explicit RcppXPtr(T* p, bool set_delete_finalizer) ;
+  		explicit XPtr(T* p, bool set_delete_finalizer) ;
 
   		/**
   		 * Returns a reference to the object wrapped. This allows this
@@ -90,7 +91,7 @@ class RcppXPtr : public RcppSexp {
 };
 
 template<typename T>
-RcppXPtr<T>::RcppXPtr(T* p, bool set_delete_finalizer = true) : RcppSexp::RcppSexp() {
+XPtr<T>::XPtr(T* p, bool set_delete_finalizer = true) : RObject::RObject() {
 	m_sexp = R_MakeExternalPtr( (void*)p , R_NilValue, R_NilValue) ;
 	if( set_delete_finalizer ){
 		setDeleteFinalizer() ;
@@ -99,29 +100,30 @@ RcppXPtr<T>::RcppXPtr(T* p, bool set_delete_finalizer = true) : RcppSexp::RcppSe
 }
 
 template<typename T>
-void RcppXPtr<T>::setDeleteFinalizer(){
+void XPtr<T>::setDeleteFinalizer(){
 	R_RegisterCFinalizerEx( m_sexp, delete_finalizer<T> , FALSE) ; 
 }
 
 template<typename T>
-T& RcppXPtr<T>::operator*() const {
+T& XPtr<T>::operator*() const {
 	return *((T*)EXTPTR_PTR( m_sexp )) ;
 }
 
 template<typename T>
-T* RcppXPtr<T>::operator->() const {
+T* XPtr<T>::operator->() const {
 	return (T*)(EXTPTR_PTR(m_sexp));
 }
 
 template<typename T>
-SEXP RcppXPtr<T>::getProtected(){
+SEXP XPtr<T>::getProtected(){
 	return EXTPTR_PROT(m_sexp) ;
 }
 
 template<typename T>
-SEXP RcppXPtr<T>::getTag(){
+SEXP XPtr<T>::getTag(){
 	return EXTPTR_TAG(m_sexp) ;
 }
 
+} // namespace Rcpp 
 
 #endif

@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// RcppSexp.h: Rcpp R/C++ interface class library -- SEXP support
+// RObject.cpp: Rcpp R/C++ interface class library -- SEXP support
 //
 // Copyright (C) 2009 Dirk Eddelbuettel
 // Copyright (C) 2009 Romain Francois
@@ -20,73 +20,75 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <RcppSexp.h>
+#include <Rcpp_RObject.h>
 #include <algorithm>
 
-RcppSexp::RcppSexp(const bool & v) {
-    logTxt("RcppSexp from bool\n");
+namespace Rcpp {
+
+RObject::RObject(const bool & v) {
+    logTxt("RObject from bool\n");
     m_sexp = Rf_ScalarLogical(v);
     protect() ;
 }
 
-RcppSexp::RcppSexp(const double & v) {
-    logTxt("RcppSexp from double\n");
+RObject::RObject(const double & v) {
+    logTxt("RObject from double\n");
     m_sexp = Rf_ScalarReal(v);
     protect() ;
 }
 
-RcppSexp::RcppSexp(const int & v) {
-    logTxt("RcppSexp from int\n");
+RObject::RObject(const int & v) {
+    logTxt("RObject from int\n");
     m_sexp = Rf_ScalarInteger(v);
     protect() ;
 }
 
-RcppSexp::RcppSexp(const Rbyte & v) {
-    logTxt("RcppSexp from raw\n");
+RObject::RObject(const Rbyte & v) {
+    logTxt("RObject from raw\n");
     m_sexp = Rf_ScalarRaw(v);
     protect() ;
 }
 
-RcppSexp::RcppSexp(const std::string & v) {
-    logTxt("RcppSexp from std::string\n");
+RObject::RObject(const std::string & v) {
+    logTxt("RObject from std::string\n");
     m_sexp = Rf_mkString(v.c_str());
     protect() ;
 }
 
-RcppSexp::RcppSexp(const std::vector<bool> & v) {
-    logTxt("RcppSexp from bool vector\n");
+RObject::RObject(const std::vector<bool> & v) {
+    logTxt("RObject from bool vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(LGLSXP, n);
     protect() ;
     copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
 }
 
-RcppSexp::RcppSexp(const std::vector<int> & v) {
-    logTxt("RcppSexp from int vector\n");
+RObject::RObject(const std::vector<int> & v) {
+    logTxt("RObject from int vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(INTSXP, n);
     protect() ;
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
 }
 
-RcppSexp::RcppSexp(const std::vector<double> & v) {
-    logTxt("RcppSexp from double vector\n");
+RObject::RObject(const std::vector<double> & v) {
+    logTxt("RObject from double vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(REALSXP, n);
     protect() ;
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
 }
 
-RcppSexp::RcppSexp(const std::vector<Rbyte> & v) {
-    logTxt("RcppSexp from vector<Rbyte> \n");
+RObject::RObject(const std::vector<Rbyte> & v) {
+    logTxt("RObject from vector<Rbyte> \n");
     int n = v.size();
     m_sexp = Rf_allocVector(RAWSXP, n);
     protect() ;
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
 }
 
-RcppSexp::RcppSexp(const std::vector<std::string> & v) {
-    logTxt("RcppSexp from std::string vector\n");
+RObject::RObject(const std::vector<std::string> & v) {
+    logTxt("RObject from std::string vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(STRSXP, n);
     protect() ;
@@ -101,32 +103,32 @@ RcppSexp::RcppSexp(const std::vector<std::string> & v) {
 
 /* sets */
 
-RcppSexp::RcppSexp(const std::set<int> & v) {
-    logTxt("RcppSexp from set<int>\n");
+RObject::RObject(const std::set<int> & v) {
+    logTxt("RObject from set<int>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(INTSXP, n);
     protect() ;
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
 }
 
-RcppSexp::RcppSexp(const std::set<double> & v) {
-    logTxt("RcppSexp from set<double>\n");
+RObject::RObject(const std::set<double> & v) {
+    logTxt("RObject from set<double>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(REALSXP, n);
     protect() ;
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
 }
 
-RcppSexp::RcppSexp(const std::set<Rbyte> & v) {
-    logTxt("RcppSexp from set<Rbyte> \n");
+RObject::RObject(const std::set<Rbyte> & v) {
+    logTxt("RObject from set<Rbyte> \n");
     int n = v.size();
     m_sexp = Rf_allocVector(RAWSXP, n);
     protect() ;
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
 }
 
-RcppSexp::RcppSexp(const std::set<std::string> & v) {
-    logTxt("RcppSexp from set<string>\n");
+RObject::RObject(const std::set<std::string> & v) {
+    logTxt("RObject from set<string>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(STRSXP, n);
     protect() ;
@@ -139,14 +141,14 @@ RcppSexp::RcppSexp(const std::set<std::string> & v) {
     }
 }
 
-RcppSexp::~RcppSexp() {
+RObject::~RObject() {
 	release() ;
-    logTxt("~RcppSexp");
+    logTxt("~RObject");
 }
 
-double RcppSexp::asDouble() const {
+double RObject::asDouble() const {
     if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RcppSexp::asDouble expects single value");
+	throw std::range_error("RObject::asDouble expects single value");
     }
     switch( TYPEOF(m_sexp) ){
     	case LGLSXP:
@@ -158,14 +160,14 @@ double RcppSexp::asDouble() const {
     	case RAWSXP:
     		return (double)RAW(m_sexp)[0];
     	default:
-    		throw std::range_error("RcppSexp::asDouble invalid type");
+    		throw std::range_error("RObject::asDouble invalid type");
     }
     return 0.0 ; 	// never reached
 }
 
-int RcppSexp::asInt() const {
+int RObject::asInt() const {
     if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RcppSexp::asInt expects single value");
+	throw std::range_error("RObject::asInt expects single value");
     }
     switch( TYPEOF(m_sexp)){
     	case LGLSXP:
@@ -177,14 +179,14 @@ int RcppSexp::asInt() const {
     	case RAWSXP:
     		return (int)RAW(m_sexp)[0];
     	default:
-    		throw std::range_error("RcppSexp::asInt invalid type");
+    		throw std::range_error("RObject::asInt invalid type");
     }
     return 0; 	// never reached
 }
 
-Rbyte RcppSexp::asRaw() const {
+Rbyte RObject::asRaw() const {
     if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RcppSexp::asRaw expects single value");
+	throw std::range_error("RObject::asRaw expects single value");
     }
     switch( TYPEOF(m_sexp) ){
     	case LGLSXP:
@@ -196,14 +198,14 @@ Rbyte RcppSexp::asRaw() const {
     	case RAWSXP:
     		return RAW(m_sexp)[0] ;
     	default:
-    		throw std::range_error("RcppSexp::asRaw expects raw, double or int");
+    		throw std::range_error("RObject::asRaw expects raw, double or int");
     }
     return (Rbyte)0; 	// never reached
 }
 
-bool RcppSexp::asBool() const {
+bool RObject::asBool() const {
     if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RcppSexp::asRaw expects single value");
+	throw std::range_error("RObject::asRaw expects single value");
     }
     switch( TYPEOF(m_sexp) ){
     	case LGLSXP:
@@ -215,22 +217,22 @@ bool RcppSexp::asBool() const {
     	case RAWSXP:
     		return (bool)RAW(m_sexp)[0] ;
     	default:
-    		throw std::range_error("RcppSexp::asRaw expects raw, double or int");
+    		throw std::range_error("RObject::asRaw expects raw, double or int");
     }
     return false; 	// never reached
 }
 
-std::string RcppSexp::asStdString() const {
+std::string RObject::asStdString() const {
     if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RcppSexp::asStdString expects single value");
+	throw std::range_error("RObject::asStdString expects single value");
     }
     if (!Rf_isString(m_sexp)) {
-	throw std::range_error("RcppSexp::asStdString expects string");
+	throw std::range_error("RObject::asStdString expects string");
     }
     return std::string(CHAR(STRING_ELT(m_sexp,0)));
 }
 
-std::vector<bool> RcppSexp::asStdVectorBool() const {
+std::vector<bool> RObject::asStdVectorBool() const {
     int n = Rf_length(m_sexp);
     std::vector<bool> v(n);
     switch( TYPEOF(m_sexp) ){
@@ -247,13 +249,13 @@ std::vector<bool> RcppSexp::asStdVectorBool() const {
     	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
     	break;
     default:
-    		throw std::range_error( "RcppSexp::asStdVectorBool(): invalid R type" ) ; 
+    		throw std::range_error( "RObject::asStdVectorBool(): invalid R type" ) ; 
     }
     return v;
 }
 
 
-std::vector<int> RcppSexp::asStdVectorInt() const {
+std::vector<int> RObject::asStdVectorInt() const {
     int n = Rf_length(m_sexp);
     std::vector<int> v(n);
     switch( TYPEOF(m_sexp) ){
@@ -270,12 +272,12 @@ std::vector<int> RcppSexp::asStdVectorInt() const {
     	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
     	break;
     default:
-    		throw std::range_error( "RcppSexp::asStdVectorInt(): invalid R type" ) ; 
+    		throw std::range_error( "RObject::asStdVectorInt(): invalid R type" ) ; 
     }
     return v;
 }
 
-std::vector<Rbyte> RcppSexp::asStdVectorRaw() const {
+std::vector<Rbyte> RObject::asStdVectorRaw() const {
     int n = Rf_length(m_sexp);
     std::vector<Rbyte> v(n);
     switch( TYPEOF(m_sexp) ){
@@ -292,12 +294,12 @@ std::vector<Rbyte> RcppSexp::asStdVectorRaw() const {
     	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
     	break;
     default:
-    	std::range_error("RcppSexp::asStdVectorRaw expects raw, double or int");
+    	std::range_error("RObject::asStdVectorRaw expects raw, double or int");
     }
     return v;
 }
 
-std::vector<double> RcppSexp::asStdVectorDouble() const {
+std::vector<double> RObject::asStdVectorDouble() const {
     int n = Rf_length(m_sexp);
     std::vector<double> v(n);
     switch( TYPEOF(m_sexp) ){
@@ -314,17 +316,17 @@ std::vector<double> RcppSexp::asStdVectorDouble() const {
     	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
     	break;
     default:
-    	std::range_error("RcppSexp::asStdVectorDouble expects raw, double or int");
+    	std::range_error("RObject::asStdVectorDouble expects raw, double or int");
     }
     return v;
 }
 
 
-std::vector<std::string> RcppSexp::asStdVectorString() const {
+std::vector<std::string> RObject::asStdVectorString() const {
     int n = Rf_length(m_sexp);
     std::vector<std::string> v(n);
     if (!Rf_isString(m_sexp)) {
-	throw std::range_error("RcppSexp::asStdVectorString expects string");
+	throw std::range_error("RObject::asStdVectorString expects string");
     }
     for (int i = 0; i < n; i++) {
 	v[i] = std::string(CHAR(STRING_ELT(m_sexp,i)));
@@ -335,20 +337,20 @@ std::vector<std::string> RcppSexp::asStdVectorString() const {
 
 
 
-void RcppSexp::protect(){
+void RObject::protect(){
 	if( !isProtected ){
 		isProtected = true ;
 		R_PreserveObject( m_sexp ); 
 	}
 }
 
-void RcppSexp::release(){
+void RObject::release(){
 	if( isProtected ){
 		R_ReleaseObject(m_sexp); 
 	}
 }
 
-std::vector<std::string> RcppSexp::attributeNames() const {
+std::vector<std::string> RObject::attributeNames() const {
 	/* inspired from do_attributes@attrib.c */
 	
 	std::vector<std::string> v ;
@@ -360,7 +362,7 @@ std::vector<std::string> RcppSexp::attributeNames() const {
     return v ;
 }
 
-bool RcppSexp::hasAttribute( const std::string& attr) const {
+bool RObject::hasAttribute( const std::string& attr) const {
 	SEXP attrs = ATTRIB(m_sexp);
     while( attrs != R_NilValue ){
     	if( attr == CHAR(PRINTNAME(TAG(attrs))) ){
@@ -371,7 +373,10 @@ bool RcppSexp::hasAttribute( const std::string& attr) const {
     return false; /* give up */
 }
 
-SEXP RcppSexp::attr( const std::string& name) const{
+SEXP RObject::attr( const std::string& name) const{
 	return Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) );
 }
+
+
+} // namespace Rcpp
 
