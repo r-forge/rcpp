@@ -13,11 +13,8 @@
 ## ----> put the bulk of the code e.g. in  ../inst/unitTests/runTests.R :
 
 if(require("RUnit", quietly = TRUE)) {
-
-  ## --- Setup ---
   pkg <- "Rcpp"
-  wd <- getwd()
-  
+
   require( pkg, character.only=TRUE)
 
   path <- system.file("unitTests", package = pkg)
