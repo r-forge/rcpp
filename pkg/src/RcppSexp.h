@@ -24,10 +24,9 @@
 #define RcppSexp_h
 
 #include <RcppCommon.h>
-#include <RcppSuperClass.h>
 #include <set>
 
-class RcppSexp: public RcppSuperClass {
+class RcppSexp {
 public:
 	
 	/**
