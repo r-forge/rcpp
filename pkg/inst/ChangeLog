@@ -1,5 +1,15 @@
 2009-12-29  Romain Francois <francoisromain@free.fr>
 
+	* src/RcppXPtr.h: added operator SEXP() to class
+	RcppXPtr to ease implicit conversion from RcppXPtr to SEXP.
+	This means we can directly return the RcppXPtr object to R when the 
+	return type of the function is SEXP. (no need to explicitely call 
+	asSexp anymore)
+	
+	* src/RcppSexp.{h,cpp} : idem
+	
+2009-12-29  Romain Francois <francoisromain@free.fr>
+
 	* src/RcppXPtr.h: new smart external pointer wrapper. The RcppXPtr 
 	template can be used to wrap a external pointer (SEXP) so that it 
 	looks like the dumb pointer it is wrapping (as far as the * and -> 
