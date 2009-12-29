@@ -1,3 +1,20 @@
+2009-12-29  Romain Francois <francoisromain@free.fr>
+
+	* src/RcppXPtr.h: new smart external pointer wrapper. The RcppXPtr 
+	template can be used to wrap a external pointer (SEXP) so that it 
+	looks like the dumb pointer it is wrapping (as far as the * and -> 
+	operator are concerned). The template parameter controls the type
+	of object that is wrapped by the pointer. 
+	
+	* src/Rcpp.h: importing the RcppXPtr.h header
+	
+	* src/RcppExample.cpp: added an example of RcppXPtr usage
+	
+	* inst/examples/RcppInline/external_pointer.r: added example using
+	the RcppXPtr template
+	
+	* DESCRIPTION: marking this as 0.7.0.4
+	
 2009-12-28  Romain Francois <francoisromain@free.fr>
 
 	* R/exceptions.R: s/uncaught_cpp_exception/cpp_exception/ and added a
