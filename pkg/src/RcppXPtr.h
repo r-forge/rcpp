@@ -89,16 +89,6 @@ class RcppXPtr : public RcppSexp {
   		
 };
 
-
-template <typename T>
-void delete_finalizer(SEXP p) {
-	if( TYPEOF(p) == EXTPTRSXP ){
-		T* ptr = (T*) EXTPTR_PTR(p) ;
-		delete ptr ;
-	}
-}
-
-
 template<typename T>
 RcppXPtr<T>::RcppXPtr(T* p, bool set_delete_finalizer = true) : RcppSexp::RcppSexp() {
 	m_sexp = R_MakeExternalPtr( (void*)p , R_NilValue, R_NilValue) ;
