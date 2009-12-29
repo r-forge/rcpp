@@ -24,12 +24,29 @@
 #define RcppSexp_h
 
 #include <RcppCommon.h>
+#include <RcppSuperClass.h>
 #include <set>
 
-class RcppSexp {
+class RcppSexp: public RcppSuperClass {
 public:
-    RcppSexp(SEXP sexp, int numprot=0) : m_sexp(sexp) { }
-    RcppSexp() : m_sexp(R_NilValue) { }
+	
+	/**
+	 * wraps a SEXP. The SEXP is not automatically 
+	 * protected from garbage collection because it might be 
+	 * protected from elsewhere (e.g. if it comes from the 
+	 * R side). See protect and release for ways to protect
+	 * the SEXP from garbage collection, and release to 
+	 * remove the protection
+	 */
+	RcppSexp(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp) {};
+    
+    /**
+	 * if this object is protected rom R's GC, then it is released
+	 * and become subject to garbage collection. See protect 
+	 * and release member functions.
+	 */
+    ~RcppSexp() ;
+	
     RcppSexp(const double & v);
     RcppSexp(const int & v);
     RcppSexp(const Rbyte & v);
@@ -47,13 +64,9 @@ public:
     RcppSexp(const std::set<std::string> & v);
     RcppSexp(const std::set<Rbyte> & v);
     
-    ~RcppSexp();
     
-    /**
-     * implicit conversion to SEXP
-     */
-    operator SEXP() const ;
-    
+    /* we don't provide implicit converters because 
+       of Item 5 in More Effective C++ */
     bool                     asBool() const;
     double                   asDouble() const;
     int                      asInt() const;
@@ -64,18 +77,86 @@ public:
     std::vector<std::string> asStdVectorString() const;
     std::vector<Rbyte>       asStdVectorRaw() const;
     std::vector<bool>        asStdVectorBool() const;
-    SEXP                     asSexp() const;
     
-    /* attributes */
+    
+    /**
+	 * protects the wrapped SEXP from garbage collection. This 
+	 * calls the R_PreserveObject function on the underlying SEXP.
+	 *
+	 * Note that this does not use the PROTECT/UNPROTECT dance
+	 */
+	void protect();
+	
+	/**
+	 * explicitely release this object to R garbage collection. This
+	 * calls the R_ReleaseObject function on the underlying SEXP. 
+	 * This is automatically done by the destructor if we protected 
+	 * the SEXP (using the protect member function)
+	 */
+	void release();
+	
+	/**
+	 * implicit conversion to SEXP
+	 */
+	inline operator SEXP() const {
+		return m_sexp ;
+	}
+	
+	
+	/* attributes */
+	
+	/**
+	 * extracts the names of the attributes of the wrapped SEXP
+	 */
     std::vector<std::string> attributeNames() const ;
-    bool hasAttribute( const std::string& attr) const ; 
-    RcppSexp attr( const std::string& name) const ;
     
-    /* NULL */
-    bool isNULL() const ;
+    /**
+     * Identifies if the SEXP has the given attribute
+     */
+	bool hasAttribute( const std::string& attr) const ; 
     
-private:
-    SEXP m_sexp;
+    /**
+     * extract the given attribute
+     */
+    SEXP attr( const std::string& name) const  ;
+    
+    /**
+     * is this object NULL
+     */
+    inline bool isNULL() const{
+    	return m_sexp == R_NilValue ;
+    }
+    
+    /**
+     * The SEXP typeof, calls TYPEOF on the underlying SEXP
+     */
+    inline int sexp_type() const {
+    	return TYPEOF(m_sexp) ;
+    }
+    
+    /** 
+	 * explicit conversion to SEXP
+	 */
+	inline SEXP asSexp() const {
+		return m_sexp ;
+	}
+	
+protected:
+	
+	/**
+	 * The SEXP this is wrapping
+	 */
+	SEXP m_sexp ;
+	
+	/**
+	 * true if this protects the SEXP from garbage collection
+	 * using R_ReleaseObject/R_PreserveObject strategy
+	 *
+	 * if this is true then the object will be release and become
+	 * subject to R garbage collection when this object is deleted
+	 */
+	bool isProtected ;    
+    
 };
 
 #endif

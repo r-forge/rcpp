@@ -23,6 +23,8 @@
 #define RcppXPtr_h
 
 #include <RcppCommon.h>
+#include <RcppSexp.h>
+
 
 template <typename T>
 void delete_finalizer(SEXP p){
@@ -33,7 +35,7 @@ void delete_finalizer(SEXP p){
 }
 
 template <typename T>
-class RcppXPtr {
+class RcppXPtr : public RcppSuperClass {
 	public:
 		
 		/** 
@@ -41,7 +43,7 @@ class RcppXPtr {
 		 *
 		 * @param xp external pointer to wrap
 		 */
-		explicit RcppXPtr(SEXP m_sexp) ;
+		 explicit RcppXPtr(SEXP m_sexp) : RcppSuperClass::RcppSuperClass(m_sexp){} ;
 		
 		/**
 		 * creates a new external pointer wrapping the dumb pointer p. 
@@ -56,18 +58,7 @@ class RcppXPtr {
 		 *        so you need to make sure the pointer can be deleted. 
 		 */
   		explicit RcppXPtr(T* p, bool set_delete_finalizer) ;
-  		
-  		/**
-  		 * if this was built using the SEXP constructor, and no call 
-  		 * to protect was issued, the destructor 
-  		 * does nothing
-  		 *
-  		 * if built using the dumb pointer constructor or a call to 
-  		 * protect was issued, then the external
-  		 * pointer is released (using R_ReleaseObject), so 
-  		 */
-  		~RcppXPtr() ;
-  		
+
   		/**
   		 * Returns a reference to the object wrapped. This allows this
   		 * object to look and feel like a dumb pointer to T
@@ -94,43 +85,12 @@ class RcppXPtr {
   		 */
   		SEXP getTag() ;
   		
-  		/**
-  		 * force this external pointer to be protected from R garbage collection 
-  		 */
-  		void protect() ;
-  		
   		void setDeleteFinalizer() ;
   		
-  		/** 
-  		 * Returns the external pointer (suitable to send to the R side)
-  		 */
-  		SEXP asSexp();
-    	
-  		/**
-   	     * implicit conversion to SEXP. So that we can return these 
-   	     * objects to the R side directly
-   	     */
-   	    operator SEXP() const ;
-   	    
-  	private:
-  		
-  		/**
-  		 * The external pointer
-  		 */
-  		SEXP m_sexp;
-  		
-  		/**
-  		 * set to true if this objects protects the external pointer 
-  		 * from R garbage collection (R_PreserveObject/R_ReleaseObject)
-  		 */
-  		bool isProtected;
 };
 
 template<typename T>
-RcppXPtr<T>::RcppXPtr(SEXP m_sexp) : m_sexp(m_sexp), isProtected(false) {}
-
-template<typename T>
-RcppXPtr<T>::RcppXPtr(T* p, bool set_delete_finalizer = true) : isProtected(false) {
+RcppXPtr<T>::RcppXPtr(T* p, bool set_delete_finalizer = true) : RcppSuperClass::RcppSuperClass() {
 	m_sexp = R_MakeExternalPtr( (void*)p , R_NilValue, R_NilValue) ;
 	if( set_delete_finalizer ){
 		setDeleteFinalizer() ;
@@ -139,22 +99,8 @@ RcppXPtr<T>::RcppXPtr(T* p, bool set_delete_finalizer = true) : isProtected(fals
 }
 
 template<typename T>
-void RcppXPtr<T>::protect(){
-	R_PreserveObject( m_sexp ) ;
-	isProtected = true ;
-}
-
-template<typename T>
 void RcppXPtr<T>::setDeleteFinalizer(){
 	R_RegisterCFinalizerEx( m_sexp, delete_finalizer<T> , FALSE) ; 
-}
-
-
-template<typename T>
-RcppXPtr<T>::~RcppXPtr(){
-	if( isProtected ){
-		R_ReleaseObject( m_sexp ) ;
-	}
 }
 
 template<typename T>
@@ -175,16 +121,6 @@ SEXP RcppXPtr<T>::getProtected(){
 template<typename T>
 SEXP RcppXPtr<T>::getTag(){
 	return EXTPTR_TAG(m_sexp) ;
-}
-
-template<typename T>
-SEXP RcppXPtr<T>::asSexp(){
-	return m_sexp ;
-}
-
-template<typename T>
-RcppXPtr<T>::operator SEXP() const {
-	return m_sexp ;
 }
 
 #endif
