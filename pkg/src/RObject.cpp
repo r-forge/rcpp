@@ -20,7 +20,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <Rcpp_RObject.h>
+#include <Rcpp/RObject.h>
 #include <algorithm>
 
 namespace Rcpp {

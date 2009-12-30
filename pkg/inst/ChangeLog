@@ -1,5 +1,15 @@
 2009-12-30  Romain Francois <francoisromain@free.fr>
 
+	* src/Makevars* : adapt for allowong copy of the Rcpp directory
+	
+	* src/Rcpp_RObject.h: replace by src/Rcpp/RObject.h
+	
+	* src/Rcpp_XPtr.h: replaced by src/Rcpp/XPtr.h
+	
+	* src/*.cpp: adapt to the Rcpp directory
+
+2009-12-30  Romain Francois <francoisromain@free.fr>
+
 	* inst/unitTests/runit.RObject.R: new unit tests
 
 	* inst/unitTests/runit.exceptions.R: idem
