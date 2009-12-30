@@ -1,9 +1,8 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Rcpp_RObject.h: Rcpp R/C++ interface class library -- super class of all R objects wrapped in C++ classes
+// Environment.h: Rcpp R/C++ interface class library -- access R environments
 //
-// Copyright (C) 2009 - 2010	Dirk Eddelbuettel
-// Copyright (C) 2009 - 2010	Romain Francois
+// Copyright (C) 2009 - 2010	Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -33,16 +32,16 @@ namespace Rcpp{
 class Environment: public RObject{
 public:
 	
-	/**
-	 * wraps the given environment
-	 *
-	 * if the SEXP is not an environment, and exception is thrown
-	 */
-	Environment(SEXP m_sexp) ;
+    /**
+     * wraps the given environment
+     *
+     * if the SEXP is not an environment, and exception is thrown
+     */
+    Environment(SEXP m_sexp) ;
     
-	/**
-	 * Nothing specific
-	 */ 
+    /**
+     * Nothing specific
+     */ 
     ~Environment() ;
 	
     /**
@@ -55,11 +54,11 @@ public:
     
 protected:
 	
-	/**
-	 * we cache whether this environment is a user defined database
-	 * or a standard environment
-	 */
-	bool is_user_database ;
+    /**
+     * we cache whether this environment is a user defined database
+     * or a standard environment
+     */
+    bool is_user_database ;
 };
 
 } // namespace Rcpp
