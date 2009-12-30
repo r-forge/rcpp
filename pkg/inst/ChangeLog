@@ -1,3 +1,8 @@
+2009-12-30  Romain Francois <francoisromain@free.fr>
+
+	* man/RcppUnitTests.Rd: shows and link unit test reports generated at
+	build time
+
 2009-12-29  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp_RObject.{h,cpp}: new namespace Rcpp and new class
