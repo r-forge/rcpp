@@ -23,7 +23,7 @@
 #define Rcpp_XPtr_h
 
 #include <RcppCommon.h>
-#include <Rcpp_RObject.h>
+#include <Rcpp/RObject.h>
 
 namespace Rcpp{
 

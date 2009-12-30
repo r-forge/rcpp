@@ -42,7 +42,7 @@
 #include <RcppVectorView.h>
 
 /* new api */
-#include <Rcpp_RObject.h>
-#include <Rcpp_XPtr.h>
+#include <Rcpp/RObject.h>
+#include <Rcpp/XPtr.h>
 
 #endif
