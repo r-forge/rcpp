@@ -13,11 +13,11 @@ Unit tests are run automatically at build time and reports are included in the
 \ifelse{html}{\url{../doc/Rcpp-unitTests.html}: html formatted unit test report}{\samp{../doc/Rcpp-unitTests.html}: html formatted unit test report}
 }
 
-\details{
-\ifelse{html}{\out{<pre>}}{\ifelse{latex}{\out{\begin{verbatim}}}{}}
-\Sexpr[echo=FALSE,results=text]{paste(readLines(system.file("doc", "Rcpp-unitTests.txt", package = "Rcpp" ) ), collapse="\n\n")}
-\ifelse{html}{\out{</pre>}}{\ifelse{latex}{\out{\end{verbatim}}}{}}
-}
+%\details{
+%\ifelse{html}{\out{<pre>}}{\ifelse{latex}{\out{\begin{verbatim}}}{}}
+%\Sexpr[echo=FALSE,results=text]{paste(readLines(system.file("doc", "Rcpp-unitTests.txt", package = "Rcpp" ) ), collapse="\n\n")}
+%\ifelse{html}{\out{</pre>}}{\ifelse{latex}{\out{\end{verbatim}}}{}}
+%}
 
 \examples{
 # unit tests are in the unitTests directory of the package
