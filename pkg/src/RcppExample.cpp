@@ -467,7 +467,7 @@ RcppExport SEXP RcppXPtrExample_create_external_pointer(){
 	v->push_back( 1 ) ;
 	v->push_back( 2 ) ;
 	Rcpp::XPtr< std::vector<int> > p(v) ;
-	return p.asSexp() ;
+	return p ;
 }
 
 RcppExport SEXP RcppXPtrExample_get_external_pointer(SEXP x){
