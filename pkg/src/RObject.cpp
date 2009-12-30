@@ -1,9 +1,8 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// RObject.cpp: Rcpp R/C++ interface class library -- SEXP support
+// RObject.cpp: Rcpp R/C++ interface class library -- R Object support
 //
-// Copyright (C) 2009 Dirk Eddelbuettel
-// Copyright (C) 2009 Romain Francois
+// Copyright (C) 2009 Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of Rcpp.
 //
