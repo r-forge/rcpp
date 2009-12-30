@@ -43,6 +43,7 @@
 
 /* new api */
 #include <Rcpp/RObject.h>
-#include <Rcpp/XPtr.h>
+#include <Rcpp/XPtr.h> 
+#include <Rcpp/Environment.h> 
 
 #endif
