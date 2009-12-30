@@ -79,7 +79,7 @@ test.RObject.asRaw <- function(){
 	checkException( funx(NULL) , msg = "RObject.asRaw(NULL) -> exception" )
 	checkException( funx("foo") , msg = "RObject.asRaw(character) -> exception" )
 	checkException( funx(1:2), msg = "RObject.asRaw(>1 integer) -> exception" )
-	checkException( funx(1.3), msg = "RObject.asRaw(>1 numeric) -> exception" )
+	checkException( funx(as.numeric(1:2)), msg = "RObject.asRaw(>1 numeric) -> exception" )
 	checkException( funx(as.raw(1:3)), msg = "RObject.asRaw(>1 raw) -> exception" )
 	checkException( funx(integer(0)), msg = "RObject.asRaw(0 integer) -> exception" )
 	checkException( funx(numeric(0)), msg = "RObject.asRaw(0 numeric) -> exception" )
