@@ -23,4 +23,6 @@ path <- system.file("unitTests", package = pkg)
 testSuite <- defineTestSuite(name=paste(pkg, "unit testing"), dirs = path)
 tests <- runTestSuite(testSuite)
 printHTMLProtocol(tests, fileName="Rcpp-unitTests.html" )
+printTextProtocol(tests, fileName="Rcpp-unitTests.txt" )
+
 
