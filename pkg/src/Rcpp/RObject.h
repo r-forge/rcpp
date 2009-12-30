@@ -1,9 +1,8 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Rcpp_RObject.h: Rcpp R/C++ interface class library -- super class of all R objects wrapped in C++ classes
+// RObject.h: Rcpp R/C++ interface class library -- general R object wrapper
 //
-// Copyright (C) 2009 - 2010	Dirk Eddelbuettel
-// Copyright (C) 2009 - 2010	Romain Francois
+// Copyright (C) 2009 - 2010	Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -31,23 +30,23 @@ namespace Rcpp{
 class RObject{
 public:
 	
-	/**
-	 * wraps a SEXP. The SEXP is not automatically 
-	 * protected from garbage collection because it might be 
-	 * protected from elsewhere (e.g. if it comes from the 
-	 * R side). See protect and release for ways to protect
-	 * the SEXP from garbage collection, and release to 
-	 * remove the protection
-	 */
-	RObject(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp) {};
+    /**
+     * wraps a SEXP. The SEXP is not automatically 
+     * protected from garbage collection because it might be 
+     * protected from elsewhere (e.g. if it comes from the 
+     * R side). See protect and release for ways to protect
+     * the SEXP from garbage collection, and release to 
+     * remove the protection
+     */
+    RObject(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp) {};
     
     /**
-	 * if this object is protected rom R's GC, then it is released
-	 * and become subject to garbage collection. See protect 
-	 * and release member functions.
-	 */
+     * if this object is protected rom R's GC, then it is released
+     * and become subject to garbage collection. See protect 
+     * and release member functions.
+     */
     ~RObject() ;
-	
+    
     RObject(const double & v);
     RObject(const int & v);
     RObject(const Rbyte & v);
@@ -81,40 +80,40 @@ public:
     
     
     /**
-	 * protects the wrapped SEXP from garbage collection. This 
-	 * calls the R_PreserveObject function on the underlying SEXP.
-	 *
-	 * Note that this does not use the PROTECT/UNPROTECT dance
-	 */
-	void protect();
+     * protects the wrapped SEXP from garbage collection. This 
+     * calls the R_PreserveObject function on the underlying SEXP.
+     *
+     * Note that this does not use the PROTECT/UNPROTECT dance
+     */
+    void protect();
 	
-	/**
-	 * explicitely release this object to R garbage collection. This
-	 * calls the R_ReleaseObject function on the underlying SEXP. 
-	 * This is automatically done by the destructor if we protected 
-	 * the SEXP (using the protect member function)
-	 */
-	void release();
+    /**
+     * explicitely release this object to R garbage collection. This
+     * calls the R_ReleaseObject function on the underlying SEXP. 
+     * This is automatically done by the destructor if we protected 
+     * the SEXP (using the protect member function)
+     */
+    void release();
+    
+    /**
+     * implicit conversion to SEXP
+     */
+    inline operator SEXP() const {
+	return m_sexp ;
+    }
 	
-	/**
-	 * implicit conversion to SEXP
-	 */
-	inline operator SEXP() const {
-		return m_sexp ;
-	}
+    
+    /* attributes */
 	
-	
-	/* attributes */
-	
-	/**
-	 * extracts the names of the attributes of the wrapped SEXP
-	 */
+    /**
+     * extracts the names of the attributes of the wrapped SEXP
+     */
     std::vector<std::string> attributeNames() const ;
     
     /**
      * Identifies if the SEXP has the given attribute
      */
-	bool hasAttribute( const std::string& attr) const ; 
+    bool hasAttribute( const std::string& attr) const ; 
     
     /**
      * extract the given attribute
@@ -136,27 +135,27 @@ public:
     }
     
     /** 
-	 * explicit conversion to SEXP
-	 */
-	inline SEXP asSexp() const {
-		return m_sexp ;
-	}
+     * explicit conversion to SEXP
+     */
+    inline SEXP asSexp() const {
+	return m_sexp ;
+    }
 	
 protected:
 	
-	/**
-	 * The SEXP this is wrapping
-	 */
-	SEXP m_sexp ;
+    /**
+     * The SEXP this is wrapping
+     */
+    SEXP m_sexp ;
 	
-	/**
-	 * true if this protects the SEXP from garbage collection
-	 * using R_ReleaseObject/R_PreserveObject strategy
-	 *
-	 * if this is true then the object will be release and become
-	 * subject to R garbage collection when this object is deleted
-	 */
-	bool isProtected ;    
+    /**
+     * true if this protects the SEXP from garbage collection
+     * using R_ReleaseObject/R_PreserveObject strategy
+     *
+     * if this is true then the object will be release and become
+     * subject to R garbage collection when this object is deleted
+     */
+    bool isProtected ;    
     
 };
 

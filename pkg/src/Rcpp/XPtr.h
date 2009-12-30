@@ -29,99 +29,99 @@ namespace Rcpp{
 
 template <typename T>
 void delete_finalizer(SEXP p){
-	if( TYPEOF(p) == EXTPTRSXP ){
-		T* ptr = (T*) EXTPTR_PTR(p) ;
-		delete ptr ;
-	}
+    if( TYPEOF(p) == EXTPTRSXP ){
+	T* ptr = (T*) EXTPTR_PTR(p) ;
+	delete ptr ;
+    }
 }
 
 template <typename T>
 class XPtr : public RObject {
-	public:
+public:
 		
-		/** 
-		 * constructs a XPtr wrapping the external pointer (EXTPTRSXP SEXP)
-		 *
-		 * @param xp external pointer to wrap
-		 */
-		 explicit XPtr(SEXP m_sexp) : RObject::RObject(m_sexp){} ;
+    /** 
+     * constructs a XPtr wrapping the external pointer (EXTPTRSXP SEXP)
+     *
+     * @param xp external pointer to wrap
+     */
+    explicit XPtr(SEXP m_sexp) : RObject::RObject(m_sexp){} ;
 		
-		/**
-		 * creates a new external pointer wrapping the dumb pointer p. 
-		 * This calls R_PreserveObject to prevent the external pointer 
-		 * from R garbage collection
-		 * 
-		 * @param p dumb pointer to some object
-		 * @param set_delete_finalizer if set to true, a finalizer will 
-		 *        be registered for the external pointer. The finalizer
-		 *        is called when the xp is garbage collected. The finalizer 
-		 *        is merely a call to the delete operator or the pointer
-		 *        so you need to make sure the pointer can be deleted. 
-		 */
-  		explicit XPtr(T* p, bool set_delete_finalizer) ;
+    /**
+     * creates a new external pointer wrapping the dumb pointer p. 
+     * This calls R_PreserveObject to prevent the external pointer 
+     * from R garbage collection
+     * 
+     * @param p dumb pointer to some object
+     * @param set_delete_finalizer if set to true, a finalizer will 
+     *        be registered for the external pointer. The finalizer
+     *        is called when the xp is garbage collected. The finalizer 
+     *        is merely a call to the delete operator or the pointer
+     *        so you need to make sure the pointer can be deleted. 
+     */
+    explicit XPtr(T* p, bool set_delete_finalizer) ;
 
-  		/**
-  		 * Returns a reference to the object wrapped. This allows this
-  		 * object to look and feel like a dumb pointer to T
-  		 */
-  		T& operator*() const ;
+    /**
+     * Returns a reference to the object wrapped. This allows this
+     * object to look and feel like a dumb pointer to T
+     */
+    T& operator*() const ;
   		
-  		/**
-  		 * Returns the dumb pointer. This allows to call the -> operator 
-  		 * on this as if it was the dumb pointer
-  		 */
-  		T* operator->() const ;
+    /**
+     * Returns the dumb pointer. This allows to call the -> operator 
+     * on this as if it was the dumb pointer
+     */
+    T* operator->() const ;
   		
-  		/**
-  		 * Returns the 'protected' part of the external pointer, this is 
-  		 * the SEXP that is passed in as the third argument of the 
-  		 * R_MakeExternalPointer function. See Writing R extensions
-  		 */
-  		SEXP getProtected() ;
+    /**
+     * Returns the 'protected' part of the external pointer, this is 
+     * the SEXP that is passed in as the third argument of the 
+     * R_MakeExternalPointer function. See Writing R extensions
+     */
+    SEXP getProtected() ;
   		
-  		/** 
-  		 * Returns the 'tag' part of the external pointer, this is the 
-  		 * SEXP that is passed in as the 2nd argument of the 
-  		 * R_MakeExternalPointer function. See Writing R extensions
-  		 */
-  		SEXP getTag() ;
-  		
-  		void setDeleteFinalizer() ;
+    /** 
+     * Returns the 'tag' part of the external pointer, this is the 
+     * SEXP that is passed in as the 2nd argument of the 
+     * R_MakeExternalPointer function. See Writing R extensions
+     */
+    SEXP getTag() ;
+    
+    void setDeleteFinalizer() ;
   		
 };
 
 template<typename T>
 XPtr<T>::XPtr(T* p, bool set_delete_finalizer = true) : RObject::RObject() {
-	m_sexp = R_MakeExternalPtr( (void*)p , R_NilValue, R_NilValue) ;
-	if( set_delete_finalizer ){
-		setDeleteFinalizer() ;
-	}
-	protect() ;
+    m_sexp = R_MakeExternalPtr( (void*)p , R_NilValue, R_NilValue) ;
+    if( set_delete_finalizer ){
+	setDeleteFinalizer() ;
+    }
+    protect() ;
 }
 
 template<typename T>
 void XPtr<T>::setDeleteFinalizer(){
-	R_RegisterCFinalizerEx( m_sexp, delete_finalizer<T> , FALSE) ; 
+    R_RegisterCFinalizerEx( m_sexp, delete_finalizer<T> , FALSE) ; 
 }
 
 template<typename T>
 T& XPtr<T>::operator*() const {
-	return *((T*)EXTPTR_PTR( m_sexp )) ;
+    return *((T*)EXTPTR_PTR( m_sexp )) ;
 }
 
 template<typename T>
 T* XPtr<T>::operator->() const {
-	return (T*)(EXTPTR_PTR(m_sexp));
+    return (T*)(EXTPTR_PTR(m_sexp));
 }
 
 template<typename T>
 SEXP XPtr<T>::getProtected(){
-	return EXTPTR_PROT(m_sexp) ;
+    return EXTPTR_PROT(m_sexp) ;
 }
 
 template<typename T>
 SEXP XPtr<T>::getTag(){
-	return EXTPTR_TAG(m_sexp) ;
+    return EXTPTR_TAG(m_sexp) ;
 }
 
 } // namespace Rcpp 
