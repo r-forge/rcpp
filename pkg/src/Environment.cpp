@@ -23,6 +23,17 @@
 
 namespace Rcpp {
 
+/* this comes from JRI, where it was introduced to cope with cases
+   where bindings are locked */
+struct safeAssign_s {
+    SEXP sym, val, rho;
+};
+static void safeAssign(void *data) {
+    struct safeAssign_s *s = (struct safeAssign_s*) data;
+    Rf_defineVar(s->sym, s->val, s->rho);
+}
+	
+	
     Environment::Environment( SEXP m_sexp = R_GlobalEnv) : RObject::RObject(m_sexp){
 	if( TYPEOF(m_sexp) != ENVSXP ){
 	    throw std::runtime_error( "not an environment" ) ;
@@ -45,6 +56,49 @@ namespace Rcpp {
 	}
 	return R_NilValue ;
     }
-	
+    
+    SEXP Environment::get( const std::string& name) const {
+    	SEXP res = Rf_findVarInFrame( m_sexp, Rf_install(name.c_str())  ) ;
+    	
+    	if( res == R_UnboundValue ) return R_NilValue ;
+    	
+    	/* We need to evaluate if it is a promise */
+	if( TYPEOF(res) == PROMSXP){
+    		res = Rf_eval( res, m_sexp ) ;
+    	}
+    	return res ;
+    }
+    
+    bool Environment::exists( const std::string& name) const{
+    	SEXP res = Rf_findVarInFrame( m_sexp, Rf_install(name.c_str())  ) ;
+    	return res != R_UnboundValue ;
+    }
+    
+    bool Environment::assign( const std::string& name, SEXP x = R_NilValue) const{
+    	/* borrowed from JRI, we cannot just use defineVar since it might 
+    	   crash on locked bindings */
+    	struct safeAssign_s s;
+    	s.sym = Rf_install( name.c_str() ) ;
+    	if( !s.sym || s.sym == R_NilValue ) return false ;
+    	
+    	s.rho = m_sexp ;
+    	s.val = x ;
+    	return static_cast<bool>( R_ToplevelExec(safeAssign, (void*) &s) );
+    }
+    
+    bool Environment::isLocked() const{
+    	return static_cast<bool>(R_EnvironmentIsLocked(m_sexp));
+    }
+    
+    bool Environment::bindingIsActive(const std::string& name) const{
+    	if( !exists( name) ) return false ; /* should this be an exception instead ? */
+    	return static_cast<bool>(R_BindingIsActive(Rf_install(name.c_str()), m_sexp)) ;
+    }
+    
+    bool Environment::bindingIsLocked(const std::string& name) const{
+    	if( !exists( name) ) return false ; /* should this be an exception instead ? */
+    	return static_cast<bool>(R_BindingIsLocked(Rf_install(name.c_str()), m_sexp)) ;
+    }
+    
 } // namespace Rcpp
 

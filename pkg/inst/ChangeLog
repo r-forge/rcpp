@@ -1,6 +1,7 @@
 2009-12-30  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/Environment.h : added minimal support for environment
+	* src/Rcpp/Environment.h : added support for environment through the
+	Rcpp::Environment class
 	
 	* src/Environment.cpp: idem
 	
