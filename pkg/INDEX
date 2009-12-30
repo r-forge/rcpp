@@ -5,4 +5,5 @@ RcppExample             Rcpp R / C++ interface example
 RcppParams              C++ class for receiving (scalar) parameters
                         from R
 RcppResultSet           C++ class for sending C++ objects back to R
+RcppUnitTests			Unit test results for package Rcpp
 RcppVector              C++ classes for receiving R object in C++
