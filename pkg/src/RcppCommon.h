@@ -38,6 +38,7 @@
 
 #include <R.h>
 #include <Rinternals.h>
+#include <R_ext/Callbacks.h>
 
 // #ifdef BUILDING_DLL
 // #define RcppExport extern "C" __declspec(dllexport)

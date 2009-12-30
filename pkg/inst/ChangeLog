@@ -1,5 +1,16 @@
 2009-12-30  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Environment.h : added minimal support for environment
+	
+	* src/Environment.cpp: idem
+	
+	* inst/unitTests/runit.environments.R: testing the above
+	
+	* src/RcppCommon.h: now includes <R_ext/Callbacks.h>, needed for the 
+	environment support
+	
+2009-12-30  Romain Francois <francoisromain@free.fr>
+
 	* src/Makevars* : adapt for allowong copy of the Rcpp directory
 	
 	* src/Rcpp_RObject.h: replace by src/Rcpp/RObject.h
@@ -7,6 +18,8 @@
 	* src/Rcpp_XPtr.h: replaced by src/Rcpp/XPtr.h
 	
 	* src/*.cpp: adapt to the Rcpp directory
+	
+	* cleanup: idem
 
 2009-12-30  Romain Francois <francoisromain@free.fr>
 
