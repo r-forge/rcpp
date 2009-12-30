@@ -49,8 +49,62 @@ public:
      * 
      * the same as calling this from R: 
      * > ls( envir = this, all = all )
+     *
+     * @param all same meaning as in ?ls
      */ 
     SEXP ls(bool all) const ;
+    
+    /**
+     * Get an object from the environment
+     *
+     * @param name name of the object
+     *
+     * @return a SEXP (possibly R_NilValue)
+     */
+    SEXP get(const std::string& name) const ;
+    
+    /**
+     * Indicates if an object called name exists in the 
+     * environment
+     *
+     * @param name name of the object
+     *
+     * @return true if the object exists in the environment
+     */
+    bool exists( const std::string& name ) const ;
+    
+    /**
+     * Attempts to assign x to name in this environment
+     *
+     * @param name name of the object to assign
+     * @param x object to assign
+     *
+     * @return true if the assign was successfull
+     */
+    bool assign( const std::string& name, SEXP x ) const ;
+    
+    /**
+     * @return true if this environment is locked
+     * see ?environmentIsLocked for details of what this means
+     */
+    bool isLocked() const ;
+    
+    /**
+     * @param name name of a potential binding
+     *
+     * @return true if the binding is locked in this environment
+     * see ?bindingIsLocked
+     */
+    bool bindingIsLocked(const std::string& name) const ;
+    
+    /**
+     *
+     * @param name name of a binding
+     * 
+     * @return true if the binding is active in this environment
+     * see ?bindingIsActive
+     */
+    bool bindingIsActive(const std::string& name) const ;
     
 protected:
 	
