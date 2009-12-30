@@ -59,7 +59,7 @@ test.XPtr <- function(){
 	', Rcpp=TRUE, verbose=FALSE)
 	front <- funx(xp)
 	checkEquals( front, 1L, msg = "check usage of external pointer" )
-Ma}
+}
 
 # this is similar but without inline, the code is included in 
 # the dyn lib. One reason for this is to effectively instanciate one
