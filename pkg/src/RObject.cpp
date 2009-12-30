@@ -294,7 +294,7 @@ std::vector<Rbyte> RObject::asStdVectorRaw() const {
     	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
     	break;
     default:
-    	std::range_error("RObject::asStdVectorRaw expects raw, double or int");
+    	throw std::range_error("RObject::asStdVectorRaw expects raw, double or int");
     }
     return v;
 }
@@ -316,7 +316,7 @@ std::vector<double> RObject::asStdVectorDouble() const {
     	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
     	break;
     default:
-    	std::range_error("RObject::asStdVectorDouble expects raw, double or int");
+    	throw std::range_error("RObject::asStdVectorDouble expects raw, double or int");
     }
     return v;
 }
