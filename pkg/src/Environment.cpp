@@ -32,13 +32,20 @@ static void safeAssign(void *data) {
     struct safeAssign_s *s = (struct safeAssign_s*) data;
     Rf_defineVar(s->sym, s->val, s->rho);
 }
-	
-	
+
+struct safeFindNamespace_s {
+    SEXP sym, val ;
+};
+static void safeFindNamespace(void *data) {
+    struct safeFindNamespace_s *s = (struct safeFindNamespace_s*) data;
+    s->val = R_FindNamespace(s->sym);
+}
+
+
     Environment::Environment( SEXP m_sexp = R_GlobalEnv) : RObject::RObject(m_sexp){
 	if( TYPEOF(m_sexp) != ENVSXP ){
 	    throw std::runtime_error( "not an environment" ) ;
 	}
-	is_user_database = IS_USER_DATABASE(m_sexp) ;
     }
 	
     Environment::~Environment(){
@@ -46,7 +53,7 @@ static void safeAssign(void *data) {
     }
 	
     SEXP Environment::ls( bool all = true) const {
-	if( is_user_database ){
+	if( is_user_database() ){
 	    R_ObjectTable *tb = (R_ObjectTable*)
 		R_ExternalPtrAddr(HASHTAB(m_sexp));
 	    return tb->objects(tb) ;
@@ -74,9 +81,14 @@ static void safeAssign(void *data) {
     	return res != R_UnboundValue ;
     }
     
-    bool Environment::assign( const std::string& name, SEXP x = R_NilValue) const{
+    bool Environment::assign( const std::string& name, SEXP x = R_NilValue) const throw(binding_is_locked){
+    	if( exists( name) && bindingIsLocked(name) ) throw binding_is_locked(name) ;
+    	
     	/* borrowed from JRI, we cannot just use defineVar since it might 
     	   crash on locked bindings */
+    	   
+    	/* TODO: we need to modify R_ToplevelExec so that it does not print 
+    	         the error message as it currently does*/
     	struct safeAssign_s s;
     	s.sym = Rf_install( name.c_str() ) ;
     	if( !s.sym || s.sym == R_NilValue ) return false ;
@@ -87,18 +99,86 @@ static void safeAssign(void *data) {
     }
     
     bool Environment::isLocked() const{
-    	return static_cast<bool>(R_EnvironmentIsLocked(m_sexp));
+    	return R_EnvironmentIsLocked(m_sexp);
     }
     
-    bool Environment::bindingIsActive(const std::string& name) const{
-    	if( !exists( name) ) return false ; /* should this be an exception instead ? */
-    	return static_cast<bool>(R_BindingIsActive(Rf_install(name.c_str()), m_sexp)) ;
+    bool Environment::bindingIsActive(const std::string& name) const throw(no_such_binding) {
+    	if( !exists( name) ) throw no_such_binding(name) ;
+    	return R_BindingIsActive(Rf_install(name.c_str()), m_sexp) ;
     }
     
-    bool Environment::bindingIsLocked(const std::string& name) const{
-    	if( !exists( name) ) return false ; /* should this be an exception instead ? */
-    	return static_cast<bool>(R_BindingIsLocked(Rf_install(name.c_str()), m_sexp)) ;
+    bool Environment::bindingIsLocked(const std::string& name) const throw(no_such_binding) {
+    	if( !exists( name) ) throw no_such_binding(name) ;
+    	return R_BindingIsLocked(Rf_install(name.c_str()), m_sexp) ;
     }
+    
+    void Environment::lock( bool bindings = false ) {
+    	R_LockEnvironment( m_sexp, bindings ? TRUE: FALSE ) ;
+    }
+    
+    void Environment::lockBinding(const std::string& name) throw(no_such_binding) {
+    	if( !exists( name) ) throw no_such_binding(name) ;
+    	R_LockBinding( Rf_install( name.c_str() ), m_sexp ); 
+    }
+    
+    void Environment::unlockBinding(const std::string& name) throw(no_such_binding) {
+    	if( !exists( name) ) throw no_such_binding(name) ;
+    	R_unLockBinding( Rf_install( name.c_str() ), m_sexp );
+    }
+    
+    bool Environment::is_user_database() const {
+    	return OBJECT(m_sexp) && Rf_inherits(m_sexp, "UserDefinedDatabase") ;
+    }
+    
+    /* static */
+    
+    Environment Environment::global_env() throw() {
+    	return Environment(R_GlobalEnv) ;
+    }
+    
+    Environment Environment::empty_env() throw() {
+    	return Environment(R_GlobalEnv) ;
+    }
+    
+    Environment Environment::base_env() throw(){
+    	return Environment(R_BaseEnv) ;
+    }
+    
+    Environment Environment::base_namespace() throw() {
+    	return Environment(R_BaseNamespace) ;
+    }
+    
+    Environment Environment::namespace_env(const std::string& package) throw(no_such_namespace) {
+    	struct safeFindNamespace_s s;
+    	s.sym = Rf_mkString( package.c_str() ) ;
+    	if( !s.sym || s.sym == R_NilValue || !R_ToplevelExec(safeFindNamespace, (void*) &s) ){
+    		throw no_such_namespace(package) ;
+    	}
+    	return s.val ;
+    }
+    
+    /* exceptions */
+    
+    Environment::no_such_binding::no_such_binding(const std::string& binding) :
+    	message( "no such binding : '" + binding + "'" ) {}
+    const char* Environment::no_such_binding::what() const throw(){
+    	return message.c_str() ;
+    }
+    Environment::no_such_binding::~no_such_binding() throw() {}
+    
+    Environment::binding_is_locked::binding_is_locked(const std::string& binding) : 
+    	message("binding is locked : '" + binding + "'" ) {}
+    const char* Environment::binding_is_locked::what() const throw(){
+    	return message.c_str() ;
+    }
+    Environment::binding_is_locked::~binding_is_locked() throw() {}
+    
+    Environment::no_such_namespace::no_such_namespace(const std::string& package) : 
+    	message("no such namespace : '" + package + "'" ) {}
+    const char* Environment::no_such_namespace::what() const throw(){
+    	return message.c_str() ;
+    }
+    Environment::no_such_namespace::~no_such_namespace() throw() {}
     
 } // namespace Rcpp
 

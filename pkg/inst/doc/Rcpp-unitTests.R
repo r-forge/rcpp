@@ -24,5 +24,8 @@ testSuite <- defineTestSuite(name=paste(pkg, "unit testing"), dirs = path)
 tests <- runTestSuite(testSuite)
 printHTMLProtocol(tests, fileName="Rcpp-unitTests.html" )
 printTextProtocol(tests, fileName="Rcpp-unitTests.txt" )
-
+if( file.exists( "/tmp" ) ){
+	file.copy( "Rcpp-unitTests.txt", "/tmp", overwrite = TRUE )
+	file.copy( "Rcpp-unitTests.html", "/tmp", overwrite = TRUE )
+}
 
