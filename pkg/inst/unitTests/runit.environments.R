@@ -94,8 +94,11 @@ test.environment.assign <- function(){
 	checkEquals( e$a, 1:10, msg = "Environment::assign, checking value 1" )
 	checkEquals( e$b, Rcpp:::CxxFlags, msg = "Environment::assign, checking value 2" )
 	
-	lockBinding( "a", e ) 
-	checkTrue( !funx(e, "a", letters ), msg = "Environment::assign and locked bindings" )
+	lockBinding( "a", e )
+	checkTrue( 
+		tryCatch( { funx(e, "a", letters ) ; FALSE}, "Rcpp::Environment::binding_is_locked" = function(e) TRUE ), 
+		msg = "cannot assign to locked binding (catch exception)" )
+
 }
 
 test.environment.isLocked <- function(){
@@ -121,10 +124,12 @@ test.environment.bindingIsActive <- function(){
 	e <- new.env()
 	e$a <- 1:10
 	makeActiveBinding( "b", function(x) 10, e ) 
-	
+
 	checkTrue( !funx(e, "a" ), msg = "Environment::bindingIsActive( non active ) -> false" )
 	checkTrue( funx(e, "b" ), msg = "Environment::bindingIsActive( active ) -> true" )
-	checkTrue( !funx(e, "xx" ), msg = "Environment::bindingIsActive( no binding ) -> false" )
+	checkTrue( 
+		tryCatch( { funx(e, "xx" ) ; FALSE}, "Rcpp::Environment::no_such_binding" = function(e) TRUE ), 
+		msg = "Environment::bindingIsActive(no binding) -> exception)" )
 	
 }
 
@@ -143,7 +148,9 @@ test.environment.bindingIsLocked <- function(){
 	
 	checkTrue( !funx(e, "a" ), msg = "Environment::bindingIsActive( non active ) -> false" )
 	checkTrue( funx(e, "b" ), msg = "Environment::bindingIsActive( active ) -> true" )
-	checkTrue( !funx(e, "xx" ), msg = "Environment::bindingIsActive( no binding ) -> false" )
+	checkTrue( 
+		tryCatch( { funx(e, "xx" ) ; FALSE}, "Rcpp::Environment::no_such_binding" = function(e) TRUE ), 
+		msg = "Environment::bindingIsLocked(no binding) -> exception)" )
 	
 }
 
@@ -155,4 +162,81 @@ test.environment.NotAnEnvironment <- function(){
 	checkException( funx( iris ), msg = "not an environment" )
 	checkException( funx( NULL ), msg = "not an environment" )
 }
+
+
+test.environment.lockBinding <- function(){
+	funx <- cfunction(signature(x="environment", name = "character" ), '
+	Rcpp::Environment env(x) ;
+	std::string st = Rcpp::RObject(name).asStdString() ;
+	env.lockBinding( st ) ;
+	return R_NilValue ;
+	', Rcpp=TRUE, verbose=FALSE)
+	
+	e <- new.env()
+	e$a <- 1:10
+	e$b <- letters
+	funx(e, "b")
+	checkTrue( bindingIsLocked("b", e ), msg = "Environment::lockBinding()" )
+	checkTrue( 
+		tryCatch( { funx(e, "xx" ) ; FALSE}, "Rcpp::Environment::no_such_binding" = function(e) TRUE ), 
+		msg = "Environment::lockBinding(no binding) -> exception)" )
+	
+}
+
+test.environment.unlockBinding <- function(){
+	funx <- cfunction(signature(x="environment", name = "character" ), '
+	Rcpp::Environment env(x) ;
+	std::string st = Rcpp::RObject(name).asStdString() ;
+	env.unlockBinding( st ) ;
+	return R_NilValue ;
+	', Rcpp=TRUE, verbose=FALSE)
+	
+	e <- new.env()
+	e$a <- 1:10
+	e$b <- letters
+	lockBinding( "b", e )
+	funx(e, "b")
+	checkTrue( !bindingIsLocked("b", e ), msg = "Environment::lockBinding()" )
+	checkTrue( 
+		tryCatch( { funx(e, "xx" ) ; FALSE}, "Rcpp::Environment::no_such_binding" = function(e) TRUE ), 
+		msg = "Environment::unlockBinding(no binding) -> exception)" )
+	
+}
+
+test.environment.global.env <- function(){
+	funx <- cfunction(signature(), 
+	'return Rcpp::Environment::global_env(); ', Rcpp=TRUE, verbose=FALSE)
+	checkEquals( funx(), globalenv(), msg = "REnvironment::global_env" )
+}
+
+test.environment.empty.env <- function(){
+	funx <- cfunction(signature(), 
+	'return Rcpp::Environment::empty_env(); ', Rcpp=TRUE, verbose=FALSE)
+	checkEquals( funx(), emptyenv(), msg = "REnvironment::empty_env" )
+}
+
+test.environment.base.env <- function(){
+	funx <- cfunction(signature(), 
+	'return Rcpp::Environment::base_env(); ', Rcpp=TRUE, verbose=FALSE)
+	checkEquals( funx(), baseenv(), msg = "REnvironment::base_env" )
+}
+
+test.environment.empty.env <- function(){
+	funx <- cfunction(signature(), 
+	'return Rcpp::Environment::base_namespace(); ', Rcpp=TRUE, verbose=FALSE)
+	checkEquals( funx(), .BaseNamespaceEnv, msg = "REnvironment::base_namespace" )
+}
+
+test.environment.namespace.env <- function(){
+	funx <- cfunction(signature(env = "character" ),  '
+	std::string st = Rcpp::RObject(env).asStdString() ;
+	return Rcpp::Environment::namespace_env(st); ', Rcpp=TRUE, verbose=FALSE)
+	checkEquals( funx("Rcpp"), asNamespace("Rcpp"), msg = "REnvironment::base_namespace" )
+	checkTrue( 
+		tryCatch( { funx("----" ) ; FALSE}, "Rcpp::Environment::no_such_namespace" = function(e) TRUE ), 
+		msg = "Environment::namespace_env(no namespace) -> exception)" )
+	
+}
+
+
 
