@@ -1,3 +1,17 @@
+2009-12-31  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/Evaluator.h : new class Rcpp::Evaluator that eases
+	evaluation of R expression with error capture. so that we can for example
+	throw C++ exceptions
+	
+	* src/Evaluator.cpp : implementation of Rcpp::Evaluator
+	
+	* inst/unitTests/runit.evaluator: unit tests of Rcpp::Evaluator
+	
+	* inst/Rcpp/RObject.h: RObject::RObject(SEXP) now initializes isProtected
+	
+	* inst/src/Environment.cpp: use of exceptions
+
 2009-12-30  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/Environment.h : added support for environment through the

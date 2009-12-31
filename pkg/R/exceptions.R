@@ -26,3 +26,24 @@ cpp_exception <- function( message = "C++ exception", class = NULL ){
 	stop( condition )
 }
 
+# used by Rcpp::Evaluator
+exceptions <- new.env()
+setCurrentError <- function( condition = NULL) exceptions[["current"]] <- condition
+resetCurrentError <- function() {
+	setCurrentError(NULL)
+	setErrorOccured(FALSE)
+}
+getCurrentError <- function() exceptions[["current"]]
+errorOccured <- function() isTRUE( exceptions[["error_occured"]] )
+setErrorOccured <- function(error_occured = TRUE) exceptions[["error_occured"]] <- error_occured
+resetCurrentError()
+protectedEval <- function(expr, env ){
+	resetCurrentError()
+	tryCatch( eval( expr, envir = env), error = function(e){
+		setErrorOccured( TRUE )
+		setCurrentError( e )
+		invisible( NULL )
+	} )
+}
+setErrorOccured(FALSE)
+

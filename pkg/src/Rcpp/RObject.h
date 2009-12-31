@@ -38,7 +38,7 @@ public:
      * the SEXP from garbage collection, and release to 
      * remove the protection
      */
-    RObject(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp) {};
+    RObject(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp), isProtected(false){};
     
     /**
      * if this object is protected rom R's GC, then it is released
