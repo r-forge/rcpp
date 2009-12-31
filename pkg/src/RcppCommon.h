@@ -39,6 +39,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Callbacks.h>
+#include <Rversion.h>
 
 // #ifdef BUILDING_DLL
 // #define RcppExport extern "C" __declspec(dllexport)
@@ -54,6 +55,7 @@ inline void logTxtFunction(const char* file, const int line, const char* express
 //#define logTxt(x) logTxtFunction(__FILE__, __LINE__, x);
 #define logTxt(x) 
 
+/* in exceptions.cpp */
 void forward_uncaught_exceptions_to_r() ;
 RcppExport SEXP initUncaughtExceptionHandler() ; 
 
