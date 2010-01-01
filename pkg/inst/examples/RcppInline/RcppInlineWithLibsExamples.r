@@ -1,7 +1,6 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2009 - 2010	Dirk Eddelbuettel
-# Copyright (C) 2009 - 2010	Romain Francois
+# Copyright (C) 2009 - 2010	Dirk Eddelbuettel and Romain Francois
 #
 # This file is part of Rcpp.
 #
@@ -136,7 +135,46 @@ thirdExample <- function() {
     invisible(NULL)
 }
 
+fourthExample <- function() {
+
+    ## now use Rcpp to pass down a parameter for the seed, and a vector size
+    gslrng <- '
+    int seed = wrap(s).asInt();
+    int len = wrap(n).asInt();
+
+    gsl_rng *r;
+    gsl_rng_env_setup();
+    std::vector<double> v(len);
+
+    r = gsl_rng_alloc (gsl_rng_default);
+
+    gsl_rng_set (r, (unsigned long) seed);
+    for (int i=0; i<len; i++) {
+       v[i] = gsl_rng_get (r);
+    }
+    gsl_rng_free(r);
+
+    return wrap(v);
+    '
+
+    ## turn into a function that R can call
+    ## compileargs redundant on Debian/Ubuntu as gsl headers are found anyway
+    ## use additional define for compile to suppress output
+    funx <- cfunction(signature(s="numeric", n="numeric"),
+                      gslrng,
+                      includes=c("#include <gsl/gsl_rng.h>",
+                                 "using namespace Rcpp;",
+                                 "using namespace std;"),
+                      Rcpp=TRUE,
+                      cppargs="-I/usr/include",
+                      libargs="-lgsl -lgslcblas")
+    cat("\n\nCalling fourth example with seed, length and namespaces\n")
+    print(funx(0, 5))
+
+    invisible(NULL)
+}
+
 firstExample()
 secondExample()
 thirdExample()
-
+fourthExample()
