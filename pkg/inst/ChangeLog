@@ -1,11 +1,19 @@
 2010-01-01  Romain Francois <francoisromain@free.fr>
 
+	* pkg/src/Rcpp/RObject.h: RObject::RObject constructors are 
+	replaced by the Rcpp::wrap set of functions. Currently the wrap 
+	functions make a RObject object but it is likely that as new
+	classes become available in the new API, wrap will return 
+	instances of classes that extend RObject.
+	
 	* pkg/src/Rcpp/RObject.h: s/protect/preserve/, added methods
 	isPreserved and forgetPreserve
-	
-	* pkg/src/Rcpp/XPtr.h 
-	* pkg/src/RObject.cpp
-	* pkg/src/Evaluator.cpp
+
+	* ** : adapted examples, code, and unit tests to reflect both 
+	above items
+
+2010-01-01  Romain Francois <francoisromain@free.fr>
+
 
 2009-12-31  Romain Francois <francoisromain@free.fr>
 

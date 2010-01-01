@@ -56,7 +56,7 @@ secondExample <- function() {
 
     ## now use Rcpp to pass down a parameter for the seed
     gslrng <- '
-    int seed = Rcpp::RObject(par).asInt();
+    int seed = Rcpp::wrap(par).asInt();
 
     gsl_rng *r;
     gsl_rng_env_setup();
@@ -74,7 +74,7 @@ secondExample <- function() {
     #endif
 
     gsl_rng_free(r);
-    return Rcpp::RObject(v) ;
+    return Rcpp::wrap(v) ;
     '
 
     ## turn into a function that R can call
@@ -103,8 +103,8 @@ thirdExample <- function() {
 
     ## now use Rcpp to pass down a parameter for the seed, and a vector size
     gslrng <- '
-    int seed = Rcpp::RObject(s).asInt();
-    int len = Rcpp::RObject(n).asInt();
+    int seed = Rcpp::wrap(s).asInt();
+    int len = Rcpp::wrap(n).asInt();
 
     gsl_rng *r;
     gsl_rng_env_setup();
@@ -118,7 +118,7 @@ thirdExample <- function() {
     }
     gsl_rng_free(r);
 
-    return Rcpp::RObject(v) ;
+    return Rcpp::wrap(v) ;
     '
 
     ## turn into a function that R can call

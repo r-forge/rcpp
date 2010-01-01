@@ -55,7 +55,7 @@ test.XPtr <- function(){
 		Rcpp::XPtr< std::vector<int> > p(x) ;
 		
 		/* just return the front of the vector as a SEXP */
-		return( Rcpp::RObject( p->front() ) ) ;
+		return( Rcpp::wrap( p->front() ) ) ;
 	', Rcpp=TRUE, verbose=FALSE)
 	front <- funx(xp)
 	checkEquals( front, 1L, msg = "check usage of external pointer" )

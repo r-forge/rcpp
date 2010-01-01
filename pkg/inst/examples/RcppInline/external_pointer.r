@@ -51,7 +51,7 @@ funx <- cfunction(signature(x = "externalptr" ), '
 	Rcpp::XPtr< std::vector<int> > p(x) ;
 	
 	/* just return the front of the vector as a SEXP */
-	return( Rcpp::RObject( p->front() ) ) ;
+	return( Rcpp::wrap( p->front() ) ) ;
 ', Rcpp=TRUE, verbose=FALSE)
 front <- funx(xp)
 stopifnot( identical( front, 1L ) )
