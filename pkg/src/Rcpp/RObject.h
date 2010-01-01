@@ -38,7 +38,7 @@ public:
      * the SEXP from garbage collection, and release to 
      * remove the protection
      */
-    RObject(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp), isProtected(false){};
+    RObject(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp), preserved(false){};
     
     /**
      * if this object is protected rom R's GC, then it is released
@@ -85,7 +85,7 @@ public:
      *
      * Note that this does not use the PROTECT/UNPROTECT dance
      */
-    void protect();
+    void preserve();
 	
     /**
      * explicitely release this object to R garbage collection. This
@@ -96,11 +96,32 @@ public:
     void release();
     
     /**
+     * Indicates if the underlying SEXP is preserved by this object
+     */
+    inline bool isPreserved() const{ return preserved ; }
+    
+    /**
+     * when this object goes out of scope, if the wrapped SEXP is currently
+     * protected from R's garbage collection, it becomes subject to garbage
+     * collection. 
+     *
+     * This method allows this object to forget that it is preserving
+     * the SEXP.
+     *
+     * This can be used when we want some other RObject to assume ownership
+     * of the SEXP. This needs to be used with EXTRA care. If the SEXP 
+     * was preserved by one object and the protection was not passed to another,
+     * there is a great chance that there will be memory leaks.
+     *
+     * This might be improved later, possibly with using shared smart pointer
+     * or by doing what auto_ptr does with the assignment operator
+     */
+    void forgetPreserve() ;
+    
+    /**
      * implicit conversion to SEXP
      */
-    inline operator SEXP() const {
-	return m_sexp ;
-    }
+    inline operator SEXP() const { return m_sexp ; }
 	
     
     /* attributes */
@@ -123,24 +144,19 @@ public:
     /**
      * is this object NULL
      */
-    inline bool isNULL() const{
-    	return m_sexp == R_NilValue ;
-    }
+    inline bool isNULL() const{ return m_sexp == R_NilValue ; }
     
     /**
      * The SEXP typeof, calls TYPEOF on the underlying SEXP
      */
-    inline int sexp_type() const {
-    	return TYPEOF(m_sexp) ;
-    }
+    inline int sexp_type() const { return TYPEOF(m_sexp) ; }
     
     /** 
      * explicit conversion to SEXP
      */
-    inline SEXP asSexp() const {
-	return m_sexp ;
-    }
-	
+    inline SEXP asSexp() const { return m_sexp ; }
+    
+    
 protected:
 	
     /**
@@ -155,7 +171,7 @@ protected:
      * if this is true then the object will be release and become
      * subject to R garbage collection when this object is deleted
      */
-    bool isProtected ;    
+    bool preserved ;    
     
 };
 

@@ -96,7 +96,7 @@ XPtr<T>::XPtr(T* p, bool set_delete_finalizer = true) : RObject::RObject() {
     if( set_delete_finalizer ){
 	setDeleteFinalizer() ;
     }
-    protect() ;
+    preserve() ;
 }
 
 template<typename T>
