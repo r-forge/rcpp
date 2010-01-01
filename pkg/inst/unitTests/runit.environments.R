@@ -48,7 +48,7 @@ test.environment.ls <- function(){
 test.environment.get <- function(){
 	funx <- cfunction(signature(x="environment", name = "character" ), '
 	Rcpp::Environment env(x) ;
-	return env.get( Rcpp::RObject(name).asStdString() ) ;
+	return env.get( Rcpp::wrap(name).asStdString() ) ;
 	', Rcpp=TRUE, verbose=FALSE)
 	
 	e <- new.env( )
@@ -65,8 +65,8 @@ test.environment.get <- function(){
 test.environment.exists <- function(){
 	funx <- cfunction(signature(x="environment", name = "character" ), '
 	Rcpp::Environment env(x) ;
-	std::string st = Rcpp::RObject(name).asStdString() ;
-	return Rcpp::RObject( env.exists(st) ) ;
+	std::string st = Rcpp::wrap(name).asStdString() ;
+	return Rcpp::wrap( env.exists(st) ) ;
 	', Rcpp=TRUE, verbose=FALSE)
 	
 	e <- new.env( )
@@ -83,8 +83,8 @@ test.environment.assign <- function(){
 	
 	funx <- cfunction(signature(x="environment", name = "character", object = "ANY" ), '
 	Rcpp::Environment env(x) ;
-	std::string st = Rcpp::RObject(name).asStdString() ;
-	return Rcpp::RObject( env.assign(st, object) ) ;
+	std::string st = Rcpp::wrap(name).asStdString() ;
+	return Rcpp::wrap( env.assign(st, object) ) ;
 	', Rcpp=TRUE, verbose=FALSE)
 	
 	e <- new.env( )
@@ -104,7 +104,7 @@ test.environment.assign <- function(){
 test.environment.isLocked <- function(){
 	funx <- cfunction(signature(x="environment" ), '
 	Rcpp::Environment env(x) ;
-	return Rcpp::RObject( env.isLocked() ) ;
+	return Rcpp::wrap( env.isLocked() ) ;
 	', Rcpp=TRUE, verbose=FALSE)
 	
 	e <- new.env()
@@ -117,8 +117,8 @@ test.environment.bindingIsActive <- function(){
 	
 	funx <- cfunction(signature(x="environment", name = "character" ), '
 	Rcpp::Environment env(x) ;
-	std::string st = Rcpp::RObject(name).asStdString() ;
-	return Rcpp::RObject( env.bindingIsActive(st) ) ;
+	std::string st = Rcpp::wrap(name).asStdString() ;
+	return Rcpp::wrap( env.bindingIsActive(st) ) ;
 	', Rcpp=TRUE, verbose=FALSE)
 	
 	e <- new.env()
@@ -137,8 +137,8 @@ test.environment.bindingIsLocked <- function(){
 	
 	funx <- cfunction(signature(x="environment", name = "character" ), '
 	Rcpp::Environment env(x) ;
-	std::string st = Rcpp::RObject(name).asStdString() ;
-	return Rcpp::RObject( env.bindingIsLocked(st) ) ;
+	std::string st = Rcpp::wrap(name).asStdString() ;
+	return Rcpp::wrap( env.bindingIsLocked(st) ) ;
 	', Rcpp=TRUE, verbose=FALSE)
 	
 	e <- new.env()
@@ -167,7 +167,7 @@ test.environment.NotAnEnvironment <- function(){
 test.environment.lockBinding <- function(){
 	funx <- cfunction(signature(x="environment", name = "character" ), '
 	Rcpp::Environment env(x) ;
-	std::string st = Rcpp::RObject(name).asStdString() ;
+	std::string st = Rcpp::wrap(name).asStdString() ;
 	env.lockBinding( st ) ;
 	return R_NilValue ;
 	', Rcpp=TRUE, verbose=FALSE)
@@ -186,7 +186,7 @@ test.environment.lockBinding <- function(){
 test.environment.unlockBinding <- function(){
 	funx <- cfunction(signature(x="environment", name = "character" ), '
 	Rcpp::Environment env(x) ;
-	std::string st = Rcpp::RObject(name).asStdString() ;
+	std::string st = Rcpp::wrap(name).asStdString() ;
 	env.unlockBinding( st ) ;
 	return R_NilValue ;
 	', Rcpp=TRUE, verbose=FALSE)
@@ -229,7 +229,7 @@ test.environment.empty.env <- function(){
 
 test.environment.namespace.env <- function(){
 	funx <- cfunction(signature(env = "character" ),  '
-	std::string st = Rcpp::RObject(env).asStdString() ;
+	std::string st = Rcpp::wrap(env).asStdString() ;
 	return Rcpp::Environment::namespace_env(st); ', Rcpp=TRUE, verbose=FALSE)
 	checkEquals( funx("Rcpp"), asNamespace("Rcpp"), msg = "REnvironment::base_namespace" )
 	checkTrue( 

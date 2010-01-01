@@ -34,7 +34,9 @@ public:
      * wraps a SEXP. The SEXP is not automatically 
      * protected from garbage collection because it might be 
      * protected from elsewhere (e.g. if it comes from the 
-     * R side). See protect and release for ways to protect
+     * R side). 
+     * 
+     * See preserve and release for ways to protect
      * the SEXP from garbage collection, and release to 
      * remove the protection
      */
@@ -42,29 +44,11 @@ public:
     
     /**
      * if this object is protected rom R's GC, then it is released
-     * and become subject to garbage collection. See protect 
+     * and become subject to garbage collection. See preserve 
      * and release member functions.
      */
     ~RObject() ;
-    
-    RObject(const double & v);
-    RObject(const int & v);
-    RObject(const Rbyte & v);
-    RObject(const std::string & v);
-    RObject(const bool & v);
-    
-    RObject(const std::vector<int> & v);
-    RObject(const std::vector<double> & v);
-    RObject(const std::vector<std::string> & v);
-    RObject(const std::vector<Rbyte> & v);
-    RObject(const std::vector<bool> & v);
-    
-    RObject(const std::set<int> & v);
-    RObject(const std::set<double> & v);
-    RObject(const std::set<std::string> & v);
-    RObject(const std::set<Rbyte> & v);
-    
-    
+   
     /* we don't provide implicit converters because 
        of Item 5 in More Effective C++ */
     bool                     asBool() const;
@@ -174,6 +158,27 @@ protected:
     bool preserved ;    
     
 };
+
+// factories
+RObject wrap(SEXP m_sexp) ;
+
+RObject wrap(const bool & v);
+RObject wrap(const double & v);
+RObject wrap(const int & v);
+RObject wrap(const Rbyte & v);
+RObject wrap(const std::string & v);
+
+RObject wrap(const std::vector<int> & v);
+RObject wrap(const std::vector<double> & v);
+RObject wrap(const std::vector<std::string> & v);
+RObject wrap(const std::vector<Rbyte> & v);
+RObject wrap(const std::vector<bool> & v);
+
+RObject wrap(const std::set<int> & v);
+RObject wrap(const std::set<double> & v);
+RObject wrap(const std::set<std::string> & v);
+RObject wrap(const std::set<Rbyte> & v);
+
 
 } // namespace Rcpp
 
