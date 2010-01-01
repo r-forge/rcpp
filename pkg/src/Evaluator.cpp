@@ -36,11 +36,11 @@ namespace Rcpp {
 		Environment rcpp = Environment::namespace_env("Rcpp") ;
 		SEXP call = Rf_lang3( Rf_install("protectedEval"), expression, env ) ;
 		result = RObject( Rf_eval( call, rcpp ) ); 
-		result.protect() ;
+		result.preserve() ;
 		error_occured = LOGICAL( Rf_eval( Rf_lang1( Rf_install("errorOccured")) , rcpp) )[0] ;
 		if( error_occured ){
 			error = RObject( Rf_eval( Rf_lang1(Rf_install("getCurrentError")) , rcpp) );
-			error.protect() ;
+			error.preserve() ;
 		}
 	}
 	

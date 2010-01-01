@@ -27,38 +27,38 @@ namespace Rcpp {
 RObject::RObject(const bool & v) {
     logTxt("RObject from bool\n");
     m_sexp = Rf_ScalarLogical(v);
-    protect() ;
+    preserve() ;
 }
 
 RObject::RObject(const double & v) {
     logTxt("RObject from double\n");
     m_sexp = Rf_ScalarReal(v);
-    protect() ;
+    preserve() ;
 }
 
 RObject::RObject(const int & v) {
     logTxt("RObject from int\n");
     m_sexp = Rf_ScalarInteger(v);
-    protect() ;
+    preserve() ;
 }
 
 RObject::RObject(const Rbyte & v) {
     logTxt("RObject from raw\n");
     m_sexp = Rf_ScalarRaw(v);
-    protect() ;
+    preserve() ;
 }
 
 RObject::RObject(const std::string & v) {
     logTxt("RObject from std::string\n");
     m_sexp = Rf_mkString(v.c_str());
-    protect() ;
+    preserve() ;
 }
 
 RObject::RObject(const std::vector<bool> & v) {
     logTxt("RObject from bool vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(LGLSXP, n);
-    protect() ;
+    preserve() ;
     copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
 }
 
@@ -66,7 +66,7 @@ RObject::RObject(const std::vector<int> & v) {
     logTxt("RObject from int vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(INTSXP, n);
-    protect() ;
+    preserve() ;
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
 }
 
@@ -74,7 +74,7 @@ RObject::RObject(const std::vector<double> & v) {
     logTxt("RObject from double vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(REALSXP, n);
-    protect() ;
+    preserve() ;
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
 }
 
@@ -82,7 +82,7 @@ RObject::RObject(const std::vector<Rbyte> & v) {
     logTxt("RObject from vector<Rbyte> \n");
     int n = v.size();
     m_sexp = Rf_allocVector(RAWSXP, n);
-    protect() ;
+    preserve() ;
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
 }
 
@@ -90,7 +90,7 @@ RObject::RObject(const std::vector<std::string> & v) {
     logTxt("RObject from std::string vector\n");
     int n = v.size();
     m_sexp = Rf_allocVector(STRSXP, n);
-    protect() ;
+    preserve() ;
     int i=0; 
     std::vector<std::string>::const_iterator it = v.begin() ;
     while( i<n ){
@@ -106,7 +106,7 @@ RObject::RObject(const std::set<int> & v) {
     logTxt("RObject from set<int>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(INTSXP, n);
-    protect() ;
+    preserve() ;
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
 }
 
@@ -114,7 +114,7 @@ RObject::RObject(const std::set<double> & v) {
     logTxt("RObject from set<double>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(REALSXP, n);
-    protect() ;
+    preserve() ;
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
 }
 
@@ -122,7 +122,7 @@ RObject::RObject(const std::set<Rbyte> & v) {
     logTxt("RObject from set<Rbyte> \n");
     int n = v.size();
     m_sexp = Rf_allocVector(RAWSXP, n);
-    protect() ;
+    preserve() ;
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
 }
 
@@ -130,7 +130,7 @@ RObject::RObject(const std::set<std::string> & v) {
     logTxt("RObject from set<string>\n");
     int n = v.size();
     m_sexp = Rf_allocVector(STRSXP, n);
-    protect() ;
+    preserve() ;
     int i=0;
     std::set<std::string>::iterator it = v.begin(); 
     while( i<n ){
@@ -333,20 +333,21 @@ std::vector<std::string> RObject::asStdVectorString() const {
     return v;
 }
 
-
-
-
-void RObject::protect(){
-	if( !isProtected ){
-		isProtected = true ;
+void RObject::preserve(){
+	if( !preserved ){
+		preserved = true ;
 		R_PreserveObject( m_sexp ); 
 	}
 }
 
 void RObject::release(){
-	if( isProtected ){
+	if( preserved ){
 		R_ReleaseObject(m_sexp); 
 	}
+}
+
+void RObject::forgetPreserve(){
+	preserved = false ;
 }
 
 std::vector<std::string> RObject::attributeNames() const {
