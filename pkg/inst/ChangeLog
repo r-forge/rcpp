@@ -12,9 +12,6 @@
 	* ** : adapted examples, code, and unit tests to reflect both 
 	above items
 
-2010-01-01  Romain Francois <francoisromain@free.fr>
-
-
 2009-12-31  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/Evaluator.h : new class Rcpp::Evaluator that eases
