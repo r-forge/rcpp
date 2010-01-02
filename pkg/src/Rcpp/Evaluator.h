@@ -30,17 +30,17 @@ namespace Rcpp{
 
 class Evaluator{
 public:
-	Evaluator(SEXP expression ) ;
-	~Evaluator() ;
-	void run(SEXP env) ;
-	inline RObject getResult() const { return result ; }
-	inline RObject getError() const { return error ; }
+    Evaluator(SEXP expression ) ;
+    ~Evaluator() ;
+    void run(SEXP env) ;
+    inline RObject getResult() const { return result ; }
+    inline RObject getError() const { return error ; }
 	
 private:		
-	SEXP expression ;
-	bool error_occured ;
-	RObject result ;
-	RObject error ;
+    SEXP expression ;
+    bool error_occured ;
+    RObject result ;
+    RObject error ;
 };
 
 } // namespace Rcpp

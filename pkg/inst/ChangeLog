@@ -1,15 +1,20 @@
+2010-01-02  Romain Francois <francoisromain@free.fr>
+
+	* pkg/src/RcppSexp.h: Added to preserver existing interface,
+	  implementation use the redesigned class src/RObject.h
+
 2010-01-01  Romain Francois <francoisromain@free.fr>
 
-	* pkg/src/Rcpp/RObject.h: RObject::RObject constructors are 
-	replaced by the Rcpp::wrap set of functions. Currently the wrap 
+	* pkg/src/Rcpp/RObject.h: RObject::RObject constructors are
+	replaced by the Rcpp::wrap set of functions. Currently the wrap
 	functions make a RObject object but it is likely that as new
-	classes become available in the new API, wrap will return 
+	classes become available in the new API, wrap will return
 	instances of classes that extend RObject.
-	
+
 	* pkg/src/Rcpp/RObject.h: s/protect/preserve/, added methods
 	isPreserved and forgetPreserve
 
-	* ** : adapted examples, code, and unit tests to reflect both 
+	* ** : adapted examples, code, and unit tests to reflect both
 	above items
 
 2009-12-31  Romain Francois <francoisromain@free.fr>
@@ -17,37 +22,37 @@
 	* src/Rcpp/Evaluator.h : new class Rcpp::Evaluator that eases
 	evaluation of R expression with error capture. so that we can for example
 	throw C++ exceptions
-	
+
 	* src/Evaluator.cpp : implementation of Rcpp::Evaluator
-	
+
 	* inst/unitTests/runit.evaluator: unit tests of Rcpp::Evaluator
-	
+
 	* inst/Rcpp/RObject.h: RObject::RObject(SEXP) now initializes isProtected
-	
+
 	* inst/src/Environment.cpp: use of exceptions
 
 2009-12-30  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/Environment.h : added support for environment through the
 	Rcpp::Environment class
-	
+
 	* src/Environment.cpp: idem
-	
+
 	* inst/unitTests/runit.environments.R: testing the above
-	
-	* src/RcppCommon.h: now includes <R_ext/Callbacks.h>, needed for the 
+
+	* src/RcppCommon.h: now includes <R_ext/Callbacks.h>, needed for the
 	environment support
-	
+
 2009-12-30  Romain Francois <francoisromain@free.fr>
 
 	* src/Makevars* : adapt for allowong copy of the Rcpp directory
-	
+
 	* src/Rcpp_RObject.h: replace by src/Rcpp/RObject.h
-	
+
 	* src/Rcpp_XPtr.h: replaced by src/Rcpp/XPtr.h
-	
+
 	* src/*.cpp: adapt to the Rcpp directory
-	
+
 	* cleanup: idem
 
 2009-12-30  Romain Francois <francoisromain@free.fr>
@@ -65,60 +70,60 @@
 
 	* src/Rcpp_RObject.{h,cpp}: new namespace Rcpp and new class
 	Rcpp::RObject to replace RcppSexp with the same functionality.
-	
+
 	* src/Rcpp_XPtr.h: replaces RcppXPtr.h and the class is now 
 	Rcpp::XPtr<> and extends Rcpp::RObject
-	
+
 	* inst/examples/RcppInline/external_pointer.r: use the new namespace
-	
+
 	* inst/examples/RcppInline/RcppInlineWithLibsExamples.r: idem
-	
+
 	* inst/examples/RcppInline/RcppSexpTests.r: idem
-	
+
 	* DESCRIPTION: marked as version 0.7.0.5
-	
+
 	* inst/doc/*: fake (empty) vignette and unit test trigger
-	
+
 	* inst/unitTests/*: prepare the space for unit tests
-	
+
 	* tests/doRUnit.R : added the usual RUnit tests trigger
 
 2009-12-29  Romain Francois <francoisromain@free.fr>
 
 	* src/RcppXPtr.h: now RcppXPtr extends RcppSexp and RcppSexp manages
 	garbarge collection, attributes, etc ...
-	
+
 	* src/exceptions.cpp: replaces src/exception_handling.cpp
-	
+
 	* DESCRIPTION: now suggesting RUnit.
 
 2009-12-29  Romain Francois <francoisromain@free.fr>
 
 	* src/RcppXPtr.h: added operator SEXP() to class
 	RcppXPtr to ease implicit conversion from RcppXPtr to SEXP.
-	This means we can directly return the RcppXPtr object to R when the 
-	return type of the function is SEXP. (no need to explicitely call 
+	This means we can directly return the RcppXPtr object to R when the
+	return type of the function is SEXP. (no need to explicitely call
 	asSexp anymore)
-	
+
 	* src/RcppSexp.{h,cpp} : idem
-	
+
 2009-12-29  Romain Francois <francoisromain@free.fr>
 
-	* src/RcppXPtr.h: new smart external pointer wrapper. The RcppXPtr 
-	template can be used to wrap a external pointer (SEXP) so that it 
-	looks like the dumb pointer it is wrapping (as far as the * and -> 
+	* src/RcppXPtr.h: new smart external pointer wrapper. The RcppXPtr
+	template can be used to wrap a external pointer (SEXP) so that it
+	looks like the dumb pointer it is wrapping (as far as the * and ->
 	operator are concerned). The template parameter controls the type
-	of object that is wrapped by the pointer. 
-	
+	of object that is wrapped by the pointer.
+
 	* src/Rcpp.h: importing the RcppXPtr.h header
-	
+
 	* src/RcppExample.cpp: added an example of RcppXPtr usage
-	
+
 	* inst/examples/RcppInline/external_pointer.r: added example using
 	the RcppXPtr template
-	
+
 	* DESCRIPTION: marking this as 0.7.0.4
-	
+
 2009-12-28  Romain Francois <francoisromain@free.fr>
 
 	* R/exceptions.R: s/uncaught_cpp_exception/cpp_exception/ and added a
@@ -129,7 +134,7 @@
 	show how to grab details of the C++ exception
 
 	* src/exception_handling.cpp: factored out from RcppCommon.cpp, now
-	able to grab the class name of the exception and its message. 
+	able to grab the class name of the exception and its message.
 
 2009-12-27  Dirk Eddelbuettel  <edd@debian.org>
 

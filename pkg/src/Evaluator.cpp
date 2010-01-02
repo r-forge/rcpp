@@ -24,24 +24,24 @@
 
 namespace Rcpp {
 	
-	Evaluator::Evaluator( SEXP expression = R_NilValue) : 
-		expression(expression), 
-		result(R_NilValue),
-		error(R_NilValue),
-		error_occured(false){}
+    Evaluator::Evaluator( SEXP expression = R_NilValue) : 
+	expression(expression),
+	error_occured(false), 
+	result(R_NilValue),
+	error(R_NilValue) {}
 	
-	Evaluator::~Evaluator(){} 
+    Evaluator::~Evaluator(){} 
 	
-	void Evaluator::run(SEXP env ){
-		Environment rcpp = Environment::namespace_env("Rcpp") ;
-		SEXP call = Rf_lang3( Rf_install("protectedEval"), expression, env ) ;
-		result = wrap( Rf_eval( call, rcpp ) ); 
-		result.preserve() ;
-		error_occured = LOGICAL( Rf_eval( Rf_lang1( Rf_install("errorOccured")) , rcpp) )[0] ;
-		if( error_occured ){
-			error = wrap( Rf_eval( Rf_lang1(Rf_install("getCurrentError")) , rcpp) );
-			error.preserve() ;
-		}
+    void Evaluator::run(SEXP env ){
+	Environment rcpp = Environment::namespace_env("Rcpp") ;
+	SEXP call = Rf_lang3( Rf_install("protectedEval"), expression, env ) ;
+	result = wrap( Rf_eval( call, rcpp ) ); 
+	result.preserve() ;
+	error_occured = LOGICAL( Rf_eval( Rf_lang1( Rf_install("errorOccured")) , rcpp) )[0] ;
+	if( error_occured ){
+	    error = wrap( Rf_eval( Rf_lang1(Rf_install("getCurrentError")) , rcpp) );
+	    error.preserve() ;
 	}
+    }
 	
 } // namespace Rcpp
