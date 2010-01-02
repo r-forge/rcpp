@@ -182,7 +182,4 @@ RObject wrap(const std::set<Rbyte> & v);
 
 } // namespace Rcpp
 
-// to provide some backwards compatibility with Rcpp 0.7.0 which has RcppSexp
-typedef Rcpp::RObject RcppSexp;
-
 #endif
