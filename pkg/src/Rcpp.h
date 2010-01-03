@@ -4,6 +4,7 @@
 //
 // Copyright (C) 2005 - 2006 Dominick Samperi
 // Copyright (C) 2008 - 2009 Dirk Eddelbuettel
+// Copyright (C) 2009 - 2010 Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -45,6 +46,7 @@
 #include <Rcpp/pairlist.h>
 #include <Rcpp/grow.h>
 #include <Rcpp/wrap.h>
+#include <Rcpp/as.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/XPtr.h>
 #include <Rcpp/Environment.h>
