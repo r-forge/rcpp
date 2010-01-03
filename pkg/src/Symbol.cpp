@@ -29,30 +29,31 @@ namespace Rcpp {
 		return "not compatible with Symbol, excepting SYMSXP, CHARSXP or STRSXP" ;
 	}
 	
-	Symbol::Symbol( SEXP x = R_NilValue ) throw(not_compatible) : RObject::RObject(x) {
-		if( m_sexp != R_NilValue ){
-			int type = TYPEOF(m_sexp) ;
+	Symbol::Symbol( SEXP x = R_NilValue ) throw(not_compatible) : RObject::RObject() {
+		if( x != R_NilValue ){
+			int type = TYPEOF(x) ;
 			switch( type ){
 			case SYMSXP:
 				break; /* nothing to do */
 			case CHARSXP:
-				m_sexp = Rf_install(CHAR(m_sexp)) ;
+				setSEXP( Rf_install(CHAR(x)) ) ;
 				break ;
 			case STRSXP:
 				{
 					/* FIXME: check that there is at least one element */
-					m_sexp = Rf_install( CHAR(STRING_ELT(m_sexp, 0 )) ) ;
+					setSEXP( Rf_install( CHAR(STRING_ELT(x, 0 )) ) );
 					break ;
 				}
 			default:
 				throw not_compatible(type) ;
 			}
+		} else {
+			setSEXP( x ) ;
 		}
 	}
 	
 	Symbol::Symbol(const std::string& symbol){
-		m_sexp = Rf_install(symbol.c_str()) ;
-		preserve() ;
+		setSEXP( Rf_install(symbol.c_str()) );
 	}
 	
 	Symbol::~Symbol(){}

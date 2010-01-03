@@ -145,6 +145,16 @@ public:
     Environment(SEXP x) throw(not_compatible);
     
     /**
+     * copy constructor
+     */
+    Environment(const Environment& other) throw() ;
+    
+    /**
+     * assignment
+     */
+    Environment& operator=(const Environment& other) throw(); 
+    
+    /**
      * Gets the environment associated with the given name
      *
      * @param name name of the environment, e.g "package:Rcpp"

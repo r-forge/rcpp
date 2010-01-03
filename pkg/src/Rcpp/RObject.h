@@ -29,18 +29,33 @@ namespace Rcpp{
 
 class RObject{
 public:
+
+    /**
+     * default constructor. uses R_NilValue
+     */ 
+    RObject() : m_sexp(R_NilValue) {} ;	
 	
     /**
-     * wraps a SEXP. The SEXP is not automatically 
-     * protected from garbage collection because it might be 
-     * protected from elsewhere (e.g. if it comes from the 
-     * R side). 
-     * 
-     * See preserve and release for ways to protect
-     * the SEXP from garbage collection, and release to 
-     * remove the protection
+     * wraps a SEXP. The SEXP is automatically protected from garbage 
+     * collection by this object and the protection vanishes when this 
+     * object is destroyed
      */
-    RObject(SEXP m_sexp = R_NilValue) : m_sexp(m_sexp), preserved(false){};
+    RObject(SEXP x) : m_sexp(R_NilValue) { setSEXP(x) ; };
+    
+    /**
+     * Copy constructor. set this SEXP to the SEXP of the copied object
+     */
+    RObject( const RObject& other ) ;
+    
+    /**
+     * Assignment operator. set this SEXP to the SEXP of the copied object
+     */
+    RObject& operator=( const RObject& other ) ;
+    
+    /** 
+     * Assignement operator. Set this SEXP to the given SEXP
+     */ 
+    RObject& operator=( SEXP other ) ;
     
     /**
      * if this object is protected rom R's GC, then it is released
@@ -49,6 +64,11 @@ public:
      */
     ~RObject() ;
    
+    /**
+     * implicit conversion to SEXP
+     */
+    inline operator SEXP() const { return m_sexp ; }
+    
     /* we don't provide implicit converters because 
        of Item 5 in More Effective C++ */
     bool                     asBool() const;
@@ -62,51 +82,8 @@ public:
     std::vector<Rbyte>       asStdVectorRaw() const;
     std::vector<bool>        asStdVectorBool() const;
     
-    
-    /**
-     * protects the wrapped SEXP from garbage collection. This 
-     * calls the R_PreserveObject function on the underlying SEXP.
-     *
-     * Note that this does not use the PROTECT/UNPROTECT dance
-     */
-    void preserve();
-	
-    /**
-     * explicitely release this object to R garbage collection. This
-     * calls the R_ReleaseObject function on the underlying SEXP. 
-     * This is automatically done by the destructor if we protected 
-     * the SEXP (using the protect member function)
-     */
-    void release();
-    
-    /**
-     * Indicates if the underlying SEXP is preserved by this object
-     */
-    inline bool isPreserved() const{ return preserved ; }
-    
-    /**
-     * when this object goes out of scope, if the wrapped SEXP is currently
-     * protected from R's garbage collection, it becomes subject to garbage
-     * collection. 
-     *
-     * This method allows this object to forget that it is preserving
-     * the SEXP.
-     *
-     * This can be used when we want some other RObject to assume ownership
-     * of the SEXP. This needs to be used with EXTRA care. If the SEXP 
-     * was preserved by one object and the protection was not passed to another,
-     * there is a great chance that there will be memory leaks.
-     *
-     * This might be improved later, possibly with using shared smart pointer
-     * or by doing what auto_ptr does with the assignment operator
-     */
-    void forgetPreserve() ;
-    
-    /**
-     * implicit conversion to SEXP
-     */
-    inline operator SEXP() const { return m_sexp ; }
-	
+    inline bool isPreserved() { DEFUNCT("isPreserved") ; return m_sexp != R_NilValue ; }
+    inline void forgetPreserve() { DEFUNCT("forgetPreserve") ; }
     
     /* attributes */
 	
@@ -128,7 +105,7 @@ public:
     /**
      * is this object NULL
      */
-    inline bool isNULL() const{ return m_sexp == R_NilValue ; }
+    inline bool isNULL() const{ return Rf_isNull(m_sexp) ; }
     
     /**
      * The SEXP typeof, calls TYPEOF on the underlying SEXP
@@ -142,20 +119,26 @@ public:
     
     
 protected:
-	
+
     /**
-     * The SEXP this is wrapping
+     * sets the SEXP wrapped by this object
+     *
+     * @param x new SEXP to attach to this object
+     */
+    void setSEXP(SEXP x) ;
+   
+    inline void DEFUNCT(const std::string& method ){ Rf_warning("method %s is defunct", method.c_str() )  ; }
+    
+    /**
+     * The SEXP this is wrapping. This has to be considered read only.
+     * to change it, use setSEXP
      */
     SEXP m_sexp ;
-	
-    /**
-     * true if this protects the SEXP from garbage collection
-     * using R_ReleaseObject/R_PreserveObject strategy
-     *
-     * if this is true then the object will be release and become
-     * subject to R garbage collection when this object is deleted
-     */
-    bool preserved ;    
+    
+private:
+    
+    void preserve(){ if( m_sexp != R_NilValue ) R_PreserveObject(m_sexp) ; } 
+    void release() { if( m_sexp != R_NilValue ) R_ReleaseObject(m_sexp) ; } 
     
 };
 

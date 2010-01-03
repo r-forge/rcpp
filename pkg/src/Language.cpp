@@ -25,14 +25,14 @@
 
 namespace Rcpp {
 	
-	Language::Language( SEXP lang = R_NilValue ) throw(not_compatible) : RObject::RObject(lang){
+	Language::Language( SEXP lang = R_NilValue ) throw(not_compatible) : RObject::RObject( ){
 		/* if this is not trivially a call, then try to convert it to one */
-		if( m_sexp != R_NilValue && TYPEOF(m_sexp) != LANGSXP ){
+		if( lang != R_NilValue && TYPEOF(lang) != LANGSXP ){
 	    		
 	    		/* taken from do_ascall */
 	    		switch( TYPEOF(lang) ){
 	    		case LISTSXP :
-	    			m_sexp = Rf_duplicate( lang ) ;
+	    			Rf_duplicate( lang ) ;
 	    			break ;
 	    		case VECSXP:
 	    		case EXPRSXP:
@@ -40,33 +40,35 @@ namespace Rcpp {
 	    				int n = Rf_length(lang) ;
 	    				if( n == 0 ) throw not_compatible() ;
 	    				SEXP names = GET_NAMES(lang) ; 
-	    				SEXP ap;
-	    				PROTECT( ap = m_sexp = Rf_allocList( n ) ) ;
+	    				SEXP res, ap;
+	    				PROTECT( ap = res = Rf_allocList( n ) ) ;
 	    				for( int i=0; i<n; i++){
 	    					SETCAR(ap, VECTOR_ELT(lang, i));
-	    					if (names != R_NilValue && !Rf_StringBlank(STRING_ELT(names, i)))
-	    					SET_TAG(ap, Rf_install(Rf_translateChar(STRING_ELT(names, i))));
+	    					if (names != R_NilValue && !Rf_StringBlank(STRING_ELT(names, i))){
+	    						SET_TAG(ap, Rf_install(Rf_translateChar(STRING_ELT(names, i))));
+	    					}
 	    					ap = CDR( ap) ;
 	    				}
 	    				UNPROTECT(1) ;
+	    				setSEXP(res) ; 
 	    			}
 	    		default:
 	    			throw not_compatible() ;
 	    		}
 	    		SET_TYPEOF(m_sexp, LANGSXP);
 	    		SET_TAG(m_sexp, R_NilValue);
+		} else{
+			setSEXP( lang ) ;
 		}
 		
 	};
 	
 	Language::Language( const std::string& symbol ): RObject::RObject(R_NilValue) {
-		m_sexp = Rf_lcons( Symbol(symbol), R_NilValue ) ;
-		preserve() ;
+		setSEXP( Rf_lcons( Symbol(symbol), R_NilValue ) );
 	}
 	
 	Language::Language( const Symbol& symbol ){
-		m_sexp = Rf_lcons( symbol, R_NilValue ) ;
-		preserve() ;
+		setSEXP( Rf_lcons( symbol, R_NilValue ) ) ;
 	}
 	
 	Language::~Language(){}
