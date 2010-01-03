@@ -29,11 +29,12 @@ namespace Rcpp {
 		return "not compatible with Symbol, excepting SYMSXP, CHARSXP or STRSXP" ;
 	}
 	
-	Symbol::Symbol( SEXP x = R_NilValue ) throw(not_compatible) : RObject::RObject() {
+	Symbol::Symbol( SEXP x ) throw(not_compatible) : RObject::RObject() {
 		if( x != R_NilValue ){
 			int type = TYPEOF(x) ;
 			switch( type ){
 			case SYMSXP:
+				setSEXP( x ) ;
 				break; /* nothing to do */
 			case CHARSXP:
 				setSEXP( Rf_install(CHAR(x)) ) ;
