@@ -1,6 +1,12 @@
+2010-01-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.7.1
+
+	* debian/*: Similarly updated for new release to Debian
+
 2010-01-02  Romain Francois <francoisromain@free.fr>
 
-	* pkg/src/RcppSexp.h: Added to preserver existing interface,
+	* pkg/src/RcppSexp.h: Added to preserve existing interface,
 	  implementation use the redesigned class src/RObject.h
 
 2010-01-01  Romain Francois <francoisromain@free.fr>
