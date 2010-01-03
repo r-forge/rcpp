@@ -45,19 +45,14 @@ static void safeFindNamespace(void *data) {
 
     Environment::Environment( SEXP x = R_GlobalEnv) throw(not_compatible) : RObject::RObject(x){
 	
-    	if( Rf_isEnvironment(x) ){
-    		/* this is an environment, that's easy */
-    		m_sexp = x; 
-    	} else{
+    	if( ! Rf_isEnvironment(x) ) {
     		
     		/* not an environment, but maybe convertible to one using 
     		   as.environment, try that */
     		Evaluator evaluator( Rf_lang2(Symbol("as.environment"), x ) ) ;
     		evaluator.run() ;
     		if( evaluator.successfull() ){
-    			m_sexp = evaluator.getResult() ;
-    			preserved = true ;
-    			evaluator.getResult().forgetPreserve() ;
+    			setSEXP( evaluator.getResult().asSexp() ) ;
     		} else{
     			throw not_compatible( ) ; 
     		}
@@ -67,32 +62,37 @@ static void safeFindNamespace(void *data) {
     Environment::Environment( const std::string& name) throw(no_such_env) : RObject(R_EmptyEnv){
     	/* similar to matchEnvir@envir.c */
     	if( name == ".GlobalEnv" ) {
-    		m_sexp = R_GlobalEnv ;
+    		setSEXP( R_GlobalEnv ) ;
     	} else if( name == "package:base" ){
-    		m_sexp = R_BaseEnv ;
+    		setSEXP( R_BaseEnv ) ;
     	} else{
     		Evaluator evaluator( Rf_lang2(Symbol("as.environment"), Rf_mkString(name.c_str()) ) ) ;
     		evaluator.run() ;
     		if( evaluator.successfull() ){
-    			m_sexp = evaluator.getResult() ;
-    			preserved = true ;
-    			evaluator.getResult().forgetPreserve() ;
+    			setSEXP( evaluator.getResult().asSexp() ) ;
     		} else{
     			throw no_such_env(name) ; 
     		}
     	}
     }
     
-    Environment::Environment(int pos) throw(no_such_env) : RObject(R_EmptyEnv){
+    Environment::Environment(int pos) throw(no_such_env) : RObject(R_GlobalEnv){
     	Evaluator evaluator( Rf_lang2(Symbol("as.environment"), Rf_ScalarInteger(pos) ) ) ;
     	evaluator.run() ;
     	if( evaluator.successfull() ){
-    		m_sexp = evaluator.getResult() ;
-    		preserved = true ;
-    		evaluator.getResult().forgetPreserve() ;
+    		setSEXP( evaluator.getResult() ) ;
     	} else{
     		throw no_such_env(pos) ; 
     	}
+    }
+    
+    Environment::Environment( const Environment& other ) throw() {
+	setSEXP( other.asSexp() ) ; 
+    }
+    
+    Environment& Environment::operator=(const Environment& other) throw() {
+    	setSEXP( other.asSexp() ) ; 
+	return *this ;
     }
     
     Environment::~Environment(){

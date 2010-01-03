@@ -101,11 +101,8 @@ public:
 #ifdef CXX0X
 template<typename... Args> 
 	Language( const std::string& symbol, const Args&... args) : RObject(R_NilValue) {
-		SEXP x; 
-		PROTECT( x = Rf_lcons( Symbol(symbol), pack( args... ) ) );
-		m_sexp = x ;
-		UNPROTECT(1) ;
-		preserve() ;
+		/* TODO: should we first allocate and protect the list  ?*/
+		setSEXP( Rf_lcons( Symbol(symbol), pack( args... ) ) );
 	}
 #endif	
 	~Language() ;

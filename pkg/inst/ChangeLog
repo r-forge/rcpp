@@ -1,5 +1,15 @@
 2010-01-03  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/RObject.h: rework the garbage collection mechanism so that 
+	it is automatic and hidden. methods preserve and release are now 
+	private to the RObject class and the SEXP may only be changed using
+	the protected setSEXP member function. isPreserved and forgetPreserve
+	are defunct.
+	
+	* src/Rcpp/RObject.h: RObject gains assignment operators and copy constructors
+	
+2010-01-03  Romain Francois <francoisromain@free.fr>
+
 	* src/RcppCommon.h: added the CXX0X define that controls whether
 	we can use C++0x features offered by the gcc. currently the define
 	is hardcoded, but this will eventually be a configure guess. The 

@@ -30,7 +30,7 @@ canUseCXX0X <- function() .Call( "canUseCXX0X", PACKAGE = "Rcpp" )
 
 ## Provide compiler flags -- i.e. -I/path/to/Rcpp.h
 RcppCxxFlags <- function() {
-    paste("-I", RcppLdPath(), if( canUseCXX0X ) " -std=c++0x" else "", sep="")
+    paste("-I", RcppLdPath(), if( canUseCXX0X() ) " -std=c++0x" else "", sep="")
 }
 
 ## Shorter names, and call cat() directly

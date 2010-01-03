@@ -26,6 +26,44 @@
 
 namespace Rcpp {
 
+void RObject::setSEXP(SEXP x){
+	/* if we are setting to the same SEXP as we already have, do nothing */
+	if( x != m_sexp ){
+		
+		/* the previous SEXP was not NULL, so release it */
+		release() ;
+		
+		/* set the SEXP */
+		m_sexp = x ;
+		
+		/* the new SEXP is not NULL, so preserve it */
+		preserve() ;
+	}
+}
+
+/* copy constructor */
+RObject::RObject( const RObject& other ){
+	SEXP x = other.asSexp() ;	
+	setSEXP( x ) ; 
+}
+
+RObject& RObject::operator=( const RObject& other){
+	SEXP x = other.asSexp() ;	
+	setSEXP( x ) ; 
+	return *this ;
+}
+
+RObject& RObject::operator=( SEXP other ){
+	setSEXP( other ) ; 
+	return *this ;
+}
+
+RObject::~RObject() {
+	release() ;
+	logTxt("~RObject");
+}
+
+
 RObject wrap(SEXP m_sexp=R_NilValue){
 	switch( TYPEOF(m_sexp) ){
 		case ENVSXP:
@@ -41,35 +79,30 @@ RObject wrap(SEXP m_sexp=R_NilValue){
 RObject wrap(const bool & v){
     logTxt("RObject from bool\n");
     RObject o(Rf_ScalarLogical(v));
-    o.preserve() ;
     return o ;
 }
 
 RObject wrap(const double & v){
     logTxt("RObject from double\n");
     RObject o(Rf_ScalarReal(v));
-    o.preserve() ;
     return o ;
 }
 
 RObject wrap(const int & v){
     logTxt("RObject from int\n");
     RObject o(Rf_ScalarInteger(v));
-    o.preserve() ;
     return o ;
 }
 
 RObject wrap(const Rbyte & v){
     logTxt("RObject from raw\n");
     RObject o(Rf_ScalarRaw(v));
-    o.preserve() ;
     return o ;
 }
 
 RObject wrap(const std::string & v){
     logTxt("RObject from std::string\n");
     RObject o(Rf_mkString(v.c_str()));
-    o.preserve() ;
     return o ;
 }
 
@@ -79,7 +112,6 @@ RObject wrap(const std::vector<bool> & v){
     SEXP m_sexp = PROTECT( Rf_allocVector(LGLSXP, n) );
     copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ; /* m_sexp now preserved by o */
     return o ;
 }
@@ -90,7 +122,6 @@ RObject wrap(const std::vector<int> & v){
     SEXP m_sexp = PROTECT( Rf_allocVector(INTSXP, n) );
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ;
     return o ;
 }
@@ -101,7 +132,6 @@ RObject wrap(const std::vector<double> & v){
     SEXP m_sexp = PROTECT( Rf_allocVector(REALSXP, n) );
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ;
     return o ;
 }
@@ -112,7 +142,6 @@ RObject wrap(const std::vector<Rbyte> & v){
     SEXP m_sexp = PROTECT(Rf_allocVector(RAWSXP, n));
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ;
     return o ;
 }
@@ -129,7 +158,6 @@ RObject wrap(const std::vector<std::string> & v){
     	it++; 
     }
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ;
     return o ;
 }
@@ -142,7 +170,6 @@ RObject wrap(const std::set<int> & v){
     SEXP m_sexp = Rf_allocVector(INTSXP, n);
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ;
     return o ;
 }
@@ -153,7 +180,6 @@ RObject wrap(const std::set<double> & v){
     SEXP m_sexp = Rf_allocVector(REALSXP, n);
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ;
     return o ;
 }
@@ -164,7 +190,6 @@ RObject wrap(const std::set<Rbyte> & v){
     SEXP m_sexp = Rf_allocVector(RAWSXP, n);
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ;
     return o ;
 }
@@ -181,14 +206,8 @@ RObject wrap(const std::set<std::string> & v){
     	it++; 
     }
     RObject o(m_sexp) ;
-    o.preserve() ;
     UNPROTECT(1) ;
     return o ;
-}
-
-RObject::~RObject() {
-	logTxt("~RObject");
-	release() ;
 }
 
 double RObject::asDouble() const {
@@ -377,23 +396,6 @@ std::vector<std::string> RObject::asStdVectorString() const {
 	v[i] = std::string(CHAR(STRING_ELT(m_sexp,i)));
     }
     return v;
-}
-
-void RObject::preserve(){
-	if( !preserved ){
-		preserved = true ;
-		R_PreserveObject( m_sexp ); 
-	}
-}
-
-void RObject::release(){
-	if( preserved ){
-		R_ReleaseObject(m_sexp); 
-	}
-}
-
-void RObject::forgetPreserve(){
-	preserved = false ;
 }
 
 std::vector<std::string> RObject::attributeNames() const {
