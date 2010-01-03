@@ -25,6 +25,7 @@
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/Environment.h>
+#include <Rcpp/wrap.h>
 
 namespace Rcpp{ 
 

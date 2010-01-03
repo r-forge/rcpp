@@ -44,6 +44,7 @@
 /* new api */
 #include <Rcpp/pairlist.h>
 #include <Rcpp/grow.h>
+#include <Rcpp/wrap.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/XPtr.h>
 #include <Rcpp/Environment.h>

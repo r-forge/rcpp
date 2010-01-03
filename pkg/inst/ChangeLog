@@ -1,5 +1,12 @@
 2010-01-03  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/wrap.h : factored out from RObject. there is now a
+	template wrap in addition to the specific implementations. The 
+	template generates a warning and return NULL
+	
+	* src/wrap.cpp: specific implementations of the wrap template
+	(factored out of RObject)
+
 	* src/Rcpp/pairlist.h : variadic templates to 
 	recursively generate a pairlist 
 	(CAR and CDR) from any number of "wrap("'able objects. 
