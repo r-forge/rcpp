@@ -302,6 +302,12 @@ public:
      * @throw no_such_namespace 
      */
     static Environment namespace_env(const std::string& ) throw(no_such_namespace) ;
+    
+    /**
+     * The parent environment of this environment
+     */
+    Environment parent() const throw() ;
+    
 };
 
 } // namespace Rcpp

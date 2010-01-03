@@ -1,5 +1,8 @@
 2010-01-03  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Environment.h: Environment gains the parent
+	method that returns the parent environment
+	
 	* src/Rcpp/as.h: template as<> to convert SEXP to classic
 	C++ types, fcactored out of RObject
 	
