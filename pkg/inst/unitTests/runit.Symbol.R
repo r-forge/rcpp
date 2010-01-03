@@ -39,7 +39,11 @@ test.Symbol <- function(){
 	UNPROTECT(1) ; /* res */
 	return res ;
 	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
-	checkTrue( all( funx() ), msg = "Symbol creation" )
+	res <- funx()
+	checkTrue( res[1L], msg = "Symbol creation - SYMSXP " )
+	checkTrue( res[2L], msg = "Symbol creation - CHARSXP " )
+	checkTrue( res[3L], msg = "Symbol creation - STRSXP " )
+	checkTrue( res[4L], msg = "Symbol creation - std::string " )
 }
 
 test.Symbol.notcompatible <- function(){
