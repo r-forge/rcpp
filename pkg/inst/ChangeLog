@@ -1,3 +1,7 @@
+2010-01-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* doxyfile: updated to current doxygen standard using -u
+
 2010-01-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.7.1
