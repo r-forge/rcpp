@@ -71,7 +71,7 @@ public:
 	 * > as.call( as.list( as.name( "rnorm") ) )
 	 * > call( "rnorm" )
 	 */
-	Language( const std::string& symbol ); 
+	explicit Language( const std::string& symbol ); 
 	
 	/**
 	 * Creates a call using the given symbol as the function name
@@ -81,7 +81,7 @@ public:
 	 * Language( Symbol("rnorm") ) makes a SEXP similar to this: 
 	 * > call( "rnorm" )
 	 */
-	Language( const Symbol& symbol ); 
+	explicit Language( const Symbol& symbol ); 
 	
 	/**
 	 * Creates a call to the given symbol using variable number of 
@@ -107,6 +107,17 @@ template<typename... Args>
 		setSEXP( Rf_lcons( Symbol(symbol), pairlist( args... ) ) );
 	}
 #endif	
+	
+	/**
+	 * sets the symbol of the call
+	 */
+	void setSymbol( const std::string& symbol);
+	
+	/**
+	 * sets the symbol of the call
+	 */
+	void setSymbol( const Symbol& symbol ) ;
+
 	~Language() ;
 };
 

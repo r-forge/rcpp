@@ -73,6 +73,15 @@ namespace Rcpp {
 	
 	Language::~Language(){}
 	
+	void Language::setSymbol( const std::string& symbol){
+		setSymbol( Symbol( symbol ) ) ;
+	}
+	
+	void Language::setSymbol( const Symbol& symbol){
+		SETCAR( m_sexp, symbol ) ;
+		SET_TAG(m_sexp, R_NilValue);
+	}
+	
 	Language::not_compatible::not_compatible() throw() {}
     	const char* Language::not_compatible::what() const throw(){
     		return "cannot convert to call" ;
