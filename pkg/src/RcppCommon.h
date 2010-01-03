@@ -24,6 +24,10 @@
 #ifndef RcppCommon_h
 #define RcppCommon_h
 
+// TODO: need to bring this from the configure step
+//       but I have no idea how to do it
+#define CXX0X
+
 #include <exception>
 #include <iostream>
 #include <sstream>
@@ -40,6 +44,8 @@
 #include <Rinternals.h>
 #include <R_ext/Callbacks.h>
 #include <Rversion.h>
+#define GET_NAMES(x)	Rf_getAttrib(x, R_NamesSymbol)
+
 
 // #ifdef BUILDING_DLL
 // #define RcppExport extern "C" __declspec(dllexport)
@@ -58,5 +64,14 @@ inline void logTxtFunction(const char* file, const int line, const char* express
 /* in exceptions.cpp */
 void forward_uncaught_exceptions_to_r() ;
 RcppExport SEXP initUncaughtExceptionHandler() ; 
+
+/* just testing variadic templates */
+#ifdef CXX0X
+template<typename... Args>
+int variadic_length( const Args&... args) { return sizeof...(Args) ; }
+#endif
+
+RcppExport SEXP test_variadic() ; 
+RcppExport SEXP canUseCXX0X() ;
 
 #endif

@@ -2,7 +2,7 @@
 //
 // Environment.cpp: Rcpp R/C++ interface class library -- Environments
 //
-// Copyright (C) 2009 - 2010	Romain Francois
+// Copyright (C) 2009 - 2010	Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -20,6 +20,8 @@
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Rcpp/Environment.h>
+#include <Rcpp/Evaluator.h>
+#include <Rcpp/Symbol.h>
 
 namespace Rcpp {
 
@@ -41,13 +43,58 @@ static void safeFindNamespace(void *data) {
     s->val = R_FindNamespace(s->sym);
 }
 
-
-    Environment::Environment( SEXP m_sexp = R_GlobalEnv) : RObject::RObject(m_sexp){
-	if( TYPEOF(m_sexp) != ENVSXP ){
-	    throw std::runtime_error( "not an environment" ) ;
-	}
-    }
+    Environment::Environment( SEXP x = R_GlobalEnv) throw(not_compatible) : RObject::RObject(x){
 	
+    	if( Rf_isEnvironment(x) ){
+    		/* this is an environment, that's easy */
+    		m_sexp = x; 
+    	} else{
+    		
+    		/* not an environment, but maybe convertible to one using 
+    		   as.environment, try that */
+    		Evaluator evaluator( Rf_lang2(Symbol("as.environment"), x ) ) ;
+    		evaluator.run() ;
+    		if( evaluator.successfull() ){
+    			m_sexp = evaluator.getResult() ;
+    			preserved = true ;
+    			evaluator.getResult().forgetPreserve() ;
+    		} else{
+    			throw not_compatible( ) ; 
+    		}
+    	}
+    }
+
+    Environment::Environment( const std::string& name) throw(no_such_env) : RObject(R_EmptyEnv){
+    	/* similar to matchEnvir@envir.c */
+    	if( name == ".GlobalEnv" ) {
+    		m_sexp = R_GlobalEnv ;
+    	} else if( name == "package:base" ){
+    		m_sexp = R_BaseEnv ;
+    	} else{
+    		Evaluator evaluator( Rf_lang2(Symbol("as.environment"), Rf_mkString(name.c_str()) ) ) ;
+    		evaluator.run() ;
+    		if( evaluator.successfull() ){
+    			m_sexp = evaluator.getResult() ;
+    			preserved = true ;
+    			evaluator.getResult().forgetPreserve() ;
+    		} else{
+    			throw no_such_env(name) ; 
+    		}
+    	}
+    }
+    
+    Environment::Environment(int pos) throw(no_such_env) : RObject(R_EmptyEnv){
+    	Evaluator evaluator( Rf_lang2(Symbol("as.environment"), Rf_ScalarInteger(pos) ) ) ;
+    	evaluator.run() ;
+    	if( evaluator.successfull() ){
+    		m_sexp = evaluator.getResult() ;
+    		preserved = true ;
+    		evaluator.getResult().forgetPreserve() ;
+    	} else{
+    		throw no_such_env(pos) ; 
+    	}
+    }
+    
     Environment::~Environment(){
 	logTxt( "~Environment" ) ;
     }
@@ -137,7 +184,7 @@ static void safeFindNamespace(void *data) {
     }
     
     Environment Environment::empty_env() throw() {
-    	return Environment(R_GlobalEnv) ;
+    	return Environment(R_EmptyEnv) ;
     }
     
     Environment Environment::base_env() throw(){
@@ -179,6 +226,23 @@ static void safeFindNamespace(void *data) {
     	return message.c_str() ;
     }
     Environment::no_such_namespace::~no_such_namespace() throw() {}
+    
+    Environment::no_such_env::no_such_env(const std::string& name) : 
+    	message("no environment called : '" + name + "'" ) {}
+    Environment::no_such_env::no_such_env(int pos) : 
+    	message("no environment in the given position" ) {}
+    const char* Environment::no_such_env::what() const throw(){
+    	return message.c_str() ;
+    }
+    Environment::no_such_env::~no_such_env() throw() {}
+    
+    Environment::not_compatible::not_compatible() throw() {}
+    const char* Environment::not_compatible::what() const throw(){
+    	return "cannot convert to environment" ;
+    }
+    Environment::not_compatible::~not_compatible() throw() {}
+    
+    
     
 } // namespace Rcpp
 

@@ -32,7 +32,7 @@ namespace Rcpp {
 	
     Evaluator::~Evaluator(){} 
 	
-    void Evaluator::run(SEXP env ){
+    void Evaluator::run(SEXP env ) throw() {
 	Environment rcpp = Environment::namespace_env("Rcpp") ;
 	SEXP call = Rf_lang3( Rf_install("protectedEval"), expression, env ) ;
 	result = wrap( Rf_eval( call, rcpp ) ); 
@@ -43,5 +43,9 @@ namespace Rcpp {
 	    error.preserve() ;
 	}
     }
-	
+    
+    void Evaluator::run() throw() {
+    	run( R_GlobalEnv) ;
+    }
+
 } // namespace Rcpp

@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2009 - 2010	Romain Francois
+# Copyright (C) 2009 - 2010	Dirk Eddelbuettel and Romain Francois
 #
 # This file is part of Rcpp.
 #
@@ -238,5 +238,40 @@ test.environment.namespace.env <- function(){
 	
 }
 
+test.environment.constructor.SEXP <- function(){
+	funx <- cfunction(signature( env = "ANY" ), 'return Environment( env ) ;', 
+		Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx( globalenv() ), globalenv(), msg = "Environment( environment ) - 1" )
+	checkEquals( funx( baseenv() ), baseenv(), msg = "Environment( environment ) - 2" )
+	checkEquals( funx( asNamespace("Rcpp") ), asNamespace("Rcpp"), msg = "Environment( environment ) - 3" )
+	
+	checkEquals( funx( ".GlobalEnv" ), globalenv(), msg = "Environment( character ) - 1" )
+	checkEquals( funx( "package:base" ), baseenv(), msg = "Environment( character ) - 2" )
+	checkEquals( funx( "package:Rcpp" ), as.environment("package:Rcpp") , msg = 'Environment( "package:Rcpp") ' )
+	
+	checkEquals( funx(1L), globalenv(), msg = "Environment( SEXP{integer} )" )
+}
 
+test.environment.constructor.stdstring <- function(){
+	funx <- cfunction(signature( env = "character" ), '
+	std::string st = RObject(env).asStdString() ;
+	return Environment( st ) ; ', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	checkEquals( funx( ".GlobalEnv" ), globalenv(), msg = "Environment( std::string ) - 1" )
+	checkEquals( funx( "package:base" ), baseenv(), msg = "Environment( std::string ) - 2" )
+	checkEquals( funx( "package:Rcpp" ), as.environment("package:Rcpp") , 
+		msg = 'Environment( std::string ) - 3' )
+	
+}
+
+test.environment.constructor.int <- function(){
+	funx <- cfunction(signature( env = "integer" ), '
+	int pos = RObject(env).asInt() ;
+	return Environment( pos ) ;', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	for( i in 1:length(search())){
+		checkEquals( funx(i), as.environment(i), msg = sprintf("Environment(int) - %d", i) ) 
+	}
+}
 
