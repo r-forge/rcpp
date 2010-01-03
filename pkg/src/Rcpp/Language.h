@@ -25,6 +25,8 @@
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/Symbol.h>
+#include <Rcpp/Named.h>
+#include <Rcpp/pairlist.h>
 
 namespace Rcpp{ 
 
@@ -100,32 +102,12 @@ public:
 	 */
 #ifdef CXX0X
 template<typename... Args> 
-	Language( const std::string& symbol, const Args&... args) : RObject(R_NilValue) {
+	Language( const std::string& symbol, const Args&... args) : RObject() {
 		/* TODO: should we first allocate and protect the list  ?*/
-		setSEXP( Rf_lcons( Symbol(symbol), pack( args... ) ) );
+		setSEXP( Rf_lcons( Symbol(symbol), pairlist( args... ) ) );
 	}
 #endif	
 	~Language() ;
-
-private:
-	
-	/* recursive packing of the arguments into a list, 
-	  use first as the CAR and build the CDR from the remaining args recursively */
-#ifdef CXX0X
-	template<typename T, typename... Args>
-	SEXP pack( const T& first, const Args&... args ){
-		return Rf_cons( wrap(first), pack( args... ) ) ;
-	}
-#endif	
-	
-	/* end of the recursion, wrap first to make the CAR and use 
-	   R_NilValue as the CDR of the list */
-#ifdef CXX0X
-template<typename T>
-	SEXP pack( const T& first){
-		return Rf_cons( wrap(first), R_NilValue ) ; 
-	}
-#endif
 };
 
 } // namespace Rcpp

@@ -1,5 +1,26 @@
 2010-01-03  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/pairlist.h : variadic templates to 
+	recursively generate a pairlist 
+	(CAR and CDR) from any number of "wrap("'able objects. 
+	(factored out of Language)  
+	
+	* src/pairlist.cpp: end of recursion for the above
+	
+	* src/Rcpp/grow.h : grow a pairlist with any wrappable 
+	object. Used in pairlist
+	
+	* src/grow.cpp : specific implementation for Named object
+	to allow tagging the head of the pairlist.
+	
+	* src/Rcpp/Named.h : new class Named that is used to specify
+	named elements in a pairlist.
+	
+	* src/Named.cpp: implementation
+	
+	* src/Rcpp/RObject.h: added wrap(const char* const) RObject factory
+	method
+
 	* src/Rcpp/RObject.h: rework the garbage collection mechanism so that 
 	it is automatic and hidden. methods preserve and release are now 
 	private to the RObject class and the SEXP may only be changed using
@@ -8,8 +29,6 @@
 	
 	* src/Rcpp/RObject.h: RObject gains assignment operators and copy constructors
 	
-2010-01-03  Romain Francois <francoisromain@free.fr>
-
 	* src/RcppCommon.h: added the CXX0X define that controls whether
 	we can use C++0x features offered by the gcc. currently the define
 	is hardcoded, but this will eventually be a configure guess. The 
@@ -20,8 +39,6 @@
 	code linking against Rcpp (inline code or packages) can take 
 	advantage of it
 
-2010-01-03  Romain Francois <francoisromain@free.fr>
-
 	* src/Rcpp/Language.h : new class Rcpp::Language to manage calls
 	(LANGSXP SEXP)
 	
@@ -29,15 +46,11 @@
 	
 	* inst/unitTests/runit.Language.R: unit tests
 
-2010-01-03  Romain Francois <francoisromain@free.fr>
-
 	* src/Rcpp/Environment.h : added constructors and made the SEXP based
 	constructor smarter (using as.environment)
 	
 	* inst/unitTests/runit.environments.R: more unit tests
 	
-2010-01-03  Romain Francois <francoisromain@free.fr>
-
 	* src/Rcpp/Symbol.h: new class Rcpp::Symbol to encapsulate 
 	symbols. This allows to use Symbol("rnorm") instead of the most cryptic
 	Rf_install("rnorm")

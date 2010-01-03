@@ -75,7 +75,7 @@ RObject wrap(SEXP m_sexp=R_NilValue){
 	}
 	return RObject(m_sexp) ;
 }
-	
+
 RObject wrap(const bool & v){
     logTxt("RObject from bool\n");
     RObject o(Rf_ScalarLogical(v));
@@ -98,6 +98,10 @@ RObject wrap(const Rbyte & v){
     logTxt("RObject from raw\n");
     RObject o(Rf_ScalarRaw(v));
     return o ;
+}
+
+RObject wrap( const char * const v){
+	return wrap( std::string(v) ) ;
 }
 
 RObject wrap(const std::string & v){

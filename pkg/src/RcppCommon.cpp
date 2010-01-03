@@ -68,4 +68,12 @@ SEXP canUseCXX0X(){
 #endif
 }
 
-
+/* this is mainly here so that variadic template errors show up 
+   at compile time */
+SEXP test_named(){
+#ifdef CXX0X
+	return Rcpp::Language( "foobar", Rcpp::Named("foo", 2 ), 2, Rcpp::Named("bar", 10) ) ;
+#else
+	return R_NilValue ;
+#endif
+}

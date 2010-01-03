@@ -42,11 +42,14 @@
 #include <RcppVectorView.h>
 
 /* new api */
+#include <Rcpp/pairlist.h>
+#include <Rcpp/grow.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/XPtr.h>
 #include <Rcpp/Environment.h>
 #include <Rcpp/Evaluator.h>
 #include <Rcpp/Symbol.h>
 #include <Rcpp/Language.h>
+#include <Rcpp/Named.h>
 
 #endif
