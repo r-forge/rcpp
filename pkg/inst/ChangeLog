@@ -1,3 +1,41 @@
+2010-01-03  Romain Francois <francoisromain@free.fr>
+
+	* src/RcppCommon.h: added the CXX0X define that controls whether
+	we can use C++0x features offered by the gcc. currently the define
+	is hardcoded, but this will eventually be a configure guess. The 
+	canUseCXX0X function can be called to bring this back to R
+	
+	* R/RcppLdPath.R: added the canUseCXX0X R function to query 
+	the internal canUseCXX0X function, use this in RcppCxxFlags so that 
+	code linking against Rcpp (inline code or packages) can take 
+	advantage of it
+
+2010-01-03  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/Language.h : new class Rcpp::Language to manage calls
+	(LANGSXP SEXP)
+	
+	* src/Language.cpp : implementation
+	
+	* inst/unitTests/runit.Language.R: unit tests
+
+2010-01-03  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/Environment.h : added constructors and made the SEXP based
+	constructor smarter (using as.environment)
+	
+	* inst/unitTests/runit.environments.R: more unit tests
+	
+2010-01-03  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/Symbol.h: new class Rcpp::Symbol to encapsulate 
+	symbols. This allows to use Symbol("rnorm") instead of the most cryptic
+	Rf_install("rnorm")
+	
+	* src/Symbol.cpp: implementation
+	
+	* inst/unitTests/runit.Symbol.R: unit tests
+
 2010-01-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* doxyfile: updated to current doxygen standard using -u

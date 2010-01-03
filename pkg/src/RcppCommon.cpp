@@ -40,3 +40,32 @@ inline void logTxtFunction(const char* file, const int line, const char* express
     Rprintf("%s:%d %s\n", file, line, expression);
 }
 
+SEXP test_variadic() {
+	SEXP res = PROTECT( Rf_allocVector(INTSXP, 5) ) ; 
+#ifdef CXX0X
+	INTEGER(res)[0] = variadic_length() ; 
+	INTEGER(res)[1] = variadic_length(1) ;
+	INTEGER(res)[2] = variadic_length(1, 3.3) ;
+	INTEGER(res)[3] = variadic_length(1, "foo", 'f') ;
+	INTEGER(res)[4] = variadic_length(1, 2, 2.3f, "foo", std::string("foobar") ) ;
+#else
+	INTEGER(res)[0] = 0 ; 
+	INTEGER(res)[1] = 1 ;
+	INTEGER(res)[2] = 2 ;
+	INTEGER(res)[3] = 3 ;
+	INTEGER(res)[4] = 4 ;
+#endif
+	UNPROTECT(1) ;
+	return res;
+}
+
+SEXP canUseCXX0X(){
+	SEXP res ;
+#ifdef CXX0X
+	return Rf_ScalarLogical( TRUE ) ;
+#else
+	return Rf_ScalarLogical( FALSE ) ;
+#endif
+}
+
+

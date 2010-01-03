@@ -32,10 +32,12 @@ class Evaluator{
 public:
     Evaluator(SEXP expression ) ;
     ~Evaluator() ;
-    void run(SEXP env) ;
+    void run(SEXP env) throw() ;
+    void run() throw() ;
     inline RObject getResult() const { return result ; }
     inline RObject getError() const { return error ; }
-	
+    inline bool successfull() const { return !error_occured ; }
+    
 private:		
     SEXP expression ;
     bool error_occured ;

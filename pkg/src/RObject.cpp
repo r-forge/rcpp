@@ -20,12 +20,22 @@
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Rcpp/RObject.h>
+#include <Rcpp/Environment.h>
+#include <Rcpp/Symbol.h>
 #include <algorithm>
 
 namespace Rcpp {
 
 RObject wrap(SEXP m_sexp=R_NilValue){
-    return RObject(m_sexp) ;
+	switch( TYPEOF(m_sexp) ){
+		case ENVSXP:
+			return Environment(m_sexp); 
+		case SYMSXP:
+			return Symbol(m_sexp) ;
+		default:
+			break ;
+	}
+	return RObject(m_sexp) ;
 }
 	
 RObject wrap(const bool & v){

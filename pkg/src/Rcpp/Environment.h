@@ -94,13 +94,70 @@ public:
     		std::string message ;
     } ;
     
+    /**
+     * Exception thrown when attempting to convert a SEXP to 
+     * an environment using as.environment
+     */
+    class not_compatible: public std::exception{
+    	public:
+    		not_compatible() throw() ;
+    		
+    		/**
+    		 * The message: cannot convert to environment 
+    		 */
+    		const char* what() const throw() ;
+    		
+    		~not_compatible() throw() ;
+    	
+    } ;
+
+    /**
+     * Exception thrown when attempting to get an environment from a 
+     * name
+     */
+    class no_such_env: public std::exception{
+    	public:
+    		/**
+    		 * @param name name of the environment, e.g "package:Rcpp"
+    		 */
+    		no_such_env( const std::string& name) ;
+    		
+    		/**
+    		 * @paral pos search path position where there is no environment
+    		 */
+    		no_such_env(int pos) ;
+    		
+    		/**
+    		 * The message: no such environment : '{name}' 
+    		 */
+    		const char* what() const throw() ;
+    		
+    		~no_such_env() throw() ;
+    	private:
+    		std::string message ;
+    } ;
     
     /**
      * wraps the given environment
      *
      * if the SEXP is not an environment, and exception is thrown
      */
-    Environment(SEXP m_sexp) ;
+    Environment(SEXP x) throw(not_compatible);
+    
+    /**
+     * Gets the environment associated with the given name
+     *
+     * @param name name of the environment, e.g "package:Rcpp"
+     */
+    Environment( const std::string& name ) throw(no_such_env) ;
+    
+    /**
+     * Gets the environment in the given position of the search path
+     * 
+     * @param pos (1-based) position of the environment, e.g pos=1 gives the
+     *        global environment
+     */
+    Environment( int pos ) throw(no_such_env) ;
     
     /**
      * Nothing specific

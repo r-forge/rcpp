@@ -25,7 +25,7 @@ USERDIR =	../inst/lib
 USERLIB	=	libRcpp$(DYLIB_EXT)
 USERLIBST =	libRcpp.a
 
-PKG_CPPFLAGS += -I.
+PKG_CPPFLAGS += -I. -std=c++0x
 
 userLibrary: 	$(USERLIB) $(USERLIBST)
 		-@if test ! -e $(USERDIR)$(R_ARCH); then mkdir -p $(USERDIR)$(R_ARCH); fi
