@@ -204,6 +204,10 @@ static void safeFindNamespace(void *data) {
     	return s.val ;
     }
     
+    Environment Environment::parent() const throw() {
+    	return Environment( ENCLOS(m_sexp) ) ; 
+    }
+    
     /* exceptions */
     
     Environment::no_such_binding::no_such_binding(const std::string& binding) :
