@@ -34,3 +34,19 @@ test.Language <- function(){
 	checkException( funx(as.raw(1) ), msg = "Language not compatible with raw" )
 }
 
+test.Language.variadic <- function(){
+	if( Rcpp:::canUseCXX0X() ){
+		funx <- cfunction(signature(), '
+		return Language( "rnorm", 10, 0.0, 2.0 ) ;
+		', Rcpp=TRUE, verbose=TRUE, includes = "using namespace Rcpp;" )
+		checkEquals( funx(), call("rnorm", 10L, 0.0, 2.0 ), 
+			msg = "variadic templates" )
+			
+		funx <- cfunction(signature(), '
+		return Language( "rnorm", 10, Named("mean",0.0), 2.0 ) ;
+		', Rcpp=TRUE, verbose=TRUE, includes = "using namespace Rcpp;" )
+		checkEquals( funx(), call("rnorm", 10L, mean = 0.0, 2.0 ), 
+			msg = "variadic templates" )
+	}
+}
+

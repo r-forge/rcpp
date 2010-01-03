@@ -148,6 +148,7 @@ RObject wrap(SEXP m_sexp) ;
 RObject wrap(const bool & v);
 RObject wrap(const double & v);
 RObject wrap(const int & v);
+RObject wrap(const char* const v);
 RObject wrap(const Rbyte & v);
 RObject wrap(const std::string & v);
 
@@ -161,7 +162,6 @@ RObject wrap(const std::set<int> & v);
 RObject wrap(const std::set<double> & v);
 RObject wrap(const std::set<std::string> & v);
 RObject wrap(const std::set<Rbyte> & v);
-
 
 } // namespace Rcpp
 
