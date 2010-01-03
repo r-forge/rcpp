@@ -1,5 +1,13 @@
 2010-01-03  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/as.h: template as<> to convert SEXP to classic
+	C++ types, fcactored out of RObject
+	
+	* src/as.cpp: specific implementations. as<int>, as<bool>
+	as<string>, ...
+	
+	* inst/unitTests/runit.as.R: unit tests
+
 	* src/Rcpp/wrap.h : factored out from RObject. there is now a
 	template wrap in addition to the specific implementations. The 
 	template generates a warning and return NULL
