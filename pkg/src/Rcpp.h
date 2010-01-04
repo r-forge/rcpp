@@ -54,5 +54,6 @@
 #include <Rcpp/Symbol.h>
 #include <Rcpp/Language.h>
 #include <Rcpp/Named.h>
+#include <Rcpp/Pairlist.h>
 
 #endif

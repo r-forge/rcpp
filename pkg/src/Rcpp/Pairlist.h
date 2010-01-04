@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Language.h: Rcpp R/C++ interface class library -- language objects (calls)
+// Pairlist.h: Rcpp R/C++ interface class library -- pair lists objects (LISTSXP)
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,12 +19,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef Rcpp_Language_h
-#define Rcpp_Language_h
+#ifndef Rcpp_Pairlist_h
+#define Rcpp_Pairlist_h
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
-#include <Rcpp/Symbol.h>
 #include <Rcpp/pairlist.h>
 
 namespace Rcpp{ 
@@ -34,11 +33,11 @@ namespace Rcpp{
  *
  * This represents calls that can be evaluated
  */
-class Language : public RObject{
+class Pairlist : public RObject{
 public:
 	/**
 	 * Exception thrown when attempting to convert a SEXP to 
-	 * a call using as.call
+	 * a pair list using as.pairlist
 	 */
 	class not_compatible: public std::exception{
 		public:
@@ -54,70 +53,34 @@ public:
 	} ;
   	
 	/**
-	 * Attempts to convert the SEXP to a call
+	 * Attempts to convert the SEXP to a pair list
 	 *
 	 * @throw not_compatible if the SEXP could not be converted
-	 * to a call using as.call
+	 * to a pair list using as.pairlist
 	 */
-	Language(SEXP lang) throw(not_compatible) ;
+	Pairlist(SEXP lang) throw(not_compatible) ;
 	
 	/**
-	 * Creates a call using the given symbol as the function name
+	 * Creates a pairlist by wrapping the variable number of arguments
+	 * using the pairlist template
 	 *
-	 * @param symbol symbol name to call
-	 *
-	 * Language( "rnorm" ) makes a SEXP similar to this (expressed in R)
-	 * > as.call( as.list( as.name( "rnorm") ) )
-	 * > call( "rnorm" )
-	 */
-	explicit Language( const std::string& symbol ); 
-	
-	/**
-	 * Creates a call using the given symbol as the function name
-	 *
-	 * @param symbol symbol name to call
-	 *
-	 * Language( Symbol("rnorm") ) makes a SEXP similar to this: 
-	 * > call( "rnorm" )
-	 */
-	explicit Language( const Symbol& symbol ); 
-	
-	/**
-	 * Creates a call to the given symbol using variable number of 
-	 * arguments
-	 *
-	 * @param symbol symbol
 	 * @param ...Args variable length argument list. The type of each 
 	 *        argument must be wrappable, meaning there need to be 
 	 *        a wrap function that takes this type as its parameter
 	 * 
-	 * @example Language( "rnorm", 10, 0.0 ) 
-	 * will create the same call as 
-	 * > call( "rnorm", 10L, 0.0 )
-	 *
-	 * 10 is wrapped as an integer vector using wrap( const& int )
-	 * 0.0 is wrapped as a numeric vector using wrap( const& double )
-	 * ...
+	 * @example Pairlist( 10, std::string("foobar"), "rnorm" ) 
+	 * will create the same pair list as
+	 * > pairlist( 10L, "foobar", "rnorm" )
 	 */
 #ifdef CXX0X
 template<typename... Args> 
-	Language( const std::string& symbol, const Args&... args) : RObject() {
+	Pairlist( const Args&... args) : RObject() {
 		/* TODO: should we first allocate and protect the list  ?*/
-		setSEXP( Rf_lcons( Symbol(symbol), pairlist( args... ) ) );
+		setSEXP( pairlist( args... ) );
 	}
 #endif	
 	
-	/**
-	 * sets the symbol of the call
-	 */
-	void setSymbol( const std::string& symbol);
-	
-	/**
-	 * sets the symbol of the call
-	 */
-	void setSymbol( const Symbol& symbol ) ;
-
-	~Language() ;
+	~Pairlist() ;
 };
 
 } // namespace Rcpp

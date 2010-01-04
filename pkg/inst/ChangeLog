@@ -1,5 +1,13 @@
 2010-01-04  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Pairlist.h: new class Rcpp::Pairlist to manage dotted
+	pair lists (LISTSXP). unsurprisingly this shares a lot of
+	similarities with Language class
+
+	* src/Pairlist.cpp: implementation
+
+	* inst/unitTests/runit.Pairlist.R: unit tests for Rcpp::Pairlist
+
 	* src/Rcpp/wrap.h: wrap no more a template. this was not a good
 	idea as it prevented implicit conversion to SEXP behavior when 
 	wrap'ing a RObject.
