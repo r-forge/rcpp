@@ -60,7 +60,6 @@ SEXP test_variadic() {
 }
 
 SEXP canUseCXX0X(){
-	SEXP res ;
 #ifdef CXX0X
 	return Rf_ScalarLogical( TRUE ) ;
 #else
