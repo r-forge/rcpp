@@ -1,4 +1,4 @@
-2010-01-04  Dirk Eddelbuettel  <edd@debian.org>
+2010-01-04  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/wrap.h: wrap no more a template. this was not a good
 	idea as it prevented implicit conversion to SEXP behavior when 
