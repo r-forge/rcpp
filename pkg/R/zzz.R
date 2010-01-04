@@ -15,11 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-dumpUnitTestReport <- function(){
-	txt <- system.file( "doc", "Rcpp-unitTests.txt", package = "Rcpp" )
-	if( file.exists( txt ) ) paste( readLines( txt ), collapse = "\n\n" ) else ""
-}
-
 .onAttach <- function(libname, pkgname){
 	.Call( "initUncaughtExceptionHandler", PACKAGE = pkgname )
 }
