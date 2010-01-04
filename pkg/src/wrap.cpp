@@ -132,7 +132,7 @@ RObject wrap(const std::vector<std::string> & v){
 RObject wrap(const std::set<int> & v){
     logTxt("RObject from set<int>\n");
     int n = v.size();
-    SEXP m_sexp = Rf_allocVector(INTSXP, n);
+    SEXP m_sexp = PROTECT( Rf_allocVector(INTSXP, n) );
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
     RObject o(m_sexp) ;
     UNPROTECT(1) ;
@@ -142,7 +142,7 @@ RObject wrap(const std::set<int> & v){
 RObject wrap(const std::set<double> & v){
     logTxt("RObject from set<double>\n");
     int n = v.size();
-    SEXP m_sexp = Rf_allocVector(REALSXP, n);
+    SEXP m_sexp = PROTECT( Rf_allocVector(REALSXP, n) );
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
     RObject o(m_sexp) ;
     UNPROTECT(1) ;
@@ -152,7 +152,7 @@ RObject wrap(const std::set<double> & v){
 RObject wrap(const std::set<Rbyte> & v){
     logTxt("RObject from set<Rbyte> \n");
     int n = v.size();
-    SEXP m_sexp = Rf_allocVector(RAWSXP, n);
+    SEXP m_sexp = PROTECT( Rf_allocVector(RAWSXP, n) );
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
     RObject o(m_sexp) ;
     UNPROTECT(1) ;
@@ -162,7 +162,7 @@ RObject wrap(const std::set<Rbyte> & v){
 RObject wrap(const std::set<std::string> & v){
     logTxt("RObject from set<string>\n");
     int n = v.size();
-    SEXP m_sexp = Rf_allocVector(STRSXP, n);
+    SEXP m_sexp = PROTECT( Rf_allocVector(STRSXP, n) );
     int i=0;
     std::set<std::string>::iterator it = v.begin(); 
     while( i<n ){
