@@ -75,7 +75,7 @@ void forward_uncaught_exceptions_to_r(){
 }
 
 SEXP initUncaughtExceptionHandler(){
-    void (*old_terminate)() = std::set_terminate(forward_uncaught_exceptions_to_r);
+    std::set_terminate(forward_uncaught_exceptions_to_r);
     return R_NilValue ;
 }
 
