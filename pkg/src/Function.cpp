@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Language.cpp: Rcpp R/C++ interface class library -- Language objects ( calls )
+// Function.cpp: Rcpp R/C++ interface class library -- functions
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,43 +19,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <Rcpp/Pairlist.h>
-#include <Rcpp/Evaluator.h>
+#include <Rcpp/Function.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/Language.h>
+#include <Rcpp/pairlist.h>
 #include <RcppCommon.h>
 
 namespace Rcpp {
 	
-	Pairlist::Pairlist( SEXP x = R_NilValue ) throw(not_compatible) : RObject::RObject( ){
-		if( x != R_NilValue ){
-			switch( TYPEOF(x) ){
-				case LANGSXP:
-				case LISTSXP:
-					setSEXP( x) ; 
-					break ;
-				default:
-					{
-						Evaluator evaluator( Language("as.pairlist", x ) ) ;
-						evaluator.run() ;
-						if( evaluator.successfull() ){
-    							setSEXP( evaluator.getResult().asSexp() ) ;
-    						} else{
-    							throw not_compatible( ) ; 
-    						}
-					}
-			}
-		}          
-		
+	Function::Function( SEXP x = R_NilValue ) throw(not_compatible) : RObject::RObject( ){
+		switch( TYPEOF(x) ){
+		case CLOSXP:
+		case SPECIALSXP:
+		case BUILTINSXP:
+			setSEXP(x); 
+			break; 
+		default:
+			throw not_compatible() ;
+		}
 	};
 	
-	Pairlist::~Pairlist(){}
+	Function::~Function(){}
 	
-	Pairlist::not_compatible::not_compatible() throw() {}
-    	const char* Pairlist::not_compatible::what() const throw(){
-    		return "cannot convert to pair list" ;
+	Function::not_compatible::not_compatible() throw() {}
+    	const char* Function::not_compatible::what() const throw(){
+    		return "not a function" ;
     	}
-    	Pairlist::not_compatible::~not_compatible() throw() {}
+    	Function::not_compatible::~not_compatible() throw() {}
     
 	
 	

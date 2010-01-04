@@ -1,5 +1,15 @@
 2010-01-04  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Function.h: new class Rcpp::Function to manage functions
+	(closures, primitives and builtins) all share the Function class
+	(at least for now). This is implemented as a functor taking 
+	variable number of arguments, so it looks pretty similar to the 
+	R function
+	
+	* src/Function.cpp: implementation
+	
+	* inst/unitTests/runit.Function.R: unit tests
+
 	* src/Rcpp/Pairlist.h: new class Rcpp::Pairlist to manage dotted
 	pair lists (LISTSXP). unsurprisingly this shares a lot of
 	similarities with Language class
