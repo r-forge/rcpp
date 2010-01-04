@@ -8,6 +8,11 @@
 	
 	* src/unitTests/runit.environments.R: remove unit test
 
+	* src/unitTests/runit.Language.R: remove verbose=TRUE in cfunction
+	call (generated noise)
+
+	* src/wrap.cpp: added a few missing PROTECT 
+	
 2010-01-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/excections.cpp: Get rid of another unused variable
