@@ -1,5 +1,15 @@
 2010-01-04  Dirk Eddelbuettel  <edd@debian.org>
 
+	* src/Rcpp/wrap.h: wrap no more a template. this was not a good
+	idea as it prevented implicit conversion to SEXP behavior when 
+	wrap'ing a RObject.
+
+	* src/Rcpp/Environment.h: added the remove method
+	
+	* src/unitTests/runit.environments.R: remove unit test
+
+2010-01-04  Dirk Eddelbuettel  <edd@debian.org>
+
 	* src/excections.cpp: Get rid of another unused variable
 	* src/RcppCommon.cpp: Idem
 
