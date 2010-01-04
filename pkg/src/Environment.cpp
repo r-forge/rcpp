@@ -161,6 +161,7 @@ static void safeFindNamespace(void *data) {
     	    } else{
     	    	throw no_such_binding(name) ;
     	    }
+	    return true; // to make g++ -Wall happy
     }
     
     bool Environment::isLocked() const{
