@@ -22,6 +22,7 @@
 #include <Rcpp/Environment.h>
 #include <Rcpp/Evaluator.h>
 #include <Rcpp/Symbol.h>
+#include <Rcpp/Language.h>
 
 namespace Rcpp {
 
@@ -143,6 +144,23 @@ static void safeFindNamespace(void *data) {
     	s.rho = m_sexp ;
     	s.val = x ;
     	return static_cast<bool>( R_ToplevelExec(safeAssign, (void*) &s) );
+    }
+    
+    bool Environment::remove( const std::string& name) throw(binding_is_locked){
+    	    if( exists(name) ){
+    	    	    if( bindingIsLocked(name) ){
+    	    	    	    throw binding_is_locked(name) ;
+    	    	    } else{
+    	    	    	    /* unless we want to copy all of do_remove, 
+    	    	    	       we have to go back to R to do this operation */
+    	    	    	    Language call( ".Internal", 
+    	    	    	    	    Language( "remove", name, m_sexp, false ) 
+    	    	    	    	    ) ;
+    	    	    	    Rf_eval( call, R_GlobalEnv ) ;
+    	    	    }
+    	    } else{
+    	    	throw no_such_binding(name) ;
+    	    }
     }
     
     bool Environment::isLocked() const{

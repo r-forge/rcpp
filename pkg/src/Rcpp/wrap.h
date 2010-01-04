@@ -29,11 +29,6 @@
 namespace Rcpp{ 
 
 // factories
-template <typename T>
-RObject wrap(const T& v ){
-	Rf_warning( "not implemented" ) ;
-	return RObject(R_NilValue) ;
-}
 
 RObject wrap(SEXP m_sexp) ;
 

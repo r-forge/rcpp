@@ -275,3 +275,31 @@ test.environment.constructor.int <- function(){
 	}
 }
 
+test.environment.remove <- function(){
+	funx <- cfunction(signature( env = "environment", name = "character" ), '
+	return wrap( Environment(env).remove( as<std::string>(name) ) ) ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	e <- new.env( )
+	e$a <- 1
+	e$b <- 2
+	checkTrue( funx( e, "a" ), msg = "Environment::remove" )
+	checkEquals( ls(envir=e), "b", msg = "check that the element was removed" )
+	checkException( funx(e, "xx"), msg = "Environment::remove no such binding" )
+	lockBinding( "b", e )
+	checkException( funx(e, "b"), msg = "Environment::remove binding is locked" )
+	checkEquals( ls(envir=e), "b", msg = "check that the element was not removed" )
+	
+}
+
+test.environment.parent <- function(){
+	funx <- cfunction(signature( env = "environment" ), '
+	return Environment(env).parent() ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	e <- new.env( parent = emptyenv() )
+	f <- new.env( parent = e )
+	checkEquals( funx(f), e, msg = "Environment::parent" )
+	checkEquals( funx(e), emptyenv() , msg = "Environment::parent" )
+	
+}

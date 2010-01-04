@@ -223,6 +223,11 @@ public:
     bool isLocked() const ;
     
     /**
+     * remove an object from this environment
+     */
+    bool remove( const std::string& name ) throw(binding_is_locked) ;
+    
+    /**
      * locks this environment. See ?lockEnvironment
      *
      * @param bindings also lock the bindings of this environment ?
