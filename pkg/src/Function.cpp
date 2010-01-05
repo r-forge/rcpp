@@ -35,18 +35,10 @@ namespace Rcpp {
 			setSEXP(x); 
 			break; 
 		default:
-			throw not_compatible() ;
+			throw not_compatible("cannot convert to function") ;
 		}
 	};
 	
-	Function::~Function(){}
-	
-	Function::not_compatible::not_compatible() throw() {}
-    	const char* Function::not_compatible::what() const throw(){
-    		return "not a function" ;
-    	}
-    	Function::not_compatible::~not_compatible() throw() {}
-    
-	
+	Function::~Function(){}	
 	
 } // namespace Rcpp

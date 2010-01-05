@@ -31,25 +31,6 @@ class Symbol: public RObject{
 public:
 
     /**
-     * Exception thrown when attempting to create a Symbol from a 
-     * SEXP that is not compatible
-     */
-    class not_compatible: public std::exception{
-    	public:
-    		not_compatible(int type) throw() ;
-    		
-    		/**
-    		 * The message: not compatible with Symbol
-    		 */
-    		const char* what() const throw();
-    		
-    		~not_compatible() throw() ;
-    		
-    	private:
-    		int type ;
-    } ;
-    	
-    /**
      * wraps the SEXP into a Symbol object. 
      * 
      * @param m_sexp Accepted SEXP types are SYMSXP, CHARSXP and STRSXP

@@ -35,23 +35,7 @@ namespace Rcpp{
  */
 class Pairlist : public RObject{
 public:
-	/**
-	 * Exception thrown when attempting to convert a SEXP to 
-	 * a pair list using as.pairlist
-	 */
-	class not_compatible: public std::exception{
-		public:
-			not_compatible() throw() ;
-			
-			/**
-			 * The message: cannot convert to call 
-			 */
-			const char* what() const throw() ;
-			
-			~not_compatible() throw() ;
-		
-	} ;
-  	
+	
 	/**
 	 * Attempts to convert the SEXP to a pair list
 	 *

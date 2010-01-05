@@ -38,7 +38,7 @@ namespace Rcpp {
 	    		case EXPRSXP:
 	    			{
 	    				int n = Rf_length(lang) ;
-	    				if( n == 0 ) throw not_compatible() ;
+	    				if( n == 0 ) throw not_compatible("cannot convert to call (LANGSXP)") ;
 	    				SEXP names = GET_NAMES(lang) ; 
 	    				SEXP res, ap;
 	    				PROTECT( ap = res = Rf_allocList( n ) ) ;
@@ -53,7 +53,7 @@ namespace Rcpp {
 	    				setSEXP(res) ; 
 	    			}
 	    		default:
-	    			throw not_compatible() ;
+	    			throw not_compatible("cannot convert to call (LANGSXP)") ;
 	    		}
 	    		SET_TYPEOF(m_sexp, LANGSXP);
 	    		SET_TAG(m_sexp, R_NilValue);
@@ -81,13 +81,6 @@ namespace Rcpp {
 		SETCAR( m_sexp, symbol ) ;
 		SET_TAG(m_sexp, R_NilValue);
 	}
-	
-	Language::not_compatible::not_compatible() throw() {}
-    	const char* Language::not_compatible::what() const throw(){
-    		return "cannot convert to call" ;
-    	}
-    	Language::not_compatible::~not_compatible() throw() {}
-    
 	
 	
 } // namespace Rcpp

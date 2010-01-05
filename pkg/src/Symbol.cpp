@@ -23,12 +23,6 @@
 
 namespace Rcpp {
 
-	Symbol::not_compatible::not_compatible(int type) throw() {}
-	Symbol::not_compatible::~not_compatible() throw() {}
-	const char* Symbol::not_compatible::what() const throw() {
-		return "not compatible with Symbol, excepting SYMSXP, CHARSXP or STRSXP" ;
-	}
-	
 	Symbol::Symbol( SEXP x ) throw(not_compatible) : RObject::RObject() {
 		if( x != R_NilValue ){
 			int type = TYPEOF(x) ;
@@ -46,7 +40,7 @@ namespace Rcpp {
 					break ;
 				}
 			default:
-				throw not_compatible(type) ;
+				throw not_compatible("cannot convert to symbol (SYMSXP)") ;
 			}
 		} else {
 			setSEXP( x ) ;

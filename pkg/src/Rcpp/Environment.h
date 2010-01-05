@@ -95,23 +95,6 @@ public:
     } ;
     
     /**
-     * Exception thrown when attempting to convert a SEXP to 
-     * an environment using as.environment
-     */
-    class not_compatible: public std::exception{
-    	public:
-    		not_compatible() throw() ;
-    		
-    		/**
-    		 * The message: cannot convert to environment 
-    		 */
-    		const char* what() const throw() ;
-    		
-    		~not_compatible() throw() ;
-    	
-    } ;
-
-    /**
      * Exception thrown when attempting to get an environment from a 
      * name
      */
