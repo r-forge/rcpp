@@ -1,6 +1,12 @@
 2010-01-05  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/IntegerVector.h new class Rcpp::IntegerVector 
+	* src/Rcpp/GenericVector.h : new class Rcpp::GenericVector 
+	and an alias Rcpp::List to handle lists (VECSXP), aka generic 
+	vectors
+	* src/NumericVector.cpp : implementation
+	* inst/unitTests/runit.NumericVector.R: unit tests
+
+	* src/Rcpp/IntegerVector.h : new class Rcpp::IntegerVector 
 	to manage integer vector (INTSXP). IntegerVector can be
 	constructed from SEXP of appropriate type, from an int which 
 	simply allocates a vector that big, or using an 
@@ -19,6 +25,11 @@
 	vectors (RAWSXP)
 	* src/RawVector.cpp : implementation
 	* inst/unitTests/runit.RawVector.R: unit tests
+
+	* src/Rcpp/LogicalVector.h : same as above, but for numeric 
+	vectors (RAWSXP)
+	* src/LogicalVector.cpp : implementation
+	* inst/unitTests/runit.LogicalVector.R: unit tests
 
 	* src/RcppCommon.h: improve the conditional compiling logic
 	with macros HAS_VARIADIC_TEMPLATES and HAS_INIT_LISTS instead
