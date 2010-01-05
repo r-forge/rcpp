@@ -36,7 +36,7 @@ namespace Rcpp {
 					break ;
 				default:
 					{
-						Evaluator evaluator( Language("as.pairlist", x ) ) ;
+						Evaluator evaluator( Rf_lang2( Rf_install("as.pairlist"), x ) ) ;
 						evaluator.run() ;
 						if( evaluator.successfull() ){
     							setSEXP( evaluator.getResult().asSexp() ) ;
