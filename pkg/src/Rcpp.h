@@ -60,5 +60,6 @@
 #include <Rcpp/NumericVector.h>
 #include <Rcpp/RawVector.h>
 #include <Rcpp/LogicalVector.h>
+#include <Rcpp/GenericVector.h>
 
 #endif
