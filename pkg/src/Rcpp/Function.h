@@ -68,7 +68,7 @@ public:
 	 *        a wrap function that takes this type as its parameter
 	 *
 	 */
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
 	SEXP operator()( const Args&... args) {
 		Evaluator evaluator( Rf_lcons( m_sexp, pairlist(args...) ) ) ; 

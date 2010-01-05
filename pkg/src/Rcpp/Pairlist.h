@@ -72,7 +72,7 @@ public:
 	 * will create the same pair list as
 	 * > pairlist( 10L, "foobar", "rnorm" )
 	 */
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
 	Pairlist( const Args&... args) : RObject() {
 		/* TODO: should we first allocate and protect the list  ?*/

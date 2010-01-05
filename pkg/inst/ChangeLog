@@ -1,3 +1,17 @@
+2010-01-05  Romain Francois <francoisromain@free.fr>
+
+	* src/RcppCommon.h: improve the conditional compiling logic
+	with macros HAS_VARIADIC_TEMPLATES and HAS_INIT_LISTS instead
+	of CXX0X. This ensures the package can be compiled with 
+	older GCC, with lower functionality
+
+	* src/RcppCommon.{h,cpp}: added a capabilities function that 
+	can be used to bring the result of the two above macros to R
+
+	* R/RcppLdPaths.R: added unexported function RcppCapabilities
+	to call the internal capabilities. capabilities is an alias
+	to RcppCapabilities so that we can call Rcpp::capabilities()
+
 2010-01-04  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/Function.h: new class Rcpp::Function to manage functions

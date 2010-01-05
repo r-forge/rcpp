@@ -48,7 +48,7 @@ public:
 	 */
 	Named( const std::string& tag ) : object(R_NilValue), tag(tag){} ;
 	
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 	template<typename T>
 	Named( const std::string& tag, const T& value ) : object(R_NilValue), tag(tag) {
 		object = wrap( value ) ;
