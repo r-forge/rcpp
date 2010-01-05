@@ -59,5 +59,6 @@
 #include <Rcpp/IntegerVector.h>
 #include <Rcpp/NumericVector.h>
 #include <Rcpp/RawVector.h>
+#include <Rcpp/LogicalVector.h>
 
 #endif
