@@ -45,7 +45,6 @@ static void safeFindNamespace(void *data) {
 }
 
     Environment::Environment( SEXP x = R_GlobalEnv) throw(not_compatible) : RObject::RObject(x){
-	
     	if( ! Rf_isEnvironment(x) ) {
     		
     		/* not an environment, but maybe convertible to one using 
@@ -153,8 +152,15 @@ static void safeFindNamespace(void *data) {
     	    	    } else{
     	    	    	    /* unless we want to copy all of do_remove, 
     	    	    	       we have to go back to R to do this operation */
-    	    	    	    Language call( ".Internal", 
-    	    	    	    	    Language( "remove", name, m_sexp, false ) 
+    	    	    	    SEXP call = Rf_lang2( 
+    	    	    	    	    Rf_install( ".Internal" ), 
+    	    	    	    	    Rf_lcons( Rf_install( "remove" ), 
+    	    	    	    	    	    Rf_cons( Rf_mkString(name.c_str()), 
+    	    	    	    	    	    	    Rf_cons( m_sexp, 
+    	    	    	    	    	    	    	    Rf_cons( Rf_ScalarLogical( FALSE ), R_NilValue )
+    	    	    	    	    	    	    	    ) 
+    	    	    	    	    	    	    )
+    	    	    	    	    	    )
     	    	    	    	    ) ;
     	    	    	    Rf_eval( call, R_GlobalEnv ) ;
     	    	    }
