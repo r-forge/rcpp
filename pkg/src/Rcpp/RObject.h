@@ -30,6 +30,21 @@ namespace Rcpp{
 class RObject{
 public:
 
+	/**
+   	 * Exception thrown when attempting to convert a SEXP
+   	 */
+   	class not_compatible: public std::exception{
+   		public:
+   			not_compatible(const std::string& message) throw() : message(message){};
+   			
+   			const char* what() const throw() ; 
+   			
+   			~not_compatible() throw() ;
+   		private:
+   			std::string message ;
+   	} ;
+	
+	
     /**
      * default constructor. uses R_NilValue
      */ 
@@ -62,7 +77,7 @@ public:
      * and become subject to garbage collection. See preserve 
      * and release member functions.
      */
-    ~RObject() ;
+    virtual ~RObject() ;
    
     /**
      * implicit conversion to SEXP

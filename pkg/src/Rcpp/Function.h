@@ -71,6 +71,8 @@ public:
 #ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
 	SEXP operator()( const Args&... args) {
+		
+		/* FIXME: we should use applyClosure instead */
 		Evaluator evaluator( Rf_lcons( m_sexp, pairlist(args...) ) ) ; 
 		evaluator.run() ;
 		if( evaluator.successfull() ){

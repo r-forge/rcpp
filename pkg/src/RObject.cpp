@@ -278,6 +278,11 @@ SEXP RObject::attr( const std::string& name) const{
 	return Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) );
 }
 
+const char* RObject::not_compatible::what( ) const throw() {
+	return message.c_str() ;
+}
+RObject::not_compatible::~not_compatible() throw() {}
+			
 
 } // namespace Rcpp
 
