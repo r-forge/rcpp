@@ -58,5 +58,6 @@
 #include <Rcpp/Function.h>
 #include <Rcpp/IntegerVector.h>
 #include <Rcpp/NumericVector.h>
+#include <Rcpp/RawVector.h>
 
 #endif

@@ -9,12 +9,17 @@
 	they can be used in STL algorithms
 	* src/IntegerVector.cpp : implementation
 	* inst/unitTests/runit.IntegerVector.R: unit tests
-	
+
 	* src/Rcpp/NumericVector.h : same as above, but for numeric 
 	vectors (REALSXP)
 	* src/NumericVector.cpp : implementation
 	* inst/unitTests/runit.NumericVector.R: unit tests
-	
+
+	* src/Rcpp/RawVector.h : same as above, but for numeric 
+	vectors (RAWSXP)
+	* src/RawVector.cpp : implementation
+	* inst/unitTests/runit.RawVector.R: unit tests
+
 	* src/RcppCommon.h: improve the conditional compiling logic
 	with macros HAS_VARIADIC_TEMPLATES and HAS_INIT_LISTS instead
 	of CXX0X. This ensures the package can be compiled with 

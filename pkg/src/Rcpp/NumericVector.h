@@ -57,6 +57,8 @@ public:
 	double* begin() const ; 
 	double* end() const ;
 	
+	typedef double* iterator ;
+	
 } ;
 
 } // namespace

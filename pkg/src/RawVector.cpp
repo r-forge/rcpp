@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// NumericVector.h: Rcpp R/C++ interface class library -- integer vectors
+// RawVector.h: Rcpp R/C++ interface class library -- integer vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -21,52 +21,55 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
-#include <Rcpp/NumericVector.h>
+#include <Rcpp/RawVector.h>
+#include <algorithm>
 
 namespace Rcpp{
 	
-	NumericVector::NumericVector(SEXP x) throw(not_compatible) : RObject() {
+	RawVector::RawVector(SEXP x) throw(not_compatible) : RObject() {
 		switch( TYPEOF( x ) ){
-			case REALSXP:
+			case RAWSXP:
 				setSEXP( x ) ;
 				break ;
 			case INTSXP:
+			case REALSXP:
 			case LGLSXP:
-			case RAWSXP:
-				setSEXP( Rf_coerceVector( x, REALSXP) ) ;
+				setSEXP( Rf_coerceVector( x, RAWSXP) ) ;
 				break ;
 			default:
-				throw not_compatible( "cannot convert to numeric vector" ) ;
+				throw not_compatible( "cannot convert to intrger vector" ) ;
 		}
 	}
 	
-	NumericVector::NumericVector(int size) : RObject() {
-		setSEXP( Rf_allocVector(REALSXP, size) ) ;
+	RawVector::RawVector(int size) : RObject() {
+		setSEXP( Rf_allocVector(RAWSXP, size) ) ;
 	}
 
-#ifdef HAS_INIT_LISTS	
-	NumericVector::NumericVector( std::initializer_list<int> list ) {
-		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), REAL(x) ); 
+#ifdef HAS_INIT_LISTS
+	RawVector::RawVector( std::initializer_list<int> list ) {
+		SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;
+		std::copy( list.begin(), list.end(), RAW(x) ); 
 		setSEXP(x) ;
 		UNPROTECT( 1 ); /* x */
 	}
-	NumericVector::NumericVector( std::initializer_list<double> list ) {
-		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), REAL(x) ); 
+	RawVector::RawVector( std::initializer_list<Rbyte> list ) {
+		/* FIXME: we need to take care of coercion, so 
+		transform is probably better */
+		SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;
+		std::copy( list.begin(), list.end(), RAW(x) ); 
 		setSEXP(x) ;
 		UNPROTECT( 1 ); /* x */
 	}
 #endif
 
-double& NumericVector::operator[]( int i ) const { 
-	return REAL(m_sexp)[i] ;
+Rbyte& RawVector::operator[]( int i ) const { 
+	return RAW(m_sexp)[i] ;
 }
-double* NumericVector::begin() const { 
-	return REAL(m_sexp) ;
+Rbyte* RawVector::begin() const { 
+	return RAW(m_sexp) ;
 }
-double* NumericVector::end() const { 
-	return REAL(m_sexp) + LENGTH(m_sexp);
+Rbyte* RawVector::end() const { 
+	return RAW(m_sexp) + LENGTH(m_sexp);
 }
 
 } // namespace 

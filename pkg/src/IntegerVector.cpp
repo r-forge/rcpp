@@ -22,14 +22,22 @@
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/IntegerVector.h>
+#include <algorithm>
 
 namespace Rcpp{
 	
 	IntegerVector::IntegerVector(SEXP x) throw(not_compatible) : RObject() {
-		if( TYPEOF( x ) == INTSXP ){
-			setSEXP( x ) ;
-		} else {
-			throw not_compatible( "cannot convert to intrger vector" ) ;
+		switch( TYPEOF( x ) ){
+			case INTSXP:
+				setSEXP( x ) ;
+				break ;
+			case REALSXP:
+			case LGLSXP:
+			case RAWSXP:
+				setSEXP( Rf_coerceVector( x, INTSXP) ) ;
+				break ;
+			default:
+				throw not_compatible( "cannot convert to intrger vector" ) ;
 		}
 	}
 	
