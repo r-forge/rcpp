@@ -56,5 +56,6 @@
 #include <Rcpp/Named.h>
 #include <Rcpp/Pairlist.h>
 #include <Rcpp/Function.h>
+#include <Rcpp/IntegerVector.h>
 
 #endif

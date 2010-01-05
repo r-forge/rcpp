@@ -82,4 +82,6 @@ RcppExport SEXP canUseCXX0X() ;
 RcppExport SEXP test_named() ;
 RcppExport SEXP capabilities() ;
 
+const char * const sexp_to_name(int sexp_type); 
+
 #endif
