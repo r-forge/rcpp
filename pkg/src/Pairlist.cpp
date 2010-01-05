@@ -41,7 +41,7 @@ namespace Rcpp {
 						if( evaluator.successfull() ){
     							setSEXP( evaluator.getResult().asSexp() ) ;
     						} else{
-    							throw not_compatible( ) ; 
+    							throw not_compatible( "cannot convert to call (LANGSXP)" ) ; 
     						}
 					}
 			}
@@ -50,13 +50,6 @@ namespace Rcpp {
 	};
 	
 	Pairlist::~Pairlist(){}
-	
-	Pairlist::not_compatible::not_compatible() throw() {}
-    	const char* Pairlist::not_compatible::what() const throw(){
-    		return "cannot convert to pair list" ;
-    	}
-    	Pairlist::not_compatible::~not_compatible() throw() {}
-    
 	
 	
 } // namespace Rcpp

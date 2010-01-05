@@ -36,23 +36,7 @@ namespace Rcpp{
  */
 class Language : public RObject{
 public:
-	/**
-	 * Exception thrown when attempting to convert a SEXP to 
-	 * a call using as.call
-	 */
-	class not_compatible: public std::exception{
-		public:
-			not_compatible() throw() ;
-			
-			/**
-			 * The message: cannot convert to call 
-			 */
-			const char* what() const throw() ;
-			
-			~not_compatible() throw() ;
-		
-	} ;
-  	
+	
 	/**
 	 * Attempts to convert the SEXP to a call
 	 *

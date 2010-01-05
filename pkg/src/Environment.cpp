@@ -54,7 +54,7 @@ static void safeFindNamespace(void *data) {
     		if( evaluator.successfull() ){
     			setSEXP( evaluator.getResult().asSexp() ) ;
     		} else{
-    			throw not_compatible( ) ; 
+    			throw not_compatible( "cannot convert to environment"  ) ; 
     		}
     	}
     }
@@ -264,14 +264,6 @@ static void safeFindNamespace(void *data) {
     	return message.c_str() ;
     }
     Environment::no_such_env::~no_such_env() throw() {}
-    
-    Environment::not_compatible::not_compatible() throw() {}
-    const char* Environment::not_compatible::what() const throw(){
-    	return "cannot convert to environment" ;
-    }
-    Environment::not_compatible::~not_compatible() throw() {}
-    
-    
     
 } // namespace Rcpp
 

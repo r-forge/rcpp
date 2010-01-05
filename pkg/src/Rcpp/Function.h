@@ -34,23 +34,7 @@ namespace Rcpp{
  */
 class Function : public RObject{
 public:
-	/**
-	 * Exception thrown when attempting build a Function from a SEXP 
-	 * that is not appropriate
-	 */
-	class not_compatible: public std::exception{
-		public:
-			not_compatible() throw() ;
-			
-			/**
-			 * The message: not a function 
-			 */
-			const char* what() const throw() ;
-			
-			~not_compatible() throw() ;
-		
-	} ;
-  	
+	
 	/**
 	 * Attempts to convert the SEXP to a pair list
 	 *
