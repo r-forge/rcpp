@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// IntegerVector.h: Rcpp R/C++ interface class library -- integer vectors
+// NumericVector.h: Rcpp R/C++ interface class library -- integer vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -21,45 +21,45 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
-#include <Rcpp/IntegerVector.h>
+#include <Rcpp/NumericVector.h>
 
 namespace Rcpp{
 	
-	IntegerVector::IntegerVector(SEXP x) throw(not_compatible) : RObject() {
-		if( TYPEOF( x ) == INTSXP ){
+	NumericVector::NumericVector(SEXP x) throw(not_compatible) : RObject() {
+		if( TYPEOF( x ) == REALSXP ){
 			setSEXP( x ) ;
 		} else {
 			throw not_compatible( "cannot convert to intrger vector" ) ;
 		}
 	}
 	
-	IntegerVector::IntegerVector(int size) : RObject() {
-		setSEXP( Rf_allocVector(INTSXP, size) ) ;
+	NumericVector::NumericVector(int size) : RObject() {
+		setSEXP( Rf_allocVector(REALSXP, size) ) ;
 	}
 
 #ifdef HAS_INIT_LISTS	
-	IntegerVector::IntegerVector( std::initializer_list<int> list ) {
-		SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), INTEGER(x) ); 
+	NumericVector::NumericVector( std::initializer_list<int> list ) {
+		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
+		std::copy( list.begin(), list.end(), REAL(x) ); 
 		setSEXP(x) ;
 		UNPROTECT( 1 ); /* x */
 	}
-	IntegerVector::IntegerVector( std::initializer_list<double> list ) {
-		SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), INTEGER(x) ); 
+	NumericVector::NumericVector( std::initializer_list<double> list ) {
+		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
+		std::copy( list.begin(), list.end(), REAL(x) ); 
 		setSEXP(x) ;
 		UNPROTECT( 1 ); /* x */
 	}
 #endif
 
-int& IntegerVector::operator[]( int i ) const { 
-	return INTEGER(m_sexp)[i] ;
+double& NumericVector::operator[]( int i ) const { 
+	return REAL(m_sexp)[i] ;
 }
-int* IntegerVector::begin() const { 
-	return INTEGER(m_sexp) ;
+double* NumericVector::begin() const { 
+	return REAL(m_sexp) ;
 }
-int* IntegerVector::end() const { 
-	return INTEGER(m_sexp) + LENGTH(m_sexp);
+double* NumericVector::end() const { 
+	return REAL(m_sexp) + LENGTH(m_sexp);
 }
 
 } // namespace 

@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// IntegerVector.h: Rcpp R/C++ interface class library -- integer vectors
+// NumericVector.h: Rcpp R/C++ interface class library -- numeric vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,8 +19,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef Rcpp_IntegerVector_h
-#define Rcpp_IntegerVector_h
+#ifndef Rcpp_NumericVector_h
+#define Rcpp_NumericVector_h
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
@@ -32,15 +32,15 @@
 
 namespace Rcpp{ 
 
-class IntegerVector : public RObject {     
+class NumericVector : public RObject {     
 public:
 
-	IntegerVector(SEXP x) throw(not_compatible);
-	IntegerVector( int size) ;
+	NumericVector(SEXP x) throw(not_compatible);
+	NumericVector( int size) ;
 	
 #ifdef HAS_INIT_LISTS	
-	IntegerVector( std::initializer_list<int> list ) ;
-	IntegerVector( std::initializer_list<double> list ) ;
+	NumericVector( std::initializer_list<int> list ) ;
+	NumericVector( std::initializer_list<double> list ) ;
 #endif
 	
 	/**
@@ -53,9 +53,10 @@ public:
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
-	int& operator[]( int i ) const ;
-	int* begin() const ; 
-	int* end() const ;
+	double& operator[]( int i ) const ;
+	double* begin() const ; 
+	double* end() const ;
+	
 } ;
 
 } // namespace
