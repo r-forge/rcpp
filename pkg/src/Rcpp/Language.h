@@ -99,7 +99,7 @@ public:
 	 * 0.0 is wrapped as a numeric vector using wrap( const& double )
 	 * ...
 	 */
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
 	Language( const std::string& symbol, const Args&... args) : RObject() {
 		/* TODO: should we first allocate and protect the list  ?*/

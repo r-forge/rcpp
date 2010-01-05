@@ -37,3 +37,6 @@ RcppCxxFlags <- function() {
 CxxFlags <- function() cat(RcppCxxFlags())
 LdFlags <- function() cat(RcppLdFlags())
 
+# capabilities
+RcppCapabilities <- capabilities <- function() .Call("capabilities", PACKAGE = "Rcpp")
+

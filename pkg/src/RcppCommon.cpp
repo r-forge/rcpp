@@ -42,7 +42,7 @@ inline void logTxtFunction(const char* file, const int line, const char* express
 
 SEXP test_variadic() {
 	SEXP res = PROTECT( Rf_allocVector(INTSXP, 5) ) ; 
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 	INTEGER(res)[0] = variadic_length() ; 
 	INTEGER(res)[1] = variadic_length(1) ;
 	INTEGER(res)[2] = variadic_length(1, 3.3) ;
@@ -60,17 +60,39 @@ SEXP test_variadic() {
 }
 
 SEXP canUseCXX0X(){
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 	return Rf_ScalarLogical( TRUE ) ;
 #else
 	return Rf_ScalarLogical( FALSE ) ;
 #endif
 }
 
+SEXP capabilities(){
+	SEXP cap = PROTECT( Rf_allocVector( LGLSXP, 2) ) ;
+	SEXP names = PROTECT( Rf_allocVector( STRSXP, 2 ) ) ;
+#ifdef HAS_VARIADIC_TEMPLATES
+	LOGICAL(cap)[0] = TRUE ;
+#else
+	LOGICAL(cap)[0] = FALSE ;
+#endif
+#ifdef HAS_INIT_LISTS
+	LOGICAL(cap)[1] = TRUE ;
+#else
+	LOGICAL(cap)[1] = FALSE ;
+#endif
+	
+	SET_STRING_ELT(names, 0, Rf_mkChar("variadic templates") ) ;
+	SET_STRING_ELT(names, 1, Rf_mkChar("initializer lists") ) ;
+	Rf_setAttrib( cap, R_NamesSymbol, names ) ;
+	UNPROTECT(2) ;
+	return cap ;
+}
+
+
 /* this is mainly here so that variadic template errors show up 
    at compile time */
 SEXP test_named(){
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 	return Rcpp::Language( "foobar", Rcpp::Named("foo", 2 ), 2, Rcpp::Named("bar", 10) ) ;
 #else
 	return R_NilValue ;

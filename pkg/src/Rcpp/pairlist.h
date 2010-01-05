@@ -29,7 +29,7 @@
 namespace Rcpp{
 	/* recursive packing of the arguments into a list, 
 	  use first as the CAR and build the CDR from the remaining args recursively */
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 	SEXP pairlist() ;
 	template<typename T, typename... Args>
 	SEXP pairlist( const T& first, const Args&... args ){

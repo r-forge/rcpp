@@ -24,9 +24,15 @@
 #ifndef RcppCommon_h
 #define RcppCommon_h
 
-// TODO: need to bring this from the configure step
-//       but I have no idea how to do it
-#define CXX0X
+#ifdef __GNUC__
+	#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+	#if GCC_VERSION >= 40300
+		#define HAS_VARIADIC_TEMPLATES
+	#endif
+	#if GCC_VERSION >= 40400
+		#define HAS_INIT_LISTS
+	#endif
+#endif
 
 #include <exception>
 #include <iostream>
@@ -66,7 +72,7 @@ void forward_uncaught_exceptions_to_r() ;
 RcppExport SEXP initUncaughtExceptionHandler() ; 
 
 /* just testing variadic templates */
-#ifdef CXX0X
+#ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args>
 int variadic_length( const Args&... args) { return sizeof...(Args) ; }
 #endif
@@ -74,5 +80,6 @@ int variadic_length( const Args&... args) { return sizeof...(Args) ; }
 RcppExport SEXP test_variadic() ; 
 RcppExport SEXP canUseCXX0X() ;
 RcppExport SEXP test_named() ;
+RcppExport SEXP capabilities() ;
 
 #endif
