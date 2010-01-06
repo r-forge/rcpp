@@ -1,52 +1,57 @@
+2010-01-06  Dirk Eddelbuettel  <deddelbuettel@wtchi-stat-l1.wolve.com>
+
+	* src/RcppCommon.h: Protect definition of logTxt by #ifndef
+	* inst/doc/Rcpp-unitTests.Rnw: Minor LaTeX tweak
+
 2010-01-06  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/wrap.h : wrap can now use initializer lists (available 
-	on on GCC >= 4.4). 
+	* src/Rcpp/wrap.h : wrap can now use initializer lists (available
+	on on GCC >= 4.4).
 	* src/wrap.cpp: implementation
 	* int/unitTests/runit.wrap.R: unit tests
 
-	* src/RObject.cpp : make methods RObject::asFoo 
+	* src/RObject.cpp : make methods RObject::asFoo
 	calling Rcpp::as<Foo> to avoid code duplication
 
 2010-01-05  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/GenericVector.h : new class Rcpp::GenericVector 
-	and an alias Rcpp::List to handle lists (VECSXP), aka generic 
+	* src/Rcpp/GenericVector.h : new class Rcpp::GenericVector
+	and an alias Rcpp::List to handle lists (VECSXP), aka generic
 	vectors
 	* src/NumericVector.cpp : implementation
 	* inst/unitTests/runit.NumericVector.R: unit tests
 
-	* src/Rcpp/IntegerVector.h : new class Rcpp::IntegerVector 
+	* src/Rcpp/IntegerVector.h : new class Rcpp::IntegerVector
 	to manage integer vector (INTSXP). IntegerVector can be
-	constructed from SEXP of appropriate type, from an int which 
-	simply allocates a vector that big, or using an 
-	initialization list (the last is GCC >= 4.4 only). 
-	Additionally IntegerVector defines begin() and end() so that 
+	constructed from SEXP of appropriate type, from an int which
+	simply allocates a vector that big, or using an
+	initialization list (the last is GCC >= 4.4 only).
+	Additionally IntegerVector defines begin() and end() so that
 	they can be used in STL algorithms
 	* src/IntegerVector.cpp : implementation
 	* inst/unitTests/runit.IntegerVector.R: unit tests
 
-	* src/Rcpp/NumericVector.h : same as above, but for numeric 
+	* src/Rcpp/NumericVector.h : same as above, but for numeric
 	vectors (REALSXP)
 	* src/NumericVector.cpp : implementation
 	* inst/unitTests/runit.NumericVector.R: unit tests
 
-	* src/Rcpp/RawVector.h : same as above, but for numeric 
+	* src/Rcpp/RawVector.h : same as above, but for numeric
 	vectors (RAWSXP)
 	* src/RawVector.cpp : implementation
 	* inst/unitTests/runit.RawVector.R: unit tests
 
-	* src/Rcpp/LogicalVector.h : same as above, but for numeric 
+	* src/Rcpp/LogicalVector.h : same as above, but for numeric
 	vectors (RAWSXP)
 	* src/LogicalVector.cpp : implementation
 	* inst/unitTests/runit.LogicalVector.R: unit tests
 
 	* src/RcppCommon.h: improve the conditional compiling logic
 	with macros HAS_VARIADIC_TEMPLATES and HAS_INIT_LISTS instead
-	of CXX0X. This ensures the package can be compiled with 
+	of CXX0X. This ensures the package can be compiled with
 	older GCC, with lower functionality
 
-	* src/RcppCommon.{h,cpp}: added a capabilities function that 
+	* src/RcppCommon.{h,cpp}: added a capabilities function that
 	can be used to bring the result of the two above macros to R
 
 	* R/RcppLdPaths.R: added unexported function RcppCapabilities
