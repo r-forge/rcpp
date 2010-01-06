@@ -19,9 +19,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <RcppCommon.h>
 #include <Rcpp/wrap.h>
 #include <Rcpp/Symbol.h>
 #include <Rcpp/Environment.h>
+#include <algorithm>
+#ifdef HAS_INIT_LISTS
+#include <initializer_list>
+#endif
+#include <Rcpp/IntegerVector.h>
+#include <Rcpp/RawVector.h>
+#include <Rcpp/NumericVector.h>
+#include <Rcpp/LogicalVector.h>
+#include <Rcpp/GenericVector.h>
 
 namespace Rcpp{
 
@@ -174,5 +184,39 @@ RObject wrap(const std::set<std::string> & v){
     UNPROTECT(1) ;
     return o ;
 }
+
+#ifdef HAS_INIT_LISTS
+IntegerVector wrap( std::initializer_list<int> list) {
+	SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
+	std::copy( list.begin(), list.end(), INTEGER(x) ) ;
+	UNPROTECT(1) ;
+	return IntegerVector( x ) ;
+}
+NumericVector wrap( std::initializer_list<double> list) {
+	SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
+	std::copy( list.begin(), list.end(), REAL(x) ) ;
+	UNPROTECT(1) ;
+	return NumericVector( x ) ;
+}
+LogicalVector wrap( std::initializer_list<bool> list) {
+	SEXP x = PROTECT( Rf_allocVector( LGLSXP, list.size() ) ) ;
+	std::copy( list.begin(), list.end(), LOGICAL(x) ) ;
+	UNPROTECT(1) ;
+	return LogicalVector( x ) ;
+}
+RawVector wrap(std::initializer_list<Rbyte> list){
+	SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;
+	std::copy( list.begin(), list.end(), RAW(x) ) ;
+	UNPROTECT(1) ;
+	return RawVector( x ) ;
+}
+// List wrap( std::initializer_list<RObject> list){
+// 	SEXP x = PROTECT( Rf_allocVector( VECSXP, list.size() ) ) ;
+// 	std::copy( list.begin(), list.end(), VECTOR_PTR(x) ) ;
+// 	UNPROTECT(1) ;
+// 	return List( x ) ;
+// }
+#endif
+
 
 } // namespace Rcpp

@@ -1,5 +1,12 @@
 2010-01-05  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/wrap.h : wrap can now use initializer lists (available 
+	on on GCC >= 4.4). 
+	* src/wrap.cpp: implementation
+	* int/unitTests/runit.wrap.R: unit tests
+
+2010-01-05  Romain Francois <francoisromain@free.fr>
+
 	* src/Rcpp/GenericVector.h : new class Rcpp::GenericVector 
 	and an alias Rcpp::List to handle lists (VECSXP), aka generic 
 	vectors
