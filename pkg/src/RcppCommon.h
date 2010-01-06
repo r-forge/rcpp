@@ -63,8 +63,10 @@ char *copyMessageToR(const char* const mesg);
 // simple logging help
 inline void logTxtFunction(const char* file, const int line, const char* expression); 
 
+#ifndef logTxT
 //#define logTxt(x) logTxtFunction(__FILE__, __LINE__, x);
 #define logTxt(x) 
+#endif
 
 /* in exceptions.cpp */
 void forward_uncaught_exceptions_to_r() ;
