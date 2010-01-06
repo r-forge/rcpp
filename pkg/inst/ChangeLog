@@ -1,9 +1,12 @@
-2010-01-05  Romain Francois <francoisromain@free.fr>
+2010-01-06  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/wrap.h : wrap can now use initializer lists (available 
 	on on GCC >= 4.4). 
 	* src/wrap.cpp: implementation
 	* int/unitTests/runit.wrap.R: unit tests
+
+	* src/RObject.cpp : make methods RObject::asFoo 
+	calling Rcpp::as<Foo> to avoid code duplication
 
 2010-01-05  Romain Francois <francoisromain@free.fr>
 

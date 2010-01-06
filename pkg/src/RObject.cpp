@@ -23,6 +23,7 @@
 #include <Rcpp/Environment.h>
 #include <Rcpp/Symbol.h>
 #include <algorithm>
+#include <Rcpp/as.h>
 
 namespace Rcpp {
 
@@ -63,193 +64,16 @@ RObject::~RObject() {
 	logTxt("~RObject");
 }
 
-double RObject::asDouble() const {
-    if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RObject::asDouble expects single value");
-    }
-    switch( TYPEOF(m_sexp) ){
-    	case LGLSXP:
-    		return LOGICAL(m_sexp)[0] ? 1.0 : 0.0 ; 
-    	case REALSXP:
-    		return REAL(m_sexp)[0] ; 
-    	case INTSXP:
-    		return (double)INTEGER(m_sexp)[0]; 
-    	case RAWSXP:
-    		return (double)RAW(m_sexp)[0];
-    	default:
-    		throw std::range_error("RObject::asDouble invalid type");
-    }
-    return 0.0 ; 	// never reached
-}
-
-int RObject::asInt() const {
-    if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RObject::asInt expects single value");
-    }
-    switch( TYPEOF(m_sexp)){
-    	case LGLSXP:
-    		return LOGICAL(m_sexp)[0] ? 1 : 0 ; 
-    	case REALSXP:
-    		return (int)REAL(m_sexp)[0] ; // some of this might be lost
-    	case INTSXP:
-    		return INTEGER(m_sexp)[0]; 
-    	case RAWSXP:
-    		return (int)RAW(m_sexp)[0];
-    	default:
-    		throw std::range_error("RObject::asInt invalid type");
-    }
-    return 0; 	// never reached
-}
-
-Rbyte RObject::asRaw() const {
-    if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RObject::asRaw expects single value");
-    }
-    switch( TYPEOF(m_sexp) ){
-    	case LGLSXP:
-    		return LOGICAL(m_sexp)[0] ? (Rbyte)1 : (Rbyte)0 ; 
-    	case REALSXP:
-    		return (Rbyte)REAL(m_sexp)[0] ;
-    	case INTSXP:
-    		return (Rbyte)INTEGER(m_sexp)[0] ;
-    	case RAWSXP:
-    		return RAW(m_sexp)[0] ;
-    	default:
-    		throw std::range_error("RObject::asRaw expects raw, double or int");
-    }
-    return (Rbyte)0; 	// never reached
-}
-
-bool RObject::asBool() const {
-    if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RObject::asRaw expects single value");
-    }
-    switch( TYPEOF(m_sexp) ){
-    	case LGLSXP:
-    		return LOGICAL(m_sexp)[0] ? true : false ; 
-    	case REALSXP:
-    		return (bool)REAL(m_sexp)[0] ;
-    	case INTSXP:
-    		return (bool)INTEGER(m_sexp)[0] ;
-    	case RAWSXP:
-    		return (bool)RAW(m_sexp)[0] ;
-    	default:
-    		throw std::range_error("RObject::asRaw expects raw, double or int");
-    }
-    return false; 	// never reached
-}
-
-std::string RObject::asStdString() const {
-    if (Rf_length(m_sexp) != 1) {
-	throw std::range_error("RObject::asStdString expects single value");
-    }
-    if (!Rf_isString(m_sexp)) {
-	throw std::range_error("RObject::asStdString expects string");
-    }
-    return std::string(CHAR(STRING_ELT(m_sexp,0)));
-}
-
-std::vector<bool> RObject::asStdVectorBool() const {
-    int n = Rf_length(m_sexp);
-    std::vector<bool> v(n);
-    switch( TYPEOF(m_sexp) ){
-    case LGLSXP:
-    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
-    	break ;
-    case INTSXP:
-    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
-    	break;
-    case REALSXP:
-    	v.assign( REAL(m_sexp), REAL(m_sexp)+n ) ;
-    	break;
-    case RAWSXP:
-    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
-    	break;
-    default:
-    		throw std::range_error( "RObject::asStdVectorBool(): invalid R type" ) ; 
-    }
-    return v;
-}
-
-
-std::vector<int> RObject::asStdVectorInt() const {
-    int n = Rf_length(m_sexp);
-    std::vector<int> v(n);
-    switch( TYPEOF(m_sexp) ){
-    case LGLSXP:
-    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
-    	break;
-    case INTSXP:
-    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
-    	break;
-    case REALSXP:
-    	v.assign( REAL(m_sexp), REAL(m_sexp)+n ) ;
-    	break;
-    case RAWSXP:
-    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
-    	break;
-    default:
-    		throw std::range_error( "RObject::asStdVectorInt(): invalid R type" ) ; 
-    }
-    return v;
-}
-
-std::vector<Rbyte> RObject::asStdVectorRaw() const {
-    int n = Rf_length(m_sexp);
-    std::vector<Rbyte> v(n);
-    switch( TYPEOF(m_sexp) ){
-    case LGLSXP:
-    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
-    	break ;
-    case RAWSXP:
-    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
-    	break ;
-    case REALSXP:
-    	v.assign( REAL(m_sexp), REAL(m_sexp)+n) ;
-    	break;
-    case INTSXP:
-    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
-    	break;
-    default:
-    	throw std::range_error("RObject::asStdVectorRaw expects raw, double or int");
-    }
-    return v;
-}
-
-std::vector<double> RObject::asStdVectorDouble() const {
-    int n = Rf_length(m_sexp);
-    std::vector<double> v(n);
-    switch( TYPEOF(m_sexp) ){
-    case LGLSXP:
-    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
-    	break ;
-    case RAWSXP:
-    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
-    	break ;
-    case REALSXP:
-    	v.assign( REAL(m_sexp), REAL(m_sexp)+n) ;
-    	break;
-    case INTSXP:
-    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
-    	break;
-    default:
-    	throw std::range_error("RObject::asStdVectorDouble expects raw, double or int");
-    }
-    return v;
-}
-
-
-std::vector<std::string> RObject::asStdVectorString() const {
-    int n = Rf_length(m_sexp);
-    std::vector<std::string> v(n);
-    if (!Rf_isString(m_sexp)) {
-	throw std::range_error("RObject::asStdVectorString expects string");
-    }
-    for (int i = 0; i < n; i++) {
-	v[i] = std::string(CHAR(STRING_ELT(m_sexp,i)));
-    }
-    return v;
-}
+double RObject::asDouble() const { return as<double>( m_sexp ) ; }
+int RObject::asInt() const { return as<int>( m_sexp ) ; }
+Rbyte RObject::asRaw() const { return as<Rbyte>( m_sexp ) ; }
+bool RObject::asBool() const { return as<bool>(m_sexp) ; }
+std::string RObject::asStdString() const { return as< std::string >( m_sexp ) ; }
+std::vector<bool> RObject::asStdVectorBool() const { return as< std::vector<bool> >( m_sexp ) ; }
+std::vector<int> RObject::asStdVectorInt() const { return as< std::vector<int> >( m_sexp ) ; }
+std::vector<Rbyte> RObject::asStdVectorRaw() const { return as< std::vector<Rbyte> >( m_sexp ) ; }
+std::vector<double> RObject::asStdVectorDouble() const { return as< std::vector<double> >( m_sexp ) ; }
+std::vector<std::string> RObject::asStdVectorString() const { return as< std::vector<std::string> >( m_sexp ) ; }
 
 std::vector<std::string> RObject::attributeNames() const {
 	/* inspired from do_attributes@attrib.c */
