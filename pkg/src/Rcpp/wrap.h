@@ -59,11 +59,13 @@ RObject wrap(const std::set<double> & v);
 RObject wrap(const std::set<std::string> & v);
 RObject wrap(const std::set<Rbyte> & v);
 
+#ifdef HAS_INIT_LISTS
 IntegerVector wrap( std::initializer_list<int> list) ;
 NumericVector wrap( std::initializer_list<double> list) ; 
 LogicalVector wrap( std::initializer_list<bool> list) ;
 RawVector wrap(std::initializer_list<Rbyte> list) ;
 // List wrap( std::initializer_list<RObject> list) ;
+#endif
 
 } // namespace Rcpp
 
