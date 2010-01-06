@@ -45,7 +45,6 @@
 
 // include R headers, but set R_NO_REMAP and access everything via Rf_ prefixes
 #define R_NO_REMAP
-
 #include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Callbacks.h>

@@ -290,4 +290,3 @@ test.RObject.isNULL <- function(){
 	checkTrue( !funx(.GlobalEnv), msg = "RObject.isNULL(environment) -> false" )
 }
 
-

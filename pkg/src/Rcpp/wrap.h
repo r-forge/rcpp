@@ -22,9 +22,18 @@
 #ifndef Rcpp_wrap_h
 #define Rcpp_wrap_h
 
+#ifdef HAS_INIT_LISTS
+#include <initializer_list>
+#endif
+
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <set>
+#include <Rcpp/IntegerVector.h>
+#include <Rcpp/RawVector.h>
+#include <Rcpp/NumericVector.h>
+#include <Rcpp/LogicalVector.h>
+#include <Rcpp/GenericVector.h>
 
 namespace Rcpp{ 
 
@@ -49,6 +58,12 @@ RObject wrap(const std::set<int> & v);
 RObject wrap(const std::set<double> & v);
 RObject wrap(const std::set<std::string> & v);
 RObject wrap(const std::set<Rbyte> & v);
+
+IntegerVector wrap( std::initializer_list<int> list) ;
+NumericVector wrap( std::initializer_list<double> list) ; 
+LogicalVector wrap( std::initializer_list<bool> list) ;
+RawVector wrap(std::initializer_list<Rbyte> list) ;
+// List wrap( std::initializer_list<RObject> list) ;
 
 } // namespace Rcpp
 
