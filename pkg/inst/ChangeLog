@@ -1,5 +1,10 @@
 2010-01-07  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/ComplexVector.h: new class Rcpp::ComplexVector
+	to manage ... complex vectors (CPLXSXP)
+	* src/ComplexVector.cpp: implementation
+	* inst/unitTests/runit.ComplexVector.R: unit tests
+
 	* src/Rcpp/Promise.h: new class Rcpp::Promise to manage
 	promises (PROMSXP). only read access so far (no way to force
 	the promise)

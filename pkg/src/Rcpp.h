@@ -64,6 +64,6 @@
 #include <Rcpp/WeakReference.h>
 #include <Rcpp/CharacterVector.h>
 #include <Rcpp/ExpressionVector.h>
-
+#include <Rcpp/ComplexVector.h>
 
 #endif
