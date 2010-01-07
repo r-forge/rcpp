@@ -75,6 +75,8 @@ SEXP* CharacterVector::end(){
 	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
 }
 
+/* proxy stuff */
+
 CharacterVector::StringProxy::StringProxy(CharacterVector& v, int i) :
 	parent(v), index(i){}
 

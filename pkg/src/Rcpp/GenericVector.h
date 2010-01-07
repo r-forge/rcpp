@@ -35,6 +35,24 @@ namespace Rcpp{
 class GenericVector : public RObject {     
 public:
 
+	/* much inspired from item 30 of more effective C++ */
+	class Proxy {
+	public:
+		Proxy( GenericVector& v, int index ) ;
+		
+		/* lvalue uses */
+		Proxy& operator=(const Proxy& rhs) ;
+		Proxy& operator=(SEXP rhs) ;
+		
+		/* rvalue use */
+		operator SEXP() const ;
+		
+	private:
+		GenericVector& parent; 
+		int index ;
+	} ;
+
+
 	GenericVector(SEXP x) throw(not_compatible);
 	GenericVector( int size) ;
 	
@@ -58,7 +76,10 @@ public:
 	SEXP* begin(); 
 	SEXP* end() ;
 	
-	SEXP& operator[]( int i ) const ;
+	const Proxy operator[]( int i ) const ;
+	Proxy operator[]( int i ) ;
+	
+	friend class Proxy; 
 	
 } ;
 
