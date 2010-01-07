@@ -68,9 +68,29 @@ SEXP* GenericVector::end(){
 	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
 }
 
-/* does this work for = ? */
-SEXP& GenericVector::operator[](int i) const {
-	return *(RCPP_VECTOR_PTR(m_sexp) + i) ;
+/* proxy stuff */
+
+GenericVector::Proxy::Proxy(GenericVector& v, int i) :
+	parent(v), index(i){}
+
+GenericVector::Proxy::operator SEXP() const{
+	return VECTOR_ELT( parent, index ) ;
+}
+
+GenericVector::Proxy& GenericVector::Proxy::operator=( const Proxy& rhs){
+	SET_VECTOR_ELT( parent, index, VECTOR_ELT( rhs.parent, rhs.index) ) ;
+}
+
+GenericVector::Proxy& GenericVector::Proxy::operator=( SEXP rhs){
+	SET_VECTOR_ELT( parent, index, rhs ) ;
+}
+
+const GenericVector::Proxy GenericVector::operator[](int i) const {
+	return Proxy(const_cast<GenericVector&>(*this), i) ;
+}
+
+GenericVector::Proxy GenericVector::operator[](int i) {
+	return Proxy(*this, i ) ;
 }
 
 

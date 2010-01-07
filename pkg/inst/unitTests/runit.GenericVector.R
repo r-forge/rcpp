@@ -24,7 +24,7 @@
 test.List <- function(){
 	funx <- cfunction(signature(), '
 	List x(10) ;
-	for( int i=0; i<10; i++) x.set( i, Rf_ScalarInteger( i * 2) )  ;
+	for( int i=0; i<10; i++) x[i] = Rf_ScalarInteger( i * 2)  ;
 	return x ;', 
 		Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
 	checkEquals( funx(), as.list( 2*0:9), msg = "GenericVector" )
