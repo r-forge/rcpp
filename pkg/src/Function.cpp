@@ -22,7 +22,7 @@
 #include <Rcpp/Function.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/Language.h>
-#include <Rcpp/pairlist.h>
+#include <Rcpp/Pairlist.h>
 #include <RcppCommon.h>
 
 namespace Rcpp {

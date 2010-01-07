@@ -23,7 +23,6 @@
 
 #include <algorithm>
 
-#include <Rcpp/pairlist.h>
 #include <Rcpp/grow.h>
 #include <Rcpp/wrap.h>
 #include <Rcpp/as.h>
