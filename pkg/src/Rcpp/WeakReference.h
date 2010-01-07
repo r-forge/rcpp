@@ -29,7 +29,7 @@ namespace Rcpp{
 
 class WeakReference : public RObject {
 public:
-	WeakReference() : RObject(){}
+	WeakReference() : RObject(){} ;
 
 	/**
 	 * wraps a weak reference
@@ -38,7 +38,7 @@ public:
 	 *
 	 * @throw not_compatible if x is not a weak reference
 	 */
-	WeakReference( SEXP x) throw(not_compatible) : RObject() ; 
+	WeakReference( SEXP x) throw(not_compatible) ; 
 
 	/** 
 	 * Retrieve the key
