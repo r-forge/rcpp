@@ -27,6 +27,10 @@
 
 namespace Rcpp {
 
+	const char* Promise::unevaluated_promise::what() throw() {
+		return "promise not yet evaluated" ;
+	}
+	
 	Promise::Promise(SEXP x) throw(not_compatible) : RObject(){
 		if( TYPEOF(x) == PROMSXP ){
 			setSEXP( x ) ;
@@ -35,12 +39,18 @@ namespace Rcpp {
 		}
 	}
 
-	int Promise::seen(){
+	int Promise::seen() const {
 		return PRSEEN(m_sexp);
 	}
 
-	RObject Promise::value() const{
-		return wrap( PRVALUE(m_sexp) ) ;
+	RObject Promise::value() const throw(unevaluated_promise) {
+		SEXP val = PRVALUE(m_sexp) ; 
+		if( val == R_UnboundValue ) throw unevaluated_promise() ;
+		return wrap( val ) ;
+	}
+	
+	bool Promise::was_evaluated() const {
+		return PRVALUE(m_sexp) != R_UnboundValue ;
 	}
 
 	Environment Promise::environment() const {
