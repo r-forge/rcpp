@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// GenericVector.h: Rcpp R/C++ interface class library -- integer vectors
+// GenericVector.cpp: Rcpp R/C++ interface class library -- generic vectors (lists)
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -67,5 +67,11 @@ SEXP* GenericVector::begin(){
 SEXP* GenericVector::end(){
 	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
 }
+
+/* does this work for = ? */
+SEXP& GenericVector::operator[](int i) const {
+	return *(RCPP_VECTOR_PTR(m_sexp) + i) ;
+}
+
 
 } // namespace 

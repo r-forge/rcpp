@@ -62,5 +62,6 @@
 #include <Rcpp/LogicalVector.h>
 #include <Rcpp/GenericVector.h>
 #include <Rcpp/WeakReference.h>
+#include <Rcpp/CharacterVector.h>
 
 #endif

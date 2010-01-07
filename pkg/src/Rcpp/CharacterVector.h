@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// GenericVector.h: Rcpp R/C++ interface class library -- generic vectors (lists)
+// CharacterVector.h: Rcpp R/C++ interface class library -- character vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,8 +19,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef Rcpp_GenericVector_h
-#define Rcpp_GenericVector_h
+#ifndef Rcpp_CharacterVector_h
+#define Rcpp_CharacterVector_h
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
@@ -32,14 +32,33 @@
 
 namespace Rcpp{ 
 
-class GenericVector : public RObject {     
+class CharacterVector : public RObject {     
 public:
 
-	GenericVector(SEXP x) throw(not_compatible);
-	GenericVector( int size) ;
+	/* much inspired from item 30 of more effective C++ */
+	class StringProxy {
+	public:
+		StringProxy( CharacterVector& v, int index ) ;
+		
+		/* lvalue uses */
+		StringProxy& operator=(const StringProxy& rhs) ;
+		StringProxy& operator=(const std::string& rhs) ;
+		
+		/* rvalue use */
+		operator SEXP() const ;
+		operator char*() const ;
+		
+	private:
+		CharacterVector& parent; 
+		int index ;
+	} ;
+
 	
-#ifdef HAS_INIT_LISTS	
-	GenericVector( std::initializer_list<RObject> list ) ;
+	CharacterVector(SEXP x) throw(not_compatible);
+	CharacterVector(int size) ;
+	
+#ifdef HAS_INIT_LISTS
+	CharacterVector( std::initializer_list<std::string> list ) ;
 #endif
 	
 	/**
@@ -53,16 +72,17 @@ public:
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
 	SEXP get(const int& i) const ;
-	void set(const int& i, SEXP value ) ;
+	void set(const int& i, const std::string& value ) ;
 	
 	SEXP* begin(); 
 	SEXP* end() ;
 	
-	SEXP& operator[]( int i ) const ;
+	const StringProxy operator[]( int i ) const ;
+	StringProxy operator[]( int i ) ;
+	
+	friend class StringProxy; 
 	
 } ;
-
-typedef GenericVector List ;
 
 } // namespace
 
