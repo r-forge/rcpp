@@ -1,5 +1,10 @@
 2010-01-07  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/wrap.h : now the result type of the various wrap 
+	functions depends on the parameters. wrap( bool ) makes a
+	LogicalVector, etc ... wrap(SEXP) dispatches to the 
+	appropriate Rcpp:: class depending on TYPEOF
+
 	* src/Rcpp/RObject.h: added methods "isS4", "slot" 
 	and "hasSlot" to deal with S4 objects
 	* inst/unitTests/runit.S4.R: unit tests
