@@ -24,7 +24,6 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
-#include <Rcpp/pairlist.h>
 
 namespace Rcpp{ 
 
@@ -66,6 +65,21 @@ template<typename... Args>
 	
 	~Pairlist() ;
 };
+
+#ifdef HAS_VARIADIC_TEMPLATES
+	SEXP pairlist() ;
+	template<typename T, typename... Args>
+	SEXP pairlist( const T& first, const Args&... args ){
+		return grow(first, pairlist(args...) ) ;
+	}
+ 	/* end of the recursion, wrap first to make the CAR and use 
+ 	   R_NilValue as the CDR of the list */
+	template<typename T>
+	SEXP pairlist( const T& first){
+		return grow(first, R_NilValue ) ; 
+	}
+#endif
+
 
 } // namespace Rcpp
 

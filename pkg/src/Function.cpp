@@ -27,6 +27,10 @@
 
 namespace Rcpp {
 	
+	const char* Function::not_a_closure::what() throw(){
+		return "not a closure" ; 
+	}
+	
 	Function::Function( SEXP x = R_NilValue ) throw(not_compatible) : RObject::RObject( ){
 		switch( TYPEOF(x) ){
 		case CLOSXP:
@@ -40,5 +44,12 @@ namespace Rcpp {
 	};
 	
 	Function::~Function(){}	
+	
+	Environment Function::environment() const throw(not_a_closure){
+		if( TYPEOF(m_sexp) != CLOSXP ) {
+			throw not_a_closure() ;
+		}
+		return Environment( CLOENV(m_sexp) ) ;
+	}
 	
 } // namespace Rcpp
