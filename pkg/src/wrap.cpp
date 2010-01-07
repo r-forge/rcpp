@@ -112,16 +112,6 @@ RawVector wrap(const Rbyte & v){
     return o ;
 }
 
-CharacterVector wrap( const char * const v){
-	return wrap( std::string(v) ) ;
-}
-
-CharacterVector wrap(const std::string & v){
-    logTxt("RObject from std::string\n");
-    CharacterVector o(Rf_mkString(v.c_str()));
-    return o ;
-}
-
 LogicalVector wrap(const std::vector<bool> & v){
     logTxt("RObject from bool vector\n");
     int n = v.size();
@@ -158,22 +148,6 @@ RawVector wrap(const std::vector<Rbyte> & v){
     SEXP m_sexp = PROTECT(Rf_allocVector(RAWSXP, n));
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
     RawVector o(m_sexp) ;
-    UNPROTECT(1) ;
-    return o ;
-}
-
-CharacterVector wrap(const std::vector<std::string> & v){
-    logTxt("RObject from std::string vector\n");
-    int n = v.size();
-    SEXP m_sexp = PROTECT(Rf_allocVector(STRSXP, n));
-    int i=0; 
-    std::vector<std::string>::const_iterator it = v.begin() ;
-    while( i<n ){
-    	SET_STRING_ELT(m_sexp, i, Rf_mkChar(it->c_str()));
-    	i++ ;
-    	it++; 
-    }
-    CharacterVector o(m_sexp) ;
     UNPROTECT(1) ;
     return o ;
 }
