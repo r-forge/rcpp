@@ -44,6 +44,11 @@ public:
 		Proxy& operator=(const Proxy& rhs) ;
 		Proxy& operator=(SEXP rhs) ;
 		
+		template <typename T>
+		Proxy& operator=( const T& rhs){
+			SET_VECTOR_ELT( parent, index, wrap(rhs) ) ;
+		}
+		
 		/* rvalue use */
 		operator SEXP() const ;
 		

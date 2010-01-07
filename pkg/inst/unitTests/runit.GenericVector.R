@@ -30,6 +30,20 @@ test.List <- function(){
 	checkEquals( funx(), as.list( 2*0:9), msg = "GenericVector" )
 }
 
+test.List.template <- function(){
+	funx <- cfunction(signature(), '
+	List x(4) ;
+	x[0] = "foo"  ;
+	x[1] = 10 ;
+	x[2] = 10.2 ;
+	x[3] = false; 
+	return x ;', 
+		Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 
+		list( "foo", 10L, 10.2, FALSE), 
+		msg = "GenericVector" )
+}
+
 test.List.VECSXP <- function(){
 	funx <- cfunction(signature(vec = "list" ), '
 	List x(vec) ;
