@@ -24,7 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
-#include <Rcpp/pairlist.h>
+#include <Rcpp/Pairlist.h>
 #include <Rcpp/Evaluator.h>
 
 namespace Rcpp{ 
@@ -34,6 +34,17 @@ namespace Rcpp{
  */
 class Function : public RObject{
 public:
+
+	/**
+	 * thrown when attempting to get/set the environment of 
+	 * a function that is a not a closure (CLOSXP)
+	 */
+	class not_a_closure : public std::exception{
+	public:
+		not_a_closure() throw() {} ;
+		~not_a_closure() throw() {} ;
+		const char* what() throw() ;
+	} ;
 	
 	/**
 	 * Attempts to convert the SEXP to a pair list
@@ -42,8 +53,8 @@ public:
 	 * to a pair list using as.pairlist
 	 */
 	Function(SEXP lang) throw(not_compatible) ;
-	
-	
+
+
 	/**
 	 * calls the function with the specified arguments
 	 *
@@ -67,7 +78,12 @@ template<typename... Args>
 			return evaluator.getError() ;
 		}
 	}
-#endif	
+#endif
+	
+	/**
+	 * Returns the environment of this function
+	 */
+	Environment environment() const throw(not_a_closure) ;
 	
 	~Function() ;
 };

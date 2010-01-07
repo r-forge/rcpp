@@ -25,7 +25,7 @@
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/Symbol.h>
-#include <Rcpp/pairlist.h>
+#include <Rcpp/Pairlist.h>
 
 namespace Rcpp{ 
 

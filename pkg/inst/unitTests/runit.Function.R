@@ -47,3 +47,16 @@ test.Function.variadic <- function(){
 	}
 }
 
+test.Function.env <- function(){
+	funx <- cfunction(signature(x="function"), '
+	Function fun(x) ;
+	return fun.environment() ;
+	', Rcpp=TRUE, verbose=FALSE, 
+	includes = "using namespace Rcpp;" )
+	checkEquals( funx(rnorm), asNamespace("stats" ), msg = "Function::environment" )
+	checkException( funx(is.function), 
+		msg = "Function::environment( builtin) : exception" )
+	checkException( funx(`~`), 
+		msg = "Function::environment( special) : exception" )
+}
+

@@ -51,5 +51,6 @@ namespace Rcpp {
 	
 	Pairlist::~Pairlist(){}
 	
+	SEXP pairlist(){ return R_NilValue ; }
 	
 } // namespace Rcpp
