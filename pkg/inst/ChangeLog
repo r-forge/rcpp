@@ -9,14 +9,14 @@
 	to wrap WEAKREFSXP with accessors to the key and value
 	* src/WeakReference.cpp: implementation
 
-	* src/Rcpp/Rcpp_Rinternals.h: borrowed from Rinternals so that 
-	we can use VECTOR_PTR (which R forbids unless we define 
+	* src/Rcpp/Rcpp_Rinternals.h: borrowed from Rinternals so that
+	we can use VECTOR_PTR (which R forbids unless we define
 	USE_RINTERNALS, but defining it disables NO_R_REMAP)
 
-	* src/Rcpp/GenericVector.h : added begin and end to allow 
+	* src/Rcpp/GenericVector.h : added begin and end to allow
 	stl type iteration over generic vectors.
 
-2010-01-06  Dirk Eddelbuettel  <deddelbuettel@wtchi-stat-l1.wolve.com>
+2010-01-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppCommon.h: Protect definition of logTxt by #ifndef
 	* inst/doc/Rcpp-unitTests.Rnw: Minor LaTeX tweak
