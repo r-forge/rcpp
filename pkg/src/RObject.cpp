@@ -103,11 +103,25 @@ RObject RObject::attr( const std::string& name) const{
 	return wrap( Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) ) );
 }
 
+/* S4 */
+
+bool RObject::hasSlot(const std::string& name) const throw(not_s4){
+	if( !Rf_isS4(m_sexp) ) throw not_s4() ;
+	return R_has_slot( m_sexp, Rf_mkString(name.c_str()) ) ;
+}
+
+RObject RObject::slot(const std::string& name) const throw(not_s4){
+	if( !Rf_isS4(m_sexp) ) throw not_s4() ;
+	return R_do_slot( m_sexp, Rf_mkString(name.c_str()) ) ;
+}
+
+
 const char* RObject::not_compatible::what( ) const throw() {
 	return message.c_str() ;
 }
-RObject::not_compatible::~not_compatible() throw() {}
-			
+const char* RObject::not_s4::what( ) const throw() {
+	return "not an S4 object" ;
+}
 
 } // namespace Rcpp
 

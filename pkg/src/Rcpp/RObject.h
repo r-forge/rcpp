@@ -36,54 +36,61 @@ public:
    	class not_compatible: public std::exception{
    		public:
    			not_compatible(const std::string& message) throw() : message(message){};
-   			
+   			~not_compatible() throw(){} ;
    			const char* what() const throw() ; 
-   			
-   			~not_compatible() throw() ;
    		private:
    			std::string message ;
    	} ;
-	
-	
-    /**
+
+	/**
+   	 * Exception thrown when attempting to convert a SEXP
+   	 */
+   	class not_s4: public std::exception{
+   		public:
+   			not_s4() throw(){};
+   			~not_s4() throw(){} ;
+   			const char* what() const throw() ; 
+   	} ;
+
+   /**
      * default constructor. uses R_NilValue
      */ 
     RObject() : m_sexp(R_NilValue) {} ;	
-	
+
     /**
      * wraps a SEXP. The SEXP is automatically protected from garbage 
      * collection by this object and the protection vanishes when this 
      * object is destroyed
      */
     RObject(SEXP x) : m_sexp(R_NilValue) { setSEXP(x) ; };
-    
+
     /**
      * Copy constructor. set this SEXP to the SEXP of the copied object
      */
     RObject( const RObject& other ) ;
-    
+
     /**
      * Assignment operator. set this SEXP to the SEXP of the copied object
      */
     RObject& operator=( const RObject& other ) ;
-    
+
     /** 
      * Assignement operator. Set this SEXP to the given SEXP
      */ 
     RObject& operator=( SEXP other ) ;
-    
+
     /**
      * if this object is protected rom R's GC, then it is released
      * and become subject to garbage collection. See preserve 
      * and release member functions.
      */
     virtual ~RObject() ;
-   
+
     /**
      * implicit conversion to SEXP
      */
     inline operator SEXP() const { return m_sexp ; }
-    
+
     /* we don't provide implicit converters because 
        of Item 5 in More Effective C++ */
     bool                     asBool() const;
@@ -96,43 +103,69 @@ public:
     std::vector<std::string> asStdVectorString() const;
     std::vector<Rbyte>       asStdVectorRaw() const;
     std::vector<bool>        asStdVectorBool() const;
-    
+
     inline bool isPreserved() { DEFUNCT("isPreserved") ; return m_sexp != R_NilValue ; }
     inline void forgetPreserve() { DEFUNCT("forgetPreserve") ; }
-    
+
     /* attributes */
-	
+
     /**
      * extracts the names of the attributes of the wrapped SEXP
      */
     std::vector<std::string> attributeNames() const ;
-    
+
     /**
      * Identifies if the SEXP has the given attribute
      */
     bool hasAttribute( const std::string& attr) const ; 
-    
+
     /**
      * extract the given attribute
      */
+    /* TODO: implement a proxy pattern for attributes */
     RObject attr( const std::string& name) const  ;
-    
+
     /**
      * is this object NULL
      */
     inline bool isNULL() const{ return Rf_isNull(m_sexp) ; }
-    
+
     /**
      * The SEXP typeof, calls TYPEOF on the underlying SEXP
      */
     inline int sexp_type() const { return TYPEOF(m_sexp) ; }
-    
+
     /** 
      * explicit conversion to SEXP
      */
     inline SEXP asSexp() const { return m_sexp ; }
-    
-    
+
+    /**
+     * Tests if the SEXP has the object bit set
+     */
+    inline bool isObject() const { return Rf_isObject(m_sexp) ;}
+
+    /**
+     * Tests if the SEXP is an S4 object
+     */
+    inline bool isS4() const { return Rf_isS4(m_sexp) ; }
+
+    /**
+     * Indicates if this S4 object has the given slot
+     *
+     * @throw not_s4 if the object is not an S4 object
+     */
+    bool hasSlot(const std::string& name) const throw(not_s4) ;
+
+    /**
+     * Retrieves the given slot
+     *
+     * @throw not_s4 if this is not an S4 object
+     */
+    RObject slot(const std::string& name) const throw(not_s4) ;
+    /* TODO : implement the proxy pattern here so that we can get and 
+              set the slot the same way */
+
 protected:
 
     /**
@@ -141,20 +174,20 @@ protected:
      * @param x new SEXP to attach to this object
      */
     void setSEXP(SEXP x) ;
-   
+
     inline void DEFUNCT(const std::string& method ){ Rf_warning("method %s is defunct", method.c_str() )  ; }
-    
+
     /**
      * The SEXP this is wrapping. This has to be considered read only.
      * to change it, use setSEXP
      */
     SEXP m_sexp ;
-    
+
 private:
-    
+
     void preserve(){ if( m_sexp != R_NilValue ) R_PreserveObject(m_sexp) ; } 
     void release() { if( m_sexp != R_NilValue ) R_ReleaseObject(m_sexp) ; } 
-    
+
 };
 
 } // namespace Rcpp
