@@ -22,9 +22,6 @@
 #include <Rcpp.h>
 
 #include <algorithm>
-#ifdef HAS_INIT_LISTS
-#include <initializer_list>
-#endif
 
 #include <Rcpp/pairlist.h>
 #include <Rcpp/grow.h>
@@ -228,27 +225,5 @@ CharacterVector wrap(const std::set<std::string> & v){
     UNPROTECT(1) ;
     return o ;
 }
-
-#ifdef HAS_INIT_LISTS
-IntegerVector wrap( std::initializer_list<int> list) {
-	return IntegerVector( list ) ;
-}
-NumericVector wrap( std::initializer_list<double> list) {
-	return NumericVector( list ) ;
-}
-LogicalVector wrap( std::initializer_list<bool> list) {
-	return LogicalVector( list ) ;
-}
-RawVector wrap(std::initializer_list<Rbyte> list){
-	return RawVector( list ) ;
-}
-CharacterVector wrap(std::initializer_list<std::string> list){
-	return CharacterVector( list ) ;
-}
-List wrap( std::initializer_list<RObject> list){
-	return List( list ) ;
-}
-#endif
-
 
 } // namespace Rcpp
