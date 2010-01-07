@@ -60,7 +60,7 @@ namespace Rcpp {
 		} else{
 			setSEXP( lang ) ;
 		}
-		
+
 	};
 	
 	Language::Language( const std::string& symbol ): RObject::RObject(R_NilValue) {
