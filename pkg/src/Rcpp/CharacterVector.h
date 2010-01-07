@@ -56,6 +56,8 @@ public:
 	
 	CharacterVector(SEXP x) throw(not_compatible);
 	CharacterVector(int size) ;
+	CharacterVector( const std::string& x );
+	CharacterVector( const std::vector<std::string>& x );
 	
 #ifdef HAS_INIT_LISTS
 	CharacterVector( std::initializer_list<std::string> list ) ;
