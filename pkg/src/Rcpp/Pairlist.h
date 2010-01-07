@@ -28,9 +28,9 @@
 namespace Rcpp{ 
 
 /** 
- * C++ wrapper around calls (LANGSXP SEXP)
+ * C++ wrapper around pair lists (LISTSXP SEXP)
  *
- * This represents calls that can be evaluated
+ * This represents dotted pair lists
  */
 class Pairlist : public RObject{
 public:
@@ -64,6 +64,19 @@ template<typename... Args>
 #endif	
 	
 	~Pairlist() ;
+	
+	/**
+	 * wraps an object and add it in front of the pairlist
+	 *
+	 * @param object anything that can be wrapped by one 
+	 * of the wrap functions, or an object of class Named
+	 */
+	template <typename T>
+	void push_front( const T& object){
+		setSEXP( grow(object, m_sexp) ) ;
+	}
+
+	
 };
 
 #ifdef HAS_VARIADIC_TEMPLATES
@@ -79,7 +92,6 @@ template<typename... Args>
 		return grow(first, R_NilValue ) ; 
 	}
 #endif
-
 
 } // namespace Rcpp
 

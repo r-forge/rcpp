@@ -52,3 +52,17 @@ test.Pairlist.variadic <- function(){
 	}
 }
 
+test.Pairlist.push.front <- function(){
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_front( 1 ) ;
+	p.push_front( 10.0 ) ;
+	p.push_front( "foo" ) ;
+	p.push_front( Named( "foobar", 10) ) ;
+	return p ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 
+		pairlist( foobar = 10, "foo", 10.0, 1L), 
+		msg = "Pairlist::push_front" )
+}
+
