@@ -99,7 +99,7 @@ bool RObject::hasAttribute( const std::string& attr) const {
     return false; /* give up */
 }
 
-SEXP RObject::attr( const std::string& name) const{
+RObject RObject::attr( const std::string& name) const{
 	return wrap( Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) ) );
 }
 
