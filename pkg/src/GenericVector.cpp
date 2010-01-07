@@ -60,4 +60,12 @@ void GenericVector::set( const int& i, SEXP value ){
 	SET_VECTOR_ELT(m_sexp,i,value) ;
 }
 
+SEXP* GenericVector::begin(){
+	return RCPP_VECTOR_PTR(m_sexp) ;
+}
+
+SEXP* GenericVector::end(){
+	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
+}
+
 } // namespace 
