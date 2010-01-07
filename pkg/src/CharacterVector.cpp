@@ -45,7 +45,22 @@ namespace Rcpp{
 	CharacterVector::CharacterVector(int size) : RObject() {
 		setSEXP( Rf_allocVector(STRSXP, size) ) ;
 	}
-
+	
+	CharacterVector::CharacterVector( const std::string& x){
+		setSEXP( Rf_mkString(x.c_str()) ) ;
+	}
+	
+	CharacterVector::CharacterVector( const std::vector<std::string>& x){
+		SEXP y = PROTECT( Rf_allocVector( STRSXP, x.size() ) );
+		int n = x.size() ;
+		std::vector<std::string>::const_iterator iter = x.begin() ;
+		for( int i=0; i<n; i++, iter++){
+			SET_STRING_ELT( y, i, Rf_mkChar(iter->c_str()) ) ;
+		}
+		setSEXP(y) ;
+		UNPROTECT(1) ;
+	}
+	
 #ifdef HAS_INIT_LISTS
 	CharacterVector::CharacterVector( std::initializer_list<std::string> list ) {
 		SEXP x = PROTECT( Rf_allocVector( STRSXP, list.size() ) ) ;
