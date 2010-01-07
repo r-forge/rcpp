@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// GenericVector.cpp: Rcpp R/C++ interface class library -- generic vectors (lists)
+// ExpressionVector.cpp: Rcpp R/C++ interface class library -- expression vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -21,38 +21,38 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
-#include <Rcpp/GenericVector.h>
+#include <Rcpp/ExpressionVector.h>
 #include <Rcpp/Evaluator.h>
 #include <Rcpp/Symbol.h>
 #include <algorithm>
 
 namespace Rcpp{
 	
-	GenericVector::GenericVector(SEXP x) throw(not_compatible) : RObject() {
+	ExpressionVector::ExpressionVector(SEXP x) throw(not_compatible) : RObject() {
 		switch( TYPEOF( x ) ){
-			case VECSXP:
+			case EXPRSXP:
 				setSEXP( x ) ;
 				break ;
 			default:
 				{
-					Evaluator e( Rf_lang2( Symbol("as.list"), x ) ) ;
+					Evaluator e( Rf_lang2( Symbol("as.expression"), x ) ) ;
 					e.run() ;
 					if( e.successfull() ){
 						setSEXP( e.getResult() ) ;
 					} else{
-						throw not_compatible( "could not convert to a list" ) ;
+						throw not_compatible( "could not convert to an expression vector" ) ;
 					}
 				}
 		}
 	}
 	
-	GenericVector::GenericVector(int size) : RObject() {
-		setSEXP( Rf_allocVector(VECSXP, size) ) ;
+	ExpressionVector::ExpressionVector(int size) : RObject() {
+		setSEXP( Rf_allocVector(EXPRSXP, size) ) ;
 	}
 
 #ifdef HAS_INIT_LISTS
-	GenericVector::GenericVector( std::initializer_list<RObject> list ) {
-		SEXP x = PROTECT( Rf_allocVector( VECSXP, list.size() ) ) ;
+	ExpressionVector::ExpressionVector( std::initializer_list<RObject> list ) {
+		SEXP x = PROTECT( Rf_allocVector( EXPRSXP, list.size() ) ) ;
 		const RObject* p = list.begin() ;
 		for( int i=0; i<list.size() ; i++, p++){
 			SET_VECTOR_ELT( x, i, p->asSexp() ) ;
@@ -62,36 +62,36 @@ namespace Rcpp{
 	}
 #endif
 
-SEXP* GenericVector::begin(){
+SEXP* ExpressionVector::begin(){
 	return RCPP_VECTOR_PTR(m_sexp) ;
 }
 
-SEXP* GenericVector::end(){
+SEXP* ExpressionVector::end(){
 	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
 }
 
 /* proxy stuff */
 
-GenericVector::Proxy::Proxy(GenericVector& v, int i) :
+ExpressionVector::Proxy::Proxy(ExpressionVector& v, int i) :
 	parent(v), index(i){}
 
-GenericVector::Proxy::operator SEXP() const{
+ExpressionVector::Proxy::operator SEXP() const{
 	return VECTOR_ELT( parent, index ) ;
 }
 
-GenericVector::Proxy& GenericVector::Proxy::operator=( const Proxy& rhs){
+ExpressionVector::Proxy& ExpressionVector::Proxy::operator=( const Proxy& rhs){
 	SET_VECTOR_ELT( parent, index, VECTOR_ELT( rhs.parent, rhs.index) ) ;
 }
 
-GenericVector::Proxy& GenericVector::Proxy::operator=( SEXP rhs){
+ExpressionVector::Proxy& ExpressionVector::Proxy::operator=( SEXP rhs){
 	SET_VECTOR_ELT( parent, index, rhs ) ;
 }
 
-const GenericVector::Proxy GenericVector::operator[](int i) const {
-	return Proxy(const_cast<GenericVector&>(*this), i) ;
+const ExpressionVector::Proxy ExpressionVector::operator[](int i) const {
+	return Proxy(const_cast<ExpressionVector&>(*this), i) ;
 }
 
-GenericVector::Proxy GenericVector::operator[](int i) {
+ExpressionVector::Proxy ExpressionVector::operator[](int i) {
 	return Proxy(*this, i ) ;
 }
 

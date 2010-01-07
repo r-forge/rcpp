@@ -1,5 +1,10 @@
 2010-01-07  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/ExpressionVector.h: new class Rcpp::ExpressionVector
+	which shares a lot with GenericVector.
+	* src/ExpressionVector.cpp: implementation
+	* inst/unitTests/runit.ExpressionVector.R: unit tests
+
 	* src/Rcpp/CharacterVector.h: new class Rcpp::CharacterVector
 	to manage character vectors (STRSXP). StringVector is a 
 	convenience typedef equivalent to CharacterVector

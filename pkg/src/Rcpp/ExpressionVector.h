@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// GenericVector.h: Rcpp R/C++ interface class library -- generic vectors (lists)
+// ExpressionVector.h: Rcpp R/C++ interface class library -- expression vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,8 +19,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef Rcpp_GenericVector_h
-#define Rcpp_GenericVector_h
+#ifndef Rcpp_ExpressionVector_h
+#define Rcpp_ExpressionVector_h
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
@@ -32,60 +32,57 @@
 
 namespace Rcpp{ 
 
-class GenericVector : public RObject {     
+class ExpressionVector : public RObject {     
 public:
 
 	/* much inspired from item 30 of more effective C++ */
 	class Proxy {
 	public:
-		Proxy( GenericVector& v, int index ) ;
+		Proxy( ExpressionVector& v, int index ) ;
 		
 		/* lvalue uses */
 		Proxy& operator=(const Proxy& rhs) ;
 		Proxy& operator=(SEXP rhs) ;
-		
+
 		template <typename T>
 		Proxy& operator=( const T& rhs){
 			SET_VECTOR_ELT( parent, index, wrap(rhs) ) ;
 		}
-		
+
 		/* rvalue use */
 		operator SEXP() const ;
-		
+
 	private:
-		GenericVector& parent; 
+		ExpressionVector& parent; 
 		int index ;
 	} ;
 
-
-	GenericVector(SEXP x) throw(not_compatible);
-	GenericVector( int size) ;
+	ExpressionVector(SEXP x) throw(not_compatible);
+	ExpressionVector( int size) ;
 	
 #ifdef HAS_INIT_LISTS	
-	GenericVector( std::initializer_list<RObject> list ) ;
+	ExpressionVector( std::initializer_list<RObject> list ) ;
 #endif
-	
+
 	/**
 	 * the length of the vector, uses Rf_length
 	 */
 	inline int length() const { return Rf_length( m_sexp ) ; }
-	
+
 	/**
 	 * alias of length
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
-	
+
 	SEXP* begin(); 
 	SEXP* end() ;
-	
+
 	const Proxy operator[]( int i ) const ;
 	Proxy operator[]( int i ) ;
-	
-	friend class Proxy; 
-	
-} ;
 
-typedef GenericVector List ;
+	friend class Proxy; 
+
+} ;
 
 } // namespace
 
