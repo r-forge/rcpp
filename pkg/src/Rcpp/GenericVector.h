@@ -54,6 +54,11 @@ public:
 	
 	SEXP get(const int& i) const ;
 	void set(const int& i, SEXP value ) ;
+	
+	SEXP* begin(); 
+	SEXP* end() ;
+	
+	
 } ;
 
 typedef GenericVector List ;

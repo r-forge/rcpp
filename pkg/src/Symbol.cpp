@@ -42,9 +42,7 @@ namespace Rcpp {
 			default:
 				throw not_compatible("cannot convert to symbol (SYMSXP)") ;
 			}
-		} else {
-			setSEXP( x ) ;
-		}
+		} 
 	}
 	
 	Symbol::Symbol(const std::string& symbol){
