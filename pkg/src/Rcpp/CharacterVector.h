@@ -84,6 +84,8 @@ public:
 	
 } ;
 
+typedef CharacterVector StringVector ;
+
 } // namespace
 
 #endif
