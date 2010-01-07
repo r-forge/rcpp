@@ -32,18 +32,28 @@ namespace Rcpp{
 
 class Promise : public RObject {     
 public:
+
+	class unevaluated_promise : public std::exception{
+	public:
+		unevaluated_promise() throw(){}; 
+		~unevaluated_promise() throw(){} ;
+		const char* what() throw() ;
+	} ;
+
 	Promise( SEXP x) throw(not_compatible) ;
 	
 	/** 
 	 * Return the result of the PRSEEN macro
 	 */
-	int seen() ;
+	int seen() const ;
 	
 	/**
 	 * Return the result of the PRVALUE macro on the promise
 	 */
-	RObject value() const ;
+	RObject value() const throw(unevaluated_promise) ;
 
+	bool was_evaluated() const ;
+	
 	/**
 	 * The promise expression: PRCODE
 	 */
