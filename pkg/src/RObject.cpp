@@ -24,6 +24,7 @@
 #include <Rcpp/Symbol.h>
 #include <algorithm>
 #include <Rcpp/as.h>
+#include <Rcpp/wrap.h>
 
 namespace Rcpp {
 
@@ -99,7 +100,7 @@ bool RObject::hasAttribute( const std::string& attr) const {
 }
 
 SEXP RObject::attr( const std::string& name) const{
-	return Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) );
+	return wrap( Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) ) );
 }
 
 const char* RObject::not_compatible::what( ) const throw() {

@@ -115,7 +115,7 @@ public:
     /**
      * extract the given attribute
      */
-    SEXP attr( const std::string& name) const  ;
+    RObject attr( const std::string& name) const  ;
     
     /**
      * is this object NULL

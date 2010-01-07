@@ -1,5 +1,9 @@
 2010-01-07  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/RObject.h: the result of attr is now an RObject
+	rather than a SEXP. This does not change previous behavior
+	because of the implicit conversion
+
 	* src/Rcpp/ExpressionVector.h: new class Rcpp::ExpressionVector
 	which shares a lot with GenericVector.
 	* src/ExpressionVector.cpp: implementation
