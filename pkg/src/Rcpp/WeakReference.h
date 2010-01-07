@@ -40,15 +40,18 @@ public:
 	 */
 	WeakReference( SEXP x) throw(not_compatible) ; 
 
+	/* TODO: constructor that makes a new weak reference based
+		on key, value, finalizer (C and R) */
+	
 	/** 
 	 * Retrieve the key
 	 */
-	SEXP key() const ; 
+	RObject key() const ; 
 
 	/**
 	 * Retrieve the value
 	 */
-	SEXP value() const ;
+	RObject value() const ;
 
 } ;
 
