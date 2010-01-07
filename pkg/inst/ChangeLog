@@ -1,5 +1,10 @@
 2010-01-07  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/CharacterVector.h: new class Rcpp::CharacterVector
+	to manage character vectors (STRSXP)
+	* src/CharacterVector.cpp: implementation
+	* inst/unitTests/runit.CharacterVector.R: unit tests
+
 	* src/Rcpp/WeakReference.h: new class Rcpp::WeakReference
 	to wrap WEAKREFSXP with accessors to the key and value
 	* src/WeakReference.cpp: implementation
