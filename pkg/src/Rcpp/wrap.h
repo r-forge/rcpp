@@ -34,6 +34,7 @@
 #include <Rcpp/NumericVector.h>
 #include <Rcpp/LogicalVector.h>
 #include <Rcpp/GenericVector.h>
+#include <Rcpp/CharacterVector.h>
 
 namespace Rcpp{ 
 
@@ -41,30 +42,31 @@ namespace Rcpp{
 
 RObject wrap(SEXP m_sexp) ;
 
-RObject wrap(const bool & v);
-RObject wrap(const double & v);
-RObject wrap(const int & v);
-RObject wrap(const char* const v);
-RObject wrap(const Rbyte & v);
-RObject wrap(const std::string & v);
+LogicalVector wrap(const bool & v);
+NumericVector wrap(const double & v);
+IntegerVector wrap(const int & v);
+CharacterVector wrap(const char* const v);
+RawVector wrap(const Rbyte & v);
+CharacterVector wrap(const std::string & v);
 
-RObject wrap(const std::vector<int> & v);
-RObject wrap(const std::vector<double> & v);
-RObject wrap(const std::vector<std::string> & v);
-RObject wrap(const std::vector<Rbyte> & v);
-RObject wrap(const std::vector<bool> & v);
+IntegerVector wrap(const std::vector<int> & v);
+NumericVector wrap(const std::vector<double> & v);
+CharacterVector wrap(const std::vector<std::string> & v);
+RawVector wrap(const std::vector<Rbyte> & v);
+LogicalVector wrap(const std::vector<bool> & v);
 
-RObject wrap(const std::set<int> & v);
-RObject wrap(const std::set<double> & v);
-RObject wrap(const std::set<std::string> & v);
-RObject wrap(const std::set<Rbyte> & v);
+IntegerVector wrap(const std::set<int> & v);
+NumericVector wrap(const std::set<double> & v);
+CharacterVector wrap(const std::set<std::string> & v);
+RawVector wrap(const std::set<Rbyte> & v);
 
 #ifdef HAS_INIT_LISTS
 IntegerVector wrap( std::initializer_list<int> list) ;
 NumericVector wrap( std::initializer_list<double> list) ; 
 LogicalVector wrap( std::initializer_list<bool> list) ;
 RawVector wrap(std::initializer_list<Rbyte> list) ;
-// List wrap( std::initializer_list<RObject> list) ;
+CharacterVector wrap(std::initializer_list<std::string> list );
+List wrap( std::initializer_list<RObject> list) ;
 #endif
 
 } // namespace Rcpp
