@@ -61,12 +61,12 @@ CharacterVector wrap(const std::set<std::string> & v);
 RawVector wrap(const std::set<Rbyte> & v);
 
 #ifdef HAS_INIT_LISTS
-IntegerVector wrap( std::initializer_list<int> list) ;
-NumericVector wrap( std::initializer_list<double> list) ; 
-LogicalVector wrap( std::initializer_list<bool> list) ;
-RawVector wrap(std::initializer_list<Rbyte> list) ;
-CharacterVector wrap(std::initializer_list<std::string> list );
-List wrap( std::initializer_list<RObject> list) ;
+inline IntegerVector wrap( std::initializer_list<int> list) { return IntegerVector( list ) ;}
+inline NumericVector wrap( std::initializer_list<double> list) { return NumericVector( list ); } 
+inline LogicalVector wrap( std::initializer_list<bool> list) { return LogicalVector(list); }
+inline RawVector wrap(std::initializer_list<Rbyte> list) { return RawVector(list) ; }
+inline CharacterVector wrap(std::initializer_list<std::string> list ){ return CharacterVector(list) ; }
+inline List wrap( std::initializer_list<RObject> list) { return List(list); }
 #endif
 
 } // namespace Rcpp
