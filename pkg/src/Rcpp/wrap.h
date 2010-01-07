@@ -42,23 +42,25 @@ namespace Rcpp{
 
 RObject wrap(SEXP m_sexp) ;
 
-LogicalVector wrap(const bool & v);
+LogicalVector wrap(const bool & v); 
 NumericVector wrap(const double & v);
 IntegerVector wrap(const int & v);
-CharacterVector wrap(const char* const v);
 RawVector wrap(const Rbyte & v);
-CharacterVector wrap(const std::string & v);
 
 IntegerVector wrap(const std::vector<int> & v);
 NumericVector wrap(const std::vector<double> & v);
-CharacterVector wrap(const std::vector<std::string> & v);
 RawVector wrap(const std::vector<Rbyte> & v);
 LogicalVector wrap(const std::vector<bool> & v);
 
 IntegerVector wrap(const std::set<int> & v);
 NumericVector wrap(const std::set<double> & v);
-CharacterVector wrap(const std::set<std::string> & v);
 RawVector wrap(const std::set<Rbyte> & v);
+CharacterVector wrap(const std::set<std::string> & v) ; 
+
+inline CharacterVector wrap(const char* const v){ return CharacterVector(v); }
+inline CharacterVector wrap(const std::string & v){ return CharacterVector(v); }
+inline CharacterVector wrap(const std::vector<std::string> & v){ return CharacterVector(v); }
+
 
 #ifdef HAS_INIT_LISTS
 inline IntegerVector wrap( std::initializer_list<int> list) { return IntegerVector( list ) ;}
