@@ -113,7 +113,7 @@ RawVector wrap(const Rbyte & v){
 
 LogicalVector wrap(const std::vector<bool> & v){
     logTxt("RObject from bool vector\n");
-    int n = v.size();
+    size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(LGLSXP, n) );
     copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
     LogicalVector o(m_sexp) ;
@@ -123,7 +123,7 @@ LogicalVector wrap(const std::vector<bool> & v){
 
 IntegerVector wrap(const std::vector<int> & v){
     logTxt("RObject from int vector\n");
-    int n = v.size();
+    size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(INTSXP, n) );
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
     IntegerVector o(m_sexp) ;
@@ -133,7 +133,7 @@ IntegerVector wrap(const std::vector<int> & v){
 
 NumericVector wrap(const std::vector<double> & v){
     logTxt("RObject from double vector\n");
-    int n = v.size();
+    size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(REALSXP, n) );
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
     NumericVector o(m_sexp) ;
@@ -143,7 +143,7 @@ NumericVector wrap(const std::vector<double> & v){
 
 RawVector wrap(const std::vector<Rbyte> & v){
     logTxt("RObject from vector<Rbyte> \n");
-    int n = v.size();
+    size_t n = v.size();
     SEXP m_sexp = PROTECT(Rf_allocVector(RAWSXP, n));
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
     RawVector o(m_sexp) ;
@@ -155,7 +155,7 @@ RawVector wrap(const std::vector<Rbyte> & v){
 
 IntegerVector wrap(const std::set<int> & v){
     logTxt("RObject from set<int>\n");
-    int n = v.size();
+    size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(INTSXP, n) );
     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
     IntegerVector o(m_sexp) ;
@@ -165,7 +165,7 @@ IntegerVector wrap(const std::set<int> & v){
 
 NumericVector wrap(const std::set<double> & v){
     logTxt("RObject from set<double>\n");
-    int n = v.size();
+    size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(REALSXP, n) );
     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
     NumericVector o(m_sexp) ;
@@ -175,7 +175,7 @@ NumericVector wrap(const std::set<double> & v){
 
 RawVector wrap(const std::set<Rbyte> & v){
     logTxt("RObject from set<Rbyte> \n");
-    int n = v.size();
+    size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(RAWSXP, n) );
     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
     RawVector o(m_sexp) ;
@@ -185,7 +185,7 @@ RawVector wrap(const std::set<Rbyte> & v){
 
 CharacterVector wrap(const std::set<std::string> & v){
     logTxt("RObject from set<string>\n");
-    int n = v.size();
+    size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(STRSXP, n) );
     int i=0;
     std::set<std::string>::iterator it = v.begin(); 
