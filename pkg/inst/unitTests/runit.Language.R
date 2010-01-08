@@ -50,3 +50,18 @@ test.Language.variadic <- function(){
 	}
 }
 
+# same as about but without variadic templates
+test.Language.push.back <- function(){
+	funx <- cfunction(signature(), '
+	Language call("rnorm") ;
+	call.push_back( 10 ) ;
+	call.push_back( Named("mean", 0.0) ) ;
+	call.push_back( 2.0 ) ;
+	return call ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 
+		call("rnorm", 10L, mean = 0.0, 2.0 ), 
+		msg = "Language::push_back" )
+}
+
+

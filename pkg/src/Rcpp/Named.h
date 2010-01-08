@@ -48,12 +48,10 @@ public:
 	 */
 	Named( const std::string& tag ) : object(R_NilValue), tag(tag){} ;
 	
-#ifdef HAS_VARIADIC_TEMPLATES
 	template<typename T>
 	Named( const std::string& tag, const T& value ) : object(R_NilValue), tag(tag) {
 		object = wrap( value ) ;
 	}
-#endif
 	
 	SEXP getSEXP() const ; 
 	
