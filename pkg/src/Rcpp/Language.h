@@ -115,7 +115,8 @@ template<typename... Args>
 	}
 
 	/**
-	 * wraps an object and add it in front of the pairlist
+	 * wraps an object and add it in front of the pairlist. 
+	 * in addition, the tag is set to NULL and the SEXPTYPE to LANGSXP
 	 *
 	 * @param object anything that can be wrapped by one 
 	 * of the wrap functions, or an object of class Named
@@ -127,7 +128,13 @@ template<typename... Args>
 		SET_TYPEOF(m_sexp, LANGSXP);
 	}
 
-
+	/**
+	 * insert an object at the given position, pushing other objects
+	 * to the tail of the list
+	 *
+	 * @param index index (0-based) where to insert
+	 * @param object object to wrap
+	 */
 	template <typename T>
 	void insert( const int& index, const T& object) throw(index_out_of_bounds) {
 		if( index == 0 ) {
@@ -161,6 +168,39 @@ template<typename... Args>
 	 */
 	void setSymbol( const Symbol& symbol ) ;
 
+	
+	/**
+	 * replaces an element of the list
+	 *
+	 * @param index position
+	 * @param object object that can be wrapped
+	 */
+	template <typename T>
+	void replace( const int& index, const T& object ) throw(index_out_of_bounds){
+		if( index < 0 || index >= Rf_length(m_sexp) ) throw index_out_of_bounds() ;
+		
+		if( index == 0 ){
+			/* special handling */
+			SEXP x = PROTECT(pairlist( object ));
+			SETCAR( m_sexp, CAR(x) );
+			UNPROTECT(1) ;
+		} else{
+			/* pretend we do a pairlist so that we get Named to work for us */
+			SEXP x = PROTECT(pairlist( object ));
+			SEXP y = m_sexp ;
+			int i=0;
+			while( i<index ){ y = CDR(y) ; i++; }
+			
+			SETCAR( y, CAR(x) );
+			SET_TAG( y, TAG(x) );
+			UNPROTECT(1) ;
+		}
+	}
+	
+	inline size_t length(){ return Rf_length(m_sexp) ; }
+	inline size_t size(){ return Rf_length(m_sexp) ; }
+	
+	
 	~Language() ;
 };
 

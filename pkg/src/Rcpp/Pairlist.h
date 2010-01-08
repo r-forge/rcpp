@@ -99,6 +99,13 @@ template<typename... Args>
 		}
 	}
 	
+	/**
+	 * insert an object at the given position, pushing other objects
+	 * to the tail of the list
+	 *
+	 * @param index index (0-based) where to insert
+	 * @param object object to wrap
+	 */
 	template <typename T>
 	void insert( const int& index, const T& object) throw(index_out_of_bounds) {
 		if( index == 0 ) {
@@ -121,23 +128,49 @@ template<typename... Args>
 		}
 	}
 	
-
+	/**
+	 * replaces an element of the list
+	 *
+	 * @param index position
+	 * @param object object that can be wrapped
+	 */
+	template <typename T>
+	void replace( const int& index, const T& object ) throw(index_out_of_bounds){
+		if( index < 0 || index >= Rf_length(m_sexp) ) throw index_out_of_bounds() ;
+		
+		/* pretend we do a pairlist so that we get Named to work for us */
+		SEXP x = PROTECT(pairlist( object ));
+		SEXP y = m_sexp ;
+		int i=0;
+		while( i<index ){ y = CDR(y) ; i++; }
+		
+		SETCAR( y, CAR(x) );
+		SET_TAG( y, TAG(x) );
+		UNPROTECT(1) ;
+	}
+	
+	inline size_t length(){ return Rf_length(m_sexp) ; }
+	inline size_t size(){ return Rf_length(m_sexp) ; }
+	
 };
 
-#ifdef HAS_VARIADIC_TEMPLATES
 	SEXP pairlist() ;
-	template<typename T, typename... Args>
-	SEXP pairlist( const T& first, const Args&... args ){
-		return grow(first, pairlist(args...) ) ;
-	}
- 	/* end of the recursion, wrap first to make the CAR and use 
+
+	/* end of the recursion, wrap first to make the CAR and use 
  	   R_NilValue as the CDR of the list */
 	template<typename T>
 	SEXP pairlist( const T& first){
 		return grow(first, R_NilValue ) ; 
 	}
+
+#ifdef HAS_VARIADIC_TEMPLATES
+	template<typename T, typename... Args>
+	SEXP pairlist( const T& first, const Args&... args ){
+		return grow(first, pairlist(args...) ) ;
+	}
 #endif
 
+	
 } // namespace Rcpp
 
 #endif

@@ -103,5 +103,18 @@ test.Pairlist.insert <- function(){
 		msg = "Pairlist::replace" )
 }
 
-
+test.Pairlist.replace <- function(){
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	p.replace( 0, Named( "first", 1 ) ) ;
+	p.replace( 1, 20.0 ) ;
+	p.replace( 2, false ) ;
+	return p ;', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(),
+		pairlist( first = 1, 20.0 , FALSE), msg = "Pairlist::replace" )	
+}
 
