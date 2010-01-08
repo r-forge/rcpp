@@ -45,6 +45,7 @@ RObject wrap(SEXP m_sexp) ;
 LogicalVector wrap(const bool & v); 
 NumericVector wrap(const double & v);
 IntegerVector wrap(const int & v);
+inline IntegerVector wrap(const size_t & v){ return wrap( (int)v ) } ;
 RawVector wrap(const Rbyte & v);
 
 IntegerVector wrap(const std::vector<int> & v);
