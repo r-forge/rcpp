@@ -38,7 +38,7 @@ template<> double                   	as<double>(SEXP m_sexp) ;
 template<> int                      	as<int>(SEXP m_sexp) ;
 template<> Rbyte                    	as<Rbyte>(SEXP m_sexp) ;
 template<> std::string              	as<std::string>(SEXP m_sexp) ;
-template<> std::vector<int>         	as< std::vector<int>>(SEXP m_sexp) ;
+template<> std::vector<int>         	as< std::vector<int> >(SEXP m_sexp) ;
 template<> std::vector<double>      	as< std::vector<double> >(SEXP m_sexp) ;
 template<> std::vector<std::string> 	as< std::vector<std::string> >(SEXP m_sexp) ;
 template<> std::vector<Rbyte>       	as< std::vector<Rbyte> >(SEXP m_sexp) ;
