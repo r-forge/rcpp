@@ -68,8 +68,8 @@ SEXP canUseCXX0X(){
 }
 
 SEXP capabilities(){
-	SEXP cap = PROTECT( Rf_allocVector( LGLSXP, 2) ) ;
-	SEXP names = PROTECT( Rf_allocVector( STRSXP, 2 ) ) ;
+	SEXP cap = PROTECT( Rf_allocVector( LGLSXP, 3) ) ;
+	SEXP names = PROTECT( Rf_allocVector( STRSXP, 3 ) ) ;
 #ifdef HAS_VARIADIC_TEMPLATES
 	LOGICAL(cap)[0] = TRUE ;
 #else
@@ -80,9 +80,16 @@ SEXP capabilities(){
 #else
 	LOGICAL(cap)[1] = FALSE ;
 #endif
-	
+#ifdef __GNUC__
+	LOGICAL(cap)[2] = TRUE ;
+#else
+	/* just because I don't know */
+	LOGICAL(cap)[2] = FALSE ;
+#endif
+
 	SET_STRING_ELT(names, 0, Rf_mkChar("variadic templates") ) ;
 	SET_STRING_ELT(names, 1, Rf_mkChar("initializer lists") ) ;
+	SET_STRING_ELT(names, 2, Rf_mkChar("exception handling") ) ;
 	Rf_setAttrib( cap, R_NamesSymbol, names ) ;
 	UNPROTECT(2) ;
 	return cap ;
