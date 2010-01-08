@@ -50,7 +50,7 @@ if test "${GXX}" = yes; then
 	     has44=no
         ;;
         4.2.*)
-	     AC_MSG_WARN([With g++ version 4.2 core functionality should be stable.])
+	     AC_MSG_WARN([With g++ version 4.2 core functionality should be stable -- but no C++0x features though].)
 	     has43=no
 	     has44=no
         ;;
@@ -65,13 +65,13 @@ if test "${GXX}" = yes; then
 	     has44=yes
         ;;
         *)
-	     AC_MSG_WARN([Hm, not sure what g++ version you have. Using minimal features])
+	     AC_MSG_WARN([Hm, not sure what g++ version you have, so using minimal features and no C++0x.])
 	     has43=no
 	     has44=no
         ;;
     esac
 else
-    AC_MSG_WARN([Hm, not sure what compiler you. Using minimal features])
+    AC_MSG_WARN([Hm, not sure what C++ compiler you have, so using minimal features and no C++0x.])
     has43=no
     has44=no
 fi
