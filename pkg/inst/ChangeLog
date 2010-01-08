@@ -6,7 +6,7 @@
 	external pointer
 
 	* src/Rcpp/Pairlist.h: Pairlist gains a push_back, replace,
-	length, size and insert methods
+	length, size, remove and insert methods
 
 	* src/Rcpp/Language.h: idem for Language
 
