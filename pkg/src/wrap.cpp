@@ -187,7 +187,7 @@ CharacterVector wrap(const std::set<std::string> & v){
     logTxt("RObject from set<string>\n");
     size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(STRSXP, n) );
-    int i=0;
+    size_t i=0;
     std::set<std::string>::iterator it = v.begin(); 
     while( i<n ){
     	SET_STRING_ELT(m_sexp, i, Rf_mkChar(it->c_str()));
