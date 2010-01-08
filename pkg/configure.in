@@ -64,7 +64,16 @@ if test "${GXX}" = yes; then
 	     has43=yes
 	     has44=yes
         ;;
+        *)
+	     AC_MSG_WARN([Hm, not sure what g++ version you have. Using minimal features])
+	     has43=no
+	     has44=no
+        ;;
     esac
+else
+    AC_MSG_WARN([Hm, not sure what compiler you. Using minimal features])
+    has43=no
+    has44=no
 fi
 
 
