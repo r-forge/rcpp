@@ -2666,8 +2666,8 @@ $as_echo "$as_me: WARNING: Please report any errors you may see to the maintaine
 	     has44=no
         ;;
         4.2.*)
-	     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: With g++ version 4.2 core functionality should be stable." >&5
-$as_echo "$as_me: WARNING: With g++ version 4.2 core functionality should be stable." >&2;}
+	     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: With g++ version 4.2 core functionality should be stable -- but no C++0x features though." >&5
+$as_echo "$as_me: WARNING: With g++ version 4.2 core functionality should be stable -- but no C++0x features though." >&2;}
 	     has43=no
 	     has44=no
         ;;
@@ -2684,15 +2684,15 @@ $as_echo "$as_me: WARNING: With g++ version 4.4 or newer more parts of the new C
 	     has44=yes
         ;;
         *)
-	     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Hm, not sure what g++ version you have. Using minimal features" >&5
-$as_echo "$as_me: WARNING: Hm, not sure what g++ version you have. Using minimal features" >&2;}
+	     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Hm, not sure what g++ version you have, so using minimal features and no C++0x." >&5
+$as_echo "$as_me: WARNING: Hm, not sure what g++ version you have, so using minimal features and no C++0x." >&2;}
 	     has43=no
 	     has44=no
         ;;
     esac
 else
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Hm, not sure what compiler you. Using minimal features" >&5
-$as_echo "$as_me: WARNING: Hm, not sure what compiler you. Using minimal features" >&2;}
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Hm, not sure what C++ compiler you have, so using minimal features and no C++0x." >&5
+$as_echo "$as_me: WARNING: Hm, not sure what C++ compiler you have, so using minimal features and no C++0x." >&2;}
     has43=no
     has44=no
 fi
