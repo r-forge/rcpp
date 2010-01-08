@@ -62,13 +62,13 @@ namespace Rcpp{
 	}
 #endif
 
-SEXP* ExpressionVector::begin(){
-	return RCPP_VECTOR_PTR(m_sexp) ;
-}
-
-SEXP* ExpressionVector::end(){
-	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
-}
+// SEXP* ExpressionVector::begin(){
+// 	return RCPP_VECTOR_PTR(m_sexp) ;
+// }
+// 
+// SEXP* ExpressionVector::end(){
+// 	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
+// }
 
 /* proxy stuff */
 
