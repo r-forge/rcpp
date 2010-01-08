@@ -70,7 +70,10 @@ inline void logTxtFunction(const char* file, const int line, const char* express
 #endif
 
 /* in exceptions.cpp */
+#ifdef __GNUC__
 void forward_uncaught_exceptions_to_r() ;
+#endif 
+
 RcppExport SEXP initUncaughtExceptionHandler() ; 
 
 /* just testing variadic templates */
