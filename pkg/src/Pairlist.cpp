@@ -26,7 +26,7 @@
 #include <RcppCommon.h>
 
 namespace Rcpp {
-	
+
 	Pairlist::Pairlist( SEXP x = R_NilValue ) throw(not_compatible) : RObject::RObject( ){
 		if( x != R_NilValue ){
 			switch( TYPEOF(x) ){
@@ -46,11 +46,23 @@ namespace Rcpp {
 					}
 			}
 		}          
-		
 	};
-	
+
 	Pairlist::~Pairlist(){}
-	
+
+	void Pairlist::remove( const int& index ) throw(index_out_of_bounds){
+		if( index < 0 || index >= Rf_length(m_sexp) ) throw index_out_of_bounds() ;
+		if( index == 0 ){
+			setSEXP( CDR( m_sexp) ) ;
+		} else{
+			SEXP x = m_sexp ;
+			int i=1;
+			while( i<index ){ x = CDR(x) ; i++; }
+			SETCDR( x, CDDR(x) ) ;
+		}
+	}
+
+
 	SEXP pairlist(){ return R_NilValue ; }
-	
+
 } // namespace Rcpp

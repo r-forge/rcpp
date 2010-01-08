@@ -118,3 +118,46 @@ test.Pairlist.replace <- function(){
 		pairlist( first = 1, 20.0 , FALSE), msg = "Pairlist::replace" )	
 }
 
+test.Pairlist.size <- function(){
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	return wrap( p.size() ) ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 3L, msg = "Pairlist::size()" )
+}
+
+test.Pairlist.remove <- function(){
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	p.remove( 0 ) ;
+	return p ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), pairlist(10.0, 20.0), msg = "Pairlist::remove(0)" )
+	
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	p.remove( 2 ) ;
+	return p ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), pairlist(1L, 10.0), msg = "Pairlist::remove(0)" )
+	
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	p.remove( 1 ) ;
+	return p ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), pairlist(1L, 20.0), msg = "Pairlist::remove(0)" )
+	
+}

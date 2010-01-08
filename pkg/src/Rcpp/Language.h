@@ -168,7 +168,6 @@ template<typename... Args>
 	 */
 	void setSymbol( const Symbol& symbol ) ;
 
-	
 	/**
 	 * replaces an element of the list
 	 *
@@ -196,11 +195,17 @@ template<typename... Args>
 			UNPROTECT(1) ;
 		}
 	}
-	
+
 	inline size_t length(){ return Rf_length(m_sexp) ; }
 	inline size_t size(){ return Rf_length(m_sexp) ; }
 	
-	
+	/**
+	 * Remove the element at the given position
+	 *
+	 * @param index position where the element is to be removed
+	 */
+	void remove( const int& index ) throw(index_out_of_bounds) ; 
+
 	~Language() ;
 };
 

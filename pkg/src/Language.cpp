@@ -72,7 +72,7 @@ namespace Rcpp {
 	}
 	
 	Language::~Language(){}
-	
+
 	void Language::setSymbol( const std::string& symbol){
 		setSymbol( Symbol( symbol ) ) ;
 	}
@@ -82,5 +82,20 @@ namespace Rcpp {
 		SET_TAG(m_sexp, R_NilValue);
 	}
 	
+	void Language::remove( const int& index ) throw(index_out_of_bounds){
+		if( index < 0 || index >= Rf_length(m_sexp) ) throw index_out_of_bounds() ;
+		if( index == 0 ){
+			setSEXP( CDR( m_sexp) ) ;
+			SET_TAG(m_sexp, R_NilValue);
+			SET_TYPEOF( m_sexp, LANGSXP ) ;
+		} else{
+			SEXP x = m_sexp ;
+			int i=1;
+			while( i<index ){ x = CDR(x) ; i++; }
+			SETCDR( x, CDDR(x) ) ;
+		}
+	}
+
+
 	
 } // namespace Rcpp
