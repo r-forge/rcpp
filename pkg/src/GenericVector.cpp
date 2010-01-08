@@ -54,7 +54,7 @@ namespace Rcpp{
 	GenericVector::GenericVector( std::initializer_list<RObject> list ) {
 		SEXP x = PROTECT( Rf_allocVector( VECSXP, list.size() ) ) ;
 		const RObject* p = list.begin() ;
-		for( int i=0; i<list.size() ; i++, p++){
+		for( size_t i=0; i<list.size() ; i++, p++){
 			SET_VECTOR_ELT( x, i, p->asSexp() ) ;
 		}
 		setSEXP( x ) ;
@@ -81,10 +81,12 @@ GenericVector::Proxy::operator SEXP() const{
 
 GenericVector::Proxy& GenericVector::Proxy::operator=( const Proxy& rhs){
 	SET_VECTOR_ELT( parent, index, VECTOR_ELT( rhs.parent, rhs.index) ) ;
+	return *this ;
 }
 
 GenericVector::Proxy& GenericVector::Proxy::operator=( SEXP rhs){
 	SET_VECTOR_ELT( parent, index, rhs ) ;
+	return *this ;
 }
 
 const GenericVector::Proxy GenericVector::operator[](int i) const {
