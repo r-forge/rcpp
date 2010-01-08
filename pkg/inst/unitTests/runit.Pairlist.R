@@ -66,3 +66,17 @@ test.Pairlist.push.front <- function(){
 		msg = "Pairlist::push_front" )
 }
 
+test.Pairlist.push.back <- function(){
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( "foo" ) ;
+	p.push_back( Named( "foobar", 10) ) ;
+	return p ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 
+		pairlist( 1L, 10.0, "foo", foobar = 10), 
+		msg = "Pairlist::push_back" )
+}
+

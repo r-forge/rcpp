@@ -36,7 +36,7 @@ namespace Rcpp{
  */
 class Language : public RObject{
 public:
-	
+
 	/**
 	 * Attempts to convert the SEXP to a call
 	 *
@@ -44,7 +44,7 @@ public:
 	 * to a call using as.call
 	 */
 	Language(SEXP lang) throw(not_compatible) ;
-	
+
 	/**
 	 * Creates a call using the given symbol as the function name
 	 *
@@ -55,7 +55,7 @@ public:
 	 * > call( "rnorm" )
 	 */
 	explicit Language( const std::string& symbol ); 
-	
+
 	/**
 	 * Creates a call using the given symbol as the function name
 	 *
@@ -65,7 +65,7 @@ public:
 	 * > call( "rnorm" )
 	 */
 	explicit Language( const Symbol& symbol ); 
-	
+
 	/**
 	 * Creates a call to the given symbol using variable number of 
 	 * arguments
@@ -90,12 +90,35 @@ template<typename... Args>
 		setSEXP( Rf_lcons( Symbol(symbol), pairlist( args... ) ) );
 	}
 #endif	
-	
+
+	/**
+	 * wraps an object and add it at the end of the pairlist
+	 * (this require traversing the entire pairlist)
+	 *
+	 * @param object anything that can be wrapped by one 
+	 * of the wrap functions, or an object of class Named
+	 */
+	template <typename T>
+	void push_back( const T& object){
+		if( isNULL() ){
+			setSEXP( grow( object, m_sexp ) ) ;
+		} else {
+			SEXP x = m_sexp ;
+			/* traverse the pairlist */
+			while( !Rf_isNull(CDR(x)) ){
+				x = CDR(x) ;
+			}
+			SEXP tail = PROTECT( pairlist( object ) ); 
+			SETCDR( x, tail ) ;
+			UNPROTECT(1) ;
+		}
+	}
+
 	/**
 	 * sets the symbol of the call
 	 */
 	void setSymbol( const std::string& symbol);
-	
+
 	/**
 	 * sets the symbol of the call
 	 */

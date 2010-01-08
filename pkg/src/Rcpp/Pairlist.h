@@ -76,7 +76,29 @@ template<typename... Args>
 		setSEXP( grow(object, m_sexp) ) ;
 	}
 
-	
+	/**
+	 * wraps an object and add it at the end of the pairlist
+	 * (this require traversing the entire pairlist)
+	 *
+	 * @param object anything that can be wrapped by one 
+	 * of the wrap functions, or an object of class Named
+	 */
+	template <typename T>
+	void push_back( const T& object){
+		if( isNULL() ){
+			setSEXP( grow( object, m_sexp ) ) ;
+		} else {
+			SEXP x = m_sexp ;
+			/* traverse the pairlist */
+			while( !Rf_isNull(CDR(x)) ){
+				x = CDR(x) ;
+			}
+			SEXP tail = PROTECT( pairlist( object ) ); 
+			SETCDR( x, tail ) ;
+			UNPROTECT(1) ;
+		}
+	}
+
 };
 
 #ifdef HAS_VARIADIC_TEMPLATES

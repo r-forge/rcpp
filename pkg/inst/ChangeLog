@@ -1,5 +1,11 @@
 2010-01-07  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Pairlist.h: Pairlist gains a push_back method
+	
+	* src/Rcpp/Language.h: idem for Language
+
+2010-01-07  Romain Francois <francoisromain@free.fr>
+
 	* src/Rcpp/Pairlist.h: gains a push_front method
 
 	* src/Rcpp/wrap.h : now the result type of the various wrap 
