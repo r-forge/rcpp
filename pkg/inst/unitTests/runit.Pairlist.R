@@ -80,3 +80,28 @@ test.Pairlist.push.back <- function(){
 		msg = "Pairlist::push_back" )
 }
 
+test.Pairlist.insert <- function(){
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	
+	/* insert in 2nd position */
+	p.insert( 1, Named( "bla", "bla" ) ) ;
+	
+	/* insert in front */
+	p.insert( 0, 30.0 ) ;
+	
+	/* insert in back */
+	p.insert( 5, "foobar" ) ;
+	
+	return p ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 
+		pairlist( 30.0, 1L, bla = "bla", 10.0, 20.0, "foobar" ), 
+		msg = "Pairlist::replace" )
+}
+
+
+

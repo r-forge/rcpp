@@ -98,6 +98,29 @@ template<typename... Args>
 			UNPROTECT(1) ;
 		}
 	}
+	
+	template <typename T>
+	void insert( const int& index, const T& object) throw(index_out_of_bounds) {
+		if( index == 0 ) {
+			push_front( object ) ;
+		} else{
+			if( index <  0 ) throw index_out_of_bounds() ;
+			if( isNULL( ) ) throw index_out_of_bounds() ;
+			
+			if( index < 0 || index > Rf_length(m_sexp) ) throw index_out_of_bounds() ;
+			
+			int i=1;
+			SEXP x = m_sexp ;
+			while( i < index ){
+				x = CDR(x) ;
+				i++; 
+			}
+			SEXP tail = PROTECT( grow( object, CDR(x) ) ) ; 
+			SETCDR( x, tail ) ;
+			UNPROTECT(1) ;
+		}
+	}
+	
 
 };
 

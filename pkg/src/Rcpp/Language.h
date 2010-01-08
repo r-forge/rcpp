@@ -115,6 +115,43 @@ template<typename... Args>
 	}
 
 	/**
+	 * wraps an object and add it in front of the pairlist
+	 *
+	 * @param object anything that can be wrapped by one 
+	 * of the wrap functions, or an object of class Named
+	 */
+	template <typename T>
+	void push_front( const T& object){
+		setSEXP( grow(object, m_sexp) ) ;
+		SET_TAG(m_sexp, R_NilValue);
+		SET_TYPEOF(m_sexp, LANGSXP);
+	}
+
+
+	template <typename T>
+	void insert( const int& index, const T& object) throw(index_out_of_bounds) {
+		if( index == 0 ) {
+			push_front( object ) ;
+		} else{
+			if( index <  0 ) throw index_out_of_bounds() ;
+			if( isNULL( ) ) throw index_out_of_bounds() ;
+			
+			if( index < 0 || index > Rf_length(m_sexp) ) throw index_out_of_bounds() ;
+			
+			int i=1;
+			SEXP x = m_sexp ;
+			while( i < index ){
+				x = CDR(x) ;
+				i++; 
+			}
+			SEXP tail = PROTECT( grow( object, CDR(x) ) ) ; 
+			SETCDR( x, tail ) ;
+			UNPROTECT(1) ;
+		}
+	}
+	
+	
+	/**
 	 * sets the symbol of the call
 	 */
 	void setSymbol( const std::string& symbol);

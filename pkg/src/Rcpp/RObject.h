@@ -51,7 +51,14 @@ public:
    			~not_s4() throw(){} ;
    			const char* what() const throw() ; 
    	} ;
-
+   	
+   	class index_out_of_bounds: public std::exception{
+   	public:
+   		index_out_of_bounds() throw(){};
+   		~index_out_of_bounds() throw(){};
+   		const char* what() const throw() ;
+   	} ;
+   	
    /**
      * default constructor. uses R_NilValue
      */ 

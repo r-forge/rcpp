@@ -1,6 +1,7 @@
 2010-01-08  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/Pairlist.h: Pairlist gains a push_back method
+	* src/Rcpp/Pairlist.h: Pairlist gains a push_back 
+	and insert methods
 
 	* src/Rcpp/Language.h: idem for Language
 

@@ -122,6 +122,10 @@ const char* RObject::not_compatible::what( ) const throw() {
 const char* RObject::not_s4::what( ) const throw() {
 	return "not an S4 object" ;
 }
+const char* RObject::index_out_of_bounds::what( ) const throw() {
+	return "array or list out of bounds" ;
+}
+
 
 } // namespace Rcpp
 
