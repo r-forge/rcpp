@@ -105,10 +105,12 @@ CharacterVector::StringProxy::operator char*() const {
 
 CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const StringProxy& rhs){
 	SET_STRING_ELT( parent, index, STRING_ELT( rhs.parent, rhs.index) ) ;
+	return *this ;
 }
 
 CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const std::string& rhs){
 	SET_STRING_ELT( parent, index, Rf_mkChar( rhs.c_str() ) ) ;
+	return *this ;
 }
 
 const CharacterVector::StringProxy CharacterVector::operator[](int i) const {

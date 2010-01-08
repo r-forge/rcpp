@@ -54,7 +54,7 @@ namespace Rcpp{
 	ExpressionVector::ExpressionVector( std::initializer_list<RObject> list ) {
 		SEXP x = PROTECT( Rf_allocVector( EXPRSXP, list.size() ) ) ;
 		const RObject* p = list.begin() ;
-		for( int i=0; i<list.size() ; i++, p++){
+		for( size_t i=0; i<list.size() ; i++, p++){
 			SET_VECTOR_ELT( x, i, p->asSexp() ) ;
 		}
 		setSEXP( x ) ;
@@ -81,10 +81,12 @@ ExpressionVector::Proxy::operator SEXP() const{
 
 ExpressionVector::Proxy& ExpressionVector::Proxy::operator=( const Proxy& rhs){
 	SET_VECTOR_ELT( parent, index, VECTOR_ELT( rhs.parent, rhs.index) ) ;
+	return *this ;
 }
 
 ExpressionVector::Proxy& ExpressionVector::Proxy::operator=( SEXP rhs){
 	SET_VECTOR_ELT( parent, index, rhs ) ;
+	return *this ;
 }
 
 const ExpressionVector::Proxy ExpressionVector::operator[](int i) const {

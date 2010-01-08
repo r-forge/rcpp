@@ -47,6 +47,7 @@ public:
 		template <typename T>
 		Proxy& operator=( const T& rhs){
 			SET_VECTOR_ELT( parent, index, wrap(rhs) ) ;
+			return *this; 
 		}
 
 		/* rvalue use */
