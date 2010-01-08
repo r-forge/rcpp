@@ -51,7 +51,6 @@
 #include <R_ext/Complex.h>
 #include <Rversion.h>
 #define GET_NAMES(x)	Rf_getAttrib(x, R_NamesSymbol)
-#include <Rcpp/Rcpp_Rinternals.h>
 
 // #ifdef BUILDING_DLL
 // #define RcppExport extern "C" __declspec(dllexport)

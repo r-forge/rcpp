@@ -82,13 +82,13 @@ void CharacterVector::set( const int& i, const std::string& value ){
 	SET_STRING_ELT(m_sexp,i, Rf_mkChar(value.c_str()) ) ;
 }
 
-SEXP* CharacterVector::begin(){
-	return RCPP_VECTOR_PTR(m_sexp) ;
-}
-
-SEXP* CharacterVector::end(){
-	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
-}
+// SEXP* CharacterVector::begin(){
+// 	return RCPP_VECTOR_PTR(m_sexp) ;
+// }
+// 
+// SEXP* CharacterVector::end(){
+// 	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
+// }
 
 /* proxy stuff */
 

@@ -62,13 +62,13 @@ namespace Rcpp{
 	}
 #endif
 
-SEXP* GenericVector::begin(){
-	return RCPP_VECTOR_PTR(m_sexp) ;
-}
-
-SEXP* GenericVector::end(){
-	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
-}
+// SEXP* GenericVector::begin(){
+// 	return RCPP_VECTOR_PTR(m_sexp) ;
+// }
+// 
+// SEXP* GenericVector::end(){
+// 	return RCPP_VECTOR_PTR(m_sexp) + LENGTH(m_sexp) ;
+// }
 
 /* proxy stuff */
 
