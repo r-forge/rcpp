@@ -24,6 +24,7 @@
 #include <Rcpp/Language.h>
 #include <Rcpp/Pairlist.h>
 #include <RcppCommon.h>
+#include <Rcpp/as.h>
 
 namespace Rcpp {
 	
@@ -50,6 +51,20 @@ namespace Rcpp {
 			throw not_a_closure() ;
 		}
 		return Environment( CLOENV(m_sexp) ) ;
+	}
+	
+	Function::eval_error::eval_error(const RObject& err) throw() : message(){
+		if( err.isNULL() ) {
+			message = "unknown error" ;
+		} else{
+			message = as<std::string>( Rf_eval( 
+				Rf_lang2( Rf_install("conditionCall"), err), 
+				R_GlobalEnv ) );
+		}
+	}
+	Function::eval_error::~eval_error() throw(){}
+	const char* Function::eval_error::what() throw() {
+		return message.c_str() ;
 	}
 	
 } // namespace Rcpp
