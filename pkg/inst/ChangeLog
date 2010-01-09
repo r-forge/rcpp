@@ -1,3 +1,8 @@
+2010-01-09  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/Function.h: Function::operator() now throws an 
+	exception if an R error occurs.
+
 2010-01-08  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/wrap.h: added wrap( size_t ) to disambiguate it
