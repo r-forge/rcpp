@@ -1,5 +1,12 @@
 2010-01-09  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/RObject.h: attr can now be used to get or set the 
+	attribute (used to be read only). This is another manifestation
+	of the proxy pattern. The rhs can be anything wrap can handle
+
+	* inst/unitTests/runit.RObject.R: added test.RObject.attr.set
+	unit test (setting attribute).
+
 	* src/Rcpp/Function.h: Function::operator() now throws an 
 	exception if an R error occurs.
 

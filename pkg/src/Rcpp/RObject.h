@@ -59,7 +59,7 @@ public:
    		const char* what() const throw() ;
    	} ;
    	
-   /**
+    /**
      * default constructor. uses R_NilValue
      */ 
     RObject() : m_sexp(R_NilValue) {} ;	
@@ -94,7 +94,7 @@ public:
     virtual ~RObject() ;
 
     /**
-     * implicit conversion to SEXP
+     * implicit conversion to SEXP.
      */
     inline operator SEXP() const { return m_sexp ; }
 
@@ -126,12 +126,34 @@ public:
      */
     bool hasAttribute( const std::string& attr) const ; 
 
+    class AttributeProxy {
+	public:
+		AttributeProxy( const RObject& v, const std::string& attr_name) ;
+		
+		/* lvalue uses */
+		AttributeProxy& operator=(const AttributeProxy& rhs) ;
+		
+		template <typename T>
+		AttributeProxy& operator=(const T& rhs){
+			Rf_setAttrib( parent, Rf_install(attr_name.c_str()), wrap(rhs) ) ;
+			return *this ;
+		}
+		
+		/* rvalue use */
+		operator SEXP() const ;
+		operator RObject() const ;
+		
+	private:
+		const RObject& parent; 
+		std::string attr_name ;
+	} ;
+    
     /**
      * extract the given attribute
      */
     /* TODO: implement a proxy pattern for attributes */
-    RObject attr( const std::string& name) const  ;
-
+    AttributeProxy attr( const std::string& name) const  ;
+    
     /**
      * is this object NULL
      */
