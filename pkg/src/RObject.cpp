@@ -99,8 +99,25 @@ bool RObject::hasAttribute( const std::string& attr) const {
     return false; /* give up */
 }
 
-RObject RObject::attr( const std::string& name) const{
-	return wrap( Rf_getAttrib( m_sexp, Rf_install( name.c_str() ) ) );
+
+RObject::AttributeProxy::AttributeProxy( const RObject& v, const std::string& name) :
+	parent(v), attr_name(name) {};
+
+RObject::AttributeProxy& RObject::AttributeProxy::operator=(const AttributeProxy& rhs){
+	Rf_setAttrib( parent, Rf_install(attr_name.c_str()), parent.asSexp() ) ;
+	return *this ;
+}
+
+RObject::AttributeProxy::operator SEXP() const {
+	return Rf_getAttrib( parent , Rf_install( attr_name.c_str() ) ) ;
+}
+
+RObject::AttributeProxy::operator RObject() const {
+	return wrap( Rf_getAttrib( parent, Rf_install( attr_name.c_str() ) ) ) ;
+}
+
+RObject::AttributeProxy RObject::attr( const std::string& name) const{
+	return AttributeProxy( *this, name)  ;
 }
 
 /* S4 */
