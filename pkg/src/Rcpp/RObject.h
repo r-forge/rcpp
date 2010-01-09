@@ -149,9 +149,21 @@ public:
 	} ;
     
     /**
-     * extract the given attribute
+     * extract or set the given attribute
+     *
+     * @param name name of the attribute to get/set
+     *
+     * @return this returns a proxy to the given attribute. Depending
+     * on whether the proxy is used as a lhs or a rhs the attribute is
+     * either set (if the proxy is used on the lhs) or extracted 
+     * (if the proxy is used on the rhs). 
+     *
+     * RObject y = x.attr("foo") ; // rhs : get the attribute
+     * x.attr( "bar" ) = 10 ;      // lhs : set the attribute. 
+     *
+     * wrap is called on the right side of the assignment it can be anything
+     * wrap can handle. 
      */
-    /* TODO: implement a proxy pattern for attributes */
     AttributeProxy attr( const std::string& name) const  ;
     
     /**
