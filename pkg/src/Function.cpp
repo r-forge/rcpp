@@ -58,7 +58,7 @@ namespace Rcpp {
 			message = "unknown error" ;
 		} else{
 			message = as<std::string>( Rf_eval( 
-				Rf_lang2( Rf_install("conditionCall"), err), 
+				Rf_lang2( Rf_install("conditionMessage"), err), 
 				R_GlobalEnv ) );
 		}
 	}

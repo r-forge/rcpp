@@ -1,3 +1,10 @@
+2010-01-10  Romain Francois <francoisromain@free.fr>
+
+	* inst/unitTests/runit.Function.R: added unit test for function
+	throwing exceptions
+
+	* src/Function.cpp: grab the condition message and not the call
+
 2010-01-09  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/RObject.h: attr can now be used to get or set the 
