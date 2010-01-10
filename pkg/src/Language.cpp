@@ -96,6 +96,92 @@ namespace Rcpp {
 		}
 	}
 
-
+	
+	/* proxy for operator[] */
+	
+	Language::Proxy::Proxy(Language& v, const size_t& index) :
+		parent(v), index(index) {} ;
+	
+	Language::Proxy& Language::Proxy::operator=(const Proxy& rhs){
+		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
+		if( rhs.index < 0 || rhs.index >=  rhs.parent.length() ) throw index_out_of_bounds() ;
+		
+		SEXP target = parent.asSexp() ;
+		SEXP origin = rhs.parent.asSexp();
+		size_t i=0; 
+		while( i < index ){
+			target = CDR(target) ;
+			i++; 
+		}
+		i=0; 
+		while( i < rhs.index ){
+			origin = CDR(origin) ;
+			i++;
+		}
+		SETCAR( target, CAR(origin) );
+		if( index != 0 ) SET_TAG( target, TAG(origin) ); 
+		return *this ;
+	}
+	
+	Language::Proxy& Language::Proxy::operator=(const Named& rhs){
+		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
+		size_t i = 0 ;
+		SEXP x = parent.asSexp() ; 
+		while( i < index ) {
+			x = CDR(x) ;
+			i++ ;
+		}
+		SETCAR( x, rhs.getSEXP() ) ;
+		if( index != 0 ) SET_TAG( x, Symbol( rhs.getTag() ) ) ;
+		return *this ;
+	}
+	
+	Language::Proxy& Language::Proxy::operator=(SEXP rhs){
+		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
+		SEXP x = parent.asSexp() ; 
+		size_t i = 0 ;
+		while( i < index ) {
+			x = CDR(x) ;
+			i++ ;
+		}
+		SETCAR( x, rhs) ;
+		return *this ;
+	}
+	
+	
+	/* rvalue uses */
+	
+	Language::Proxy::operator SEXP() const{
+		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
+		SEXP x = parent.asSexp() ; 
+		size_t i = 0 ;
+		while( i < index ) {
+			x = CDR(x) ;
+			i++ ;
+		}
+		return CAR(x) ;
+	}
+	
+	Language::Proxy::operator RObject() const{
+		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
+		SEXP x = parent.asSexp() ; 
+		size_t i = 0 ;
+		while( i < index ) {
+			x = CDR(x) ;
+			i++ ;
+		}
+		return wrap( CAR(x) ) ;
+	}
+	
+	const Language::Proxy Language::operator[](int i) const {
+		return Proxy( const_cast<Language&>(*this), i) ;
+	}
+	
+	Language::Proxy Language::operator[](int i){
+		return Proxy( *this, i );
+	}
+	
+	
+	
 	
 } // namespace Rcpp

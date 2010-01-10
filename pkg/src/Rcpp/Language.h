@@ -196,8 +196,8 @@ template<typename... Args>
 		}
 	}
 
-	inline size_t length(){ return Rf_length(m_sexp) ; }
-	inline size_t size(){ return Rf_length(m_sexp) ; }
+	inline size_t length() const { return Rf_length(m_sexp) ; }
+	inline size_t size() const { return Rf_length(m_sexp) ; }
 	
 	/**
 	 * Remove the element at the given position
@@ -205,7 +205,38 @@ template<typename... Args>
 	 * @param index position where the element is to be removed
 	 */
 	void remove( const int& index ) throw(index_out_of_bounds) ; 
+	
+	class Proxy {
+	public:
+		Proxy( Language& v, const size_t& index ) ;
+		
+		/* lvalue uses */
+		Proxy& operator=(const Proxy& rhs) ;
+		Proxy& operator=(SEXP rhs) ;
+		
+		template <typename T>
+		Proxy& operator=(const T& rhs){
+			parent.replace( index, rhs ) ;
+			return *this ;
+		}
+		
+		Proxy& operator=(const Named& rhs) ;
+		
+		/* rvalue use */
+		operator SEXP() const ;
+		operator RObject() const ;
+		
+	private:
+		Language& parent; 
+		size_t index ;
+	} ;
 
+	const Proxy operator[]( int i ) const ;
+	Proxy operator[]( int i ) ;
+	
+	friend class Proxy; 
+	
+	
 	~Language() ;
 };
 
