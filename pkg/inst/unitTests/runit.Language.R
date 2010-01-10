@@ -64,4 +64,25 @@ test.Language.push.back <- function(){
 		msg = "Language::push_back" )
 }
 
+test.Language.square <- function(){
+	funx <- cfunction(signature(), '
+	Language p("rnorm") ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	return p[2] ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 10.0, msg = "Language::operator[] used as rvalue" )
+
+	funx <- cfunction(signature(), '
+	Language p("rnorm") ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	p[1] = "foobar" ;
+	p[2] = p[3] ;
+	return p ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), call("rnorm", "foobar", 20.0, 20.0) , msg = "Pairlist::operator[] used as lvalue" )
+}
 
