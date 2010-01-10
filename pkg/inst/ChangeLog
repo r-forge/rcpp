@@ -1,5 +1,7 @@
 2010-01-10  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Pairlist.h: operator[] for pairlist using proxies
+
 	* inst/unitTests/runit.Function.R: added unit test for function
 	throwing exceptions
 

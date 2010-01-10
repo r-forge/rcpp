@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/Named.h>
 
 namespace Rcpp{ 
 
@@ -34,7 +35,7 @@ namespace Rcpp{
  */
 class Pairlist : public RObject{
 public:
-	
+
 	/**
 	 * Attempts to convert the SEXP to a pair list
 	 *
@@ -149,8 +150,8 @@ template<typename... Args>
 		UNPROTECT(1) ;
 	}
 
-	inline size_t length(){ return Rf_length(m_sexp) ; }
-	inline size_t size(){ return Rf_length(m_sexp) ; }
+	inline size_t length() const { return Rf_length(m_sexp) ; }
+	inline size_t size() const { return Rf_length(m_sexp) ; }
 
 	/**
 	 * Remove the element at the given position
@@ -159,6 +160,36 @@ template<typename... Args>
 	 */
 	void remove( const int& index ) throw(index_out_of_bounds) ; 
 
+	class Proxy {
+	public:
+		Proxy( Pairlist& v, const size_t& index ) ;
+		
+		/* lvalue uses */
+		Proxy& operator=(const Proxy& rhs) ;
+		Proxy& operator=(SEXP rhs) ;
+		
+		template <typename T>
+		Proxy& operator=(const T& rhs){
+			parent.replace( index, rhs ) ;
+			return *this ;
+		}
+		
+		Proxy& operator=(const Named& rhs) ;
+		
+		/* rvalue use */
+		operator SEXP() const ;
+		operator RObject() const ;
+		
+	private:
+		Pairlist& parent; 
+		size_t index ;
+	} ;
+
+	const Proxy operator[]( int i ) const ;
+	Proxy operator[]( int i ) ;
+	
+	friend class Proxy; 
+	
 };
 
 	SEXP pairlist() ;

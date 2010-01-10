@@ -161,3 +161,29 @@ test.Pairlist.remove <- function(){
 	checkEquals( funx(), pairlist(1L, 20.0), msg = "Pairlist::remove(0)" )
 	
 }
+
+test.Pairlist.square.rvalue <- function(){
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	return p[1] ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 10.0, msg = "Pairlist::operator[] used as rvalue" )
+}
+
+test.Pairlist.square.rvalue <- function(){
+	funx <- cfunction(signature(), '
+	Pairlist p ;
+	p.push_back( 1 ) ;
+	p.push_back( 10.0 ) ;
+	p.push_back( 20.0 ) ;
+	p[1] = "foobar" ;
+	p[2] = p[0] ;
+	return p ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), pairlist(1L, "foobar", 1L) , msg = "Pairlist::operator[] used as rvalue" )
+}
+
+
