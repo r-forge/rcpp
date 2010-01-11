@@ -59,11 +59,10 @@ test.CharacterVector.plusequals <- function(){
 	x[0] = "foo" ; 
 	x[1] = "bar" ;
 	x[0] += "bar" ;
-	x[1] += "foo" ;
+	x[1] += x[0] ;
 	return x ;
 	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
-	checkEquals( funx(), c("foobar", "barfoo"), 
+	checkEquals( funx(), c("foobar", "barfoobar"), 
 		msg = "StringProxy::operator+=" )
-	
 }
 
