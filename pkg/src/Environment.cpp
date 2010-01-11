@@ -23,6 +23,7 @@
 #include <Rcpp/Evaluator.h>
 #include <Rcpp/Symbol.h>
 #include <Rcpp/Language.h>
+#include <Rcpp/wrap.h>
 
 namespace Rcpp {
 
@@ -264,6 +265,57 @@ static void safeFindNamespace(void *data) {
     	return message.c_str() ;
     }
     Environment::no_such_env::~no_such_env() throw() {}
+    
+    
+    
+    Environment::Binding::Binding( Environment& env, const std::string& name): 
+    	env(env), name(name){}
+    
+    bool Environment::Binding::active() const{
+    	return env.bindingIsActive( name ) ; 
+    }
+    
+    bool Environment::Binding::exists() const{
+    	return env.exists( name ) ; 
+    }
+    
+    bool Environment::Binding::locked() const{
+    	return env.bindingIsLocked( name ) ; 
+    }
+    
+    void Environment::Binding::lock() {
+    	    env.lockBinding( name ) ;
+    }
+    
+    void Environment::Binding::unlock() {
+    	    env.unlockBinding( name ) ;
+    }
+    
+    Environment::Binding& Environment::Binding::operator=( SEXP rhs ){
+    	    env.assign( name, rhs ) ;
+    	    return *this ;
+    }
+    
+    Environment::Binding& Environment::Binding::operator=( const Binding& rhs){
+    	    env.assign( name, rhs.env.get(rhs.name) ) ;
+    	    return *this ;
+    }
+    
+    Environment::Binding::operator SEXP() const{
+    	return env.get( name );    
+    }
+    
+    Environment::Binding::operator RObject() const{
+    	return wrap( env.get( name ) );
+    }
+    
+    const Environment::Binding Environment::operator[]( const std::string& name) const{
+    	return Binding( const_cast<Environment&>(*this), name );
+    }
+    
+    Environment::Binding Environment::operator[]( const std::string& name) {
+    	return Binding( *this, name ) ;
+    }
     
 } // namespace Rcpp
 

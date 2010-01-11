@@ -1,5 +1,12 @@
 2010-01-10  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Environment.h: operator[](string) for environment
+	allowing to get/set values of a binding in this environment. 
+	The Environment::Binding class has been created to act as
+	a proxy.
+	* src/Environment.cpp: idem
+	* inst/unitTests/runit.environments.R: unit tests for the above
+
 	* src/Rcpp/Pairlist.h: operator[] for pairlist using proxies
 	* src/Pairlist.cpp : idem
 	* inst/unitTests/runit.Pairlist.R: new unit tests

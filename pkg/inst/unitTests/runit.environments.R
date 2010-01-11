@@ -303,3 +303,24 @@ test.environment.parent <- function(){
 	checkEquals( funx(e), emptyenv() , msg = "Environment::parent" )
 	
 }
+
+test.environment.square <- function(){
+	
+	funx <- cfunction(signature( env = "environment" ), '
+	Environment e(env) ;
+	List out(3) ;
+	out[0] = e["x"] ;
+	e["y"] = 2 ;
+	out[1] = e["y"] ;
+	e["x"] = "foo"; 
+	out[2] = e["x"] ;
+	return out ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	env <- new.env( )
+	env[["x"]] <- 10L
+	checkEquals( funx(env), list( 10L, 2L, "foo") )
+	
+}
+
+

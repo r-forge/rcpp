@@ -120,6 +120,39 @@ public:
     		std::string message ;
     } ;
     
+    class Binding {
+    public:
+    	    Binding( Environment& env, const std::string& name) ;
+    	    
+    	    bool active() const ;
+    	    bool locked() const ;
+    	    bool exists() const ;
+    	    void lock( ) ;
+    	    void unlock() ;
+    	    
+    	    /* lvalue uses */
+    	    Binding& operator=(const Binding& rhs) ;
+    	    Binding& operator=(SEXP rhs) ;
+    	    
+    	    template <typename T>
+    	    Binding& operator=(const T& rhs){
+    	    	    env.assign( name, wrap(rhs) ) ;
+    	    	    return *this ;
+    	    }
+    	    
+    	    /* rvalue */
+    	    operator SEXP() const ;
+    	    operator RObject() const ;
+    	    
+    private:
+    	    Environment& env ;
+    	    std::string name ;
+    } ;
+    
+    const Binding operator[]( const std::string& name) const ;
+    Binding operator[](const std::string& name) ;
+    friend class Binding ;
+    
     /**
      * wraps the given environment
      *
