@@ -53,4 +53,17 @@ test.CharacterVector.initializer.list <- function(){
 	}
 }
 
+test.CharacterVector.plusequals <- function(){
+	funx <- cfunction(signature(), '
+	CharacterVector x(2) ;
+	x[0] = "foo" ; 
+	x[1] = "bar" ;
+	x[0] += "bar" ;
+	x[1] += "foo" ;
+	return x ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), c("foobar", "barfoo"), 
+		msg = "StringProxy::operator+=" )
+	
+}
 

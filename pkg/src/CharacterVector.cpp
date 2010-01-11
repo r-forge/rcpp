@@ -108,10 +108,25 @@ CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const Str
 	return *this ;
 }
 
+CharacterVector::StringProxy& CharacterVector::StringProxy::operator+=( const std::string& rhs){
+	std::string full( CHAR(STRING_ELT(parent,index)) ) ;
+	full += rhs ;
+	SET_STRING_ELT( parent, index, Rf_mkChar( full.c_str() ) ) ;
+	return *this ;
+}
+
+CharacterVector::StringProxy& CharacterVector::StringProxy::operator+=( const StringProxy& rhs){
+	std::string full( CHAR(STRING_ELT(parent,index)) ) ;
+	full += CHAR(STRING_ELT( rhs.parent, rhs.index)) ;
+	SET_STRING_ELT( parent, index, Rf_mkChar(full.c_str()) ) ;
+	return *this ;
+}
+
 CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const std::string& rhs){
 	SET_STRING_ELT( parent, index, Rf_mkChar( rhs.c_str() ) ) ;
 	return *this ;
 }
+
 
 const CharacterVector::StringProxy CharacterVector::operator[](int i) const throw(index_out_of_bounds){
 	if( i<0 || i>=length()) throw index_out_of_bounds() ;

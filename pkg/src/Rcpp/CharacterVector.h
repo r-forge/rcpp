@@ -44,6 +44,9 @@ public:
 		StringProxy& operator=(const StringProxy& rhs) ;
 		StringProxy& operator=(const std::string& rhs) ;
 		
+		StringProxy& operator+=(const StringProxy& rhs) ;
+		StringProxy& operator+=(const std::string& rhs) ;
+		
 		/* rvalue use */
 		operator SEXP() const ;
 		operator char*() const ;
