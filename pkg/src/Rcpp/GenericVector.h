@@ -76,11 +76,11 @@ public:
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
-	SEXP* begin(); 
-	SEXP* end() ;
+	// SEXP* begin(); 
+	// SEXP* end() ;
 	
-	const Proxy operator[]( int i ) const ;
-	Proxy operator[]( int i ) ;
+	const Proxy operator[]( int i ) const throw(index_out_of_bounds);
+	Proxy operator[]( int i ) throw(index_out_of_bounds) ;
 	
 	friend class Proxy; 
 	

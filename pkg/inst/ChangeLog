@@ -1,5 +1,9 @@
 2010-01-11  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/*Vector.h: operator[] now throws index out of bounds
+	exception when needed (FR#770)
+	* src/*Vector.cpp: same
+
 	* src/Rcpp/Environment.h: operator[](string) for environment
 	allowing to get/set values of a binding in this environment.
 	The Environment::Binding class has been created to act as

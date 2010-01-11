@@ -53,7 +53,7 @@ public:
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
-	double& operator[]( int i ) const ;
+	double& operator[]( int i ) const throw(index_out_of_bounds) ;
 	double* begin() const ; 
 	double* end() const ;
 	

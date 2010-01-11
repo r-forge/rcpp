@@ -52,7 +52,7 @@ public:
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
-	Rcomplex& operator[]( int i ) const ;
+	Rcomplex& operator[]( int i ) const throw(index_out_of_bounds) ;
 	Rcomplex* begin() const ; 
 	Rcomplex* end() const ;
 	

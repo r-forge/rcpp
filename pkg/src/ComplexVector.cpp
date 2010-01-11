@@ -55,7 +55,8 @@ namespace Rcpp{
 	}
 #endif
 
-Rcomplex& ComplexVector::operator[]( int i ) const { 
+Rcomplex& ComplexVector::operator[]( int i ) const throw(index_out_of_bounds){ 
+	if( i<0 || i>= length()) throw index_out_of_bounds() ;
 	return COMPLEX(m_sexp)[i] ;
 }
 Rcomplex* ComplexVector::begin() const { 

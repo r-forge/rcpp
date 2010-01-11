@@ -79,8 +79,8 @@ public:
 	SEXP* begin(); 
 	SEXP* end() ;
 	
-	const StringProxy operator[]( int i ) const ;
-	StringProxy operator[]( int i ) ;
+	const StringProxy operator[]( int i ) const throw(index_out_of_bounds);
+	StringProxy operator[]( int i ) throw(index_out_of_bounds);
 	
 	friend class StringProxy; 
 	

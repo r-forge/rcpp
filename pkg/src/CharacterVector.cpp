@@ -113,11 +113,13 @@ CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const std
 	return *this ;
 }
 
-const CharacterVector::StringProxy CharacterVector::operator[](int i) const {
+const CharacterVector::StringProxy CharacterVector::operator[](int i) const throw(index_out_of_bounds){
+	if( i<0 || i>=length()) throw index_out_of_bounds() ;
 	return StringProxy(const_cast<CharacterVector&>(*this), i) ;
 }
 
-CharacterVector::StringProxy CharacterVector::operator[](int i) {
+CharacterVector::StringProxy CharacterVector::operator[](int i) throw(index_out_of_bounds) {
+	if( i<0 || i>=length()) throw index_out_of_bounds() ;
 	return StringProxy(*this, i ) ;
 }
 
