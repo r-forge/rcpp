@@ -1,5 +1,8 @@
 2010-01-11  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/CharacterVector.h: StringProxy gains operator+=
+	* src/CharacterVector.cpp: implementation
+
 	* src/Rcpp/*Vector.h: operator[] now throws index out of bounds
 	exception when needed (FR#770)
 	* src/*Vector.cpp: same
