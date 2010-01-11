@@ -1,7 +1,7 @@
 2010-01-11  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/Environment.h: operator[](string) for environment
-	allowing to get/set values of a binding in this environment. 
+	allowing to get/set values of a binding in this environment.
 	The Environment::Binding class has been created to act as
 	a proxy.
 	* src/Environment.cpp: idem
@@ -12,11 +12,11 @@
 	* src/Rcpp/Pairlist.h: operator[] for pairlist using proxies
 	* src/Pairlist.cpp : idem
 	* inst/unitTests/runit.Pairlist.R: new unit tests
-	
+
 	* src/Rcpp/Language.h: same for Language
 	* src/Language.cpp : idem
 	* inst/unitTests/runit.Language.R: new unit tests
-	
+
 	* inst/unitTests/runit.Function.R: added unit test for function
 	throwing exceptions
 
@@ -24,15 +24,23 @@
 
 2010-01-09  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/RObject.h: attr can now be used to get or set the 
+	* src/Rcpp/RObject.h: attr can now be used to get or set the
 	attribute (used to be read only). This is another manifestation
 	of the proxy pattern. The rhs can be anything wrap can handle
 
 	* inst/unitTests/runit.RObject.R: added test.RObject.attr.set
 	unit test (setting attribute).
 
-	* src/Rcpp/Function.h: Function::operator() now throws an 
+	* src/Rcpp/Function.h: Function::operator() now throws an
 	exception if an R error occurs.
+
+2010-01-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.in: provide basic support for c++ compiler version detection
+ 	  at build-time so that we can add -std=c++0x when applicable;
+	  provide defaults in case we do not use g++
+	* src/Makevars.in: copied from Makevars, set C++ flags from configure
+	* configure.win: simply log what g++ version is being used
 
 2010-01-08  Romain Francois <francoisromain@free.fr>
 
@@ -50,12 +58,12 @@
 
 	* src/Rcpp/Pairlist.h: gains a push_front method
 
-	* src/Rcpp/wrap.h : now the result type of the various wrap 
+	* src/Rcpp/wrap.h : now the result type of the various wrap
 	functions depends on the parameters. wrap( bool ) makes a
-	LogicalVector, etc ... wrap(SEXP) dispatches to the 
+	LogicalVector, etc ... wrap(SEXP) dispatches to the
 	appropriate Rcpp:: class depending on TYPEOF
 
-	* src/Rcpp/RObject.h: added methods "isS4", "slot" 
+	* src/Rcpp/RObject.h: added methods "isS4", "slot"
 	and "hasSlot" to deal with S4 objects
 	* inst/unitTests/runit.S4.R: unit tests
 
@@ -79,7 +87,7 @@
 	* inst/unitTests/runit.ExpressionVector.R: unit tests
 
 	* src/Rcpp/CharacterVector.h: new class Rcpp::CharacterVector
-	to manage character vectors (STRSXP). StringVector is a 
+	to manage character vectors (STRSXP). StringVector is a
 	convenience typedef equivalent to CharacterVector
 	* src/CharacterVector.cpp: implementation
 	* inst/unitTests/runit.CharacterVector.R: unit tests
@@ -93,8 +101,8 @@
 	USE_RINTERNALS, but defining it disables NO_R_REMAP)
 
 	* src/Rcpp/GenericVector.h : added begin and end to allow
-	stl type iteration over generic vectors. Now using the 
-	Proxy pattern (from Item 30 of More Effective C++) to 
+	stl type iteration over generic vectors. Now using the
+	Proxy pattern (from Item 30 of More Effective C++) to
 	allow getting and setting the elements of the list through
 	the operator[].
 
