@@ -1,4 +1,4 @@
-2010-01-10  Romain Francois <francoisromain@free.fr>
+2010-01-11  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/Environment.h: operator[](string) for environment
 	allowing to get/set values of a binding in this environment. 
@@ -6,6 +6,8 @@
 	a proxy.
 	* src/Environment.cpp: idem
 	* inst/unitTests/runit.environments.R: unit tests for the above
+
+2010-01-10  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/Pairlist.h: operator[] for pairlist using proxies
 	* src/Pairlist.cpp : idem
