@@ -59,7 +59,8 @@ namespace Rcpp{
 	}
 #endif
 
-double& NumericVector::operator[]( int i ) const { 
+double& NumericVector::operator[]( int i ) const throw(index_out_of_bounds){ 
+	if( i<0 || i>=length()) throw index_out_of_bounds() ;
 	return REAL(m_sexp)[i] ;
 }
 double* NumericVector::begin() const { 

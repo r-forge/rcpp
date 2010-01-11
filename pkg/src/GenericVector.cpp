@@ -89,11 +89,13 @@ GenericVector::Proxy& GenericVector::Proxy::operator=( SEXP rhs){
 	return *this ;
 }
 
-const GenericVector::Proxy GenericVector::operator[](int i) const {
+const GenericVector::Proxy GenericVector::operator[](int i) const throw(index_out_of_bounds){
+	if( i<0 || i>=length()) throw index_out_of_bounds() ;
 	return Proxy(const_cast<GenericVector&>(*this), i) ;
 }
 
-GenericVector::Proxy GenericVector::operator[](int i) {
+GenericVector::Proxy GenericVector::operator[](int i) throw(index_out_of_bounds){
+	if( i<0 || i>=length()) throw index_out_of_bounds() ;
 	return Proxy(*this, i ) ;
 }
 

@@ -53,7 +53,7 @@ public:
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
-	Rbyte& operator[]( int i ) const ;
+	Rbyte& operator[]( int i ) const throw(index_out_of_bounds) ;
 	Rbyte* begin() const ; 
 	Rbyte* end() const ;
 	

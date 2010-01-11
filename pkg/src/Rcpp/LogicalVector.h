@@ -57,7 +57,7 @@ public:
 	typedef Rboolean* iterator ;
 	typedef Rboolean value_type ;
 	
-	int& operator[]( int i ) const ;
+	int& operator[]( int i ) const throw(index_out_of_bounds) ;
 	int* begin() const ; 
 	int* end() const ;
 	

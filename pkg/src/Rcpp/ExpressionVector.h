@@ -78,8 +78,8 @@ public:
 	SEXP* begin(); 
 	SEXP* end() ;
 
-	const Proxy operator[]( int i ) const ;
-	Proxy operator[]( int i ) ;
+	const Proxy operator[]( int i ) const throw(index_out_of_bounds);
+	Proxy operator[]( int i ) throw(index_out_of_bounds) ;
 
 	friend class Proxy; 
 

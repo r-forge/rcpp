@@ -89,11 +89,13 @@ ExpressionVector::Proxy& ExpressionVector::Proxy::operator=( SEXP rhs){
 	return *this ;
 }
 
-const ExpressionVector::Proxy ExpressionVector::operator[](int i) const {
+const ExpressionVector::Proxy ExpressionVector::operator[](int i) const throw(index_out_of_bounds){
+	if( i<0 || i>= length()) throw index_out_of_bounds() ;
 	return Proxy(const_cast<ExpressionVector&>(*this), i) ;
 }
 
-ExpressionVector::Proxy ExpressionVector::operator[](int i) {
+ExpressionVector::Proxy ExpressionVector::operator[](int i) throw(index_out_of_bounds){
+	if( i<0 || i>= length()) throw index_out_of_bounds() ;
 	return Proxy(*this, i ) ;
 }
 
