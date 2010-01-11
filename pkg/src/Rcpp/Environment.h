@@ -120,20 +120,89 @@ public:
     		std::string message ;
     } ;
     
+    /**
+     * proxy class to allow read and write access to a binding in
+     * an environment
+     */
     class Binding {
     public:
+    	    /**
+    	     * Creates 	a binding
+    	     * 
+    	     * @param env environment in which the binding is
+    	     * @param name name of the binding
+    	     */
     	    Binding( Environment& env, const std::string& name) ;
     	    
+    	    /**
+    	     * Is the binding an active binding
+    	     */
     	    bool active() const ;
+    	    
+    	    /**
+    	     * Is the binding locked
+    	     */
     	    bool locked() const ;
+    	    
+    	    /**
+    	     * Is the binding defined
+    	     */
     	    bool exists() const ;
+    	    
+    	    /**
+    	     * lock the binding
+    	     */
     	    void lock( ) ;
+    	    
+    	    /**
+    	     * unlock the binding
+    	     */
     	    void unlock() ;
     	    
     	    /* lvalue uses */
+    	    
+    	    /**
+    	     * Assigning another binding to this has the effect of 
+    	     * assigning the rhs to the environment. 
+    	     *
+    	     * For example :
+    	     * Environment e = ... // get an environment somehow
+    	     * Environment f = ... // get an environment somehow
+    	     * e["x"] = f["y"] ;
+    	     *
+    	     * after this, the variable x in the environment e will
+    	     * contain the same variable as "y" in the environment "f"
+    	     */
     	    Binding& operator=(const Binding& rhs) ;
+    	    
+    	    /**
+    	     * Assign the rhs to the binding
+    	     *
+    	     * For example: 
+    	     * Environment e= ... ; // get some environment
+    	     * e["foo"] = SclalarInteger( 10 ) ;
+    	     * 
+    	     * after this e will contain the variable "foo" with the value 
+    	     * 10L
+    	     */
     	    Binding& operator=(SEXP rhs) ;
     	    
+    	    /**
+    	     * templated assignement. The rhs if first wrapped using one
+    	     * of the forms of "wrap" and then the wrapped value is
+    	     * assigned to the binding
+    	     *
+    	     * For example: 
+    	     * Environment e = ... ;
+    	     * e[ "foo" ] = 10 ;
+    	     * e[ "bar"] = "foobar" ;
+    	     * 
+    	     * vector<int> v; v.push_back(10); v.push_back(20 );
+    	     * e[ "foo" ] = v ;
+    	     * 
+    	     * with GCC4.4 :
+    	     * e["bla" ] = { 1,2,3};
+    	     */
     	    template <typename T>
     	    Binding& operator=(const T& rhs){
     	    	    env.assign( name, wrap(rhs) ) ;
@@ -141,16 +210,45 @@ public:
     	    }
     	    
     	    /* rvalue */
+    	    /**
+    	     * retrieves the value for this binding
+    	     * 
+    	     * Environment stats = Environment::namespace_env( "stats" ) ;
+    	     * Function f = stats["rnorm"] ;
+    	     */
     	    operator SEXP() const ;
+    	    
+    	    /**
+    	     * retrieves the value for this binding as an RObject
+    	     */
     	    operator RObject() const ;
     	    
     private:
+    	    /**
+    	     * Reference to the environment if the binding
+    	     */
     	    Environment& env ;
+    	    
+    	    /**
+    	     * name of the binding
+    	     */
     	    std::string name ;
     } ;
     
+    /**
+     * Creates a binding for a variable in this environment
+     *
+     * The Binding class is a proxy class, so depending on how the result
+     * of this operator call is used, the variable is either retrieved 
+     * or modified. See the Binding class for details
+     */
     const Binding operator[]( const std::string& name) const ;
+    
+    /**
+     * Same as above, but for a non-const Environment
+     */
     Binding operator[](const std::string& name) ;
+    
     friend class Binding ;
     
     /**
