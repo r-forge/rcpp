@@ -5,6 +5,8 @@ clean:
 	rm -fr RJwrapper.out
 	rm -fr RJwrapper.aux
 	rm -fr RJwrapper.log
+	rm -fr RJwrapper.bbl
+	rm -fr RJwrapper.blg
 
 RJwrapper.pdf: RJwrapper.tex FrancoisEddelbuettel.tex RJournal.sty
 	pdflatex RJwrapper.tex
