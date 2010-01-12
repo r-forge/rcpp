@@ -8,7 +8,7 @@ clean:
 	rm -fr RJwrapper.bbl
 	rm -fr RJwrapper.blg
 
-RJwrapper.pdf: RJwrapper.tex FrancoisEddelbuettel.tex RJournal.sty
+RJwrapper.pdf: RJwrapper.tex EddelbuettelFrancois.tex RJournal.sty
 	pdflatex RJwrapper.tex
 	bibtex RJwrapper
 	pdflatex RJwrapper.tex
