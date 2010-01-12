@@ -5,8 +5,8 @@
 
 \abstract{
 The \pkg{Rcpp} package provides a consistent and comprehensive set 
-of C++ classes designed to ease coupling of C++ highly efficient code
-with R. The \code{RObject} class assumes the responsability of 
+of C++ classes designed to ease coupling of C++ code
+with R. The \code{RObject} class is responsible for 
 protecting and releasing its encapsulated R object (\code{SEXP})
 from garbage collection. The \code{wrap} set of functions allows
 wrapping many C++ built-in types and data structures from the standard
@@ -26,6 +26,7 @@ Writing R Extensions \citep{R:exts} provides extensive documentation about the
 various ways to couple R with code written in C. 
 Writing such code requires both expertise and discipline from the 
 programmer. Discipline, with a large amount of bookkeeping 
+%% FIXME:  The two sentences need a rewrite
 duties around the \code{PROTECT}/\code{UNPROTECT} dance one 
 has to master the steps. Expertise, to learn and use efficiently 
 the set of macros offered by R headers. 
@@ -47,10 +48,11 @@ RAII (resource acquisition is initialization) pattern. As long as the
 \code{RObject} instance is alive, its underlying \code{SEXP} remains 
 protected from garbage collection. When the \code{RObject} goes out 
 of scope (function return, exceptions), it removes the protection so that 
-if the \code{SEXP} is not otherwise protected it becomes subject to 
+if the \code{SEXP} is not otherwise protected when it becomes subject to 
 garbage collection. 
 
-Garbage collection is only mentionned here to illustrate the basic design
+% FIXME: Shorten and make a footnote?
+Garbage collection is only mentioned here to illustrate the basic design
 of the \code{RObject} class, the user of \pkg{Rcpp} need not to concern 
 himself/herself with such matters and can instead focus on the problem
 that he/she is solving.
@@ -120,8 +122,8 @@ SEXP type &  \pkg{Rcpp} class \\
 
 Some types do not have their own C++ class. \code{NILSXP} and 
 \code{S4SXP} have their functionality covered by the \code{RObject}
-class, \code{ANYSXP} is just a placeholder to facilitate S4 dispatch 
-and no object in R has this type and \code{BCODESXP} is not currently 
+class; \code{ANYSXP} is just a placeholder to facilitate S4 dispatch 
+and no object in R has this type; and \code{BCODESXP} is not currently 
 used.
 
 Each class contains functionality that is relevant to the R object
@@ -160,7 +162,7 @@ garbage collection. Since the garbage collector can happen at any time,
 not protecting an object means its memory might be reclaimed before we are
 finished with it.
 \item The \code{REAL} macro returns a pointer to the beginning of the 
-actual array. 
+actual array; its indexing is does not resemble either R or C++.
 \end{itemize}
 
 Using the \code{Rcpp::NumericVector}, the code can be rewritten: 
@@ -310,10 +312,10 @@ dirk ?
 
 \section{others}
 
-CXXR
-Rserve C++ client
-RcppTemplate
-rcppbind
+CXXR;
+Rserve C++ client;
+RcppTemplate;
+rcppbind;
 ...
 
 \section{Rcpp vintage api}
@@ -334,8 +336,8 @@ rcppbind
 \email{francoisromain@free.fr}
 
 \address{Dirk Eddelbuettel\\
-  Affiliation\\
-  Address\\
-  Country}\\
+  Debian Project\\
+  Chicago, IL\\
+  USA}\\
 \email{edd@debian.org}
 
