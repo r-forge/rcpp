@@ -39,7 +39,7 @@ namespace Rcpp {
 	    			{
 	    				int n = Rf_length(lang) ;
 	    				if( n == 0 ) throw not_compatible("cannot convert to call (LANGSXP)") ;
-	    				SEXP names = GET_NAMES(lang) ; 
+	    				SEXP names = RCPP_GET_NAMES(lang) ; 
 	    				SEXP res, ap;
 	    				PROTECT( ap = res = Rf_allocList( n ) ) ;
 	    				for( int i=0; i<n; i++){
