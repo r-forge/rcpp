@@ -66,12 +66,20 @@ Integration of C++ and R has been addressed by several authors starting with
 unpublished paper, express several ideas that are close to some of our
 approaches, though not yet fully fleshed out.
 
-Rserve was early with C++ use in one of its clients and also wrapped SEXP
-objects. 
+Rserve \citep{cran:Rserve} was early with C++ use in one 
+of its clients and also wrapped SEXP objects. 
+% FIXME: the Rserve client does not know about SEXP, it defines
+% Rexp, something that looks like SEXP, but isn't;
+% R does not have to be on the client side
 
-CXXR comes from the other side and aims to rebuild R using a C++.
+CXXR \citep{runnalls09:cxxr} comes from the other side 
+and aims to rebuild R using a C++. If moving from C to C++ is to be
+compared with improving someone's house, \pkg{Rcpp} is repainting the 
+walls where CXXR rebuilds from the foundations. 
+% maybe we do a bit more than the walls ?
+% new more comfortable furnitures ? 
 
-rppbind ...
+rcppbind ...
 
 Whit A ...
 
@@ -311,47 +319,26 @@ CharacterVector ab = {"foo","bar"};
 Besides classes, the \pkg{Rcpp} package also contains utilities allowing
 conversion from R objects to C++ types and vice-versa. Through 
 polymorphism, the \code{wrap} set of functions can be used to wrap 
-some data structure into an \code{RObject} instance. In total, the 
-\pkg{Rcpp} defines 23 different \code{wrap} functions, listed below :
+some data structure into an \code{RObject} instance. 
 
-\begin{small}
-\begin{center}
-\begin{tabular}{cc}
-C++ type & \pkg{Rcpp} type \\
-\hline
-\code{SEXP} & $\star$ \\
-\hline
-\code{bool} & \code{LogicalVector} \\
-\code{double} & \code{NumericVector}  \\
-\code{int} & \code{IntegerVector}  \\
-\code{size\_t} & \code{IntegerVector}  \\
-\code{unsigned char} & \code{RawVector}  \\
-\code{string} & \code{CharacterVector}  \\
-\code{char*} & \code{CharacterVector}  \\
-\hline
-\code{vector<int>} & \code{IntegerVector}  \\
-\code{vector<double>} & \code{NumericVector}  \\
-\code{vector<unsigned char>} & \code{RawVector}  \\
-\code{vector<bool>} & \code{LogicalVector}  \\
-\code{vector<string>} & \code{CharacterVector}  \\
-\hline
-\code{set<int>} & \code{IntegerVector}  \\
-\code{set<double>} & \code{NumericVector}  \\
-\code{set<unsigned char>} & \code{RawVector}  \\
-\code{set<string>} & \code{CharacterVector}  \\
-\hline
-\code{initializer\_list<int>} & \code{IntegerVector}  \\
-\code{initializer\_list<double>} & \code{NumericVector}  \\
-\code{initializer\_list<unsigned char>} & \code{RawVector}  \\
-\code{initializer\_list<bool>} & \code{LogicalVector}  \\
-\code{initializer\_list<string>} & \code{CharacterVector}  \\
-\code{initializer\_list<RObject>} & \code{List} \\
-\hline
-\end{tabular}
-\begin{small}$\star$ : depends on the type of the \code{SEXP}\end{small}
-\end{center}
-\end{small}
+In total, the \pkg{Rcpp} defines 23 different \code{wrap} 
+functions, including :
+\begin{itemize}
+\item SEXP
+\item primitive types : \code{bool}, \code{int}, \code{double}, 
+\code{size\_t}, \code{unsigned char} (byte), \code{std::string} and
+\code{char*}
+\item stl vectors of these types: \code{vecor<int>},
+\code{vector<double>}, \code{vector<bool>}, \code{vector<unsigned char>}, 
+\code{vector<string>}
+\item stl sets : \code{set<int>}, \code{set<double>}, \code{set<unsigned char>}, 
+\code{set<string>}
+\item initializer lists (only available in GCC 4.4).
+\end{itemize}
 
+Each type is wrapped in the most sensible class, e.g. \code{vector<double>}
+is wrapped into an \pkg{NumericVector} object, which in turns encapsulates
+a numeric vector (a \code{SEXP} of type \code{REALSXP}). 
 Here are a few examples of \code{wrap} calls: 
 
 \begin{example}
@@ -379,7 +366,126 @@ vector<int> x = as< vector<int> >(x) ;
 
 \section{external pointers}
 
-factor this out from romain's blog
+In addition to primitive data types, R can handle arbitrary pointers
+by encapsulating the pointer in a special R object, the external 
+pointer. \cite{R:exts} documents the available API R has to offer to 
+deal with external pointers. 
+
+\pkg{Rcpp} takes advantage of C++ templates and smart pointers and 
+defines the templated class \code{XPtr} that acts as a smart 
+pointer to the underlying C++ object. 
+
+Assuming we get from R an external pointer to a \code{std::vector<int>}
+c++ object, we can manipulate it as such using the \code{XPtr} class:
+
+\begin{example}
+// xp is an external pointer 
+// to a std::vector<int>
+XPtr< std::vector<int> > p(xp) ;
+p->push\_back(1) ;
+p->push\_back(2) ;
+p->size() ; 
+\end{example}
+
+The \code{XPtr} class directly derives from the \code{RObject} class.
+Thanks to its template parameter and overloading of the \code{->} 
+and \code{*} operators, objects of the \code{XPtr<Foo>} generated
+class look and feel like raw pointers (\code{Foo*}).
+
+Making an external pointer from a raw pointer is equally easy using 
+another constructor. 
+
+\begin{example}
+std::vector<int> *pv = new std::vector<int> ;
+XPtr< std::vector<int> > p(pv,true) ;
+\end{example}
+
+The creation of the instance of the \code{XPtr< std::vector<int> >} 
+smart extenal pointer to a \code{std::vector<int>} hides the 
+R API that is typically used for external pointers, including registration
+of a finalizer to be executed to free the memory of the vector when the
+external pointer goes out of scope. 
+
+\section{other examples}
+
+The last example shows how to use \pkg{Rcpp} to emulate the R code below.
+For more examples, the reader is invited to 
+refer to the comprehensive documentation included in \pkg{Rcpp}
+as well as the many examples that the package contains as part of 
+its unit tests. 
+
+\begin{example}
+> rnorm( 10L, sd = 100.0 )
+\end{example}
+
+The code can be expressed in several ways in \pkg{Rcpp}, the first version
+shows the use of the \code{Environment} and \code{Function} classes. 
+
+\begin{example}
+Environment stats("package:stats") ;
+Function rnorm = stats.get("rnorm") ;
+return rnorm(10, Named("sd", 100.0) ) ;
+\end{example}
+
+We first pull out the \code{rnorm} function from the environment 
+called \samp{package:stats} in the search path, then call the function
+using syntax similar to calling the function in R. The \code{Named} 
+class is an utility class that helps emulating the use of 
+named arguments.
+
+The second version shows the use of the \code{Language} class, which 
+manage calls (LANGSXP). 
+
+\begin{example}
+Language call("rnorm", 10, Named("sd", 100 ) ) ;
+call.eval() ;
+\end{example}
+
+%TODO: implement Language::eval( ) !!
+
+In this version, we first create a call to the symbol "rnorm" and
+evaluate the call in the global environment, this is similar to the 
+R code : 
+
+\begin{example}
+> eval( call( "rnorm", 10L, sd = 100 ) )
+\end{example}
+
+Using the R api, the first example, using the actual
+\code{rnorm} function,
+translates to :
+
+\begin{example}
+SEXP stats = PROTECT( 
+\ \ R_FindNamespace( mkString("stats") ) ) ;
+SEXP rnorm = PROTECT( 
+\ \ findVarInFrame( stats, install("rnorm") ) ) ;
+SEXP call  = PROTECT( LCONS( rnorm, 
+\ \ CONS(ScalarInteger(10), 
+\ \ \ \ CONS(ScalarReal(100.0), R_NilValue)))) ;
+SET_TAG( CDDR(call), install("sd") ) ;
+SEXP res = PROTECT( eval( call, R_GlobalEnv ) );
+UNPROTECT(4) ;
+return res ;
+\end{example}
+
+and the second example, using the \samp{rnorm} symbol, and therefore
+involving implicit lookup in hte search path, can be written as:
+
+\begin{example}
+SEXP call  = PROTECT( 
+\ \ LCONS( install("rnorm"), 
+\ \ \ \ CONS(ScalarInteger(10), 
+\ \ \ \ \ \ CONS(ScalarReal(100.0), R_NilValue)))) ;
+SET_TAG( CDDR(call), install("sd") ) ;
+SEXP res = PROTECT( eval( call, R_GlobalEnv ) );
+UNPROTECT(2) ;
+return res ;
+\end{example}
+
+
+
+\section{Limitations}
 
 
 \section{Summary}
