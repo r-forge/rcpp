@@ -601,6 +601,21 @@ R API & 34 \\
 
 \section{Summary}
 
+The \code{Rcpp} package provides comprehensive set of C++
+classes aimed at significantly reducing the complexity and
+discipline involved in combining R with compiled code.
+
+By assuming the responsibility of protection against garbage
+collection automatically and transparently and encapsulating R objects
+in C++ classes, \pkg{Rcpp} empowers the developper to concentrate on 
+the problem at hand instead of manually keeping track of 
+the \code{PROTECT}/\code{UNPROTECT} dance and without requiring 
+the expertise of knowing the details of the many macros and functions
+of the R internal API.
+
+Evidently, C++ has a price and we have shown how to take advantage
+of \code{Rcpp} to reduce --- if not eliminate --- the overhead while
+significantly improving code clarity and maintainability. 
 
 
 \bibliography{EddelbuettelFrancois}
