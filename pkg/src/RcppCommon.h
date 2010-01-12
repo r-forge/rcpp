@@ -50,7 +50,7 @@
 #include <R_ext/Callbacks.h>
 #include <R_ext/Complex.h>
 #include <Rversion.h>
-#define GET_NAMES(x)	Rf_getAttrib(x, R_NamesSymbol)
+#define RCPP_GET_NAMES(x)	Rf_getAttrib(x, R_NamesSymbol)
 
 // #ifdef BUILDING_DLL
 // #define RcppExport extern "C" __declspec(dllexport)
