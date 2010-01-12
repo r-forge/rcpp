@@ -3,7 +3,11 @@
 
 \maketitle
 
-\abstract{
+\abstract{TBD}
+
+\section{Introduction}
+
+\subsection{Overview}
 The \pkg{Rcpp} package provides a consistent and comprehensive set 
 of C++ classes designed to ease coupling of C++ code
 with R. The \code{RObject} class is responsible for 
@@ -20,7 +24,6 @@ into an R function without leaving the R console.
 This article reviews some of the design choices of the
 \pkg{Rcpp} package, in particular with respect to existing solutions
 that deal with coupling R and C++ and shows several use cases.
-}
 
 Writing R Extensions \citep{R:exts} provides extensive documentation about the 
 various ways to couple R with code written in C. 
@@ -35,6 +38,78 @@ The \pkg{Rcpp} package makes extensive use of C++ features (encapsulation,
 constructors, destructors, operator overloading, templates) in order
 to hide the complexity of the R API --- without losing its 
 efficiency --- under the carpet of object orientation. 
+
+\subsection{Background}
+
+The first public version of \pkg{Rcpp} was released in 2005 as a contribution
+to the \pkg{RQuantLib} package.  \pkg{Rcpp} was then released in a package of
+the same name in early 2006 which was following by several releases. It was
+then renamed to \pkg{RcppTemplate} and had several more releases during 2006.
+However, no releases or updates were made during 2007 and 2008.  
+
+Given the continued use of package, it was revived and using the former name
+\pkg{Rcpp}. New releases started in November 2008 which include an improved
+build and distribution process, additional documentation, new
+functionality---while retaining the existing interface.  This constitutes the
+`classic \pkg{Rcpp}' interface (see section FOO) which will be provided for
+the forseeable future.
+
+Yet C++ coding standards continued to evolved. So, in late 2009 the codebase
+was significantly extended and numerous new features were added.  Several of
+these are described below in section BAR. This constitutes the `enhanced
+\pkg{Rcpp}' interface which we also intend to support going forward.
+
+\subsection{Comparison}
+
+Integration of C++ and R has been addressed by several authors starting with
+\cite{batesdebroy01:cppclasses}. \cite{javagailemanly07:r_cpp}, in an
+unpublished paper, express several ideas that are close to some of our
+approaches, though not yet fully fleshed out.
+
+Rserve was early with C++ use in one of its clients and also wrapped SEXP
+objects. 
+
+CXXR comes from the other side and aims to rebuild R using a C++.
+
+rppbind ...
+
+Whit A ...
+
+RcppTemplate recently decided to break with the `classic \pkg{Rcpp}'  API.
+
+
+\section{Classic Rcpp}
+
+\pkg{Rcpp} is focussed on function in the standard sense of returning one (or
+more) results given inputs. An illustration can be provided using the
+time-tested example of a convolution of two vectors \citep{R:exts} but now
+rewritten using \pkg{Rcpp}.
+
+\begin{example}
+#include <Rcpp.h>
+
+RcppExport SEXP convolve2cpp(SEXP a, SEXP b) \{
+  RcppVector<double> xa(a);
+  RcppVector<double> xb(b);
+  int nab = xa.size() + xb.size() - 1;
+
+  RcppVector<double> xab(nab);
+  for (int i = 0; i < nab; i++) xab(i) = 0.0;
+
+  for (int i = 0; i < xa.size(); i++)
+    for (int j = 0; j < xb.size(); j++) 
+       xab(i + j) += xa(i) * xb(j);
+
+  RcppResultSet rs;
+  rs.add("ab", xab);
+  return rs.getReturnList();
+\}
+\end{example}
+
+\section{inline code}
+
+TBD (Dirk), maybe also something about deployment (update.package() bring new
+versiosn, Rcpp:::CxxFlags() and friends, dynamic linking)
 
 \section{\pkg{Rcpp} C++ classes}
 
@@ -305,20 +380,6 @@ vector<int> x = as< vector<int> >(x) ;
 \section{external pointers}
 
 factor this out from romain's blog
-
-\section{inline code}
-
-dirk ?
-
-\section{others}
-
-CXXR;
-Rserve C++ client;
-RcppTemplate;
-rcppbind;
-...
-
-\section{Rcpp vintage api}
 
 
 \section{Summary}
