@@ -62,15 +62,4 @@ namespace Rcpp{
 	}
 #endif
 
-Rbyte& RawVector::operator[]( int i ) const throw(index_out_of_bounds){ 
-	if( i<0 || i>= length() ) throw index_out_of_bounds() ;
-	return RAW(m_sexp)[i] ;
-}
-Rbyte* RawVector::begin() const { 
-	return RAW(m_sexp) ;
-}
-Rbyte* RawVector::end() const { 
-	return RAW(m_sexp) + LENGTH(m_sexp);
-}
-
 } // namespace 

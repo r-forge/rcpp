@@ -54,12 +54,11 @@ public:
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
-	typedef Rboolean* iterator ;
-	typedef Rboolean value_type ;
+	typedef int* iterator ;
 	
-	int& operator[]( int i ) const throw(index_out_of_bounds) ;
-	int* begin() const ; 
-	int* end() const ;
+	inline int& operator[]( int i ) const { return LOGICAL(m_sexp)[i] ;}
+	inline int* begin() const { return LOGICAL(m_sexp) ; }
+	inline int* end() const { return LOGICAL(m_sexp) + LENGTH(m_sexp); }
 	
 } ;
 
