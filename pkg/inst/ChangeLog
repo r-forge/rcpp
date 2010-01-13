@@ -6,9 +6,11 @@
 	Environment env("package:stats") ;
 	Function f = env["rnorm"] ;
 
-	* src/Rcpp/NumericVector.h: operator[] is promoted to inline
-
-	
+	* src/Rcpp/NumericVector.h: operator[], begiun and end are
+	promoted to inline member functions
+	* src/Rcpp/IntegerVector.h: idem
+	* src/Rcpp/RawVector.h: idem
+	* src/Rcpp/LogicalVector.h: idem
 
 2010-01-12  Dirk Eddelbuettel  <edd@debian.org>
 

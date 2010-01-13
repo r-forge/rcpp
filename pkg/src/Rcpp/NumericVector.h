@@ -56,8 +56,8 @@ public:
 	inline double& operator[]( const int& i ) { return REAL(m_sexp)[i]; }
 	inline const double& operator[]( const int& i ) const { return REAL(m_sexp)[i]; }
 	
-	double* begin() const ; 
-	double* end() const ;
+	inline double* begin() const { return REAL(m_sexp) ; } 
+	inline double* end() const   { return REAL(m_sexp)+LENGTH(m_sexp);}
 	
 	typedef double* iterator ;
 	

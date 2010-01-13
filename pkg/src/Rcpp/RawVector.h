@@ -53,9 +53,9 @@ public:
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
-	Rbyte& operator[]( int i ) const throw(index_out_of_bounds) ;
-	Rbyte* begin() const ; 
-	Rbyte* end() const ;
+	inline Rbyte& operator[]( int i ) const { return RAW(m_sexp)[i] ; }
+	inline Rbyte* begin() const { return RAW(m_sexp) ; }
+	inline Rbyte* end() const { return RAW(m_sexp) + LENGTH(m_sexp) ; }
 	
 	typedef Rbyte* iterator ;
 	

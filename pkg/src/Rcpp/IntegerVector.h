@@ -53,9 +53,9 @@ public:
 	 */
 	inline int size() const { return Rf_length( m_sexp ) ; }
 	
-	int& operator[]( int i ) const throw(index_out_of_bounds) ;
-	int* begin() const ; 
-	int* end() const ;
+	inline int& operator[]( int i ) const{ return INTEGER(m_sexp)[i] } ;
+	inline int* begin() const { return INTEGER(m_sexp) ; }
+	inline int* end() const { return INTEGER(m_sexp) + LENGTH(m_sexp) ; }
 	
 	typedef int* iterator ;
 	

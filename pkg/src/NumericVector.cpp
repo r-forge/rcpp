@@ -59,11 +59,4 @@ namespace Rcpp{
 	}
 #endif
 
-double* NumericVector::begin() const { 
-	return REAL(m_sexp) ;
-}
-double* NumericVector::end() const { 
-	return REAL(m_sexp) + LENGTH(m_sexp);
-}
-
 } // namespace 

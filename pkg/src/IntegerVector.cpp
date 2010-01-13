@@ -60,15 +60,4 @@ namespace Rcpp{
 	}
 #endif
 
-int& IntegerVector::operator[]( int i ) const throw(index_out_of_bounds) { 
-	if( i < 0 || i >= length() ) throw index_out_of_bounds() ;
-	return INTEGER(m_sexp)[i] ;
-}
-int* IntegerVector::begin() const { 
-	return INTEGER(m_sexp) ;
-}
-int* IntegerVector::end() const { 
-	return INTEGER(m_sexp) + LENGTH(m_sexp);
-}
-
 } // namespace 
