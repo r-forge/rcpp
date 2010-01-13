@@ -89,6 +89,11 @@ GenericVector::Proxy& GenericVector::Proxy::operator=( SEXP rhs){
 	return *this ;
 }
 
+GenericVector::Proxy& GenericVector::Proxy::operator=( const Environment::Binding& rhs){
+	SET_VECTOR_ELT( parent, index, rhs ) ;
+	return *this ;
+}
+
 const GenericVector::Proxy GenericVector::operator[](int i) const throw(index_out_of_bounds){
 	if( i<0 || i>=length()) throw index_out_of_bounds() ;
 	return Proxy(const_cast<GenericVector&>(*this), i) ;
