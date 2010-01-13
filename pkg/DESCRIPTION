@@ -21,5 +21,5 @@ Description: R/C++ interface classes and examples
 Depends: R (>= 2.0.0)
 Suggests: inline (>= 0.3.4), RUnit 
 SystemRequirements: None
-URL: http://dirk.eddelbuettel.com/code/rcpp.html
+URL: http://dirk.eddelbuettel.com/code/rcpp.html, http://romainfrancois.blog.free.fr/index.php?category/R-package/Rcpp
 License: GPL (>= 2)
