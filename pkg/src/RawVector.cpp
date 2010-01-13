@@ -26,7 +26,7 @@
 
 namespace Rcpp{
 	
-	RawVector::RawVector(SEXP x) throw(not_compatible) : RObject() {
+	RawVector::RawVector(SEXP x) throw(not_compatible) : VectorBase() {
 		switch( TYPEOF( x ) ){
 			case RAWSXP:
 				setSEXP( x ) ;
@@ -41,18 +41,18 @@ namespace Rcpp{
 		}
 	}
 	
-	RawVector::RawVector(int size) : RObject() {
+	RawVector::RawVector(int size) : VectorBase() {
 		setSEXP( Rf_allocVector(RAWSXP, size) ) ;
 	}
 
 #ifdef HAS_INIT_LISTS
-	RawVector::RawVector( std::initializer_list<int> list ) {
+	RawVector::RawVector( std::initializer_list<int> list ) : VectorBase() {
 		SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), RAW(x) ); 
 		setSEXP(x) ;
 		UNPROTECT( 1 ); /* x */
 	}
-	RawVector::RawVector( std::initializer_list<Rbyte> list ) {
+	RawVector::RawVector( std::initializer_list<Rbyte> list ) : VectorBase() {
 		/* FIXME: we need to take care of coercion, so 
 		transform is probably better */
 		SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;

@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/VectorBase.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
@@ -32,7 +33,7 @@
 
 namespace Rcpp{ 
 
-class ExpressionVector : public RObject {     
+class ExpressionVector : public VectorBase {     
 public:
 
 	/* much inspired from item 30 of more effective C++ */
@@ -64,19 +65,6 @@ public:
 #ifdef HAS_INIT_LISTS	
 	ExpressionVector( std::initializer_list<RObject> list ) ;
 #endif
-
-	/**
-	 * the length of the vector, uses Rf_length
-	 */
-	inline int length() const { return Rf_length( m_sexp ) ; }
-
-	/**
-	 * alias of length
-	 */
-	inline int size() const { return Rf_length( m_sexp ) ; }
-
-	SEXP* begin(); 
-	SEXP* end() ;
 
 	const Proxy operator[]( int i ) const throw(index_out_of_bounds);
 	Proxy operator[]( int i ) throw(index_out_of_bounds) ;

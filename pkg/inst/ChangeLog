@@ -2,6 +2,7 @@
 
 	* src/Rcpp/VectorBase.h: new virtual class Rcpp::VectorBase
 	to manage common things of all vectors (length, names, etc ...)
+	all Vector classes now derive from VectorBase
 
 	* src/Rcpp/Environment.h: Environment::Binding gains a templated
 	conversion operator, to facilitate distance 2 implicit conversion

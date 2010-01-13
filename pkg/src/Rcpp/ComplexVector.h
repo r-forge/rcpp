@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/VectorBase.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
@@ -32,7 +33,7 @@
 
 namespace Rcpp{ 
 
-class ComplexVector : public RObject {     
+class ComplexVector : public VectorBase {     
 public:
 
 	ComplexVector(SEXP x) throw(not_compatible);
@@ -42,19 +43,9 @@ public:
 	ComplexVector( std::initializer_list<Rcomplex> list ) ;
 #endif
 	
-	/**
-	 * the length of the vector, uses Rf_length
-	 */
-	inline int length() const { return Rf_length( m_sexp ) ; }
-	
-	/**
-	 * alias of length
-	 */
-	inline int size() const { return Rf_length( m_sexp ) ; }
-	
-	Rcomplex& operator[]( int i ) const throw(index_out_of_bounds) ;
-	Rcomplex* begin() const ; 
-	Rcomplex* end() const ;
+	inline Rcomplex& operator[]( int i ) const { return COMPLEX(m_sexp)[i] ; } 
+	inline Rcomplex* begin() const { return COMPLEX(m_sexp) ; } 
+	inline Rcomplex* end() const { return COMPLEX(m_sexp) + LENGTH(m_sexp) ; }
 	
 	typedef Rcomplex* iterator ;
 	

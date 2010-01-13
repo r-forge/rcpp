@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/VectorBase.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
@@ -32,7 +33,7 @@
 
 namespace Rcpp{ 
 
-class NumericVector : public RObject {     
+class NumericVector : public VectorBase {     
 public:
 
 	NumericVector(SEXP x) throw(not_compatible);
@@ -42,25 +43,15 @@ public:
 	NumericVector( std::initializer_list<int> list ) ;
 	NumericVector( std::initializer_list<double> list ) ;
 #endif
-	
-	/**
-	 * the length of the vector, uses Rf_length
-	 */
-	inline int length() const { return LENGTH( m_sexp ) ; }
-	
-	/**
-	 * alias of length
-	 */
-	inline int size() const { return LENGTH( m_sexp ) ; }
-	
+
 	inline double& operator[]( const int& i ) { return REAL(m_sexp)[i]; }
 	inline const double& operator[]( const int& i ) const { return REAL(m_sexp)[i]; }
-	
+
 	inline double* begin() const { return REAL(m_sexp) ; } 
 	inline double* end() const   { return REAL(m_sexp)+LENGTH(m_sexp);}
-	
+
 	typedef double* iterator ;
-	
+
 } ;
 
 } // namespace
