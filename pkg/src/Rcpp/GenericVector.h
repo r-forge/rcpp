@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/Environment.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
@@ -49,6 +50,7 @@ public:
 			SET_VECTOR_ELT( parent, index, wrap(rhs) ) ;
 			return *this; 
 		}
+		Proxy& operator=( const Environment::Binding& rhs) ;
 		
 		/* rvalue use */
 		operator SEXP() const ;

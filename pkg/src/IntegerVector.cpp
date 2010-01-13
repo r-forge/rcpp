@@ -26,7 +26,7 @@
 
 namespace Rcpp{
 	
-	IntegerVector::IntegerVector(SEXP x) throw(not_compatible) : RObject() {
+	IntegerVector::IntegerVector(SEXP x) throw(not_compatible) : VectorBase() {
 		switch( TYPEOF( x ) ){
 			case INTSXP:
 				setSEXP( x ) ;
@@ -41,7 +41,7 @@ namespace Rcpp{
 		}
 	}
 	
-	IntegerVector::IntegerVector(int size) : RObject() {
+	IntegerVector::IntegerVector(int size) : VectorBase() {
 		setSEXP( Rf_allocVector(INTSXP, size) ) ;
 	}
 

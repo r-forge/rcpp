@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// IntegerVector.h: Rcpp R/C++ interface class library -- integer vectors
+// VectorBase.h: Rcpp R/C++ interface class library -- base class for all vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,36 +19,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef Rcpp_IntegerVector_h
-#define Rcpp_IntegerVector_h
+#ifndef Rcpp_VectorBase_h
+#define Rcpp_VectorBase_h
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
-#include <Rcpp/VectorBase.h>
-
-#ifdef HAS_INIT_LISTS
-#include <initializer_list>
-#include <algorithm>
-#endif
 
 namespace Rcpp{ 
 
-class IntegerVector : public VectorBase {     
+class VectorBase : public RObject {     
 public:
-
-	IntegerVector(SEXP x) throw(not_compatible);
-	IntegerVector( int size) ;
 	
-#ifdef HAS_INIT_LISTS	
-	IntegerVector( std::initializer_list<int> list ) ;
-	IntegerVector( std::initializer_list<double> list ) ;
-#endif
-
-	inline int& operator[]( int i ) const{ return INTEGER(m_sexp)[i] ; }
-	inline int* begin() const { return INTEGER(m_sexp) ; }
-	inline int* end() const { return INTEGER(m_sexp) + LENGTH(m_sexp) ; }
+	VectorBase() ;
+	virtual ~VectorBase() = 0;
 	
-	typedef int* iterator ;
+	/**
+	 * the length of the vector, uses Rf_length
+	 */
+	inline int length() const { return Rf_length( m_sexp ) ; }
+	
+	/**
+	 * alias of length
+	 */
+	inline int size() const { return Rf_length( m_sexp ) ; }
 	
 } ;
 

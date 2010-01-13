@@ -1,10 +1,17 @@
 2010-01-13  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/VectorBase.h: new virtual class Rcpp::VectorBase
+	to manage common things of all vectors (length, names, etc ...)
+
 	* src/Rcpp/Environment.h: Environment::Binding gains a templated
 	conversion operator, to facilitate distance 2 implicit conversion
 	making this possible: 
 	Environment env("package:stats") ;
 	Function f = env["rnorm"] ;
+
+	* src/Rcpp/GenericVector.h: GenericVector::Proxy gains an 
+	assignement operator to deal with Environment::Binding. This is
+	to work around distance 1 implicit conversion restrictions
 
 	* src/Rcpp/NumericVector.h: operator[], begiun and end are
 	promoted to inline member functions
