@@ -1,3 +1,23 @@
+2010-01-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.7.2
+
+	* debian/*: Similarly updated for new release to Debian
+
+	* .Rbuildignore: Add 'inst/doc/{html,latex,man} as we no
+	  longer ship the voluminous doxygen-generated content
+
+	* inst/doc/examples/ConvolveBenchmarks/convolve2*: Added simple
+	  benchmark on the well-known vector convolution example from
+	  'Writing R Extensions' to compare C and C++ implementations
+	* inst/doc/examples/ConvolveBenchmarks/buildAndRun.sh: idem
+	  inst/doc/examples/ConvolveBenchmarks/exampleRCode.r: idem
+
+2010-01-12  Romain Francois <francoisromain@free.fr>
+
+	* inst/doc/examples/ConvolveBenchmarks/convolve2*: Added additional
+	C++ examples to convolution benchmark highlighting performance gains
+
 2010-01-11  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/CharacterVector.h: StringProxy gains operator+=
@@ -180,12 +200,12 @@
 
 	* src/Rcpp/Function.h: new class Rcpp::Function to manage functions
 	(closures, primitives and builtins) all share the Function class
-	(at least for now). This is implemented as a functor taking 
-	variable number of arguments, so it looks pretty similar to the 
+	(at least for now). This is implemented as a functor taking
+	variable number of arguments, so it looks pretty similar to the
 	R function
-	
+
 	* src/Function.cpp: implementation
-	
+
 	* inst/unitTests/runit.Function.R: unit tests
 
 	* src/Rcpp/Pairlist.h: new class Rcpp::Pairlist to manage dotted
@@ -197,18 +217,18 @@
 	* inst/unitTests/runit.Pairlist.R: unit tests for Rcpp::Pairlist
 
 	* src/Rcpp/wrap.h: wrap no more a template. this was not a good
-	idea as it prevented implicit conversion to SEXP behavior when 
+	idea as it prevented implicit conversion to SEXP behavior when
 	wrap'ing a RObject.
 
 	* src/Rcpp/Environment.h: added the remove method
-	
+
 	* src/unitTests/runit.environments.R: remove unit test
 
 	* src/unitTests/runit.Language.R: remove verbose=TRUE in cfunction
 	call (generated noise)
 
-	* src/wrap.cpp: added a few missing PROTECT 
-	
+	* src/wrap.cpp: added a few missing PROTECT
+
 2010-01-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/excections.cpp: Get rid of another unused variable
