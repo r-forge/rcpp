@@ -26,7 +26,7 @@
 
 namespace Rcpp{
 	
-	LogicalVector::LogicalVector(SEXP x) throw(not_compatible) : RObject() {
+	LogicalVector::LogicalVector(SEXP x) throw(not_compatible) : VectorBase() {
 		switch( TYPEOF( x ) ){
 			case LGLSXP:
 				setSEXP( x ) ;
@@ -41,24 +41,24 @@ namespace Rcpp{
 		}
 	}
 	
-	LogicalVector::LogicalVector(int size) : RObject() {
+	LogicalVector::LogicalVector(int size) : VectorBase() {
 		setSEXP( Rf_allocVector(LGLSXP, size) ) ;
 	}
 
 #ifdef HAS_INIT_LISTS
-	LogicalVector::LogicalVector( std::initializer_list<int> list ) {
+	LogicalVector::LogicalVector( std::initializer_list<int> list ) : VectorBase(){
 		SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), INTEGER(x) ); 
 		setSEXP( Rf_coerceVector( x, LGLSXP ) ) ;
 		UNPROTECT( 1 ); /* x */
 	}
-	LogicalVector::LogicalVector( std::initializer_list<Rboolean> list ) {
+	LogicalVector::LogicalVector( std::initializer_list<Rboolean> list ): VectorBase() {
 		SEXP x = PROTECT( Rf_allocVector( LGLSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), LOGICAL(x) ); 
 		setSEXP(x) ;
 		UNPROTECT( 1 ); /* x */
 	}
-	LogicalVector::LogicalVector( std::initializer_list<bool> list ) {
+	LogicalVector::LogicalVector( std::initializer_list<bool> list ) : VectorBase(){
 		SEXP x = PROTECT( Rf_allocVector( LGLSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), LOGICAL(x) ); 
 		setSEXP(x) ;

@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/VectorBase.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
@@ -32,7 +33,7 @@
 
 namespace Rcpp{ 
 
-class RawVector : public RObject {     
+class RawVector : public VectorBase {     
 public:
 
 	RawVector(SEXP x) throw(not_compatible);
@@ -42,16 +43,6 @@ public:
 	RawVector( std::initializer_list<Rbyte> list ) ;
 	RawVector( std::initializer_list<int> list ) ;
 #endif
-	
-	/**
-	 * the length of the vector, uses Rf_length
-	 */
-	inline int length() const { return Rf_length( m_sexp ) ; }
-	
-	/**
-	 * alias of length
-	 */
-	inline int size() const { return Rf_length( m_sexp ) ; }
 	
 	inline Rbyte& operator[]( int i ) const { return RAW(m_sexp)[i] ; }
 	inline Rbyte* begin() const { return RAW(m_sexp) ; }

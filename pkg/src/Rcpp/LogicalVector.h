@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/VectorBase.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
@@ -32,7 +33,7 @@
 
 namespace Rcpp{ 
 
-class LogicalVector : public RObject {     
+class LogicalVector : public VectorBase {     
 public:
 
 	LogicalVector(SEXP x) throw(not_compatible);
@@ -43,16 +44,6 @@ public:
 	LogicalVector( std::initializer_list<Rboolean> list ) ;
 	LogicalVector( std::initializer_list<bool> list ) ;
 #endif
-	
-	/**
-	 * the length of the vector, uses Rf_length
-	 */
-	inline int length() const { return Rf_length( m_sexp ) ; }
-	
-	/**
-	 * alias of length
-	 */
-	inline int size() const { return Rf_length( m_sexp ) ; }
 	
 	typedef int* iterator ;
 	

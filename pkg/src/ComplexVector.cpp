@@ -26,7 +26,7 @@
 
 namespace Rcpp{
 	
-	ComplexVector::ComplexVector(SEXP x) throw(not_compatible) : RObject() {
+	ComplexVector::ComplexVector(SEXP x) throw(not_compatible) : VectorBase() {
 		switch( TYPEOF( x ) ){
 			case CPLXSXP:
 				setSEXP( x ) ;
@@ -42,28 +42,17 @@ namespace Rcpp{
 		}
 	}
 	
-	ComplexVector::ComplexVector(int size) : RObject() {
+	ComplexVector::ComplexVector(int size) : VectorBase() {
 		setSEXP( Rf_allocVector(CPLXSXP, size) ) ;
 	}
 
 #ifdef HAS_INIT_LISTS	
-	ComplexVector::ComplexVector( std::initializer_list<Rcomplex> list ) {
+ComplexVector::ComplexVector( std::initializer_list<Rcomplex> list ) : VectorBase() {
 		SEXP x = PROTECT( Rf_allocVector( CPLXSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), COMPLEX(x) ); 
 		setSEXP(x) ;
 		UNPROTECT( 1 ); /* x */
 	}
 #endif
-
-Rcomplex& ComplexVector::operator[]( int i ) const throw(index_out_of_bounds){ 
-	if( i<0 || i>= length()) throw index_out_of_bounds() ;
-	return COMPLEX(m_sexp)[i] ;
-}
-Rcomplex* ComplexVector::begin() const { 
-	return COMPLEX(m_sexp) ;
-}
-Rcomplex* ComplexVector::end() const { 
-	return COMPLEX(m_sexp) + LENGTH(m_sexp);
-}
 
 } // namespace 

@@ -25,7 +25,7 @@
 
 namespace Rcpp{
 	
-	NumericVector::NumericVector(SEXP x) throw(not_compatible) : RObject() {
+	NumericVector::NumericVector(SEXP x) throw(not_compatible) : VectorBase() {
 		switch( TYPEOF( x ) ){
 			case REALSXP:
 				setSEXP( x ) ;
@@ -40,18 +40,18 @@ namespace Rcpp{
 		}
 	}
 	
-	NumericVector::NumericVector(int size) : RObject() {
+	NumericVector::NumericVector(int size) : VectorBase() {
 		setSEXP( Rf_allocVector(REALSXP, size) ) ;
 	}
 
 #ifdef HAS_INIT_LISTS	
-	NumericVector::NumericVector( std::initializer_list<int> list ) {
+NumericVector::NumericVector( std::initializer_list<int> list ) : VectorBase() {
 		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), REAL(x) ); 
 		setSEXP(x) ;
 		UNPROTECT( 1 ); /* x */
 	}
-	NumericVector::NumericVector( std::initializer_list<double> list ) {
+	NumericVector::NumericVector( std::initializer_list<double> list ) : VectorBase() {
 		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), REAL(x) ); 
 		setSEXP(x) ;
