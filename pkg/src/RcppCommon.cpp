@@ -4,6 +4,7 @@
 //
 // Copyright (C) 2005 - 2006 Dominick Samperi
 // Copyright (C) 2008 - 2009 Dirk Eddelbuettel
+// Copyright (C) 2010 Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -136,4 +137,54 @@ const char * const sexp_to_name(int sexp_type) {
     }
 }
 
+/* garbage collection machinery */
+// static SEXP Rcpp_PreciousList = NULL ;
+
+SEXP initRcpp(){
+	initUncaughtExceptionHandler() ;
+	// Rcpp_PreciousList = R_NilValue ;
+	// R_PreserveObject(Rcpp_PreciousList) ;
+	return R_NilValue ;
+}
+
+// later
+// static SEXP ReleaseObj(SEXP object, SEXP list) {
+// 	if (!Rf_isNull(list)) {
+// 		if (CAR(list) != object) {
+// 			SEXP c = list;
+// 			while (!Rf_isNull(CDR(c))) {
+// 				if (CADR(c) == object) {
+// 					SETCDR(c, CDDR(c));
+// 					break;
+// 				}
+// 				c = CDR(c);
+// 			}
+// 		} else return CDR(list);
+// 	}
+// 	return list;
+// }
+// 
+// 
+// void Rcpp_PreserveObject(SEXP object){
+// 	Rcpp_PreciousList = Rf_cons(object, Rcpp_PreciousList);
+// 	// Rprintf( "preserve, stack size: %d\n", stacksize) ;
+// 	// R_PreserveObject(object);
+// }
+// void Rcpp_ReleaseObject(SEXP object){
+// 	// Rprintf( "release , stack size: %d\n", stacksize) ;
+// 	// R_ReleaseObject(object);
+// 	// if (CAR(Rcpp_PreciousList) == object) {
+// 	// 	Rcpp_PreciousList = CDR(Rcpp_PreciousList);
+// 	// } else {
+// 	// 	SEXP c = Rcpp_PreciousList;
+// 	// 	while (!Rf_isNull(CDR(c))) {
+// 	// 		if (CADR(c) == object) {
+// 	// 			SETCDR(c, CDDR(c));
+// 	// 			break;
+// 	// 		}
+// 	// 		c = CDR(c) ;
+// 	// 	}
+// 	// } 
+// 	Rcpp_PreciousList = ReleaseObj( object, Rcpp_PreciousList) ;
+// }
 

@@ -88,4 +88,8 @@ RcppExport SEXP capabilities() ;
 
 const char * const sexp_to_name(int sexp_type); 
 
+RcppExport SEXP initRcpp() ;
+void Rcpp_PreserveObject(SEXP object) ;
+void Rcpp_ReleaseObject(SEXP object) ;
+
 #endif

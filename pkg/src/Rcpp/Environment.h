@@ -223,6 +223,14 @@ public:
     	     */
     	    operator RObject() const ;
     	    
+    	    template <typename T> 
+    	    operator T() const{
+    	    	    SEXP x = env.get(name) ;
+    	    	    T t(x) ;
+    	    	    return t; 
+    	    }
+    	    
+    	    
     private:
     	    /**
     	     * Reference to the environment if the binding

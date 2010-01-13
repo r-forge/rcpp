@@ -46,14 +46,16 @@ public:
 	/**
 	 * the length of the vector, uses Rf_length
 	 */
-	inline int length() const { return Rf_length( m_sexp ) ; }
+	inline int length() const { return LENGTH( m_sexp ) ; }
 	
 	/**
 	 * alias of length
 	 */
-	inline int size() const { return Rf_length( m_sexp ) ; }
+	inline int size() const { return LENGTH( m_sexp ) ; }
 	
-	double& operator[]( int i ) const throw(index_out_of_bounds) ;
+	inline double& operator[]( const int& i ) { return REAL(m_sexp)[i]; }
+	inline const double& operator[]( const int& i ) const { return REAL(m_sexp)[i]; }
+	
 	double* begin() const ; 
 	double* end() const ;
 	
