@@ -44,21 +44,17 @@ v7 <- .Call("convolve7", a, b)
 t7 <- system.time(replicate(1000, .Call("convolve7", a, b)))
 
 
-
-cat( "Writing R extensions:\n" )
-print(t1)
-cat( "\nLess careful use of R API\n")
-print(t7)
-cat( "\nRcppVector<double>::operator()\n")
-print(t2)
-cat( "\nRcpp::NumericVector::operator[]\n")
-print(t3)
-cat( "\nRcpp::NumericVector::begin()\n")
-print(t4)
+res <- data.frame(rbind(t1, t7, t2, t3, t4))
+rownames(res) <- c("Writing R extensions",
+                   "Less careful use of R API",
+                   "RcppVector<double>::operator()",
+                   "Rcpp::NumericVector::operator[]",
+                   "Rcpp::NumericVector::begin()")
+print(res)
 
 results <- list( v1, v2, v3, v4, v7)
-for( i in seq_along(results) ){
-	stopifnot( identical(results[[1L]], results[[i]] ) )
+for (i in seq_along(results) ){
+    stopifnot( all.equal(results[[1L]], results[[i]] ) )
 }
-
+cat("All results are equal\n") # as we didn't get stopped
 
