@@ -7,7 +7,6 @@
 SEXP convolve7(SEXP a, SEXP b)
 {
     int i, j, na, nb, nab;
-    double *xa, *xb, *xab;
     SEXP ab;
 
     PROTECT(a = AS_NUMERIC(a));
