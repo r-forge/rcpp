@@ -1,5 +1,11 @@
 2010-01-13  Romain Francois <francoisromain@free.fr>
 
+	* R/cpp.package.skeleton.R: new function cpp.package.skeleton
+	to extend the code generation performed by package.skeleton
+	to Rcpp features
+
+	* man/cpp.package.skeleton.Rd: documentation for cpp.package.skeleton
+
 	* src/Rcpp/VectorBase.h: new virtual class Rcpp::VectorBase
 	to manage common things of all vectors (length, names, etc ...)
 	all Vector classes now derive from VectorBase
