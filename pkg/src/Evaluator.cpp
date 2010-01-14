@@ -23,27 +23,33 @@
 #include <Rcpp/Environment.h>
 
 namespace Rcpp {
-	
-    Evaluator::Evaluator( SEXP expression = R_NilValue) : 
-	expression(expression),
-	error_occured(false), 
-	result(),
-	error() {}
-	
-    Evaluator::~Evaluator(){} 
-	
-    void Evaluator::run(SEXP env ) throw() {
-	Environment rcpp = Environment::namespace_env("Rcpp") ;
-	SEXP call = Rf_lang3( Rf_install("protectedEval"), expression, env ) ;
-	result = wrap( Rf_eval( call, rcpp ) ); 
-	error_occured = LOGICAL( Rf_eval( Rf_lang1( Rf_install("errorOccured")) , rcpp) )[0] ;
-	if( error_occured ){
-	    error = wrap( Rf_eval( Rf_lang1(Rf_install("getCurrentError")) , rcpp) );
+
+    Evaluator::eval_error::eval_error( const std::string& message) throw() :
+    	message(message){}
+    Evaluator::eval_error::~eval_error( ) throw(){} ;
+    const char* Evaluator::eval_error::what() const throw(){ return message.c_str() ; }
+
+   SEXP Evaluator::run(SEXP expr, SEXP env) throw(eval_error) {
+	int error = 0 ;
+	SEXP res = PROTECT( R_tryEval( expr, env, &error ) ) ;
+	if( error ){
+		UNPROTECT( 1 ) ; /* res */
+		SEXP message = PROTECT( Rf_eval( Rf_lang1( Rf_install("geterrmessage") ), R_GlobalEnv ) );
+		std::string err_msg ;
+		if( TYPEOF( message ) == STRSXP && Rf_length( message ) ){
+			err_msg = CHAR( STRING_ELT( message, 0 ) ) ;
+		} else{
+			err_msg = "error with no message" ;
+		}
+		UNPROTECT(1) ; /* message */
+		throw eval_error( err_msg ) ;
+	} else {
+		UNPROTECT( 1) ; /* res */
+		return res ;
 	}
     }
     
-    void Evaluator::run() throw() {
-    	run( R_GlobalEnv) ;
+    SEXP Evaluator::run( SEXP expr) throw(eval_error){
+    	return run(expr, R_GlobalEnv );
     }
-
 } // namespace Rcpp

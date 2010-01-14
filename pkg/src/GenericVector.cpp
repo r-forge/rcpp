@@ -35,13 +35,13 @@ namespace Rcpp{
 				break ;
 			default:
 				{
-					Evaluator e( Rf_lang2( Symbol("as.list"), x ) ) ;
-					e.run() ;
-					if( e.successfull() ){
-						setSEXP( e.getResult() ) ;
-					} else{
+					SEXP res = R_NilValue ; 
+					try{
+						res = Evaluator::run( Rf_lang2( Rf_install( "as.list" ), x ) ) ;
+					} catch( const Evaluator::eval_error& ex){
 						throw not_compatible( "could not convert to a list" ) ;
 					}
+					setSEXP( res ) ;
 				}
 		}
 	}

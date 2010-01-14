@@ -53,18 +53,4 @@ namespace Rcpp {
 		return Environment( CLOENV(m_sexp) ) ;
 	}
 	
-	Function::eval_error::eval_error(const RObject& err) throw() : message(){
-		if( err.isNULL() ) {
-			message = "unknown error" ;
-		} else{
-			message = as<std::string>( Rf_eval( 
-				Rf_lang2( Rf_install("conditionMessage"), err), 
-				R_GlobalEnv ) );
-		}
-	}
-	Function::eval_error::~eval_error() throw(){}
-	const char* Function::eval_error::what() throw() {
-		return message.c_str() ;
-	}
-	
 } // namespace Rcpp
