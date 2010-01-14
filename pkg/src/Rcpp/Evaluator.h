@@ -24,26 +24,24 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
-#include <Rcpp/Environment.h>
 #include <Rcpp/wrap.h>
 
 namespace Rcpp{ 
 
 class Evaluator{
 public:
-    Evaluator(SEXP expression ) ;
-    ~Evaluator() ;
-    void run(SEXP env) throw() ;
-    void run() throw() ;
-    inline RObject getResult() const { return result ; }
-    inline RObject getError() const { return error ; }
-    inline bool successfull() const { return !error_occured ; }
-    
-private:		
-    SEXP expression ;
-    bool error_occured ;
-    RObject result ;
-    RObject error ;
+	
+	class eval_error : public std::exception{
+	public:
+		eval_error( const std::string& message ) throw() ;
+		~eval_error() throw() ;
+		const char* what() const throw() ;
+	private:
+		std::string message ;
+	} ;
+	
+	static SEXP run(SEXP expr) throw(eval_error) ; 
+	static SEXP run(SEXP expr, SEXP env) throw(eval_error) ;
 };
 
 } // namespace Rcpp

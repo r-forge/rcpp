@@ -47,18 +47,6 @@ public:
 	} ;
 	
 	/**
-	 * exception generated when a function calls generates an R error
-	 */
-	class eval_error : public std::exception{
-	public:
-		eval_error(const RObject& err) throw() ;
-		~eval_error() throw() ;
-		const char* what() throw() ;
-	private: 
-		std::string message ;
-	} ;
-	
-	/**
 	 * Attempts to convert the SEXP to a pair list
 	 *
 	 * @throw not_compatible if the SEXP could not be converted
@@ -77,16 +65,8 @@ public:
 	 */
 #ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
-	SEXP operator()( const Args&... args) throw(eval_error){
-		
-		/* FIXME: we should use applyClosure instead */
-		Evaluator evaluator( Rf_lcons( m_sexp, pairlist(args...) ) ) ; 
-		evaluator.run() ;
-		if( evaluator.successfull() ){
-			return evaluator.getResult() ;
-		} else{
-			throw eval_error( evaluator.getError() );
-		}
+	SEXP operator()( const Args&... args) throw(Evaluator::eval_error){
+		return Evaluator::run( Rf_lcons( m_sexp, pairlist(args...) ) ) ;
 	}
 #endif
 	

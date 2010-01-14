@@ -35,13 +35,13 @@ namespace Rcpp{
 				break ;
 			default:
 				{
-					Evaluator e( Rf_lang2( Symbol("as.expression"), x ) ) ;
-					e.run() ;
-					if( e.successfull() ){
-						setSEXP( e.getResult() ) ;
-					} else{
+					SEXP res = R_NilValue ;
+					try{
+						SEXP res = Evaluator::run( Rf_lang2( Rf_install("as.expression"), x ) ) ;
+					} catch( const Evaluator::eval_error& e){
 						throw not_compatible( "could not convert to an expression vector" ) ;
 					}
+					setSEXP( res ) ;
 				}
 		}
 	}

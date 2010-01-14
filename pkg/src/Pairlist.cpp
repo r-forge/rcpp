@@ -36,13 +36,13 @@ namespace Rcpp {
 					break ;
 				default:
 					{
-						Evaluator evaluator( Rf_lang2( Rf_install("as.pairlist"), x ) ) ;
-						evaluator.run() ;
-						if( evaluator.successfull() ){
-    							setSEXP( evaluator.getResult().asSexp() ) ;
-    						} else{
+						SEXP res= R_NilValue;
+						try{
+							res = Evaluator::run( Rf_lang2( Rf_install("as.pairlist"), x ) ) ;
+						} catch( const Evaluator::eval_error& ex){
     							throw not_compatible( "cannot convert to call (LANGSXP)" ) ; 
     						}
+    						setSEXP( res ) ;
 					}
 			}
 		}          
