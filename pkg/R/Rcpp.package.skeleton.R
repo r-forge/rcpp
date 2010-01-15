@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-cpp.package.skeleton <- function(
+Rcpp.package.skeleton <- function(
 	name = "anRpackage", list = character(), environment = .GlobalEnv,
 	path = ".", force = FALSE, namespace = TRUE, code_files = character() ){
 	
