@@ -44,12 +44,15 @@ public:
 	RawVector( std::initializer_list<int> list ) ;
 #endif
 	
-	inline Rbyte& operator[]( int i ) const { return RAW(m_sexp)[i] ; }
-	inline Rbyte* begin() const { return RAW(m_sexp) ; }
-	inline Rbyte* end() const { return RAW(m_sexp) + LENGTH(m_sexp) ; }
+	inline Rbyte& operator[]( int i ) const { return start[i] ; }
+	inline Rbyte* begin() const { return start ; }
+	inline Rbyte* end() const { return start + LENGTH(m_sexp) ; }
 	
 	typedef Rbyte* iterator ;
-	
+
+private:
+	Rbyte* start ;
+	inline void update(){ start=RAW(m_sexp); }
 } ;
 
 } // namespace

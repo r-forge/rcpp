@@ -4,6 +4,16 @@
 	improve performance of operator[]
 	* src/NumericVector.cpp: idem
 
+	* src/Rcpp/IntegerVector.h:
+	* src/Rcpp/RawVector.h:
+	* src/Rcpp/ComplexVector.h:
+	* src/Rcpp/LogicalVector.h: idem
+
+	* src/IntegerVector.cpp:
+	* src/RawVector.cpp:
+	* src/ComplexVector.cpp:
+	* src/LogicalVector.cpp: idem
+
 2010-01-13  Romain Francois <francoisromain@free.fr>
 
 	* R/cpp.package.skeleton.R: new function cpp.package.skeleton

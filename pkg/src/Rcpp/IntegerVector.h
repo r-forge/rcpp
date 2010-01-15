@@ -44,12 +44,15 @@ public:
 	IntegerVector( std::initializer_list<double> list ) ;
 #endif
 
-	inline int& operator[]( int i ) const{ return INTEGER(m_sexp)[i] ; }
-	inline int* begin() const { return INTEGER(m_sexp) ; }
-	inline int* end() const { return INTEGER(m_sexp) + LENGTH(m_sexp) ; }
+	inline int& operator[]( int i ) const{ return start[i] ; }
+	inline int* begin() const { return start ; }
+	inline int* end() const { return start + LENGTH(m_sexp) ; }
 	
 	typedef int* iterator ;
-	
+
+private:
+	int* start ;
+	inline void update(){ start = INTEGER(m_sexp) ;}
 } ;
 
 } // namespace

@@ -31,26 +31,29 @@
 #include <algorithm>
 #endif
 
-namespace Rcpp{ 
+namespace Rcpp{
 
 class LogicalVector : public VectorBase {     
 public:
 
 	LogicalVector(SEXP x) throw(not_compatible);
 	LogicalVector( int size) ;
-	
+
 #ifdef HAS_INIT_LISTS	
 	LogicalVector( std::initializer_list<int> list ) ;
 	LogicalVector( std::initializer_list<Rboolean> list ) ;
 	LogicalVector( std::initializer_list<bool> list ) ;
 #endif
-	
+
 	typedef int* iterator ;
-	
-	inline int& operator[]( int i ) const { return LOGICAL(m_sexp)[i] ;}
-	inline int* begin() const { return LOGICAL(m_sexp) ; }
-	inline int* end() const { return LOGICAL(m_sexp) + LENGTH(m_sexp); }
-	
+
+	inline int& operator[]( int i ) const { return start[i] ;}
+	inline int* begin() const { return start ; }
+	inline int* end() const { return start + LENGTH(m_sexp); }
+
+private:
+	int* start ;
+	inline void update(){ start=LOGICAL(m_sexp); }
 } ;
 
 } // namespace

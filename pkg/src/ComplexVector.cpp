@@ -26,31 +26,35 @@
 
 namespace Rcpp{
 	
-	ComplexVector::ComplexVector(SEXP x) throw(not_compatible) : VectorBase() {
+	ComplexVector::ComplexVector(SEXP x) throw(not_compatible) : VectorBase(), start(0) {
 		switch( TYPEOF( x ) ){
 			case CPLXSXP:
 				setSEXP( x ) ;
+				update() ;
 				break ;
 			case REALSXP:
 			case LGLSXP:
 			case RAWSXP:
 			case INTSXP:
 				setSEXP( Rf_coerceVector( x, CPLXSXP) ) ;
+				update() ;
 				break ;
 			default:
 				throw not_compatible( "cannot convert to complex vector" ) ;
 		}
 	}
 	
-	ComplexVector::ComplexVector(int size) : VectorBase() {
+	ComplexVector::ComplexVector(int size) : VectorBase(), start(0) {
 		setSEXP( Rf_allocVector(CPLXSXP, size) ) ;
+		update() ;
 	}
 
 #ifdef HAS_INIT_LISTS	
-ComplexVector::ComplexVector( std::initializer_list<Rcomplex> list ) : VectorBase() {
+ComplexVector::ComplexVector( std::initializer_list<Rcomplex> list ) : VectorBase(), start(0) {
 		SEXP x = PROTECT( Rf_allocVector( CPLXSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), COMPLEX(x) ); 
 		setSEXP(x) ;
+		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
 #endif

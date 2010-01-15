@@ -44,7 +44,7 @@ namespace Rcpp{
 	
 	NumericVector::NumericVector(int size) : VectorBase(), start(0) {
 		setSEXP( Rf_allocVector(REALSXP, size) ) ;
-		start = REAL(m_sexp) ;
+		update() ;
 	}
 
 #ifdef HAS_INIT_LISTS	
