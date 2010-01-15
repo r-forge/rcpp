@@ -143,6 +143,5 @@ const char* RObject::index_out_of_bounds::what( ) const throw() {
 	return "array or list out of bounds" ;
 }
 
-
 } // namespace Rcpp
 

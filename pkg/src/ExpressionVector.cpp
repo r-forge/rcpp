@@ -37,7 +37,7 @@ namespace Rcpp{
 				{
 					SEXP res = R_NilValue ;
 					try{
-						SEXP res = Evaluator::run( Rf_lang2( Rf_install("as.expression"), x ) ) ;
+						res = Evaluator::run( Rf_lang2( Rf_install("as.expression"), x ) ) ;
 					} catch( const Evaluator::eval_error& e){
 						throw not_compatible( "could not convert to an expression vector" ) ;
 					}

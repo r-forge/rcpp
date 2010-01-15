@@ -1,3 +1,9 @@
+2010-01-15  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/NumericVector.h: cache the start of the array to
+	improve performance of operator[]
+	* src/NumericVector.cpp: idem
+
 2010-01-13  Romain Francois <francoisromain@free.fr>
 
 	* R/cpp.package.skeleton.R: new function cpp.package.skeleton
