@@ -26,38 +26,41 @@
 
 namespace Rcpp{
 	
-	RawVector::RawVector(SEXP x) throw(not_compatible) : VectorBase() {
+	RawVector::RawVector(SEXP x) throw(not_compatible) : VectorBase(), start(0) {
 		switch( TYPEOF( x ) ){
 			case RAWSXP:
 				setSEXP( x ) ;
+				update() ;
 				break ;
 			case INTSXP:
 			case REALSXP:
 			case LGLSXP:
 				setSEXP( Rf_coerceVector( x, RAWSXP) ) ;
+				update() ;
 				break ;
 			default:
 				throw not_compatible( "cannot convert to intrger vector" ) ;
 		}
 	}
 	
-	RawVector::RawVector(int size) : VectorBase() {
+	RawVector::RawVector(int size) : VectorBase(), start(0) {
 		setSEXP( Rf_allocVector(RAWSXP, size) ) ;
+		update() ;
 	}
 
 #ifdef HAS_INIT_LISTS
-	RawVector::RawVector( std::initializer_list<int> list ) : VectorBase() {
+	RawVector::RawVector( std::initializer_list<int> list ) : VectorBase(), start(0) {
 		SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), RAW(x) ); 
 		setSEXP(x) ;
+		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
-	RawVector::RawVector( std::initializer_list<Rbyte> list ) : VectorBase() {
-		/* FIXME: we need to take care of coercion, so 
-		transform is probably better */
+	RawVector::RawVector( std::initializer_list<Rbyte> list ) : VectorBase(), start(0) {
 		SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), RAW(x) ); 
 		setSEXP(x) ;
+		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
 #endif

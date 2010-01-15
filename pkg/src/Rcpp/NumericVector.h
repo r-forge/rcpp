@@ -44,11 +44,6 @@ public:
 	NumericVector( std::initializer_list<double> list ) ;
 #endif
 
-	// inline double& operator[]( const int& i ) { return REAL(m_sexp)[i]; }
-	// inline const double& operator[]( const int& i ) const { return REAL(m_sexp)[i]; }
-	// inline double* begin() const { return REAL(m_sexp) ; } 
-	// inline double* end() const   { return REAL(m_sexp)+LENGTH(m_sexp);}
-	
 	inline double& operator[]( const int& i ) { return start[i] ; }
 	inline const double& operator[]( const int& i ) const { return start[i]; }
 	inline double* begin() const { return start ; } 

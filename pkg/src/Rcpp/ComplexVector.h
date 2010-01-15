@@ -43,12 +43,15 @@ public:
 	ComplexVector( std::initializer_list<Rcomplex> list ) ;
 #endif
 	
-	inline Rcomplex& operator[]( int i ) const { return COMPLEX(m_sexp)[i] ; } 
-	inline Rcomplex* begin() const { return COMPLEX(m_sexp) ; } 
-	inline Rcomplex* end() const { return COMPLEX(m_sexp) + LENGTH(m_sexp) ; }
+	inline Rcomplex& operator[]( int i ) const { return start[i] ; } 
+	inline Rcomplex* begin() const { return start ; } 
+	inline Rcomplex* end() const { return start + LENGTH(m_sexp) ; }
 	
 	typedef Rcomplex* iterator ;
-	
+
+private:
+	Rcomplex* start ;
+	inline void update(){ start = COMPLEX(m_sexp);}
 } ;
 
 } // namespace

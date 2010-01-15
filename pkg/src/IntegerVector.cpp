@@ -26,36 +26,41 @@
 
 namespace Rcpp{
 	
-	IntegerVector::IntegerVector(SEXP x) throw(not_compatible) : VectorBase() {
+	IntegerVector::IntegerVector(SEXP x) throw(not_compatible) : VectorBase(), start(0) {
 		switch( TYPEOF( x ) ){
 			case INTSXP:
 				setSEXP( x ) ;
+				update();
 				break ;
 			case REALSXP:
 			case LGLSXP:
 			case RAWSXP:
 				setSEXP( Rf_coerceVector( x, INTSXP) ) ;
+				update() ;
 				break ;
 			default:
 				throw not_compatible( "cannot convert to intrger vector" ) ;
 		}
 	}
 	
-	IntegerVector::IntegerVector(int size) : VectorBase() {
+	IntegerVector::IntegerVector(int size) : VectorBase(), start(0) {
 		setSEXP( Rf_allocVector(INTSXP, size) ) ;
+		update() ;
 	}
 
 #ifdef HAS_INIT_LISTS	
-	IntegerVector::IntegerVector( std::initializer_list<int> list ) {
+	IntegerVector::IntegerVector( std::initializer_list<int> list ) : VectorBase(), start(0) {
 		SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), INTEGER(x) ); 
 		setSEXP(x) ;
+		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
-	IntegerVector::IntegerVector( std::initializer_list<double> list ) {
+	IntegerVector::IntegerVector( std::initializer_list<double> list ) : VectorBase(), start(0) {
 		SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), INTEGER(x) ); 
 		setSEXP(x) ;
+		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
 #endif
