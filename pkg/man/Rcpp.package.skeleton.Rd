@@ -1,17 +1,17 @@
-\name{cpp.package.skeleton}
-\alias{cpp.package.skeleton}
+\name{Rcpp.package.skeleton}
+\alias{Rcpp.package.skeleton}
 \title{
 Create a skeleton for a new package depending on Rcpp
 }
 \description{
-	\code{cpp.package.skeleton} automates the creation of 
+	\code{Rcpp.package.skeleton} automates the creation of 
 	a new source package that intends to use features of Rcpp. 
 	
 	It is based on the \link[utils]{package.skeleton} function
 	which it executes first.
 }
 \usage{
-cpp.package.skeleton(name = "anRpackage", list = character(), 
+Rcpp.package.skeleton(name = "anRpackage", list = character(), 
 	environment = .GlobalEnv, path = ".", force = FALSE, 
 	namespace = TRUE, code_files = character())
 }
@@ -46,7 +46,7 @@ Nothing, used for its side effects
 \examples{
 \dontrun{
 f <- function(){}
-cpp.package.skeleton( "foobar", "f" )
+Rcpp.package.skeleton( "foobar", "f" )
 }
 }
 \keyword{ programming }
