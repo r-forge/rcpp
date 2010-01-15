@@ -223,7 +223,7 @@ protected:
      * to change it, use setSEXP
      */
     SEXP m_sexp ;
-
+    
 private:
 
     void preserve(){ if( m_sexp != R_NilValue ) R_PreserveObject(m_sexp) ; } 

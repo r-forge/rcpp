@@ -25,36 +25,41 @@
 
 namespace Rcpp{
 	
-	NumericVector::NumericVector(SEXP x) throw(not_compatible) : VectorBase() {
+	NumericVector::NumericVector(SEXP x) throw(not_compatible) : VectorBase(), start(0) {
 		switch( TYPEOF( x ) ){
 			case REALSXP:
 				setSEXP( x ) ;
+				update() ;
 				break ;
 			case INTSXP:
 			case LGLSXP:
 			case RAWSXP:
 				setSEXP( Rf_coerceVector( x, REALSXP) ) ;
+				update() ;
 				break ;
 			default:
 				throw not_compatible( "cannot convert to numeric vector" ) ;
 		}
 	}
 	
-	NumericVector::NumericVector(int size) : VectorBase() {
+	NumericVector::NumericVector(int size) : VectorBase(), start(0) {
 		setSEXP( Rf_allocVector(REALSXP, size) ) ;
+		start = REAL(m_sexp) ;
 	}
 
 #ifdef HAS_INIT_LISTS	
-NumericVector::NumericVector( std::initializer_list<int> list ) : VectorBase() {
+NumericVector::NumericVector( std::initializer_list<int> list ) : VectorBase(), start(0) {
 		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), REAL(x) ); 
-		setSEXP(x) ;
+		setSEXP(x);
+		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
-	NumericVector::NumericVector( std::initializer_list<double> list ) : VectorBase() {
+	NumericVector::NumericVector( std::initializer_list<double> list ) : VectorBase(), start(0) {
 		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
 		std::copy( list.begin(), list.end(), REAL(x) ); 
-		setSEXP(x) ;
+		setSEXP(x);
+		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
 #endif
