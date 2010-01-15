@@ -50,3 +50,24 @@ errorOccured <- function() isTRUE( exceptions[["error_occured"]] )
 	invisible( NULL )
 }
 
+# simplified version of utils::tryCatch
+rcpp_tryCatch <- function(expr,env){
+	resetCurrentError()
+	rcpp_doTryCatch <- function(expr, env) {
+	    .Internal(.addCondHands("error", list(.rcpp_error_recorder), 
+	    	env, environment(), FALSE))
+	    expr
+	}
+	value <- rcpp_doTryCatch( return(expr), env )
+	if (is.null(value[[1L]])) {
+	    # a simple error; message is stored internally
+	    # and call is in result; this defers all allocs until
+	    # after the jump
+	    msg <- .Internal(geterrmessage())
+	    call <- value[[2L]]
+	    cond <- simpleError(msg, call)
+	}
+	else cond <- value[[1L]]
+	.rcpp_error_recorder(cond)
+}
+
