@@ -30,21 +30,36 @@ namespace Rcpp {
     const char* Evaluator::eval_error::what() const throw(){ return message.c_str() ; }
 
    SEXP Evaluator::run(SEXP expr, SEXP env) throw(eval_error) {
-	int error = 0 ;
-	SEXP res = PROTECT( R_tryEval( expr, env, &error ) ) ;
+	
+	/* grab the RCPP namespace */
+	SEXP RCPP = PROTECT( R_FindNamespace( Rf_mkString( "Rcpp")  ) );
+	
+	/* reset the error cache */
+	Rf_eval( Rf_lang1( Rf_install( "resetCurrentError" ) ), RCPP ) ; 
+	
+	/* grab the error handler from the Rcpp namespace */
+	SEXP handler = PROTECT( Rf_findVarInFrame( RCPP, Rf_install(".rcpp_error_recorder") ) ) ;
+    	
+	/* call to tryCatch, we can probably do better by looking into what tryCatch does */
+	SEXP trycatchcall = PROTECT( Rf_lcons( Rf_install( "tryCatch" ), 
+		Rf_cons( expr,  Rf_cons( handler , R_NilValue ) ) ) ) ;
+	SET_TAG( CDDR(trycatchcall), Rf_install( "error" ) ) ;
+	
+	/* call the tryCatch call */
+	SEXP res = PROTECT( Rf_eval( trycatchcall, R_GlobalEnv ) );
+	
+	/* was there an error ? */
+	int error = LOGICAL( Rf_eval( Rf_lang1( Rf_install("errorOccured") ), RCPP ) )[0];
+	
 	if( error ){
-		UNPROTECT( 1 ) ; /* res */
-		SEXP message = PROTECT( Rf_eval( Rf_lang1( Rf_install("geterrmessage") ), R_GlobalEnv ) );
-		std::string err_msg ;
-		if( TYPEOF( message ) == STRSXP && Rf_length( message ) ){
-			err_msg = CHAR( STRING_ELT( message, 0 ) ) ;
-		} else{
-			err_msg = "error with no message" ;
-		}
-		UNPROTECT(1) ; /* message */
-		throw eval_error( err_msg ) ;
+		SEXP err_msg = PROTECT( Rf_eval( 
+			Rf_lang1( Rf_install("getCurrentErrorMessage")), 
+			RCPP ) );
+		std::string message = CHAR(STRING_ELT(err_msg,0)) ;
+		UNPROTECT( 5 ) ;
+		throw eval_error(message) ;
 	} else {
-		UNPROTECT( 1) ; /* res */
+		UNPROTECT(4) ;
 		return res ;
 	}
     }

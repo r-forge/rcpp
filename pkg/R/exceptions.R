@@ -34,16 +34,19 @@ resetCurrentError <- function() {
 	setErrorOccured(FALSE)
 }
 getCurrentError <- function() exceptions[["current"]]
-errorOccured <- function() isTRUE( exceptions[["error_occured"]] )
 setErrorOccured <- function(error_occured = TRUE) exceptions[["error_occured"]] <- error_occured
-resetCurrentError()
-protectedEval <- function(expr, env ){
-	resetCurrentError()
-	tryCatch( eval( expr, envir = env), error = function(e){
-		setErrorOccured( TRUE )
-		setCurrentError( e )
-		invisible( NULL )
-	} )
-}
 setErrorOccured(FALSE)
+
+# all below are called from Evaluator::run 
+# on the C++ side, don't change them unless you also change
+# Evaluator::run
+
+getCurrentErrorMessage <- function() conditionMessage( exceptions[["current"]] )
+resetCurrentError()
+errorOccured <- function() isTRUE( exceptions[["error_occured"]] )
+.rcpp_error_recorder <- function(e){
+	setErrorOccured( TRUE )
+	setCurrentError( e )
+	invisible( NULL )
+}
 
