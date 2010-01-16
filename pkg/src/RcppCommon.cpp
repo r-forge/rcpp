@@ -61,8 +61,12 @@ SEXP test_variadic() {
 }
 
 SEXP canUseCXX0X(){
-#ifdef HAS_VARIADIC_TEMPLATES
-	return Rf_ScalarLogical( TRUE ) ;
+#ifdef __GNUC__
+	#ifdef __GXX_EXPERIMENTAL_CXX0X__
+		return Rf_ScalarLogical( TRUE ) ;
+	#else
+		return Rf_ScalarLogical( FALSE ) ;
+	#endif
 #else
 	return Rf_ScalarLogical( FALSE ) ;
 #endif

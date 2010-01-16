@@ -25,12 +25,14 @@
 #define RcppCommon_h
 
 #ifdef __GNUC__
-	#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-	#if GCC_VERSION >= 40300
-		#define HAS_VARIADIC_TEMPLATES
-	#endif
-	#if GCC_VERSION >= 40400
-		#define HAS_INIT_LISTS
+	#ifdef __GXX_EXPERIMENTAL_CXX0X__
+		#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+		#if GCC_VERSION >= 40300
+			#define HAS_VARIADIC_TEMPLATES
+		#endif
+		#if GCC_VERSION >= 40400
+			#define HAS_INIT_LISTS
+		#endif
 	#endif
 #endif
 
