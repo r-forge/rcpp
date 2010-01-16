@@ -109,12 +109,11 @@ ExpressionVector::Proxy ExpressionVector::operator[](int i) throw(index_out_of_b
 }
 
 SEXP ExpressionVector::eval() throw(Evaluator::eval_error){
-	return eval( R_GlobalEnv ) ;
-	
+	return Evaluator::run( Rf_lcons( Rf_install( "eval" ) , Rf_cons( m_sexp, R_NilValue) )) ;
 }
 
 SEXP ExpressionVector::eval(const Environment& env) throw(Evaluator::eval_error){
-	return Evaluator::run( Rf_lcons( Rf_install( "eval" ) , Rf_cons( m_sexp, R_NilValue) ) , R_GlobalEnv ) ;
+	return Evaluator::run( Rf_lcons( Rf_install( "eval" ) , Rf_cons( m_sexp, Rf_cons(env.asSexp(), R_NilValue)) ) ) ;
 }
 
 } // namespace 

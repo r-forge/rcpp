@@ -75,3 +75,17 @@ test.ExpressionVector.eval <- function(){
 	checkEquals( funx(), 1:10, msg = "ExpressionVector::eval" )
 }
 
+test.ExpressionVector.eval.env <- function(){
+	funx <- cfunction(signature(env = "environment"), '
+	ExpressionVector code( "sort(x)" ) ;
+	return code.eval(env) ;', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	e <- new.env()
+	e[["x"]] <- sample(1:10)
+	checkEquals( funx(e), 1:10, msg = "ExpressionVector::eval" )
+}
+
+
+
+
