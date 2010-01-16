@@ -323,4 +323,10 @@ test.environment.square <- function(){
 	
 }
 
+test.environment.Rcpp <- function(){
+	funx <- cfunction(signature(), '
+	return Environment::Rcpp_namespace() ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), asNamespace("Rcpp") , msg = "cached Rcpp namespace" )
+}
 

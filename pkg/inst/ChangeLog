@@ -1,5 +1,10 @@
 2010-01-16  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Environment.h : the Rcpp namespace is cached because
+	we use it in many places and retrieving it is an "expensive"
+	operation that requires a round trip to the R side
+	* src/Evaluator.cpp: use the cached Rcpp namespace
+
 	* R/Rcpp.package.skeleton: now generating example C++ and R
 	code that uses Rcpp, also the generated Makevars contains
 	a hack so that the generated package can pass check (after
