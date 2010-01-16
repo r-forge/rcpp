@@ -31,9 +31,9 @@ namespace Rcpp {
 
    SEXP Evaluator::run(SEXP expr, SEXP env) throw(eval_error) {
 	
-	/* grab the RCPP namespace */
-	SEXP RCPP = PROTECT( R_FindNamespace( Rf_mkString( "Rcpp")  ) );
-	
+   	/* already protected */
+   	SEXP RCPP = Environment::Rcpp_namespace(); 
+   	   
 	SEXP call = PROTECT( Rf_lang3( Rf_install("rcpp_tryCatch") , expr, env ) ) ;
 	
 	/* call the tryCatch call */
@@ -47,10 +47,10 @@ namespace Rcpp {
 			Rf_lang1( Rf_install("getCurrentErrorMessage")), 
 			RCPP ) );
 		std::string message = CHAR(STRING_ELT(err_msg,0)) ;
-		UNPROTECT( 4 ) ;
+		UNPROTECT( 3 ) ;
 		throw eval_error(message) ;
 	} else {
-		UNPROTECT(3) ;
+		UNPROTECT(2) ;
 		return res ;
 	}
     }

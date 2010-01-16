@@ -317,5 +317,10 @@ static void safeFindNamespace(void *data) {
     	return Binding( *this, name ) ;
     }
     
+    Environment Environment::RCPP_NAMESPACE = Environment::namespace_env("Rcpp") ;
+    Environment& Environment::Rcpp_namespace() throw() {
+    	    return RCPP_NAMESPACE ;
+    }
+    
 } // namespace Rcpp
 
