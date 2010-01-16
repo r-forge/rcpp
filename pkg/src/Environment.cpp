@@ -322,5 +322,13 @@ static void safeFindNamespace(void *data) {
     	    return RCPP_NAMESPACE ;
     }
     
+    Environment Environment::new_child(bool hashed) {
+    	    return Environment( Evaluator::run( 
+    	    	    Rf_lcons( Rf_install("new.env"), 
+    	    	    	    Rf_cons(Rf_ScalarLogical(hashed), 
+    	    	    	    	    Rf_cons(m_sexp,R_NilValue)) ) ) );
+    }
+    
+    
 } // namespace Rcpp
 
