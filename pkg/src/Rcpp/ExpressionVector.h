@@ -25,6 +25,7 @@
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
+#include <Rcpp/Evaluator.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
@@ -69,6 +70,9 @@ public:
 	ExpressionVector(SEXP x) throw(not_compatible);
 	ExpressionVector(int size) ;
 	ExpressionVector(const std::string& code) throw(parse_error) ;
+	
+	SEXP eval() throw(Evaluator::eval_error) ;
+	SEXP eval(const Environment& env) throw(Evaluator::eval_error);
 	
 #ifdef HAS_INIT_LISTS	
 	ExpressionVector( std::initializer_list<RObject> list ) ;

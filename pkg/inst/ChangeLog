@@ -1,6 +1,11 @@
 2010-01-16  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/ExpressionVector.h: ExpressionVector gains a
+	convenience methods eval to evaluate itself
+	* inst/unitTests/runit.ExpressionVector.R: added unit tests
+	for ExpressionVector::eval
+
+	* src/Rcpp/ExpressionVector.h: ExpressionVector gains a
 	constructor ExpressionVector( const std::string& ) that 
 	parses the string as R code
 	* inst/unitTests/runit.ExpressionVector.R: added unit tests

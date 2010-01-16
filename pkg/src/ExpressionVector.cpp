@@ -108,5 +108,13 @@ ExpressionVector::Proxy ExpressionVector::operator[](int i) throw(index_out_of_b
 	return Proxy(*this, i ) ;
 }
 
+SEXP ExpressionVector::eval() throw(Evaluator::eval_error){
+	return eval( R_GlobalEnv ) ;
+	
+}
+
+SEXP ExpressionVector::eval(const Environment& env) throw(Evaluator::eval_error){
+	return Evaluator::run( Rf_lcons( Rf_install( "eval" ) , Rf_cons( m_sexp, R_NilValue) ) , R_GlobalEnv ) ;
+}
 
 } // namespace 
