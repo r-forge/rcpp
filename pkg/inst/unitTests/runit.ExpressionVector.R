@@ -65,5 +65,13 @@ test.ExpressionVector.parse.error <- function(){
 	return code ;', 
 	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
 	checkException( funx(), msg = "parse error" )
-	
 }
+
+test.ExpressionVector.eval <- function(){
+	funx <- cfunction(signature(), '
+	ExpressionVector code( "local( { y <- sample(1:10); sort(y) })" ) ;
+	return code.eval() ;', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( funx(), 1:10, msg = "ExpressionVector::eval" )
+}
+
