@@ -36,6 +36,13 @@ namespace Rcpp{
 class ExpressionVector : public VectorBase {     
 public:
 
+	class parse_error : public std::exception{
+	public:
+		parse_error() throw();
+		~parse_error() throw();
+		const char* const what() throw() ;
+	} ;
+	
 	/* much inspired from item 30 of more effective C++ */
 	class Proxy {
 	public:
@@ -60,7 +67,8 @@ public:
 	} ;
 
 	ExpressionVector(SEXP x) throw(not_compatible);
-	ExpressionVector( int size) ;
+	ExpressionVector(int size) ;
+	ExpressionVector(const std::string& code) throw(parse_error) ;
 	
 #ifdef HAS_INIT_LISTS	
 	ExpressionVector( std::initializer_list<RObject> list ) ;
