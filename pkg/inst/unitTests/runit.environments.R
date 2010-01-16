@@ -330,3 +330,13 @@ test.environment.Rcpp <- function(){
 	checkEquals( funx(), asNamespace("Rcpp") , msg = "cached Rcpp namespace" )
 }
 
+test.environment.child <- function(){
+	funx <- cfunction(signature(), '
+	Environment global_env = Environment::global_env() ;
+	return global_env.new_child(false) ;
+	', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	checkEquals( parent.env(funx()), globalenv(), 
+		msg = "" )
+}
+
+

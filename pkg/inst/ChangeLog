@@ -1,5 +1,9 @@
 2010-01-16  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Environment.h: Environment gains a new_child method
+	to create an environment enclosed by this
+	* inst/unitTests/runit.environments.R: unit test for new_child
+
 	* src/Rcpp/ExpressionVector.h: ExpressionVector gains a
 	convenience methods eval to evaluate itself
 	* inst/unitTests/runit.ExpressionVector.R: added unit tests

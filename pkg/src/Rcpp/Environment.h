@@ -440,6 +440,11 @@ public:
      */
     Environment parent() const throw() ;
     
+    /**
+     * creates a new environment whose this is the parent
+     */
+    Environment new_child(bool hashed) ; 
+    
 private:
 	/* we cache the Rcpp namespace environment since
 	it is used many times internally */
