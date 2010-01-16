@@ -1,3 +1,12 @@
+2010-01-16  Romain Francois <francoisromain@free.fr>
+
+	* R/Rcpp.package.skeleton: now generating example C++ and R
+	code that uses Rcpp, also the generated Makevars contains
+	a hack so that the generated package can pass check (after
+	edition of Rd files, NAMESPACE, etc ...)
+	* inst/skeleton: added example code used by the skeleton 
+	generator
+
 2010-01-15  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/NumericVector.h: cache the start of the array to

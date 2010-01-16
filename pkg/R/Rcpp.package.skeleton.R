@@ -17,7 +17,8 @@
 
 Rcpp.package.skeleton <- function(
 	name = "anRpackage", list = character(), environment = .GlobalEnv,
-	path = ".", force = FALSE, namespace = TRUE, code_files = character() ){
+	path = ".", force = FALSE, namespace = TRUE, 
+	code_files = character() ){
 	
 	# first let the traditional version do its business
 	call <- match.call()
@@ -60,14 +61,25 @@ Rcpp.package.skeleton <- function(
 	if( !file.exists( src )){
 		dir.create( src )
 	}
+	skeleton <- system.file( "skeleton", package = "Rcpp" )
 	Makevars <- file.path( src, "Makevars" )
 	if( !file.exists( Makevars ) ){
-		writeLines(  c( 
-		"PKG_CXXFLAGS=`Rscript -e \"Rcpp:::CxxFlags()\" `" , 
-		"PKG_LIBS = `Rscript -e \"Rcpp:::LdFlasgs()\" `"  ), 
-		, con = Makevars )
+		file.copy( file.path( skeleton, "Makevars" ), Makevars )
 		message( " >> added Makevars file with Rcpp settings" )
 	}
+	
+	header <- readLines( file.path( skeleton, "rcpp_hello_world.h" ) )
+	header <- gsub( "@PKG@", name, header, fixed = TRUE )
+	writeLines( header , file.path( src, "rcpp_hello_world.h" ) )
+	message( " >> added example header file using Rcpp classes")
+	
+	file.copy( file.path( skeleton, "rcpp_hello_world.cpp" ), src )
+	message( " >> added example src file using Rcpp classes")
+	
+	rcode <- readLines( file.path( skeleton, "rcpp_hello_world.R" ) )
+	rcode <- gsub( "@PKG@", name, rcode, fixed = TRUE )
+	writeLines( rcode , file.path( root, "R", "rcpp_hello_world.R" ) )
+	message( " >> added example R file calling the C++ example")
 	
 	invisible( NULL )
 }
