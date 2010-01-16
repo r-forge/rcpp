@@ -49,6 +49,7 @@
 #include <Rinternals.h>
 #include <R_ext/Callbacks.h>
 #include <R_ext/Complex.h>
+#include <R_ext/Parse.h>
 #include <Rversion.h>
 #define RCPP_GET_NAMES(x)	Rf_getAttrib(x, R_NamesSymbol)
 

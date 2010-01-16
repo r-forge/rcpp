@@ -28,6 +28,10 @@
 
 namespace Rcpp{
 	
+	ExpressionVector::parse_error::parse_error() throw(){}
+	ExpressionVector::parse_error::~parse_error() throw(){}
+	const char* const ExpressionVector::parse_error::what() throw(){ return "parse error" ; }
+	
 	ExpressionVector::ExpressionVector(SEXP x) throw(not_compatible) : VectorBase() {
 		switch( TYPEOF( x ) ){
 			case EXPRSXP:
@@ -50,6 +54,21 @@ namespace Rcpp{
 		setSEXP( Rf_allocVector(EXPRSXP, size) ) ;
 	}
 
+	ExpressionVector::ExpressionVector(const std::string& code) throw(parse_error){
+		ParseStatus status;
+		SEXP expr = PROTECT( Rf_mkString( code.c_str() ) );
+		SEXP res  = PROTECT( R_ParseVector(expr, -1, &status, R_NilValue));
+		switch( status ){
+		case PARSE_OK:
+			setSEXP( res) ;
+			UNPROTECT( 2) ;
+			break;
+		default:
+			UNPROTECT(2) ;
+			throw parse_error() ;
+		}
+	}
+	
 #ifdef HAS_INIT_LISTS
 	ExpressionVector::ExpressionVector( std::initializer_list<RObject> list ) : VectorBase() {
 		SEXP x = PROTECT( Rf_allocVector( EXPRSXP, list.size() ) ) ;
