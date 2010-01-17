@@ -3,65 +3,65 @@
 @String{RCoreTeam = "{R Development Core Team}" }
 @String{RFoundation = "R Foundation for Statistical Computing" }
 
-@manual{R:exts, 
-	author = RCoreTeam,
-    organization = RFoundation,
-    address = {Vienna, Austria},
-    year = {2009},
-	title = "Writing R extensions",
-	url = manuals # "R-exts.html"
+@manual{R:exts,
+  author =	 RCoreTeam,
+  organization = RFoundation,
+  address =	 {Vienna, Austria},
+  year =	 2009,
+  title =	 "Writing R extensions",
+  url =		 manuals # "R-exts.html"
 }
 
-@manual{R:ints, 
-	author = RCoreTeam,
-    organization = RFoundation,
-    address = {Vienna, Austria},
-    year = {2009},
-	title = "R internals",
-	url = manuals # "R-ints.html"
+@manual{R:ints,
+  author =	 RCoreTeam,
+  organization = RFoundation,
+  address =	 {Vienna, Austria},
+  year =	 {2009},
+  title =	 "R internals",
+  url =		 manuals # "R-ints.html"
+}
+
+@Manual{armstrong09:RAbstraction,
+  title = 	 {{RAbstraction}: {C++} abstraction for {R} objects},
+  author = 	 {Whit Armstrong},
+  year = 	 2009,
+  note = 	 {Code repository last updated July 22, 2009.},
+  url =          {http://github.com/armstrtw/rabstraction}
+}
+
+@Manual{armstrong09:RObjects,
+  title = 	 {{RObjects}: {C++} wrapper for R objects (a better implementation of {RAbstraction}},
+  author = 	 {Whit Armstrong},
+  year = 	 2009,
+  note = 	 {Code repository last updated November 28, 2009.},
+  url =          {http://github.com/armstrtw/RObjects}
+}
+
+@InProceedings{batesdebroy01:cppclasses,
+  author =	 {Douglas M. Bates and Saikat DebRoy},
+  title =	 {{C++} Classes for {R} Objects},
+  booktitle =	 {Proceedings of the 2nd International Workshop on
+                  Distributed Statistical Computing},
+  year =	 2001,
+  editor =	 {Kurt Hornik & Friedrich Leisch},
+  address =	 {TU Vienna, Austria}
+}
+
+@Manual{cran:Rserve,
+  title =	 {Rserve: Binary R server},
+  author =	 {Simon Urbanek},
+  year =	 2009,
+  note =	 {R package version 0.6-1},
+  url =		 {http://www.rforge.net/Rserve/},
 }
 
 @Manual{cran:inline,
-    title = {inline: Inline C, C++, Fortran function calls from R},
-    author = {Oleg Sklyar and Duncan Murdoch and Mike Smith and Dirk Eddelbuettel},
-    year = {2009},
-    note = {R package version 0.3.4},
-    url = {http://CRAN.R-project.org/package=inline},
-  }
-
-@Manual{cran:Rserve,
-    title = {Rserve: Binary R server},
-    author = {Simon Urbanek},
-    year = 2009,
-    note = {R package version 0.6-1},
-    url = {http://www.rforge.net/Rserve/},
-  }
-
-@InProceedings{batesdebroy01:cppclasses,
-  author = 	 {Douglas M. Bates and Saikat DebRoy},
-  title = 	 {{C++} Classes for {R} Objects},
-  booktitle = {Proceedings of the 2nd International Workshop on Distributed Statistical Computing},
-  year = 	 2001,
-  editor = 	 {Kurt Hornik & Friedrich Leisch},
-  address =  {TU Vienna, Austria}
+  title =	 {inline: Inline C, C++, Fortran function calls from R},
+  author =	 {Oleg Sklyar and Duncan Murdoch and Mike Smith and Dirk Eddelbuettel},
+  year =	 {2009},
+  note =	 {R package version 0.3.4},
+  url =		 {http://CRAN.R-project.org/package=inline},
 }
-
-@Unpublished{javagailemanly07:r_cpp,
-  author = 	 {James J. Java and Daniel P. Gaile and Kenneth E. Manly},
-  title = 	 {{R/Cpp}: Interface Classes to Simplify Using R Objects in C++ Extensions},
-  note = 	 {Unpublished manuscript, University at Buffalo},
-  url =      {http://sphhp.buffalo.edu/biostat/research/techreports/UB_Biostatistics_TR0702.pdf},
-  month = 	 {July},
-  year = 	 2007
-}
-
-@InProceedings{runnalls09:cxxr,
- author= {Andrew Runnalls}, 
- title = {Aspects of {CXXR} internals}, 
- booktitle = {Directions in Statistical Computing},
- address = {University of Copenhagen, Denmark}, 
- year= 2009
- }
 
 @Manual{eddelbuettelkhan09:rquantlib,
   title = 	 {RQuantLib: {R} interface to the {QuantLib} library},
@@ -69,5 +69,38 @@
   year =	 2009, 
   note = 	 {R package version 0.3.1},
   url = 	 {http://CRAN.R-project.org/package=RQuantLib}
+}
+
+@Unpublished{javagailemanly07:r_cpp,
+  author = 	 {James J. Java and Daniel P. Gaile and Kenneth E. Manly},
+  title = 	 {{R/Cpp}: Interface Classes to Simplify Using R Objects in C++ Extensions},
+  note = 	 {Unpublished manuscript, University at Buffalo},
+  url =          {http://sphhp.buffalo.edu/biostat/research/techreports/UB_Biostatistics_TR0702.pdf},
+  month = 	 {July},
+  year = 	 2007
+}
+
+@Manual{liang08:rcppbind,
+  title = 	 {rcppbind: {A} template library for R/C++ developers},
+  author = 	 {Gang Liang},
+  year = 	 2008,
+  note = 	 {R package version 1.0},
+  url =          {http://r-forge.r-project.org/projects/rcppbind/}
+}
+
+@InProceedings{runnalls09:cxxr,
+  author =	 {Andrew Runnalls},
+  title =	 {Aspects of {CXXR} internals},
+  booktitle =	 {Directions in Statistical Computing},
+  address =	 {University of Copenhagen, Denmark},
+  year =	 2009
+}
+
+@Manual{samperi09:rcpptemplate,
+  title = 	 {RcppTemplate: Rcpp {R/C++} Object Mapping Library and Package Template},
+  author = 	 {Dominick Samperi},
+  year = 	 2009,
+  note = 	 {R package version 6.1},
+  url = 	 {http://CRAN.R-project.org/package=RcppTemplate}
 }
 
