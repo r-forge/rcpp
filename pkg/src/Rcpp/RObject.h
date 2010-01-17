@@ -184,12 +184,12 @@ public:
     /**
      * Tests if the SEXP has the object bit set
      */
-    inline bool isObject() const { return Rf_isObject(m_sexp) ;}
+    inline bool isObject() const { return ::Rf_isObject(m_sexp) ;}
 
     /**
      * Tests if the SEXP is an S4 object
      */
-    inline bool isS4() const { return Rf_isS4(m_sexp) ; }
+    inline bool isS4() const { return ::Rf_isS4(m_sexp) ; }
 
     /**
      * Indicates if this S4 object has the given slot
