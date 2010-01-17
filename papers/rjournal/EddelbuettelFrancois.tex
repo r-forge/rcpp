@@ -72,7 +72,7 @@ Integration of C++ and R has been addressed by several authors starting with
 \cite{batesdebroy01:cppclasses}. \cite{javagailemanly07:r_cpp}, in an
 unpublished paper, express several ideas that are close to some of our
 approaches, though not yet fully fleshed out.
-
+%
 The \pkg{Rserve} package \citep{cran:Rserve} was another early approach,
 going back to 2002. However its focus in on provided a binary R server for a
 C++ client was simply clients. That said, its C++ use also wrapped R object
@@ -97,7 +97,11 @@ is to rebuild R using a stronger C++ foundation.
 % new more comfortable furnitures ? 
 The code based is therefore concerns with all aspects of the R interpreter,
 REPL loop, threading --- and object interchange between R and C++ is but one part.
-
+%
+Another slightly different angle is offered by
+\cite{templelang09:rgcctranslationunit} who uses compiler output for
+references on the code in order to add bindings and wrappers.
+%
 Lastly, the \pkg{RcppTemplate} package \citep{samperi09:rcpptemplate}
 recently introduced a few new ideas yet decided to decided to break with the
 `classic \pkg{Rcpp}' API.
