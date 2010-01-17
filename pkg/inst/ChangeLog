@@ -1,5 +1,10 @@
 2010-01-16  Romain Francois <francoisromain@free.fr>
 
+	* src/exceptions.cpp: slightly less dumb exception logic 
+	on non GCC compilers. exceptions will now trigger an R error
+	with a default message (we don't attempt to get the 
+	exception class or message because we don't know how to)
+
 	* src/Rcpp/Pairlist.h: Pairlist lacked a default constructor
 	which is needed when the variadic templates are not 
 	available
