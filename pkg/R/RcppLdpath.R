@@ -35,22 +35,23 @@ RcppCxxFlags <- function(cxx0x=FALSE) {
 }
 
 ## Shorter names, and call cat() directly
-CxxFlags <- function() cat(RcppCxxFlags())
-LdFlags <- function() cat(RcppLdFlags())
+CxxFlags <- function(cxx0x=FALSE) cat(RcppCxxFlags(cxx0x=cxx0x))
+LdFlags <- function(static=FALSE) cat(RcppLdFlags(static=static))
 
 # capabilities
 RcppCapabilities <- capabilities <- function() .Call("capabilities", PACKAGE = "Rcpp")
 
-# compile, load and call the cxx0x.c script to identify whether 
+# compile, load and call the cxx0x.c script to identify whether
 # the compiler is GCC >= 4.3
 RcppCxx0xFlags <- function(){
 	td <- tempfile()
-	dir.create( td ) 
-	here <- getwd() 
-	setwd(td) 
+	dir.create( td )
+	here <- getwd()
+	setwd(td)
 	on.exit( { setwd(here) ; unlink( td, recursive = TRUE ) } )
 	file.copy( system.file( "discovery", "cxx0x.c", package = "Rcpp" ), td )
-	system( 'R CMD SHLIB cxx0x.c', intern = TRUE )
+        cmd <- paste(R.home(component="bin"), "/R CMD SHLIB cxx0x.c", sep="")
+	system( cmd, intern = TRUE )
 	dll <- sprintf( "cxx0x%s", .Platform$dynlib.ext )
 	dyn.load( dll )
 	res <- tryCatch( .Call( "cxx0x" ), error = "" )
