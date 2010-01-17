@@ -30,18 +30,18 @@ namespace Rcpp{
 class VectorBase : public RObject {     
 public:
 	
-	VectorBase() ;
-	virtual ~VectorBase() = 0;
+    VectorBase() ;
+    virtual ~VectorBase() = 0;
 	
-	/**
-	 * the length of the vector, uses Rf_length
-	 */
-	inline int length() const { return Rf_length( m_sexp ) ; }
+    /**
+     * the length of the vector, uses Rf_length
+     */
+    inline int length() const { return ::Rf_length( m_sexp ) ; }
 	
-	/**
-	 * alias of length
-	 */
-	inline int size() const { return Rf_length( m_sexp ) ; }
+    /**
+     * alias of length
+     */
+    inline int size() const { return ::Rf_length( m_sexp ) ; }
 	
 } ;
 
