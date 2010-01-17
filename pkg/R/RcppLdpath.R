@@ -26,11 +26,12 @@ RcppLdFlags <- function(static=FALSE) {
     invisible(flags)
 }
 
+# indicates if Rcpp was compiled with GCC >= 4.3
 canUseCXX0X <- function() .Call( "canUseCXX0X", PACKAGE = "Rcpp" )
 
 ## Provide compiler flags -- i.e. -I/path/to/Rcpp.h
-RcppCxxFlags <- function() {
-    paste("-I", RcppLdPath(), if( canUseCXX0X() ) " -std=c++0x" else "", sep="")
+RcppCxxFlags <- function(cxx0x=FALSE) {
+    paste("-I", RcppLdPath(), if( cxx0x && canUseCXX0X() ) " -std=c++0x" else "", sep="")
 }
 
 ## Shorter names, and call cat() directly
@@ -39,4 +40,23 @@ LdFlags <- function() cat(RcppLdFlags())
 
 # capabilities
 RcppCapabilities <- capabilities <- function() .Call("capabilities", PACKAGE = "Rcpp")
+
+# compile, load and call the cxx0x.c script to identify whether 
+# the compiler is GCC >= 4.3
+RcppCxx0xFlags <- function(){
+	td <- tempfile()
+	dir.create( td ) 
+	here <- getwd() 
+	setwd(td) 
+	on.exit( { setwd(here) ; unlink( td, recursive = TRUE ) } )
+	file.copy( system.file( "discovery", "cxx0x.c", package = "Rcpp" ), td )
+	system( 'R CMD SHLIB cxx0x.c', intern = TRUE )
+	dll <- sprintf( "cxx0x%s", .Platform$dynlib.ext )
+	dyn.load( dll )
+	res <- tryCatch( .Call( "cxx0x" ), error = "" )
+	dyn.unload( dll )
+	res
+}
+
+Cxx0xFlags <- function() cat( RcppCxx0xFlags() )
 

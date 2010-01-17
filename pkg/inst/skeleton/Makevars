@@ -1,10 +1,9 @@
-PKG_CXXFLAGS=`Rscript -e "Rcpp:::CxxFlags()"` -I.
-PKG_LIBS = `Rscript -e "Rcpp:::LdFlags()" `
+PKG_CPPFLAGS=$(shell Rscript -e "Rcpp:::CxxFlags()" )
+PKG_LIBS = $(shell Rscript -e "Rcpp:::LdFlags()" )
 
-all: $(SHLIB) hack
-
-# this hack is there to prevent R CMD check from rejecting 
-# our CxxFlags
-hack:
-	mkdir tmp; cp $(SHLIB) tmp/ ; rm -fr tmp
+## If C++0x features are desired, uncomment the next lines
+# PKG_CXXFLAGS += $(shell Rscript -e "Rcpp:::Cxx0xFlags()" )
+# all: $(SHLIB) hack
+# hack:
+# 	mkdir tmp; cp $(SHLIB) tmp/ ; rm -fr tmp
 
