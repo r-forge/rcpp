@@ -44,6 +44,9 @@ public:
 	 */
 	Pairlist(SEXP lang) throw(not_compatible) ;
 	
+	
+	Pairlist() ;
+	
 	/**
 	 * Creates a pairlist by wrapping the variable number of arguments
 	 * using the pairlist template

@@ -42,7 +42,9 @@ if( Rcpp:::capabilities()[["variadic templates"]] ){
 		x[0] = Symbol( "rnorm" ) ;
 		x[1] = Language( "rnorm", 10.0 ) ;
 		return x ;', 
-			Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+			Rcpp=TRUE, verbose=FALSE, 
+			includes = "using namespace Rcpp;",
+			cxxargs = "-std=c++0x" )
 		ex <- parse( text = "rnorm; rnorm(10)" )
 		attributes(ex) <- NULL
 		checkEquals( funx(),  ex , msg = "ExpressionVector (using variadic templates) " )

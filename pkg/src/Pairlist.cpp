@@ -27,6 +27,8 @@
 
 namespace Rcpp {
 
+	Pairlist::Pairlist( ): RObject::RObject(){}
+	
 	Pairlist::Pairlist( SEXP x = R_NilValue ) throw(not_compatible) : RObject::RObject( ){
 		if( x != R_NilValue ){
 			switch( TYPEOF(x) ){

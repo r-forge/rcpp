@@ -1,5 +1,11 @@
 2010-01-16  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Pairlist.h: Pairlist lacked a default constructor
+	which is needed when the variadic templates are not 
+	available
+
+	* inst/unitTests/*: add -std=c++0x in inline when necessary
+
 	* R/RcppLdPath.R : new script RcppCxx0xFlags() and Cxx0xFlags()
 	that compile, load and call a simple C file in order to check 
 	the compiler version and add the -std=c++0x flag
