@@ -1,5 +1,15 @@
 2010-01-16  Romain Francois <francoisromain@free.fr>
 
+	* R/RcppLdPath.R : new script RcppCxx0xFlags() and Cxx0xFlags()
+	that compile, load and call a simple C file in order to check 
+	the compiler version and add the -std=c++0x flag
+
+	* inst/discovery/cxx0x.c: discovery script. simple C script that 
+	returns "-std=c++0x" if it is compiled with GCC >= 4.3 and 
+	"" otherwise
+
+2010-01-16  Romain Francois <francoisromain@free.fr>
+
 	* src/Rcpp/Environment.h: Environment gains a new_child method
 	to create an environment enclosed by this
 	* inst/unitTests/runit.environments.R: unit test for new_child

@@ -1,0 +1,7 @@
+The cxx0x.c script is used by the Rcpp::RcppCxx0xFlags function. 
+When called, the RcppCxx0xFlags compiles and loads this script, and then 
+calls the cxx0x function. 
+
+If compiled with GCC > 4.3 the script returns "-std=c++0x", otherwise
+it returns ""
+
