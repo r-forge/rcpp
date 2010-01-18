@@ -1,4 +1,9 @@
-2010-01-16  Romain Francois <francoisromain@free.fr>
+2010-01-18  Romain Francois <francoisromain@free.fr>
+
+	* inst/discovery/cxx0x.R: replaces the cxx0x.c file to take 
+	care of compiling, etc...
+
+2010-01-17  Romain Francois <francoisromain@free.fr>
 
 	* src/exceptions.cpp: slightly less dumb exception logic 
 	on non GCC compilers. exceptions will now trigger an R error
