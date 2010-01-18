@@ -9,9 +9,8 @@
 
 \subsection{Overview}
 
-% [Romain:]
-% the overview is really messy and probably needs a complete rewrite
-% when all other sections are finished
+% [Romain:] the overview is really messy and probably 
+% needs a complete rewrite when all other sections are finished
 % [Dirk:] Agreed, see Gelman piece. We need more meat on the bones first.
 
 The \pkg{Rcpp} package provides a consistent and comprehensive set 
@@ -106,6 +105,7 @@ addition to the literature, but is beyond the scope of this article.
 
 % [Romain:] Why 'at least initial'
 % [Dirk:] For 'Classic Rcpp'
+% [Romain:] I'd argue it is still the case with the new api
 The core focus of \pkg{Rcpp}---particularly for the earlier API described in
 this section---has always been on allowing the programmer to add C++-based
 functions where we use this term in the standard mathematical sense of
@@ -148,9 +148,10 @@ vector types that are \textsl{templated} (which means that such a vector
 template can use used to create vectors of different base types). Here a
 standard \code{double} type is used to create a vector of doubles from the
 template type.
-% [ROMAIN] I think the previous sentence is confusing, one might think
+% [Romain:] I think the previous sentence is confusing, one might think
 % that the same vector can hold int and double
-% [Dirk] Better?
+% [Dirk:] Better?
+% [Romain:] I think so, maybe the (...) should be a footnote
 Fourth, the usefulness off these classes can be seen when we query the
 vectors directly for their size---using the \code{size} member function---in
 order to reserved a new result type of appropriate length.  Fifth, the
@@ -164,8 +165,6 @@ We argue that this usage is already easier to read, write and debug than the
 C macro-based approach supported by R itself. Possible performance issues and
 other potentual limitations will be discussed throughout the article and
 reviewed at the end.
-% [ROMAIN] maybe add a plug here for the 'limitations' section
-% [Dirk] Good idea, done.
 
 \section{inline code}
 
@@ -177,17 +176,21 @@ links and loads a C or C++ function---directly from the R prompt.  It was
 recently extended to work with \pkg{Rcpp} by allowing for additional header
 files and libraries, and in particularly those used by the \pkg{Rcpp} package
 which are automatically located and used.
-% [ Romain ] in what way was it extended, etc ...
-% [ Dirk ] Added
 
-% [ROMAIN] : the next paragraph is very confusing
+% [Romain] : the next paragraph is very confusing
 % [Dirk] Is this better?
+% [Romain] Not sure. It seems to be only readable backwards. what about a 
+%          separate section before 'inline code' just about this
+% 
+%          it might also be useful to show a quick example of inlining
+%          c++ code, for example say that we use it for our unit tests
+%          and show an example unit test
 The use of \pkg{inline} is possible as \pkg{Rcpp} can be used and updated
 just like any other R package. Even though it provides a library and header
 files for other packages to use, it can be installed via
 \code{install.packages()} just like other CRAN packages. Similarly, new
 versions can be obtained via \code{update.packages()}.  What makes \pkg{Rcpp}
-useful for other packages for their interfacing of of R and C++ is that it is
+useful for other packages for their interfacing of R and C++ is that it is
 provided as a dynamic library.\footnote{Windows users however only obtain a
   static library though this could be changed.} The location of this library,
 and the associated compiler and header arguments can be queried directly from
@@ -218,7 +221,7 @@ current C++ design approaches.
 
 \subsection{The RObject class}
 
-% this needs cleaning
+% [Romain] this needs cleaning
 Here, the \code{RObject} class is the base class of all
 objects in the extended API of the \pkg{Rcpp} package. An \code{RObject} has only one
 data member, the protected \code{SEXP} it encapsulates.  The \code{RObject}
@@ -230,6 +233,7 @@ return or through an exception), it removes the protection so that if the \code{
 otherwise protected when it becomes subject to garbage collection.
 
 % [Dirk]: Shorten and make a footnote?
+% [Romain]: yes, but the whole section needs cleaning anyway
 Garbage collection is only mentioned here to illustrate the basic design
 of the \code{RObject} class, the user of \pkg{Rcpp} need not to concern 
 himself/herself with such matters and can instead focus on the problem
@@ -274,6 +278,8 @@ a C++ class for most SEXP types.
 % Appendix, or we just pick a few key combinations and describe them in
 % text. 
 %
+% [Romain] Please be honest, I'd rather have the comment from you than
+%          from the reviewer. the text after will need some cleaning also then
 \begin{center}
 \begin{small}
 \begin{tabular}{ccc}
