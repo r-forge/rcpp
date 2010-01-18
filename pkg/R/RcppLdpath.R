@@ -47,19 +47,9 @@ RcppCapabilities <- capabilities <- function() .Call("capabilities", PACKAGE = "
 # compile, load and call the cxx0x.c script to identify whether
 # the compiler is GCC >= 4.3
 RcppCxx0xFlags <- function(){
-	td <- tempfile()
-	dir.create( td )
-	here <- getwd()
-	setwd(td)
-	on.exit( { setwd(here) ; unlink( td, recursive = TRUE ) } )
-	file.copy( system.file( "discovery", "cxx0x.c", package = "Rcpp" ), td )
-        cmd <- paste(R.home(component="bin"), "/R CMD SHLIB cxx0x.c", sep="")
-	system( cmd, intern = TRUE )
-	dll <- sprintf( "cxx0x%s", .Platform$dynlib.ext )
-	dyn.load( dll )
-	res <- tryCatch( .Call( "cxx0x" ), error = "" )
-	dyn.unload( dll )
-	res
+	script <- system.file( "discovery", "cxx0x.R", package = "Rcpp" ) 
+	flag <- capture.output( source( script ) )
+	flag
 }
 
 Cxx0xFlags <- function() cat( RcppCxx0xFlags() )
