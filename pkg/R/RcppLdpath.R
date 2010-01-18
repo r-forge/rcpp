@@ -16,12 +16,15 @@ RcppLdPath <- function() {
 RcppLdFlags <- function(static=FALSE) {
     rcppdir <- RcppLdPath()
     flags <- paste("-L", rcppdir, " -lRcpp", sep="")	## general default
-    if (.Platform$OS.type == "unix") {
+    if (.Platform$OS.type == "unix") {			## on Linux, consider rpath as well
         if (length(grep("^linux",R.version$os))) {
             if (static==FALSE) {		## on Linux with dyn. linking, use rpath too
                 flags <- paste(flags, " -Wl,-rpath,", rcppdir, sep="")
             }
         }
+    }
+    if (length(grep("darwin", R.version$platform))) { 	## on OS X hardcode static library
+        flags <- paste(rcppdir, "/libRcpp.a", sep="")
     }
     invisible(flags)
 }
