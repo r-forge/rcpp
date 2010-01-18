@@ -13,18 +13,19 @@ RcppLdPath <- function() {
 ## optional rpath call needed to tell the Linux dynamic linker about the
 ## location.  This is not needed on OS X where we encode this as library
 ## built time (see src/Makevars) or Windows where we use a static library
-RcppLdFlags <- function(static=FALSE) {
+## Updated Jan 2010:  We now default to static linking but allow the use
+##                    of rpath on Linux if static==FALSE has been chose
+##                    Note that this is probably being called from LdFlags()
+RcppLdFlags <- function(static=TRUE) {
     rcppdir <- RcppLdPath()
-    flags <- paste("-L", rcppdir, " -lRcpp", sep="")	## general default
-    if (.Platform$OS.type == "unix") {			## on Linux, consider rpath as well
-        if (length(grep("^linux",R.version$os))) {
-            if (static==FALSE) {		## on Linux with dyn. linking, use rpath too
-                flags <- paste(flags, " -Wl,-rpath,", rcppdir, sep="")
-            }
-        }
-    }
-    if (length(grep("darwin", R.version$platform))) { 	## on OS X hardcode static library
+    if (static) {                               # static is default on Windows and OS X
         flags <- paste(rcppdir, "/libRcpp.a", sep="")
+    } else {					# else for dynamic linking
+        flags <- paste("-L", rcppdir, " -lRcpp", sep="") # baseline setting
+        if ((.Platform$OS.type == "unix") &&    # on Linux, we can use rpath to encode path
+            (length(grep("^linux",R.version$os)))) {
+            flags <- paste(flags, " -Wl,-rpath,", rcppdir, sep="")
+        }
     }
     invisible(flags)
 }
@@ -38,8 +39,14 @@ RcppCxxFlags <- function(cxx0x=FALSE) {
 }
 
 ## Shorter names, and call cat() directly
-CxxFlags <- function(cxx0x=FALSE) cat(RcppCxxFlags(cxx0x=cxx0x))
-LdFlags <- function(static=FALSE) cat(RcppLdFlags(static=static))
+## CxxFlags defaults to no using c++0x extensions are these are considered non-portable
+CxxFlags <- function(cxx0x=FALSE) {
+    cat(RcppCxxFlags(cxx0x=cxx0x))
+}
+## LdFlags defaults to static linking on the non-Linux platforms Windows and OS X
+LdFlags <- function(static=ifelse(length(grep("^linux",R.version$os))==0, TRUE, FALSE)) {
+    cat(RcppLdFlags(static=static))
+}
 
 # capabilities
 RcppCapabilities <- capabilities <- function() .Call("capabilities", PACKAGE = "Rcpp")
@@ -47,7 +54,7 @@ RcppCapabilities <- capabilities <- function() .Call("capabilities", PACKAGE = "
 # compile, load and call the cxx0x.c script to identify whether
 # the compiler is GCC >= 4.3
 RcppCxx0xFlags <- function(){
-	script <- system.file( "discovery", "cxx0x.R", package = "Rcpp" ) 
+	script <- system.file( "discovery", "cxx0x.R", package = "Rcpp" )
 	flag <- capture.output( source( script ) )
 	flag
 }
