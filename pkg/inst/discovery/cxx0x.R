@@ -25,7 +25,7 @@ local({
 	
 		want.cxx0x <- Sys.getenv( "RCPP_WANT_CXX0X" , unset = "" ) 
 		if( want.cxx0x != "yes" ){
-			return ""
+			return(invisible(NULL))
 		}
 		
 		cxx0x.code <- '
