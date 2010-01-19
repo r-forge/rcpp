@@ -25,7 +25,7 @@ local({
 	#include <R.h>
 	#include <Rdefines.h>
 	
-	SEXP cxx0x(){
+	extern "C" SEXP cxx0x(){
 	
 	#ifdef __GNUC__
 		#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
@@ -47,8 +47,8 @@ local({
 			setwd(here) ; 
 			unlink( td, recursive = TRUE )
 		} )
-		writeLines( cxx0x.code, "cxx0x.c" )
-		cmd <- sprintf( "%s/R CMD SHLIB cxx0x.c", R.home(component="bin") )
+		writeLines( cxx0x.code, "cxx0x.cpp" )
+		cmd <- sprintf( "%s/R CMD SHLIB cxx0x.cpp", R.home(component="bin") )
 		system( cmd, intern = TRUE )
 		dyn.load( dll )
 		res <- tryCatch( .Call( "cxx0x" ), error = "" )
