@@ -1,3 +1,14 @@
+2010-01-19  Romain Francois <francoisromain@free.fr>
+
+	* configure.in: use the cxx0x.R script to discover if the 
+	compiler being used is c++0x capable
+	* configure: regenerated from updated configure.in
+
+	* src/Makevars.in: using CLINK_CPPFLAGS variable
+
+	* src/Makevars.win: using CLINK_CPPFLAGS variable with the 
+	cxx0x.R discovery script
+	
 2010-01-18  Romain Francois <francoisromain@free.fr>
 
 	* inst/discovery/cxx0x.R: replaces the cxx0x.c file to take 

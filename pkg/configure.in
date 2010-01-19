@@ -58,61 +58,14 @@ fi
 if test -z "${R_HOME}"; then
    AC_MSG_ERROR([Could not determine R_HOME.])		
 fi
-CXX=`${R_HOME}/bin/R CMD config CXX`
-CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 
-## The grep/sed command could probably be rewritten in Rscript as well
-AC_PROG_CXX
-if test "${GXX}" = yes; then
-    gxx_version=`${CXX} -v 2>&1 | grep "^.*g.. version" | sed -e 's/^.*g.. version *//'`
-    case ${gxx_version} in
-        1.*|2.*)
-	     AC_MSG_WARN([Only g++ version 3.0 or greater can be used with Rcpp.])
-	     AC_MSG_ERROR([Please use a different compiler.])   
-        ;;
-        3.*|4.0.*|4.1.*)
-	     AC_MSG_NOTICE([Only g++ version 4.2 or greater have been used for recent Rcpp development.])
-	     AC_MSG_NOTICE([Please report any errors you may see to the maintainers.])   
-	     has43=no
-	     has44=no
-        ;;
-        4.2.*)
-	     AC_MSG_NOTICE([With g++ version 4.2 core functionality should be stable -- but no C++0x features though].)
-	     has43=no
-	     has44=no
-        ;;
-        4.3.*)
-	     AC_MSG_NOTICE([With g++ version 4.3 parts of the new Cxx0x standard are available.])
-	     has43=yes
-	     has44=no
-        ;;
-        4.*)
-	     AC_MSG_NOTICE([With g++ version 4.4 or newer more parts of the new Cxx0x standard are available.])
-	     has43=yes
-	     has44=yes
-        ;;
-        *)
-	     AC_MSG_NOTICE([Hm, not sure what g++ version you have, so using minimal features and no C++0x.])
-	     has43=no
-	     has44=no
-        ;;
-    esac
-else
-    AC_MSG_NOTICE([Hm, not sure what C++ compiler you have, so using minimal features and no C++0x.])
-    has43=no
-    has44=no
-fi
-
-
-## now use the 'has43' flag to add -std=c++0x to PKG_CXXFLAGS
-if test x"${has43}" == x"yes" ; then
-     cxx_flags="-std=c++0x"
-else
-     cxx_flags=""
-fi
+## find out if we can safely add -std=c++0x
+## other packages would call Rcpp:::Cxx0xFlags() instead
+## but we cannot because configure happens too soon
+cxx0x_flags=`Rscript inst/discovery/cxx0x.R`
 
 ## now use cxx_flags
-AC_SUBST([CXXFLAGS],["${CXXFLAGS} $cxx_flags"])
+AC_SUBST([CXX0XFLAGS],["$cxx0x_flags"])
 AC_OUTPUT(src/Makevars)
 AC_MSG_NOTICE([Completed configuration and ready to build.])
 
