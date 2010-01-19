@@ -42,8 +42,8 @@ public:
 	class not_a_closure : public std::exception{
 	public:
 		not_a_closure() throw() {} ;
-		~not_a_closure() throw() {} ;
-		const char* what() throw() ;
+		virtual ~not_a_closure() throw() {} ;
+		virtual const char* what() const throw() ;
 	} ;
 	
 	/**

@@ -28,7 +28,7 @@
 
 namespace Rcpp {
 	
-	const char* Function::not_a_closure::what() throw(){
+	const char* Function::not_a_closure::what() const throw(){
 		return "not a closure" ; 
 	}
 	

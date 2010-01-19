@@ -36,8 +36,8 @@ public:
    	class not_compatible: public std::exception{
    		public:
    			not_compatible(const std::string& message) throw() : message(message){};
-   			~not_compatible() throw(){} ;
-   			const char* what() const throw() ; 
+   			virtual ~not_compatible() throw(){} ;
+   			virtual const char* what() const throw() ; 
    		private:
    			std::string message ;
    	} ;
@@ -48,15 +48,15 @@ public:
    	class not_s4: public std::exception{
    		public:
    			not_s4() throw(){};
-   			~not_s4() throw(){} ;
-   			const char* what() const throw() ; 
+   			virtual ~not_s4() throw(){} ;
+   			virtual const char* what() const throw() ; 
    	} ;
    	
    	class index_out_of_bounds: public std::exception{
    	public:
    		index_out_of_bounds() throw(){};
-   		~index_out_of_bounds() throw(){};
-   		const char* what() const throw() ;
+   		virtual ~index_out_of_bounds() throw(){};
+   		virtual const char* what() const throw() ;
    	} ;
    	
     /**

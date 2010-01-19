@@ -41,12 +41,12 @@ public:
     		 */
     		no_such_binding( const std::string& binding) ;
     		
+    		virtual ~no_such_binding() throw() ;
+    		
     		/**
     		 * The message: no such binding : '{binding}' 
     		 */
-    		const char* what() const throw();
-    		
-    		~no_such_binding() throw() ;
+    		virtual const char* what() const throw();
     		
     	private:
     		std::string message ;
@@ -62,13 +62,13 @@ public:
     		 * @param binding name of the binding
     		 */
     		binding_is_locked( const std::string& binding) ;
-    		
+    		virtual ~binding_is_locked() throw() ;
+
     		/**
     		 * The message: binding is locked : '{binding}' 
     		 */
-    		const char* what() const throw() ;
-    		
-    		~binding_is_locked() throw() ;
+    		virtual const char* what() const throw() ;
+
     	private:
     		std::string message ;
     } ;
@@ -84,12 +84,14 @@ public:
     		 */
     		no_such_namespace( const std::string& package) ;
     		
+    		virtual ~no_such_namespace() throw() ;
+    		
     		/**
     		 * The message: no such namespace : '{package}' 
     		 */
-    		const char* what() const throw() ;
+    		virtual const char* what() const throw() ;
     		
-    		~no_such_namespace() throw() ;
+    		
     	private:
     		std::string message ;
     } ;
@@ -109,13 +111,14 @@ public:
     		 * @paral pos search path position where there is no environment
     		 */
     		no_such_env(int pos) ;
+    		virtual ~no_such_env() throw() ;
     		
     		/**
     		 * The message: no such environment : '{name}' 
     		 */
-    		const char* what() const throw() ;
+    		virtual const char* what() const throw() ;
     		
-    		~no_such_env() throw() ;
+    		
     	private:
     		std::string message ;
     } ;
