@@ -21,22 +21,28 @@
 # generate the "-std=c++0x" flag when the compiler in use is GCC >= 4.3
 
 local({
-	cxx0x.code <- '
-	#include <R.h>
-	#include <Rdefines.h>
-	
-	extern "C" SEXP cxx0x(){
-	
-	#ifdef __GNUC__
-		#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-		#if GCC_VERSION >= 40300
-		return mkString( "-std=c++0x" ) ;
-		#endif
-	#endif
-	return mkString( "" ) ;
-	}
-	'
 	flag <- function(){
+	
+		want.cxx0x <- Sys.getenv( "RCPP_WANT_CXX0X" , unset = "" ) 
+		if( want.cxx0x != "yes" ){
+			return ""
+		}
+		
+		cxx0x.code <- '
+		#include <R.h>
+		#include <Rdefines.h>
+		
+		extern "C" SEXP cxx0x(){
+		
+		#ifdef __GNUC__
+			#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+			#if GCC_VERSION >= 40300
+			return mkString( "-std=c++0x" ) ;
+			#endif
+		#endif
+		return mkString( "" ) ;
+		}
+		'
 		td <- tempfile()
 		dir.create( td )
 		here <- getwd()
