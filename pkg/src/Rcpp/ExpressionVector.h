@@ -40,8 +40,8 @@ public:
 	class parse_error : public std::exception{
 	public:
 		parse_error() throw();
-		~parse_error() throw();
-		const char* const what() throw() ;
+		virtual ~parse_error() throw();
+		virtual const char* const what() throw() ;
 	} ;
 	
 	/* much inspired from item 30 of more effective C++ */

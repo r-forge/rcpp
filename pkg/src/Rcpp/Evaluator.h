@@ -34,8 +34,8 @@ public:
 	class eval_error : public std::exception{
 	public:
 		eval_error( const std::string& message ) throw() ;
-		~eval_error() throw() ;
-		const char* what() const throw() ;
+		virtual ~eval_error() throw() ;
+		virtual const char* what() const throw() ;
 	private:
 		std::string message ;
 	} ;
