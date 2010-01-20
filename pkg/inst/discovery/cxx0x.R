@@ -23,10 +23,10 @@
 local({
 	flag <- function(){
 	
-		want.cxx0x <- Sys.getenv( "RCPP_WANT_CXX0X" , unset = "" ) 
-		if( want.cxx0x != "yes" ){
-			return(invisible(NULL))
-		}
+		# want.cxx0x <- Sys.getenv( "RCPP_WANT_CXX0X" , unset = "" ) 
+		# if( want.cxx0x != "yes" ){
+		# 	return(invisible(NULL))
+		# }
 		
 		cxx0x.code <- '
 		#include <R.h>

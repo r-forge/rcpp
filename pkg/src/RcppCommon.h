@@ -81,7 +81,6 @@ template<typename... Args>
 int variadic_length( const Args&... args) { return sizeof...(Args) ; }
 #endif
 
-RcppExport SEXP test_variadic() ; 
 RcppExport SEXP canUseCXX0X() ;
 RcppExport SEXP test_named() ;
 RcppExport SEXP capabilities() ;
