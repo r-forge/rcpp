@@ -75,13 +75,27 @@ public:
 	SEXP eval(const Environment& env) throw(Evaluator::eval_error);
 	
 #ifdef HAS_INIT_LISTS	
-	ExpressionVector( std::initializer_list<RObject> list ) ;
+	ExpressionVector( std::initializer_list<SEXP> list ) : VectorBase(){
+		  fill( list.begin(), list.end() ) ;
+	}
 #endif
 
 	const Proxy operator[]( int i ) const throw(index_out_of_bounds);
 	Proxy operator[]( int i ) throw(index_out_of_bounds) ;
 
 	friend class Proxy; 
+
+private:
+	template <typename InputIterator>
+	void fill( InputIterator first, InputIterator last){
+		size_t size = std::distance( first, last );
+		SEXP x = PROTECT( Rf_allocVector( EXPRSXP, size ) ) ;
+		for( size_t i=0; i<size ; i++, ++first){
+			SET_VECTOR_ELT( x, i, *first ) ;
+		}
+		setSEXP( x ) ;
+		UNPROTECT( 1 ); /* x */
+	}
 
 } ;
 

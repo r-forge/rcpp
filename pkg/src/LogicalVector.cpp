@@ -48,28 +48,4 @@ namespace Rcpp{
 		update() ;
 	}
 
-#ifdef HAS_INIT_LISTS
-	LogicalVector::LogicalVector( std::initializer_list<int> list ) : VectorBase(){
-		SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), INTEGER(x) ); 
-		setSEXP( Rf_coerceVector( x, LGLSXP ) ) ;
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-	LogicalVector::LogicalVector( std::initializer_list<Rboolean> list ): VectorBase() {
-		SEXP x = PROTECT( Rf_allocVector( LGLSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), LOGICAL(x) ); 
-		setSEXP(x) ;
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-	LogicalVector::LogicalVector( std::initializer_list<bool> list ) : VectorBase(){
-		SEXP x = PROTECT( Rf_allocVector( LGLSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), LOGICAL(x) ); 
-		setSEXP(x) ;
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-#endif
-
 } // namespace 

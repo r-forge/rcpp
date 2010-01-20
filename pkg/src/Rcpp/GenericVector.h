@@ -66,13 +66,26 @@ public:
 	GenericVector( int size) ;
 	
 #ifdef HAS_INIT_LISTS	
-	GenericVector( std::initializer_list<RObject> list ) ;
+	GenericVector( std::initializer_list<RObject> list ) : VectorBase(){
+		fill( list.begin(), list.end() ) ;
+	};
 #endif
 	
 	const Proxy operator[]( int i ) const throw(index_out_of_bounds);
 	Proxy operator[]( int i ) throw(index_out_of_bounds) ;
 	
 	friend class Proxy; 
+
+	template <typename InputIterator>
+	void fill( InputIterator first, InputIterator last){
+		size_t size = std::distance( first, last );
+		SEXP x = PROTECT( Rf_allocVector( VECSXP, size ) ) ;
+		for( size_t i=0; i<size ; i++, ++first){
+			SET_VECTOR_ELT( x, i, *first ) ;
+		}
+		setSEXP( x ) ;
+		UNPROTECT( 1 ); /* x */
+	}
 	
 } ;
 

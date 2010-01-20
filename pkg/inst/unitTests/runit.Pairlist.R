@@ -37,7 +37,7 @@ test.Pairlist <- function(){
 }
 
 test.Pairlist.variadic <- function(){
-	if( Rcpp:::canUseCXX0X() ){
+	if( Rcpp:::capabilities()[["variadic templates"]] ){
 		funx <- cfunction(signature(), '
 		return Pairlist( "rnorm", 10, 0.0, 2.0 ) ;
 		', Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;",

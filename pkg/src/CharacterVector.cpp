@@ -51,28 +51,9 @@ namespace Rcpp{
 	}
 	
 	CharacterVector::CharacterVector( const std::vector<std::string>& x): VectorBase() {
-		SEXP y = PROTECT( Rf_allocVector( STRSXP, x.size() ) );
-		int n = x.size() ;
-		std::vector<std::string>::const_iterator iter = x.begin() ;
-		for( int i=0; i<n; i++, iter++){
-			SET_STRING_ELT( y, i, Rf_mkChar(iter->c_str()) ) ;
-		}
-		setSEXP(y) ;
-		UNPROTECT(1) ;
+		fill( x.begin(), x.size() ) ;
 	}
 	
-#ifdef HAS_INIT_LISTS
-CharacterVector::CharacterVector( std::initializer_list<std::string> list ) : VectorBase() {
-		SEXP x = PROTECT( Rf_allocVector( STRSXP, list.size() ) ) ;
-		const std::string *p = list.begin() ;
-		int n = list.size() ;
-		for( int i=0; i<n ; i++, p++){
-			SET_STRING_ELT( x, i, Rf_mkChar(p->c_str()) ) ;
-		}
-		setSEXP( x ) ;
-		UNPROTECT( 1 ); /* x */
-	}
-#endif
 
 /* proxy stuff */
 

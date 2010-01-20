@@ -48,21 +48,4 @@ namespace Rcpp{
 		update() ;
 	}
 
-#ifdef HAS_INIT_LISTS
-	RawVector::RawVector( std::initializer_list<int> list ) : VectorBase(), start(0) {
-		SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), RAW(x) ); 
-		setSEXP(x) ;
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-	RawVector::RawVector( std::initializer_list<Rbyte> list ) : VectorBase(), start(0) {
-		SEXP x = PROTECT( Rf_allocVector( RAWSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), RAW(x) ); 
-		setSEXP(x) ;
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-#endif
-
 } // namespace 

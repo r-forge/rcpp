@@ -40,7 +40,9 @@ public:
 	ComplexVector(int size) ;
 	
 #ifdef HAS_INIT_LISTS	
-	ComplexVector( std::initializer_list<Rcomplex> list ) ;
+	ComplexVector( std::initializer_list<Rcomplex> list ) : VectorBase(){
+		fill( list.begin(), list.end() ) ;
+	};
 #endif
 	
 	inline Rcomplex& operator[]( int i ) const { return start[i] ; } 
@@ -52,6 +54,16 @@ public:
 private:
 	Rcomplex* start ;
 	inline void update(){ start = COMPLEX(m_sexp);}
+	
+	template <typename InputIterator>
+	void fill( InputIterator first, InputIterator last){
+		size_t size = std::distance(first, last) ;
+		SEXP x = PROTECT( Rf_allocVector( CPLXSXP, size ) ) ;
+		std::copy( first, last, COMPLEX(x) ) ;
+		setSEXP(x) ;
+		update() ;
+		UNPROTECT( 1 ); /* x */
+	}
 } ;
 
 } // namespace
