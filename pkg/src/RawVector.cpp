@@ -30,13 +30,11 @@ namespace Rcpp{
 		switch( TYPEOF( x ) ){
 			case RAWSXP:
 				setSEXP( x ) ;
-				update() ;
 				break ;
 			case INTSXP:
 			case REALSXP:
 			case LGLSXP:
 				setSEXP( Rf_coerceVector( x, RAWSXP) ) ;
-				update() ;
 				break ;
 			default:
 				throw not_compatible( "cannot convert to intrger vector" ) ;
@@ -45,7 +43,6 @@ namespace Rcpp{
 	
 	RawVector::RawVector(int size) : VectorBase(), start(0) {
 		setSEXP( Rf_allocVector(RAWSXP, size) ) ;
-		update() ;
 	}
 
 } // namespace 
