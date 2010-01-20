@@ -41,18 +41,6 @@ inline void logTxtFunction(const char* file, const int line, const char* express
     Rprintf("%s:%d %s\n", file, line, expression);
 }
 
-SEXP canUseCXX0X(){
-#ifdef __GNUC__
-	#ifdef __GXX_EXPERIMENTAL_CXX0X__
-		return Rf_ScalarLogical( TRUE ) ;
-	#else
-		return Rf_ScalarLogical( FALSE ) ;
-	#endif
-#else
-	return Rf_ScalarLogical( FALSE ) ;
-#endif
-}
-
 SEXP capabilities(){
 	SEXP cap = PROTECT( Rf_allocVector( LGLSXP, 3) ) ;
 	SEXP names = PROTECT( Rf_allocVector( STRSXP, 3 ) ) ;
@@ -86,7 +74,7 @@ SEXP test_named(){
 #endif
 }
 
-const char * const sexp_to_name(int sexp_type) {
+const char * sexp_to_name(int sexp_type) {
     switch (sexp_type) {
     case NILSXP:	return "NILSXP";
     case SYMSXP:	return "SYMSXP";
