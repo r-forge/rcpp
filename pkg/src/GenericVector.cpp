@@ -50,18 +50,6 @@ namespace Rcpp{
 		setSEXP( Rf_allocVector(VECSXP, size) ) ;
 	}
 
-#ifdef HAS_INIT_LISTS
-GenericVector::GenericVector( std::initializer_list<RObject> list ) : VectorBase() {
-		SEXP x = PROTECT( Rf_allocVector( VECSXP, list.size() ) ) ;
-		const RObject* p = list.begin() ;
-		for( size_t i=0; i<list.size() ; i++, p++){
-			SET_VECTOR_ELT( x, i, p->asSexp() ) ;
-		}
-		setSEXP( x ) ;
-		UNPROTECT( 1 ); /* x */
-	}
-#endif
-
 /* proxy stuff */
 
 GenericVector::Proxy::Proxy(GenericVector& v, int i) :

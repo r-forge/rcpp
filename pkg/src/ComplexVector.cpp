@@ -49,14 +49,4 @@ namespace Rcpp{
 		update() ;
 	}
 
-#ifdef HAS_INIT_LISTS	
-ComplexVector::ComplexVector( std::initializer_list<Rcomplex> list ) : VectorBase(), start(0) {
-		SEXP x = PROTECT( Rf_allocVector( CPLXSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), COMPLEX(x) ); 
-		setSEXP(x) ;
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-#endif
-
 } // namespace 

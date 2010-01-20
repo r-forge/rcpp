@@ -37,7 +37,7 @@ test.Function <- function(){
 }
 
 test.Function.variadic <- function(){
-	if( Rcpp:::canUseCXX0X() ){
+	if( Rcpp:::capabilities()[["variadic templates"]] ){
 		funx <- cfunction(signature(x="function", y = "ANY"), '
 		Function sort(x) ;
 		return sort( y, Named("decreasing", true) ) ;

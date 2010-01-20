@@ -22,7 +22,6 @@
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/IntegerVector.h>
-#include <algorithm>
 
 namespace Rcpp{
 	
@@ -47,22 +46,5 @@ namespace Rcpp{
 		setSEXP( Rf_allocVector(INTSXP, size) ) ;
 		update() ;
 	}
-
-#ifdef HAS_INIT_LISTS	
-	IntegerVector::IntegerVector( std::initializer_list<int> list ) : VectorBase(), start(0) {
-		SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), INTEGER(x) ); 
-		setSEXP(x) ;
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-	IntegerVector::IntegerVector( std::initializer_list<double> list ) : VectorBase(), start(0) {
-		SEXP x = PROTECT( Rf_allocVector( INTSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), INTEGER(x) ); 
-		setSEXP(x) ;
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-#endif
 
 } // namespace 

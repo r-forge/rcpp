@@ -61,9 +61,11 @@ public:
 	CharacterVector(int size) ;
 	CharacterVector( const std::string& x );
 	CharacterVector( const std::vector<std::string>& x );
-
+	
 #ifdef HAS_INIT_LISTS
-	CharacterVector( std::initializer_list<std::string> list ) ;
+	CharacterVector( std::initializer_list<std::string> list ) : VectorBase() {
+		fill( list.begin(), list.size() ) ;
+	}
 #endif
 
 	const StringProxy operator[]( int i ) const throw(index_out_of_bounds);
@@ -71,6 +73,16 @@ public:
 
 	friend class StringProxy; 
 
+private:
+	template <typename InputIterator>
+	void fill(InputIterator first, size_t size ){
+		SEXP x = PROTECT( Rf_allocVector( STRSXP, size) ) ;
+		for( size_t i=0; i<size; ++i, ++first ){
+			SET_STRING_ELT( x, i, Rf_mkChar(first->c_str()) ) ;
+		}
+		setSEXP( x );
+		UNPROTECT(1) ;
+	}
 } ;
 
 typedef CharacterVector StringVector ;

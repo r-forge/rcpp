@@ -47,21 +47,4 @@ namespace Rcpp{
 		update() ;
 	}
 
-#ifdef HAS_INIT_LISTS	
-NumericVector::NumericVector( std::initializer_list<int> list ) : VectorBase(), start(0) {
-		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), REAL(x) ); 
-		setSEXP(x);
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-	NumericVector::NumericVector( std::initializer_list<double> list ) : VectorBase(), start(0) {
-		SEXP x = PROTECT( Rf_allocVector( REALSXP, list.size() ) ) ;
-		std::copy( list.begin(), list.end(), REAL(x) ); 
-		setSEXP(x);
-		update() ;
-		UNPROTECT( 1 ); /* x */
-	}
-#endif
-
 } // namespace 

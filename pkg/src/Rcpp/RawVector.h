@@ -40,8 +40,12 @@ public:
 	RawVector( int size) ;
 	
 #ifdef HAS_INIT_LISTS	
-	RawVector( std::initializer_list<Rbyte> list ) ;
-	RawVector( std::initializer_list<int> list ) ;
+	RawVector( std::initializer_list<Rbyte> list ) : VectorBase(), start(0) {
+		simple_fill( list.begin(), list.end() ) ;
+	}
+	RawVector( std::initializer_list<int> list ) : VectorBase(), start(0) {
+		coerce_and_fill( list.begin(), list.end() ) ;
+	}
 #endif
 	
 	inline Rbyte& operator[]( int i ) const { return start[i] ; }
@@ -53,6 +57,32 @@ public:
 private:
 	Rbyte* start ;
 	inline void update(){ start=RAW(m_sexp); }
+	
+	// simple is when there is no need for coercion
+	// called only when the input container contains raw bytes
+	template <typename InputIterator>
+	void simple_fill( InputIterator first, InputIterator last){
+		size_t size = std::distance( first, last) ;
+		SEXP x = PROTECT( Rf_allocVector( RAWSXP, size ) );
+		std::copy( first, last, RAW(x) ) ;
+		setSEXP( x ) ;
+		UNPROTECT(1) ;
+		update() ;
+	}
+	
+	// need to coerce to raw bytes
+	template <typename InputIterator>
+	void coerce_and_fill( InputIterator first, InputIterator last){
+		size_t size = std::distance( first, last) ;
+		SEXP x = PROTECT( Rf_allocVector( RAWSXP, size ) );
+		// FIXME: actually coerce
+		// std::transform( first, last, RAW(x), coerce<RAWSXP> ) ;
+		std::copy( first, last, RAW(x) ) ;
+		setSEXP( x ) ;
+		UNPROTECT(1) ;
+		update() ;
+	}
+	
 } ;
 
 } // namespace
