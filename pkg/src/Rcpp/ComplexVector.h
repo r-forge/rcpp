@@ -53,7 +53,7 @@ public:
 
 private:
 	Rcomplex* start ;
-	inline void update(){ start = COMPLEX(m_sexp);}
+	virtual void update(){ start = COMPLEX(m_sexp);}
 	
 	template <typename InputIterator>
 	void fill( InputIterator first, InputIterator last){
@@ -61,7 +61,6 @@ private:
 		SEXP x = PROTECT( Rf_allocVector( CPLXSXP, size ) ) ;
 		std::copy( first, last, COMPLEX(x) ) ;
 		setSEXP(x) ;
-		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
 } ;

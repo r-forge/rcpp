@@ -59,7 +59,7 @@ public:
 
 private:
 	int* start ;
-	inline void update(){ start=LOGICAL(m_sexp); }
+	virtual void update(){ start=LOGICAL(m_sexp); }
 	
 	// called when there is no need for coercion
 	template <typename InputIterator>
@@ -68,7 +68,6 @@ private:
 		SEXP x = PROTECT( Rf_allocVector( LGLSXP, size ) ) ;
 		std::copy( first, last, LOGICAL(x) ); 
 		setSEXP(x) ;
-		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
 	
@@ -80,7 +79,6 @@ private:
 		// std::transform( first, last, LOGICAL(x), coerce_to_logical ) ;
 		std::copy( first, last, LOGICAL(x) ); 
 		setSEXP(x) ;
-		update() ;
 		UNPROTECT( 1 ); /* x */
 	}
 	

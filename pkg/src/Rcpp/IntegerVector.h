@@ -56,7 +56,7 @@ public:
 
 private:
 	int* start ;
-	inline void update(){ start = INTEGER(m_sexp) ;}
+	virtual void update(){ start = INTEGER(m_sexp) ;}
 	
 	// simple is when there is no need for coercion
 	template <typename InputIterator>
@@ -66,7 +66,6 @@ private:
 		std::copy( first, last, INTEGER(x) ) ;
 		setSEXP( x ) ;
 		UNPROTECT(1) ;
-		update() ;
 	}
 	
 	// need to coerce to int
@@ -79,7 +78,6 @@ private:
 		std::copy( first, last, INTEGER(x) ) ;
 		setSEXP( x ) ;
 		UNPROTECT(1) ;
-		update() ;
 	}
 
 } ;

@@ -30,14 +30,12 @@ namespace Rcpp{
 		switch( TYPEOF( x ) ){
 			case CPLXSXP:
 				setSEXP( x ) ;
-				update() ;
 				break ;
 			case REALSXP:
 			case LGLSXP:
 			case RAWSXP:
 			case INTSXP:
 				setSEXP( Rf_coerceVector( x, CPLXSXP) ) ;
-				update() ;
 				break ;
 			default:
 				throw not_compatible( "cannot convert to complex vector" ) ;
@@ -46,7 +44,6 @@ namespace Rcpp{
 	
 	ComplexVector::ComplexVector(int size) : VectorBase(), start(0) {
 		setSEXP( Rf_allocVector(CPLXSXP, size) ) ;
-		update() ;
 	}
 
 } // namespace 

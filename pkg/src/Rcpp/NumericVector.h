@@ -57,7 +57,7 @@ public:
 
 private:
 	double *start ;
-	inline void update(){ start = REAL(m_sexp);}
+	virtual void update(){ start = REAL(m_sexp);}
 	
 	// simple is when there is no need for coercion
 	// called only when the input container contains doubles
@@ -68,7 +68,6 @@ private:
 		std::copy( first, last, REAL(x) ) ;
 		setSEXP( x ) ;
 		UNPROTECT(1) ;
-		update() ;
 	}
 	
 	// need to coerce to double
@@ -81,7 +80,6 @@ private:
 		std::copy( first, last, REAL(x) ) ;
 		setSEXP( x ) ;
 		UNPROTECT(1) ;
-		update() ;
 	}
 	
 	

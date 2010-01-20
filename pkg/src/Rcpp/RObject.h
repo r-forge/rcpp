@@ -228,7 +228,7 @@ private:
 
     void preserve(){ if( m_sexp != R_NilValue ) R_PreserveObject(m_sexp) ; } 
     void release() { if( m_sexp != R_NilValue ) R_ReleaseObject(m_sexp) ; } 
-
+    virtual void update() {} ;
 };
 
 } // namespace Rcpp
