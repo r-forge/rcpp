@@ -56,7 +56,7 @@ public:
 
 private:
 	Rbyte* start ;
-	inline void update(){ start=RAW(m_sexp); }
+	virtual void update(){ start=RAW(m_sexp); }
 	
 	// simple is when there is no need for coercion
 	// called only when the input container contains raw bytes
@@ -67,7 +67,6 @@ private:
 		std::copy( first, last, RAW(x) ) ;
 		setSEXP( x ) ;
 		UNPROTECT(1) ;
-		update() ;
 	}
 	
 	// need to coerce to raw bytes
@@ -80,7 +79,6 @@ private:
 		std::copy( first, last, RAW(x) ) ;
 		setSEXP( x ) ;
 		UNPROTECT(1) ;
-		update() ;
 	}
 	
 } ;

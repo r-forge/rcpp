@@ -29,13 +29,11 @@ namespace Rcpp{
 		switch( TYPEOF( x ) ){
 			case REALSXP:
 				setSEXP( x ) ;
-				update() ;
 				break ;
 			case INTSXP:
 			case LGLSXP:
 			case RAWSXP:
 				setSEXP( Rf_coerceVector( x, REALSXP) ) ;
-				update() ;
 				break ;
 			default:
 				throw not_compatible( "cannot convert to numeric vector" ) ;
@@ -44,7 +42,6 @@ namespace Rcpp{
 	
 	NumericVector::NumericVector(int size) : VectorBase(), start(0) {
 		setSEXP( Rf_allocVector(REALSXP, size) ) ;
-		update() ;
 	}
 
 } // namespace 

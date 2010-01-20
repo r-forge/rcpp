@@ -40,6 +40,8 @@ void RObject::setSEXP(SEXP x){
 		
 		/* the new SEXP is not NULL, so preserve it */
 		preserve() ;
+			
+		update() ;
 	}
 }
 
