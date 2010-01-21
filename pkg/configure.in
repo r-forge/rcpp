@@ -109,8 +109,11 @@ AC_ARG_ENABLE([cxx0x],
 	      AC_HELP_STRING([--enable-cxx0x],[Enable support for draft of upcoming C++ standard. Can also be enabled by setting the 'RCPP_CXX0X' environment variable to 'yes' ]),
               [want_cxx0x=yes],
               [want_cxx0x=no])
+## Mark 'RCPP_CXX0X' as a 'precious' variable
+AC_ARG_VAR([RCPP_CXX0X],
+           [Set to 'yes' to enable support for draft of upcoming C++ standard. Can also be enabled via the '--enable-cxx0x' option])
 
-# also try the RCPP_CXX0X environment variable
+## Also try the RCPP_CXX0X environment variable
 if test x"${want_cxx0x}" == x"no" ; then
    if test x"${RCPP_CXX0X}" == x"yes" ; then
    	want_cxx0x=yes
