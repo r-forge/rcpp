@@ -1284,7 +1284,7 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --with-cxx0x            Enable support for draft of upcoming C++ standard.
+  --enable-cxx0x          Enable support for draft of upcoming C++ standard.
                           Can also be enabled by setting the 'RCPP_CXX0X'
                           environment variable to 'yes'
 
