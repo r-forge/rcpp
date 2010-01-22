@@ -27,16 +27,6 @@
 
 namespace Rcpp {
 
-/* this comes from JRI, where it was introduced to cope with cases
-   where bindings are locked */
-struct safeAssign_s {
-    SEXP sym, val, rho;
-};
-static void safeAssign(void *data) {
-    struct safeAssign_s *s = (struct safeAssign_s*) data;
-    Rf_defineVar(s->sym, s->val, s->rho);
-}
-
 struct safeFindNamespace_s {
     SEXP sym, val ;
 };
@@ -131,19 +121,8 @@ static void safeFindNamespace(void *data) {
     
     bool Environment::assign( const std::string& name, SEXP x = R_NilValue) const throw(binding_is_locked){
     	if( exists( name) && bindingIsLocked(name) ) throw binding_is_locked(name) ;
-    	
-    	/* borrowed from JRI, we cannot just use defineVar since it might 
-    	   crash on locked bindings */
-    	   
-    	/* TODO: we need to modify R_ToplevelExec so that it does not print 
-    	         the error message as it currently does*/
-    	struct safeAssign_s s;
-    	s.sym = Rf_install( name.c_str() ) ;
-    	if( !s.sym || s.sym == R_NilValue ) return false ;
-    	
-    	s.rho = m_sexp ;
-    	s.val = x ;
-    	return static_cast<bool>( R_ToplevelExec(safeAssign, (void*) &s) );
+    	Rf_defineVar( Rf_install( name.c_str() ) , x, m_sexp );
+    	return true ;
     }
     
     bool Environment::remove( const std::string& name) throw(binding_is_locked){

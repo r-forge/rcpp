@@ -4,6 +4,9 @@
 
 	* src/Rcpp/Environment.h: make sure what() is const. (suncc finding)
 
+	* src/RcppCommon.h: pre declare classes, as an ettempt to 
+	deal with the suncc warning "RObject may not have a type qualifier."
+
 2010-01-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.7.3
