@@ -16,6 +16,8 @@
 	* src/RcppFunction.{h,cpp}: listen to some suncc warnings
 
 	* src/RcppFrame.cpp: listen to some suncc warnings
+	
+	* src/as.cpp: use transform instead of assign
 
 2010-01-21  Dirk Eddelbuettel  <edd@debian.org>
 

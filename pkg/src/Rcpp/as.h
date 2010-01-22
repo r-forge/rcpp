@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <algorithm>
 
 namespace Rcpp{ 
 
@@ -43,6 +44,27 @@ template<> std::vector<double>      	as< std::vector<double> >(SEXP m_sexp) ;
 template<> std::vector<std::string> 	as< std::vector<std::string> >(SEXP m_sexp) ;
 template<> std::vector<Rbyte>       	as< std::vector<Rbyte> >(SEXP m_sexp) ;
 template<> std::vector<bool>        	as< std::vector<bool> >(SEXP m_sexp) ;
+
+/* these do not take care of coercion*/
+inline bool Rboolean_to_bool( int x){ return x == TRUE ; }
+inline bool int_to_bool(int x){ return x != 0 ; }
+inline bool double_to_bool(double x){ return x != 0.0 ; }
+inline bool Rbyte_to_bool(Rbyte x){ return x != static_cast<Rbyte>(0) ; }
+
+/* these take care of coercion */
+inline int Rboolean_to_int(int x){ return (x==NA_LOGICAL) ? NA_INTEGER : x ; }
+inline int double_to_int(double x){ 
+	if (ISNAN(x)) return NA_INTEGER;
+	else if (x > INT_MAX || x <= INT_MIN ) {
+		return NA_INTEGER;
+	}
+	return static_cast<int>(x);
+}
+inline int Rbyte_to_int(Rbyte x){ return static_cast<int>(x); }
+
+inline int int_to_RBoolean(int x){ return ( x == NA_INTEGER ) ? NA_LOGICAL : (x!=0); }
+
+
 
 } // namespace Rcpp      
 
