@@ -159,16 +159,16 @@ template<> std::vector<Rbyte> as< std::vector<Rbyte> >(SEXP m_sexp) {
     std::vector<Rbyte> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
-    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
+    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_Rbyte ) ;
     	break ;
     case RAWSXP:
     	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
     	break ;
     case REALSXP:
-    	v.assign( REAL(m_sexp), REAL(m_sexp)+n) ;
+    	transform( REAL(m_sexp), REAL(m_sexp)+n, v.begin(), double_to_Rbyte ) ;
     	break;
     case INTSXP:
-    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
+    	transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_Rbyte ) ;
     	break;
     default:
     	throw std::range_error("as< vector<Rbyte> > expects raw, double or int");
@@ -181,16 +181,16 @@ template<> std::vector<double> as< std::vector<double> >(SEXP m_sexp){
     std::vector<double> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
-    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
+    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_double ) ;
     	break ;
     case RAWSXP:
-    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
+    	transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_double ) ;
     	break ;
     case REALSXP:
     	v.assign( REAL(m_sexp), REAL(m_sexp)+n) ;
     	break;
     case INTSXP:
-    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
+    	transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_double) ;
     	break;
     default:
     	    throw std::range_error("as< vector<double> >:  expects raw, double or int");
