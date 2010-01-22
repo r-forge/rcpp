@@ -24,6 +24,10 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/Evaluator.h>
+#include <Rcpp/wrap.h>
+#include <Rcpp/Symbol.h>
+#include <Rcpp/Language.h>
 
 namespace Rcpp{ 
 

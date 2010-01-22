@@ -20,10 +20,6 @@
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Rcpp/Environment.h>
-#include <Rcpp/Evaluator.h>
-#include <Rcpp/Symbol.h>
-#include <Rcpp/Language.h>
-#include <Rcpp/wrap.h>
 
 namespace Rcpp {
 

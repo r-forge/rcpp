@@ -19,14 +19,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <Rcpp.h>
+#include <RcppCommon.h>
 
 /* for now, the fancy exception handling is only available in GCC, 
    simply because we've not investigated if it is available in other 
    compilers */
 #ifdef __GNUC__
 #include <typeinfo>
-#include <exception>
 #include <exception_defines.h>
 #include <cxxabi.h>
 

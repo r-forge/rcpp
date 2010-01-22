@@ -25,6 +25,7 @@
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/Named.h>
+#include <Rcpp/Evaluator.h>
 
 namespace Rcpp{ 
 

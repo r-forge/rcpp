@@ -26,6 +26,9 @@
 #include <Rcpp/RObject.h>
 #include <Rcpp/Pairlist.h>
 #include <Rcpp/Evaluator.h>
+#include <Rcpp/Language.h>
+#include <Rcpp/as.h>
+#include <Rcpp/Environment.h>
 
 namespace Rcpp{ 
 
