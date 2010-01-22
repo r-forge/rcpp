@@ -69,7 +69,6 @@ inline NumericVector wrap( std::initializer_list<double> list) { return NumericV
 inline LogicalVector wrap( std::initializer_list<bool> list) { return LogicalVector(list); }
 inline RawVector wrap(std::initializer_list<Rbyte> list) { return RawVector(list) ; }
 inline CharacterVector wrap(std::initializer_list<std::string> list ){ return CharacterVector(list) ; }
-inline List wrap( std::initializer_list<RObject> list) { return List(list); }
 #endif
 
 } // namespace Rcpp

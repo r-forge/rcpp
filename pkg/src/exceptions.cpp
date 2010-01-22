@@ -19,7 +19,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <RcppCommon.h>
+#include <Rcpp.h>
 
 /* for now, the fancy exception handling is only available in GCC, 
    simply because we've not investigated if it is available in other 
@@ -77,7 +77,6 @@ void forward_uncaught_exceptions_to_r(){
 		      ), R_FindNamespace(Rf_mkString("Rcpp"))
 	     ) ; 
 }
-
 
 #else
 void forward_uncaught_exceptions_to_r(){

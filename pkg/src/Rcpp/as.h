@@ -64,9 +64,9 @@ inline int Rbyte_to_int(Rbyte x){ return static_cast<int>(x); }
 
 inline Rbyte Rboolean_to_Rbyte(int x){ return x == TRUE ? static_cast<Rbyte>(1) : static_cast<Rbyte>(0) ;}
 inline Rbyte double_to_Rbyte(double x){ 
-	if( x == NA_REAL) return static_cast<Rbyte>(0) ; 
+	if( x == NA_REAL) return (Rbyte)0 ; 
 	int y = static_cast<int>(x) ;
-	return (y < 0 || y > 255) ? static_cast<Rbyte>(0) : static_cast<Rbyte>(y) ;
+	return (y < 0 || y > 255) ? (Rbyte)0 : (Rbyte)y ;
 } 
 inline Rbyte int_to_Rbyte(int x){
 	return (x < 0 || x > 255) ? static_cast<Rbyte>(0) : static_cast<Rbyte>(x) ;
