@@ -114,16 +114,20 @@ template<> std::vector<bool> as< std::vector<bool> >(SEXP m_sexp) {
     std::vector<bool> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
-    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_bool ) ;
+    	// transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_bool ) ;
+    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
     	break ;
     case INTSXP:
-    	transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_bool ) ;
+    	// transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_bool ) ;
+    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
     	break;
     case REALSXP:
-    	transform( REAL(m_sexp), REAL(m_sexp)+n, v.begin(), double_to_bool ) ;
+    	// transform( REAL(m_sexp), REAL(m_sexp)+n, v.begin(), double_to_bool ) ;
+    	v.assign( REAL(m_sexp), REAL(m_sexp)+n ) ;
     	break;
     case RAWSXP:
-    	transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_bool ) ;
+    	// transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_bool ) ;
+    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
     	break;
     default:
     		throw std::range_error( "as< vector<bool> >: invalid R type" ) ; 
@@ -140,13 +144,16 @@ template<> std::vector<int> as< std::vector<int> >(SEXP m_sexp){
     	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
     	break;
     case LGLSXP:
-    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_int ) ;
+    	// transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_int ) ;
+    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n) ;
     	break;
     case REALSXP:
-    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), double_to_int ) ;
+    	// transform( REAL(m_sexp), REAL(m_sexp)+n, v.begin(), double_to_int ) ;
+    	v.assign( REAL(m_sexp), REAL(m_sexp) + n) ;
     	break;
     case RAWSXP:
-    	transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_int ) ;
+    	// transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_int ) ;
+    	v.assign( RAW(m_sexp), RAW(m_sexp)+n) ;
     	break;
     default:
     		throw std::range_error( "as< vector<int> >: invalid R type" ) ; 
@@ -159,16 +166,19 @@ template<> std::vector<Rbyte> as< std::vector<Rbyte> >(SEXP m_sexp) {
     std::vector<Rbyte> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
-    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_Rbyte ) ;
+    	// transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_Rbyte ) ;
+    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n) ;
     	break ;
     case RAWSXP:
     	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
     	break ;
     case REALSXP:
-    	transform( REAL(m_sexp), REAL(m_sexp)+n, v.begin(), double_to_Rbyte ) ;
+    	// transform( REAL(m_sexp), REAL(m_sexp)+n, v.begin(), double_to_Rbyte ) ;
+    	v.assign( REAL(m_sexp), REAL(m_sexp) + n ) ;
     	break;
     case INTSXP:
-    	transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_Rbyte ) ;
+    	// transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_Rbyte ) ;
+    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n) ;
     	break;
     default:
     	throw std::range_error("as< vector<Rbyte> > expects raw, double or int");
@@ -181,16 +191,19 @@ template<> std::vector<double> as< std::vector<double> >(SEXP m_sexp){
     std::vector<double> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
-    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_double ) ;
+    	// transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_double ) ;
+    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ); 
     	break ;
     case RAWSXP:
-    	transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_double ) ;
+    	// transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_double ) ;
+    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
     	break ;
     case REALSXP:
     	v.assign( REAL(m_sexp), REAL(m_sexp)+n) ;
     	break;
     case INTSXP:
-    	transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_double) ;
+    	// transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_double) ;
+    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
     	break;
     default:
     	    throw std::range_error("as< vector<double> >:  expects raw, double or int");

@@ -286,7 +286,7 @@ namespace Rcpp {
     	return Binding( *this, name ) ;
     }
     
-    Environment Environment::RCPP_NAMESPACE = Environment::namespace_env("Rcpp") ;
+    Environment Environment::RCPP_NAMESPACE = Rf_eval( Rf_lcons( Rf_install("getNamespace"), Rf_cons( Rf_mkString("Rcpp") , R_NilValue) ), R_GlobalEnv );
     Environment& Environment::Rcpp_namespace() throw() {
     	    return RCPP_NAMESPACE ;
     }

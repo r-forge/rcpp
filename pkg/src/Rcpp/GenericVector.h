@@ -66,13 +66,7 @@ public:
 
 	GenericVector(SEXP x) throw(not_compatible);
 	GenericVector( int size) ;
-	
-#ifdef HAS_INIT_LISTS	
-	GenericVector( std::initializer_list<RObject> list ) : VectorBase(){
-		fill( list.begin(), list.end() ) ;
-	};
-#endif
-	
+
 	const Proxy operator[]( int i ) const throw(index_out_of_bounds);
 	Proxy operator[]( int i ) throw(index_out_of_bounds) ;
 	
