@@ -13,6 +13,10 @@
 
 	* src/Environment.cpp: use Evaluator instead of R_ToplevelExec
 
+	* src/RcppFunction.{h,cpp}: listen to some suncc warnings
+
+	* src/RcppFrame.cpp: listen to some suncc warnings
+
 2010-01-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.7.3
