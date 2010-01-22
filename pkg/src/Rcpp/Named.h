@@ -22,6 +22,7 @@
 #ifndef Rcpp_Named_h
 #define Rcpp_Named_h
 
+#include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/Symbol.h>
 

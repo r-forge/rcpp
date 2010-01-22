@@ -22,11 +22,12 @@
 #ifndef Rcpp_wrap_h
 #define Rcpp_wrap_h
 
+#include <RcppCommon.h>
+
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
 #endif
 
-#include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <set>
 #include <Rcpp/IntegerVector.h>
