@@ -1,39 +1,78 @@
+2010-01-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.7.3
+
+	* debian/*: Similarly updated for new release to Debian
+
+	* INDEX: updated
+
+	* configure.in: Some more small cleanups
+
+	* inst/skeleton/Makevars.win: Add missing default file
+
+2010-01-21  Romain Francois <francoisromain@free.fr>
+
+	* configure.in: Some small cleanups, add RCPP_CXX0X env var
+
+2010-01-20 Romain Francois <francoisromain@free.fr>
+
+	* src/*: make update private virtual in RObject and couple it with
+	setSEXP so that it gets called automatically, instead of manually
+	* src/*: move more code depending on c++0x from cpp files to header
+	files
+
+2010-01-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.in: Detect C++ capabilties (via g++ major/minor) via
+	  small C++ program embedded in autoconf macro
+
 2010-01-19  Romain Francois <francoisromain@free.fr>
 
-	* configure.in: use the cxx0x.R script to discover if the 
+	* configure.in: use the cxx0x.R script to discover if the
 	compiler being used is c++0x capable
 	* configure: regenerated from updated configure.in
 
 	* src/Makevars.in: using CLINK_CPPFLAGS variable
 
-	* src/Makevars.win: using CLINK_CPPFLAGS variable with the 
+	* src/Makevars.win: using CLINK_CPPFLAGS variable with the
 	cxx0x.R discovery script
-	
+
+2010-01-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/RcppLdpath.R: Rewrote logic for LdFlags() to decide when linking
+	  is static: default now is everywhere but Linux, and choices can be
+	  overriden as before
+
 2010-01-18  Romain Francois <francoisromain@free.fr>
 
-	* inst/discovery/cxx0x.R: replaces the cxx0x.c file to take 
+	* inst/discovery/cxx0x.R: replaces the cxx0x.c file to take
 	care of compiling, etc...
 
 2010-01-17  Romain Francois <francoisromain@free.fr>
 
-	* src/exceptions.cpp: slightly less dumb exception logic 
+	* src/exceptions.cpp: slightly less dumb exception logic
 	on non GCC compilers. exceptions will now trigger an R error
-	with a default message (we don't attempt to get the 
+	with a default message (we don't attempt to get the
 	exception class or message because we don't know how to)
 
 	* src/Rcpp/Pairlist.h: Pairlist lacked a default constructor
-	which is needed when the variadic templates are not 
+	which is needed when the variadic templates are not
 	available
 
 	* inst/unitTests/*: add -std=c++0x in inline when necessary
 
 	* R/RcppLdPath.R : new script RcppCxx0xFlags() and Cxx0xFlags()
-	that compile, load and call a simple C file in order to check 
+	that compile, load and call a simple C file in order to check
 	the compiler version and add the -std=c++0x flag
 
-	* inst/discovery/cxx0x.c: discovery script. simple C script that 
-	returns "-std=c++0x" if it is compiled with GCC >= 4.3 and 
+	* inst/discovery/cxx0x.c: discovery script. simple C script that
+	returns "-std=c++0x" if it is compiled with GCC >= 4.3 and
 	"" otherwise
+
+2010-01-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/Rcpp/*h: call Rf_length() etc as ::Rf_length() to ensure we get
+	  the one from the top-level namespace
 
 2010-01-16  Romain Francois <francoisromain@free.fr>
 
@@ -47,7 +86,7 @@
 	for ExpressionVector::eval
 
 	* src/Rcpp/ExpressionVector.h: ExpressionVector gains a
-	constructor ExpressionVector( const std::string& ) that 
+	constructor ExpressionVector( const std::string& ) that
 	parses the string as R code
 	* inst/unitTests/runit.ExpressionVector.R: added unit tests
 	to cover the new constructor
