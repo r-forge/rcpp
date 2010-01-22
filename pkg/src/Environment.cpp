@@ -23,14 +23,6 @@
 
 namespace Rcpp {
 
-struct safeFindNamespace_s {
-    SEXP sym, val ;
-};
-static void safeFindNamespace(void *data) {
-    struct safeFindNamespace_s *s = (struct safeFindNamespace_s*) data;
-    s->val = R_FindNamespace(s->sym);
-}
-
     Environment::Environment( SEXP x = R_GlobalEnv) throw(not_compatible) : RObject::RObject(x){
     	if( ! Rf_isEnvironment(x) ) {
     		/* not an environment, but maybe convertible to one using 
@@ -197,12 +189,14 @@ static void safeFindNamespace(void *data) {
     }
     
     Environment Environment::namespace_env(const std::string& package) throw(no_such_namespace) {
-    	struct safeFindNamespace_s s;
-    	s.sym = Rf_mkString( package.c_str() ) ;
-    	if( !s.sym || s.sym == R_NilValue || !R_ToplevelExec(safeFindNamespace, (void*) &s) ){
-    		throw no_such_namespace(package) ;
+    	
+    	SEXP env = R_NilValue ;
+    	try{
+    		env = Evaluator::run( Rf_lang2(Rf_install("getNamespace"), Rf_mkString(package.c_str()) ) ) ;
+    	} catch( const Evaluator::eval_error& ex){
+    		throw no_such_namespace( package  ) ; 
     	}
-    	return s.val ;
+    	return Environment( env ) ;
     }
     
     Environment Environment::parent() const throw() {

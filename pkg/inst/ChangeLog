@@ -11,6 +11,8 @@
 
 	* src/*cpp: make sure foo.cpp only include Rcpp/foo.h
 
+	* src/Environment.cpp: use Evaluator instead of R_ToplevelExec
+
 2010-01-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.7.3
