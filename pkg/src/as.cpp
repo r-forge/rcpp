@@ -114,16 +114,16 @@ template<> std::vector<bool> as< std::vector<bool> >(SEXP m_sexp) {
     std::vector<bool> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
-    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
+    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_bool ) ;
     	break ;
     case INTSXP:
-    	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
+    	transform( INTEGER(m_sexp), INTEGER(m_sexp)+n, v.begin(), int_to_bool ) ;
     	break;
     case REALSXP:
-    	v.assign( REAL(m_sexp), REAL(m_sexp)+n ) ;
+    	transform( REAL(m_sexp), REAL(m_sexp)+n, v.begin(), double_to_bool ) ;
     	break;
     case RAWSXP:
-    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
+    	transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_bool ) ;
     	break;
     default:
     		throw std::range_error( "as< vector<bool> >: invalid R type" ) ; 
@@ -136,17 +136,17 @@ template<> std::vector<int> as< std::vector<int> >(SEXP m_sexp){
     int n = Rf_length(m_sexp);
     std::vector<int> v(n);
     switch( TYPEOF(m_sexp) ){
-    case LGLSXP:
-    	v.assign( LOGICAL(m_sexp), LOGICAL(m_sexp)+n ) ;
-    	break;
     case INTSXP:
     	v.assign( INTEGER(m_sexp), INTEGER(m_sexp)+n ) ;
     	break;
+    case LGLSXP:
+    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), Rboolean_to_int ) ;
+    	break;
     case REALSXP:
-    	v.assign( REAL(m_sexp), REAL(m_sexp)+n ) ;
+    	transform( LOGICAL(m_sexp), LOGICAL(m_sexp)+n, v.begin(), double_to_int ) ;
     	break;
     case RAWSXP:
-    	v.assign( RAW(m_sexp), RAW(m_sexp)+n ) ;
+    	transform( RAW(m_sexp), RAW(m_sexp)+n, v.begin(), Rbyte_to_int ) ;
     	break;
     default:
     		throw std::range_error( "as< vector<int> >: invalid R type" ) ; 
