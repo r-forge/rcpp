@@ -30,7 +30,7 @@ namespace Rcpp{
 	
 	ExpressionVector::parse_error::parse_error() throw(){}
 	ExpressionVector::parse_error::~parse_error() throw(){}
-	const char* ExpressionVector::parse_error::what() throw(){ return "parse error" ; }
+	const char* ExpressionVector::parse_error::what() const throw(){ return "parse error" ; }
 	
 	ExpressionVector::ExpressionVector(SEXP x) throw(not_compatible) : VectorBase() {
 		switch( TYPEOF( x ) ){
