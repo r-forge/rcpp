@@ -20,10 +20,6 @@
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Rcpp/Pairlist.h>
-#include <Rcpp/Evaluator.h>
-#include <Rcpp/RObject.h>
-#include <Rcpp/Language.h>
-#include <RcppCommon.h>
 
 namespace Rcpp {
 

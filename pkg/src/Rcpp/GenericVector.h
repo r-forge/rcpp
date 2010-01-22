@@ -23,13 +23,15 @@
 #define Rcpp_GenericVector_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
+#include <Rcpp/wrap.h>
 #include <Rcpp/Environment.h>
+#include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
+#include <Rcpp/Evaluator.h>
+#include <Rcpp/Symbol.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>
-#include <algorithm>
 #endif
 
 namespace Rcpp{ 

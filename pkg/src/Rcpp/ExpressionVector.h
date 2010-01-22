@@ -26,6 +26,7 @@
 #include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
 #include <Rcpp/Evaluator.h>
+#include <Rcpp/Environment.h>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>

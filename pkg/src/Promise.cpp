@@ -20,10 +20,6 @@
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Rcpp/Promise.h>
-#include <Rcpp/wrap.h>
-#include <Rcpp/RObject.h>
-#include <Rcpp/Environment.h>
-#include <Rcpp/ExpressionVector.h>
 
 namespace Rcpp {
 
