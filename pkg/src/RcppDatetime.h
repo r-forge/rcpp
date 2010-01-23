@@ -23,6 +23,7 @@
 #define RcppDatetime_h
 
 #include <RcppCommon.h>
+#include <time.h>
 
 class RcppDatetime {
 private:

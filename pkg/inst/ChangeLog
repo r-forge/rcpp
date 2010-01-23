@@ -2,6 +2,8 @@
 
 	* src/wrap.cpp: s/copy/std::copy/
 
+	* src/RcppDateTime.h: explicitely include <time.h> (win64 warning)
+
 2010-01-22  Romain Francois <francoisromain@free.fr>
 
 	* src/Makevars.win: disable c++0x entirely (for now)
