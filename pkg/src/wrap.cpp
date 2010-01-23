@@ -115,7 +115,7 @@ LogicalVector wrap(const std::vector<bool> & v){
     logTxt("RObject from bool vector\n");
     size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(LGLSXP, n) );
-    copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
+    std::copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
     LogicalVector o(m_sexp) ;
     UNPROTECT(1) ; /* m_sexp now preserved by o */
     return o ;
@@ -125,7 +125,7 @@ IntegerVector wrap(const std::vector<int> & v){
     logTxt("RObject from int vector\n");
     size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(INTSXP, n) );
-    copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
+    std::copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
     IntegerVector o(m_sexp) ;
     UNPROTECT(1) ;
     return o ;
@@ -135,7 +135,7 @@ NumericVector wrap(const std::vector<double> & v){
     logTxt("RObject from double vector\n");
     size_t n = v.size();
     SEXP m_sexp = PROTECT( Rf_allocVector(REALSXP, n) );
-    copy( v.begin(), v.end(), REAL(m_sexp) ) ;
+    std::copy( v.begin(), v.end(), REAL(m_sexp) ) ;
     NumericVector o(m_sexp) ;
     UNPROTECT(1) ;
     return o ;
@@ -145,7 +145,7 @@ RawVector wrap(const std::vector<Rbyte> & v){
     logTxt("RObject from vector<Rbyte> \n");
     size_t n = v.size();
     SEXP m_sexp = PROTECT(Rf_allocVector(RAWSXP, n));
-    copy( v.begin(), v.end(), RAW(m_sexp) ) ;
+    std::copy( v.begin(), v.end(), RAW(m_sexp) ) ;
     RawVector o(m_sexp) ;
     UNPROTECT(1) ;
     return o ;
