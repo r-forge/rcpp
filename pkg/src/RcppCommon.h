@@ -94,26 +94,26 @@ const char * sexp_to_name(int sexp_type);
 
 RcppExport SEXP initRcpp() ;
 
-// namespace Rcpp{
-// 	
-// 	class RObject ;
-// 	class Environment;
-// 	class Evaluator ;
-// 	class Symbol ;
-// 	class Language ;
-// 	class Named ;
-// 	class Pairlist ;
-// 	class Function ;
-// 	class IntegerVector; 
-// 	class NumericVector; 
-// 	class RawVector; 
-// 	class LogicalVector; 
-// 	class GenericVector; 
-// 	class WeakReference; 
-// 	class CharacterVector; 
-// 	class ExpressionVector; 
-// 	class ComplexVector; 
-// } 
+namespace Rcpp{
+	
+	class RObject ;
+	class Environment;
+	class Evaluator ;
+	class Symbol ;
+	class Language ;
+	class Named ;
+	class Pairlist ;
+	class Function ;
+	class IntegerVector; 
+	class NumericVector; 
+	class RawVector; 
+	class LogicalVector; 
+	class GenericVector; 
+	class WeakReference; 
+	class CharacterVector; 
+	class ExpressionVector; 
+	class ComplexVector; 
+} 
 
 
 #endif
