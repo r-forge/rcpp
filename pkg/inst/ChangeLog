@@ -1,3 +1,7 @@
+2010-01-23  Romain Francois <francoisromain@free.fr>
+
+	* src/wrap.cpp: s/copy/std::copy/
+
 2010-01-22  Romain Francois <francoisromain@free.fr>
 
 	* src/Makevars.win: disable c++0x entirely (for now)
