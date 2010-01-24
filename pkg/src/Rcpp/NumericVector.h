@@ -23,86 +23,11 @@
 #define Rcpp_NumericVector_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
-#include <Rcpp/VectorBase.h>
-
-#ifdef HAS_INIT_LISTS
-#include <initializer_list>
-#include <algorithm>
-#endif
+#include <Rcpp/SimpleVector.h>
 
 namespace Rcpp{ 
 
-class NumericVector : public VectorBase {     
-public:
-
-	NumericVector(SEXP x) throw(not_compatible);
-	NumericVector( int size) ;
-	
-#ifdef HAS_INIT_LISTS	
-	NumericVector( std::initializer_list<int> list ) : VectorBase(), start(0){
-		coerce_and_fill( list.begin(), list.end() ) ;
-	};
-	NumericVector( std::initializer_list<double> list ) : VectorBase(), start(0){
-		simple_fill( list.begin(), list.end() ) ;
-	}
-#endif
-	/** Fast 1d 0-based indexing. no bounds checking are performed */
-	inline double& operator[]( const int& i ) { return start[i] ; }
-	
-	/** Returns a pointer to the internal array */
-	inline double* begin() const { return start ; }
-	
-	/** Returns a pointer to the element after the last element of the array */
-	inline double* end() const   { return start + Rf_length(m_sexp);}
-	
-	/** convenience typedef */
-	typedef double* iterator ;
-
-	/** secure 1d 0-based indexing. 
-	 * As opposed to operator[], this operator performs bounds checks
-	 * to make sure that i is valid. There is however a price associated 
-	 * with the check
-	 * 
-	 * @param i 0-based index. this indexes the object as a vector
-	 * so if it is actually a matrix the order is column-major (as in R)
-	 */
-	double& operator()( const size_t& i ) throw(index_out_of_bounds) ;
-	
-	/**
-	 * matrix indexing. 
-	 */
-	double& operator()( const size_t&i, const size_t& j) throw(not_a_matrix,index_out_of_bounds);
-	
-private:
-	double *start ;
-	virtual void update(){ start = REAL(m_sexp);}
-	
-	// simple is when there is no need for coercion
-	// called only when the input container contains doubles
-	template <typename InputIterator>
-	void simple_fill( InputIterator first, InputIterator last){
-		size_t size = std::distance( first, last) ;
-		SEXP x = PROTECT( Rf_allocVector( REALSXP, size ) );
-		std::copy( first, last, REAL(x) ) ;
-		setSEXP( x ) ;
-		UNPROTECT(1) ;
-	}
-	
-	// need to coerce to double
-	template <typename InputIterator>
-	void coerce_and_fill( InputIterator first, InputIterator last){
-		size_t size = std::distance( first, last) ;
-		SEXP x = PROTECT( Rf_allocVector( REALSXP, size ) );
-		// FIXME: actually coerce
-		// std::transform( first, last, REAL(x), coerce_to_double ) ;
-		std::copy( first, last, REAL(x) ) ;
-		setSEXP( x ) ;
-		UNPROTECT(1) ;
-	}
-	
-	
-} ;
+typedef SimpleVector<REALSXP,double> NumericVector ;
 
 } // namespace
 

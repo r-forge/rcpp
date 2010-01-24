@@ -27,4 +27,10 @@ namespace Rcpp{
 	VectorBase::VectorBase(): RObject(){} ;
 	VectorBase::~VectorBase(){}
 
+	template<> double* get_pointer<REALSXP,double>(SEXP x){ return REAL(x) ; }
+	template<> int* get_pointer<INTSXP,int>(SEXP x){ return INTEGER(x) ; }
+	template<> int* get_pointer<LGLSXP,int>(SEXP x){ return LOGICAL(x) ; }
+	template<> Rcomplex* get_pointer<CPLXSXP,Rcomplex>(SEXP x){ return COMPLEX(x) ; }
+	template<> Rbyte* get_pointer<RAWSXP,Rbyte>(SEXP x){ return RAW(x) ; }
+
 } // namespace 
