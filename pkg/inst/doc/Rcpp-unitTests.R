@@ -1,7 +1,6 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2009 Dirk Eddelbuettel
-# Copyright (C) 2009 Romain Francois
+# Copyright (C) 2009 - 2010 Dirk Eddelbuettel and Romain Francois
 #
 # This file is part of Rcpp.
 #
