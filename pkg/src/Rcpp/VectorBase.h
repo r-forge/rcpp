@@ -51,6 +51,13 @@ public:
 	
 } ;
 
+template <int sexptype, typename T> T* get_pointer(SEXP x){ throw std::exception( "not implemented" ) ; return static_cast<T*>(0); }
+template<> double* get_pointer<REALSXP,double>(SEXP x) ;
+template<> int* get_pointer<INTSXP,int>(SEXP x) ;
+template<> int* get_pointer<LGLSXP,int>(SEXP x) ;
+template<> Rcomplex* get_pointer<CPLXSXP,Rcomplex>(SEXP x) ;
+template<> Rbyte* get_pointer<RAWSXP,Rbyte>(SEXP x) ;
+
 } // namespace
 
 #endif

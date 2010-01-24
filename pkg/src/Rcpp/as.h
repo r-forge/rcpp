@@ -52,6 +52,8 @@ inline bool double_to_bool(double x){ return x != 0.0 ; }
 inline bool Rbyte_to_bool(Rbyte x){ return x != static_cast<Rbyte>(0) ; }
 
 /* these take care of coercion */
+inline int bool_to_Rboolean(bool x){ return x ? TRUE : FALSE ; }
+
 inline int Rboolean_to_int(int x){ return (x==NA_LOGICAL) ? NA_INTEGER : x ; }
 inline int double_to_int(double x){ 
 	if (ISNAN(x)) return NA_INTEGER;

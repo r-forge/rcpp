@@ -45,6 +45,10 @@
 #include <stdexcept>
 #include <vector>
 
+#ifdef HAS_INIT_LISTS
+#include <initializer_list>
+#endif
+
 // include R headers, but set R_NO_REMAP and access everything via Rf_ prefixes
 #define R_NO_REMAP
 #include <R.h>
@@ -104,15 +108,10 @@ namespace Rcpp{
 	class Named ;
 	class Pairlist ;
 	class Function ;
-	class IntegerVector; 
-	class NumericVector; 
-	class RawVector; 
-	class LogicalVector; 
 	class GenericVector; 
 	class WeakReference; 
 	class CharacterVector; 
 	class ExpressionVector; 
-	class ComplexVector; 
 } 
 
 
