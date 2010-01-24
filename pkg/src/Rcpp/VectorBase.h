@@ -29,7 +29,13 @@ namespace Rcpp{
 
 class VectorBase : public RObject {     
 public:
-	
+	class not_a_matrix : public std::exception{
+	public:
+		not_a_matrix(){} ;
+		virtual ~not_a_matrix() throw() {} ;
+		virtual const char* what() const throw() { return "not a matrix" ; };
+	} ;
+  
     VectorBase() ;
     virtual ~VectorBase() = 0;
 	

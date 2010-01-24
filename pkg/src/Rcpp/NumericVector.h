@@ -47,14 +47,33 @@ public:
 		simple_fill( list.begin(), list.end() ) ;
 	}
 #endif
-
+	/** Fast 1d 0-based indexing. no bounds checking are performed */
 	inline double& operator[]( const int& i ) { return start[i] ; }
-	inline const double& operator[]( const int& i ) const { return start[i]; }
-	inline double* begin() const { return start ; } 
-	inline double* end() const   { return start+LENGTH(m_sexp);}
 	
+	/** Returns a pointer to the internal array */
+	inline double* begin() const { return start ; }
+	
+	/** Returns a pointer to the element after the last element of the array */
+	inline double* end() const   { return start + Rf_length(m_sexp);}
+	
+	/** convenience typedef */
 	typedef double* iterator ;
 
+	/** secure 1d 0-based indexing. 
+	 * As opposed to operator[], this operator performs bounds checks
+	 * to make sure that i is valid. There is however a price associated 
+	 * with the check
+	 * 
+	 * @param i 0-based index. this indexes the object as a vector
+	 * so if it is actually a matrix the order is column-major (as in R)
+	 */
+	double& operator()( const size_t& i ) throw(index_out_of_bounds) ;
+	
+	/**
+	 * matrix indexing. 
+	 */
+	double& operator()( const size_t&i, const size_t& j) throw(not_a_matrix,index_out_of_bounds);
+	
 private:
 	double *start ;
 	virtual void update(){ start = REAL(m_sexp);}

@@ -42,4 +42,18 @@ namespace Rcpp{
 		setSEXP( Rf_allocVector(REALSXP, size) ) ;
 	}
 
+	double& NumericVector::operator()( const size_t& i) throw(index_out_of_bounds){
+		if( i >= static_cast<size_t>(Rf_length(m_sexp)) ) throw index_out_of_bounds() ;
+		return start[i] ;
+	}
+	
+	double& NumericVector::operator()( const size_t& i, const size_t& j) throw(not_a_matrix,index_out_of_bounds){
+		if( !Rf_isMatrix(m_sexp) ) throw not_a_matrix() ;
+		int *dim = INTEGER( Rf_getAttrib( m_sexp, R_DimSymbol ) ) ;
+		size_t nrow = static_cast<size_t>(dim[0]) ;
+		size_t ncol = static_cast<size_t>(dim[1]) ;
+		if( i >= nrow || j >= ncol ) throw index_out_of_bounds() ;
+		return start[ i + nrow*j ] ;
+	}
+	
 } // namespace 

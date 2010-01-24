@@ -1,5 +1,10 @@
 2010-01-23  Romain Francois <francoisromain@free.fr>
 
+	* src/NumericVector.cpp: first pass at matrix indexing using 
+	operator()(size_t, size_t)
+
+2010-01-23  Romain Francois <francoisromain@free.fr>
+
 	* src/wrap.cpp: s/copy/std::copy/
 
 	* src/RcppDateTime.h: explicitely include <time.h> (win64 warning)
