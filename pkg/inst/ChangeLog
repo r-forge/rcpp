@@ -1,7 +1,11 @@
-2010-01-23  Romain Francois <francoisromain@free.fr>
+2010-01-24  Romain Francois <francoisromain@free.fr>
 
 	* src/NumericVector.cpp: first pass at matrix indexing using 
 	operator()(size_t, size_t)
+
+	* src/Rcpp/VectorBase.h: added the exception not_a_matrix
+	that is thrown when attempting to perform matrix indexing on 
+	a vector that is not a matrix.
 
 2010-01-23  Romain Francois <francoisromain@free.fr>
 
