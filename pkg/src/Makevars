@@ -2,8 +2,9 @@
 #
 # Makefile for Rcpp 
 #
-# Copyright (C) 2008 - 2010 Dirk Eddelbuettel <edd@debian.org>
+# Copyright (C) 2008 - 2009 Dirk Eddelbuettel <edd@debian.org>
 # Copyright (C) 2008        Simon Urbanek <simon.urbanek@r-project.org>
+# Copyright (C) 2009 - 2010 Dirk Eddelbuettel and Romain Francois
 
 ## $(SHLIB) is the usual default target that is built automatically from all source 
 ## files in this directory. userLibrary is an additional target for the second library
@@ -26,7 +27,9 @@ USERLIB	=	libRcpp$(DYLIB_EXT)
 USERLIBST =	libRcpp.a
 
 PKG_CPPFLAGS += -I. 
-CLINK_CPPFLAGS = @CXX0XFLAGS@
+
+## uncomment to enable (non-portable) support for C++0x
+#CLINK_CPPFLAGS = -std=c++0x
 
 userLibrary: 	$(USERLIB) $(USERLIBST)
 		-@if test ! -e $(USERDIR)$(R_ARCH); then mkdir -p $(USERDIR)$(R_ARCH); fi
