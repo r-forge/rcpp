@@ -108,10 +108,8 @@ namespace Rcpp{
 	class Named ;
 	class Pairlist ;
 	class Function ;
-	class GenericVector; 
 	class WeakReference; 
 	class CharacterVector; 
-	class ExpressionVector; 
 } 
 
 

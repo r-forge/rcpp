@@ -36,8 +36,12 @@
 namespace Rcpp{ 
 
 // factories
-
 RObject wrap(SEXP m_sexp) ;
+
+template <typename T> RObject wrap( const T& object){
+	SEXP x = object ; /* let implicit conversion work */
+	return wrap(x) ;  /* use the wrap(SEXP) function */
+}
 
 LogicalVector wrap(const bool & v); 
 NumericVector wrap(const double & v);
