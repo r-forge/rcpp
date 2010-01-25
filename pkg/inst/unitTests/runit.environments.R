@@ -101,16 +101,38 @@ test.environment.assign <- function(){
 
 }
 
+test.environment.assign.templated <- function(){
+	
+	funx <- cfunction(signature(x="environment", name = "character", object = "ANY" ), '
+	Rcpp::Environment env(x) ;
+	std::string st = Rcpp::wrap(name).asStdString() ;
+	return Rcpp::wrap( env.assign(st, object) ) ;
+	', Rcpp=TRUE, verbose=FALSE)
+	
+	e <- new.env( )
+	
+	
+}
+
 test.environment.isLocked <- function(){
 	funx <- cfunction(signature(x="environment" ), '
 	Rcpp::Environment env(x) ;
-	return Rcpp::wrap( env.isLocked() ) ;
+	env.assign( "x1", 1 ) ;
+	env.assign( "x2", 10.0 ) ;
+	env.assign( "x3", std::string( "foobar" ) ) ;
+	env.assign( "x4", "foobar" ) ;
+	std::vector< std::string > aa(2) ; aa[0] = "foo" ; aa[1] = "bar" ;
+	env.assign( "x5", aa ) ;
+	return R_NilValue ;
 	', Rcpp=TRUE, verbose=FALSE)
 	
 	e <- new.env()
-	checkTrue( !funx(e), msg = "Environment::isLocked( new.env) -> false" )
-	checkTrue( funx(asNamespace("Rcpp")), msg = "Environment::isLocked( namespace:Rcpp ) -> true" )
-	
+	funx(e)
+	checkEquals( e[["x1"]], 1L  , msg = "Environment::assign( int ) " )
+	checkEquals( e[["x2"]], 10.0, msg = "Environment::assign( double ) " )
+	checkEquals( e[["x3"]], "foobar", msg = "Environment::assign( char* ) " )
+	checkEquals( e[["x4"]], "foobar", msg = "Environment::assign( std::string ) " )
+	checkEquals( e[["x5"]], c("foo", "bar" ), msg = "Environment::assign( vector<string> ) " )
 }
 
 test.environment.bindingIsActive <- function(){

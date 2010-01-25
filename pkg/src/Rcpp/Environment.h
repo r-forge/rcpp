@@ -212,7 +212,7 @@ public:
     	     */
     	    template <typename T>
     	    Binding& operator=(const T& rhs){
-    	    	    env.assign( name, wrap(rhs) ) ;
+    	    	    env.assign( name, wrap(rhs).asSexp() ) ;
     	    	    return *this ;
     	    }
     	    
@@ -344,6 +344,20 @@ public:
      * @throw binding_is_locked if the binding is locked
      */
     bool assign( const std::string& name, SEXP x ) const throw(binding_is_locked) ;
+    
+    /**
+     * wrap and assign. If there is a wrap method taking an object 
+     * of WRAPPABLE type, then it is wrapped and the corresponding SEXP
+     * is assigned in the environment
+     *
+     * @param name name of the object to assign
+     * @param x wrappable object. anything that has a wrap( WRAPPABLE ) is fine
+     */
+    template <typename WRAPPABLE>
+    bool assign( const std::string& name, const WRAPPABLE& x) const throw(binding_is_locked){
+    	    SEXP y = wrap( x ).asSexp() ;
+    	    return assign( name, y ) ;
+    }
     
     /**
      * @return true if this environment is locked

@@ -1,3 +1,15 @@
+2010-01-25  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/Environment.h: Environment::assign gains a templated
+	form so that we can assign anything that can be wrapped to 
+	a name in an environment
+
+	* inst/unitTests/runit.environments.R: new unit test 
+	'test.environment.assign.templated' to test the templated assign
+
+	* src/Makevars(.win?): listen to the RCPP_CXX0X environment variable
+	and if set to "yes" attempt to add c++0x support if possible
+
 2010-01-24  Romain Francois <francoisromain@free.fr>
 
 	* src/SimpleVector.h : new template to replace simple vector 
