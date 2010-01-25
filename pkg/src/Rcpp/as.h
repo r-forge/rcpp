@@ -29,10 +29,23 @@
 namespace Rcpp{ 
 
 /** 
- * Generic converted from SEXP to the typename
+ * Generic converted from SEXP to the typename. T can be any type that 
+ * has a constructor taking a SEXP, which is the case for all our 
+ * RObject and derived classes. 
+ *
+ * If it is not possible to add the SEXP constructor, e.g you don't control
+ * the type, you can overload the as template to perform the 
+ * requested conversion
+ *
+ * This is used for example in Environment, so that for example the code
+ * below will work as long as there is a way to as<> the Foo type
+ *
+ * Environment x = ... ; // some environment
+ * Foo y = x["bla"] ;    // if as<Foo> makes sense then this works !!
  */
 template <typename T> T as( SEXP m_sexp) {
-	throw std::runtime_error("not implemented") ; 
+	T t(m_sexp);
+	return t ;
 }
 template<> bool 			as<bool>(SEXP m_sexp) ;
 template<> double                   	as<double>(SEXP m_sexp) ;
@@ -44,6 +57,11 @@ template<> std::vector<double>      	as< std::vector<double> >(SEXP m_sexp) ;
 template<> std::vector<std::string> 	as< std::vector<std::string> >(SEXP m_sexp) ;
 template<> std::vector<Rbyte>       	as< std::vector<Rbyte> >(SEXP m_sexp) ;
 template<> std::vector<bool>        	as< std::vector<bool> >(SEXP m_sexp) ;
+
+
+/* FIXME: turn the functions below into a template */
+
+
 
 /* these do not take care of coercion*/
 inline bool Rboolean_to_bool( int x){ return x == TRUE ; }

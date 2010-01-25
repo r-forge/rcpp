@@ -1,8 +1,18 @@
 2010-01-25  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/as.h: smarter template as<T>, now the template 
+	attempts to create an object by passing the SEXP as the first 
+	parameter, so any class that has a constructor taking a SEXP
+	can be as<>'ed. see item below for how this can be useful
+
+	* src/Rcpp/Environment.h: lhs use of Environment::Binding is now
+	a bit smarter and uses as<> to implicitely convert the SEXP
+	to the requested type, so that if as<Foo> makes sense, this 
+	works: Foo foo = env["x"] ; 
+
 	* src/Rcpp/Environment.h: Environment::assign gains a templated
 	form so that we can assign anything that can be wrapped to 
-	a name in an environment
+	a name in an environment. 
 
 	* inst/unitTests/runit.environments.R: new unit test 
 	'test.environment.assign.templated' to test the templated assign
