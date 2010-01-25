@@ -1,5 +1,8 @@
 2010-01-25  Romain Francois <francoisromain@free.fr>
 
+	* src/as.cpp: also use coercion for as<bool>, as<int>, as<double>
+	as<Rbyte> (FR #768)
+
 	* src/Rcpp/as.h: smarter template as<T>, now the template 
 	attempts to create an object by passing the SEXP as the first 
 	parameter, so any class that has a constructor taking a SEXP
