@@ -17,9 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-# This script is used by the Rcpp::RcppCxx0xFlags function to
-# generate the "-std=c++0x" flag when the compiler in use is GCC >= 4.3
-
 local({
 	flag <- function(){
 		
