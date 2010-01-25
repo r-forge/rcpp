@@ -28,6 +28,7 @@
 #include <Rcpp/wrap.h>
 #include <Rcpp/Symbol.h>
 #include <Rcpp/Language.h>
+#include <Rcpp/as.h>
 
 namespace Rcpp{ 
 
@@ -210,9 +211,9 @@ public:
     	     * with GCC4.4 :
     	     * e["bla" ] = { 1,2,3};
     	     */
-    	    template <typename T>
-    	    Binding& operator=(const T& rhs){
-    	    	    env.assign( name, wrap(rhs).asSexp() ) ;
+    	    template <typename WRAPPABLE>
+    	    Binding& operator=(const WRAPPABLE& rhs){
+    	    	    env.assign( name, rhs ) ;
     	    	    return *this ;
     	    }
     	    
@@ -233,7 +234,7 @@ public:
     	    template <typename T> 
     	    operator T() const{
     	    	    SEXP x = env.get(name) ;
-    	    	    T t(x) ;
+    	    	    T t = as<T>(x) ;
     	    	    return t; 
     	    }
     	    
