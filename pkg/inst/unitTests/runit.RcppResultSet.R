@@ -108,14 +108,14 @@ test.RcppResultSet.RcppDateVector <- function() {
 }
 
 test.RcppResultSet.RcppDatetime <- function() {
-    src <- 'RcppDatetime y(946710123.456); // aka print(as.numeric(as.POSIXct(strptime("2000-01-01 01:02:03.456", "%Y-%m-%d %H:%M:%OS"))), digits=12)
+    src <- 'RcppDatetime y(x);
             RcppResultSet rs;
             rs.add("foo", y);
 	    return rs.getReturnList();';
-    funx <- cfunction(signature(), src, Rcpp=TRUE)
+    funx <- cfunction(signature(x="ANY"), src, Rcpp=TRUE)
     posixt <- as.POSIXct(strptime("2000-01-01 01:02:03.456", "%Y-%m-%d %H:%M:%OS"))
     attr(posixt, "tzone") <- NULL  # no attribute gets set at the C++ level
-    checkEquals(funx()[[1]], posixt, msg = "RcppResultSet.RcppDatetime")
+    checkEquals(funx(posixt)[[1]], posixt, msg = "RcppResultSet.RcppDatetime")
 }
 
 test.RcppResultSet.RcppDatetimeVector <- function() {
