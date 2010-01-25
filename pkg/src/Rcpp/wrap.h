@@ -24,10 +24,6 @@
 
 #include <RcppCommon.h>
 
-#ifdef HAS_INIT_LISTS
-#include <initializer_list>
-#endif
-
 #include <Rcpp/RObject.h>
 #include <set>
 #include <Rcpp/IntegerVector.h>
@@ -35,6 +31,7 @@
 #include <Rcpp/NumericVector.h>
 #include <Rcpp/LogicalVector.h>
 #include <Rcpp/CharacterVector.h>
+// #include <Rcpp/GenericVector.h>
 
 namespace Rcpp{ 
 

@@ -26,11 +26,6 @@
 #include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
 
-#ifdef HAS_INIT_LISTS
-#include <initializer_list>
-#include <algorithm>
-#endif
-
 namespace Rcpp{ 
 
 class CharacterVector : public VectorBase {     

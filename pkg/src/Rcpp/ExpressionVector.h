@@ -28,11 +28,6 @@
 #include <Rcpp/Evaluator.h>
 #include <Rcpp/Environment.h>
 
-#ifdef HAS_INIT_LISTS
-#include <initializer_list>
-#include <algorithm>
-#endif
-
 namespace Rcpp{ 
 
 class ExpressionVector : public VectorBase {     
