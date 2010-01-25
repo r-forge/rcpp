@@ -1,5 +1,17 @@
 2010-01-25  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/wrap.h: wrap is back at being a template. The 
+	template parameter T is first converted to SEXP implicitely 
+	and the wrap(SEXP) method is used. This allows clients to only have to 
+	implement an implicit conversion to SEXP operator for their class
+	and have wrap for free.
+
+	* src/Rcpp/SEXP_Vector.h: factored out ExpressionVector and 
+	GenericVector into a templated SEXP_Vector class parameterized
+	by the SEXP type (VECSXP or EXPRSXP). GenericVector and 
+	ExpressionVector now are generated from the template. This will
+	ease adding features to both classes.
+
 	* src/as.cpp: also use coercion for as<bool>, as<int>, as<double>
 	as<Rbyte> (FR #768)
 

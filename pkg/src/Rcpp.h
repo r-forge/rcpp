@@ -49,6 +49,7 @@
 #include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
 #include <Rcpp/SimpleVector.h>
+#include <Rcpp/SEXP_Vector.h>
 #include <Rcpp/XPtr.h>
 #include <Rcpp/Environment.h>
 #include <Rcpp/Evaluator.h>

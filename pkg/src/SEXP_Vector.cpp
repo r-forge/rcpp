@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// ExpressionVector.h: Rcpp R/C++ interface class library -- expression vectors
+// SEXP_Vector.cpp: Rcpp R/C++ interface class library -- template for expression and generic vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,36 +19,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef Rcpp_ExpressionVector_h
-#define Rcpp_ExpressionVector_h
-
-#include <RcppCommon.h>
-#include <Rcpp/wrap.h>
 #include <Rcpp/SEXP_Vector.h>
 
-namespace Rcpp{ 
-
-/* lazyness typedef */
-typedef SEXP_Vector<EXPRSXP> ExpressionVector_Base ;
-
-class ExpressionVector : public ExpressionVector_Base {     
-public:
-	class parse_error : public std::exception{
-	public:
-		parse_error() throw();
-		virtual ~parse_error() throw();
-	        virtual const char* what() const throw() ;
-	} ;
+namespace Rcpp{
 	
-	ExpressionVector(SEXP x) throw(not_compatible);
-	ExpressionVector(const size_t& size) ;
-	ExpressionVector(const std::string& code) throw(parse_error) ;
-	
-	SEXP eval() throw(Evaluator::eval_error) ;
-	SEXP eval(const Environment& env) throw(Evaluator::eval_error);
+template<> SEXP converter<VECSXP>(SEXP x){
+	return convert_using_rfunction( x, "as.list" ) ;
+}
+template<> SEXP converter<EXPRSXP>(SEXP x){
+	return convert_using_rfunction( x, "as.expression" ) ;
+}
 
-} ;
+SEXP convert_using_rfunction(SEXP x, const char* fun){
+	SEXP res = R_NilValue ; 
+	try{
+		res = Evaluator::run( Rf_lang2( Rf_install( fun ), x ) );
+	} catch( const Evaluator::eval_error& ex){
+		throw RObject::not_compatible( "not compatible" ) ;
+	}
+	return res ;
+}
 
-} // namespace
 
-#endif
+} // namespace Rcpp
+
