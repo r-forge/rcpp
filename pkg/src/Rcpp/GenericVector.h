@@ -30,10 +30,6 @@
 #include <Rcpp/Evaluator.h>
 #include <Rcpp/Symbol.h>
 
-#ifdef HAS_INIT_LISTS
-#include <initializer_list>
-#endif
-
 namespace Rcpp{ 
 
 class GenericVector : public VectorBase {     
@@ -67,6 +63,12 @@ public:
 	GenericVector(SEXP x) throw(not_compatible);
 	GenericVector( int size) ;
 
+#ifdef HAS_INIT_LISTS
+	GenericVector( std::initializer_list<SEXP> list) : VectorBase(){
+		fill( list.begin(), list.end() ) ;
+	} ;
+#endif
+
 	const Proxy operator[]( int i ) const throw(index_out_of_bounds);
 	Proxy operator[]( int i ) throw(index_out_of_bounds) ;
 	
@@ -86,6 +88,10 @@ public:
 } ;
 
 typedef GenericVector List ;
+
+#ifdef HAS_INIT_LISTS
+inline GenericVector wrap(std::initializer_list<SEXP> list ){ return GenericVector(list) ; }
+#endif
 
 } // namespace
 
