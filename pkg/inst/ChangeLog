@@ -3,39 +3,47 @@
 	* src/as.cpp: also use coercion for as<bool>, as<int>, as<double>
 	as<Rbyte> (FR #768)
 
-	* src/Rcpp/as.h: smarter template as<T>, now the template 
-	attempts to create an object by passing the SEXP as the first 
+	* src/Rcpp/as.h: smarter template as<T>, now the template
+	attempts to create an object by passing the SEXP as the first
 	parameter, so any class that has a constructor taking a SEXP
 	can be as<>'ed. see item below for how this can be useful
 
 	* src/Rcpp/Environment.h: lhs use of Environment::Binding is now
 	a bit smarter and uses as<> to implicitely convert the SEXP
-	to the requested type, so that if as<Foo> makes sense, this 
-	works: Foo foo = env["x"] ; 
+	to the requested type, so that if as<Foo> makes sense, this
+	works: Foo foo = env["x"] ;
 
 	* src/Rcpp/Environment.h: Environment::assign gains a templated
-	form so that we can assign anything that can be wrapped to 
-	a name in an environment. 
+	form so that we can assign anything that can be wrapped to
+	a name in an environment.
 
-	* inst/unitTests/runit.environments.R: new unit test 
+	* inst/unitTests/runit.environments.R: new unit test
 	'test.environment.assign.templated' to test the templated assign
 
 	* src/Makevars(.win?): listen to the RCPP_CXX0X environment variable
 	and if set to "yes" attempt to add c++0x support if possible
 
+2010-01-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.in: Withdrawn as OS X universal binaries are only built
+	  when there is src/Makevars and neither src/Makefile nor configure
+	* configure: ide
+	* src/Makevars: Again a static file, content copied from Makevars.in,
+          -std=c++0x selection back to simply unabling a comment
+
 2010-01-24  Romain Francois <francoisromain@free.fr>
 
-	* src/SimpleVector.h : new template to replace simple vector 
-	classes. now NumericVector, IntegerVector, LogicalVector, 
+	* src/SimpleVector.h : new template to replace simple vector
+	classes. now NumericVector, IntegerVector, LogicalVector,
 	ComplexVector and RawVector are all generated from the same
 	template class. A first attempt at matrix indexing is added
 	as part of this.
 
-	* int/unitTests/runit.NumericVector.R: new unit tests about 
+	* int/unitTests/runit.NumericVector.R: new unit tests about
 	matrix indexing
-	
+
 	* src/Rcpp/VectorBase.h: added the exception not_a_matrix
-	that is thrown when attempting to perform matrix indexing on 
+	that is thrown when attempting to perform matrix indexing on
 	a vector that is not a matrix.
 
 2010-01-23  Romain Francois <francoisromain@free.fr>
