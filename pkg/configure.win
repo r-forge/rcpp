@@ -5,7 +5,7 @@ echo "Seeing g++ version ${gxx_version}"
 
 case ${gxx_version} in
     4.3.*|4.4.*|4.5.*)
-           echo "You can enable support for the C++0x draft by uncommenting"
-           echo "the variable 'CLINK_CPPFLAGS' in src/Makevars.win"
+           echo "You can enable support for the C++0x draft by setting the"
+           echo "'RCPP_CXX0X' environment variable to 'yes' "
     ;;
 esac
