@@ -17,7 +17,13 @@
 	indexing for matrices of strings
 
 	* inst/unitTests/runit.CharacterVector.R: unit test for matrix
-	indexing
+	indexing (test.CharacterVector.matrix.indexing)
+
+	* inst/Rcpp/SEXP_Vector.h: use offset to implement matrix like 
+	indexing on lists
+
+	* inst/unitTests/runit.GenericVector.R: unit test for matrix
+	indexing (test.List.matrix.indexing)
 
 2010-01-25  Romain Francois <francoisromain@free.fr>
 

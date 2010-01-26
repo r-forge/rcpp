@@ -35,7 +35,7 @@ public:
 	/* much inspired from item 30 of more effective C++ */
 	class Proxy {
 	public:
-		Proxy( SEXP_Vector<RTYPE>& v, size_t i ) : parent(v), index(i) {}
+		Proxy( SEXP_Vector& v, size_t i ) : parent(v), index(i) {}
 		
 		/* lvalue uses */
 		Proxy& operator=(const Proxy& rhs){
@@ -66,7 +66,7 @@ public:
 		
 		
 	private:
-		SEXP_Vector<RTYPE>& parent; 
+		SEXP_Vector& parent; 
 		size_t index ;
 	} ;
 
@@ -88,13 +88,20 @@ public:
 #endif
 	
 	const Proxy operator[]( int i ) const throw(index_out_of_bounds){
-		return Proxy(const_cast<SEXP_Vector<RTYPE>&>(*this), i) ;
+		return Proxy(const_cast<SEXP_Vector<RTYPE>&>(*this), offset(i)) ;
 	}
 	Proxy operator[]( int i ) throw(index_out_of_bounds){
-		if( i<0 || i>=length()) throw index_out_of_bounds() ;
-		return Proxy(*this, i ) ; 
+		return Proxy(*this, offset(i) ) ; 
 	}
 
+	
+	Proxy operator()( const size_t& i) throw(index_out_of_bounds){
+		return Proxy(*this, offset(i) ) ;
+	}
+	Proxy operator()( const size_t& i, const size_t& j) throw(index_out_of_bounds,not_a_matrix){
+		return Proxy(*this, offset(i,j) ) ;
+	}
+	
 	friend class Proxy; 
 	
 private:
