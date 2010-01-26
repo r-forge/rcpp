@@ -49,4 +49,41 @@
     	create a suitable SEXP
 
     o	Many more unit tests, now totalling 136 test functions
+
+0.7.3	2010-01-21
+
+    o	New R function Rcpp.package.skeleton, modelled after 
+    	utils::package.skeleton to help creating a package with support
+    	for Rcpp use.
+
+    o	indexing is now faster for simple vectors due to inlining of 
+    	the operator[] and caching the array pointer
+
+    o	The class Rcpp::VectorBase was introduced. All vector classes
+    	derive from it. The class handles behaviour that is common 
+    	to all vector types: length, names, etc ...
+
+    o	exception forwarding is extended to compilers other than GCC
+    	but default values are used for the exception class 
+    	and the exception message, because we don't know how to do it.
+
+    o	Improved detection of C++0x capabilities
+
+    o	Rcpp::Pairlist gains a default constructor
+
+    o	Rcpp::Environment gains a new_child method to create a new
+    	environment whose parent is this
+    
+    o	Rcpp::Environment::Binding gains a templated implicit 
+    	conversion operator
+    	
+    o	Rcpp::ExpressionVector gains an eval method to evaluate itself
+    
+    o	Rcpp::ExpressionVector gains a constructor taking a std::string
+    	representing some R code to parse. 
+    
+    o	Rcpp::GenericVector::Proxy gains an assignment operator to deal
+    	with Environment::Proxy objects
+
+
     	
