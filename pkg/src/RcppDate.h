@@ -4,6 +4,7 @@
 //
 // Copyright (C) 2005 - 2006 Dominick Samperi
 // Copyright (C) 2008        Dirk Eddelbuettel
+// Copyright (C) 2009 - 2010 Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of Rcpp.
 //
@@ -41,7 +42,8 @@ public:
     int getMonth() const { return month; }
     int getDay()  const  { return day; }
     int getYear() const  { return year; }
-    int getJDN()  const  { return jdn - Jan1970Offset; }
+    int getJDN()  const  { return jdn; } 
+    int getJulian()  const  { return jdn - Jan1970Offset; } 
 
     // Minimal set of date operations.
     friend RcppDate operator+(const RcppDate &date, int offset);
