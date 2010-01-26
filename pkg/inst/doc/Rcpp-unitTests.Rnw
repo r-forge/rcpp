@@ -10,7 +10,28 @@
 \maketitle
 
 <<echo=FALSE>>=
-writeLines( readLines( "Rcpp-unitTests.txt" ) )
+pkg <- "Rcpp"
+
+require( Rcpp )
+
+runit <- "RUnit"
+require( runit, character.only = TRUE )
+
+path <- system.file("unitTests", package = pkg)
+testSuite <- defineTestSuite(name=paste(pkg, "unit testing"), dirs = path)
+tests <- runTestSuite(testSuite)
+printHTMLProtocol(tests, fileName= sprintf( "%s-unitTests.html" , pkg ) )
+printTextProtocol(tests, fileName= sprintf( "%s-unitTests.txt"  , pkg ) )
+if( file.exists( "/tmp" ) ){
+	file.copy( sprintf( "%s-unitTests.txt" , pkg ) , "/tmp", overwrite = TRUE )
+	file.copy( sprintf( "%s-unitTests.html", pkg ) , "/tmp", overwrite = TRUE )
+}
 @
+
+\begin{verbatim}
+<<echo=F,results=tex>>=
+writeLines( readLines( "Rcpp-unitTests.txt" ) ) 
+@
+\end{verbatim}
 
 \end{document}
