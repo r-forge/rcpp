@@ -11,13 +11,13 @@ Unit tests are run automatically at build time and reports are included in the
 
 \seealso{
 \ifelse{latex}{}{\ifelse{html}{\out{<pre>}}{}}
-\ifelse{latex}{}{\ifelse{html}{\url{../doc/Rcpp-unitTests.html}: html formatted unit test report}{\samp{../doc/Rcpp-unitTests.html}: html formatted unit test report}}
+\ifelse{latex}{}{\ifelse{html}{\url{../doc/unitTests-results/Rcpp-unitTests.html}: html formatted unit test report}{\samp{../doc/unitTests-results/Rcpp-unitTests.html}: html formatted unit test report}}
 \ifelse{latex}{}{\ifelse{html}{\out{</pre>}}{}}
 }
 
 \details{
 \Sexpr[echo=FALSE,results=text]{ 
-txt <- system.file( "doc", "Rcpp-unitTests.txt", package = "Rcpp" )
+txt <- system.file( "doc", "unitTests-results", "Rcpp-unitTests.txt", package = "Rcpp" )
 if( file.exists( txt ) ) paste( readLines( txt ), collapse = "\n\n" ) else ""
 }
 }
