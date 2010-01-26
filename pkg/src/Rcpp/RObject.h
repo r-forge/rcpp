@@ -111,9 +111,6 @@ public:
     std::vector<Rbyte>       asStdVectorRaw() const;
     std::vector<bool>        asStdVectorBool() const;
 
-    inline bool isPreserved() { DEFUNCT("isPreserved") ; return m_sexp != R_NilValue ; }
-    inline void forgetPreserve() { DEFUNCT("forgetPreserve") ; }
-
     /* attributes */
 
     /**
@@ -215,8 +212,6 @@ protected:
      * @param x new SEXP to attach to this object
      */
     void setSEXP(SEXP x) ;
-
-    inline void DEFUNCT(const std::string& method ){ Rf_warning("method %s is defunct", method.c_str() )  ; }
 
     /**
      * The SEXP this is wrapping. This has to be considered read only.
