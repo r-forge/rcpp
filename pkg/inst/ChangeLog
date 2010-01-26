@@ -3,6 +3,16 @@
 	* src/Rcpp/r_cast.h: new template function to handle casts 
 	from one SEXP to another. This is mostly useful internally
 
+	* src/Rcpp/VectorBase.h: VectorBase gains a offset method
+	that is responsible to calculate the correct offset based
+	on variable number of size_t arguments. currently the number
+	of arguments can be 1 (vector indexing) and 2 (matrix indexing)
+	but arbitrary number of arguments will be added later 
+	for arbitrary array-like indexing.
+
+	* src/Rcpp/SimpleVector.h: outsourcing offset calculation 
+	to VectorBase::offset
+	
 2010-01-25  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/wrap.h: wrap is back at being a template. The 
