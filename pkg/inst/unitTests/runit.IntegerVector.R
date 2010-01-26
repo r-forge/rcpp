@@ -66,9 +66,6 @@ test.IntegerVector.matrix.indexing <- function(){
 	x <- matrix( 1:16, ncol = 4 )
 	checkEquals( funx(x), sum(diag(x)), msg = "matrix indexing" )
 	
-	y <- as.vector( x )
-	checkException( funx(y) , msg = "not a matrix" )
-	
 	funx <- cfunction(signature(x = "integer" ), '
 		IntegerVector m(x) ;
 		for( size_t i=0 ; i<4; i++){
@@ -77,6 +74,11 @@ test.IntegerVector.matrix.indexing <- function(){
 		return m ;
 	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
 	checkEquals( diag(funx(x)), 2*0:3, msg = "matrix indexing lhs" )
+	
+	
+	y <- as.vector( x )
+	checkException( funx(y) , msg = "not a matrix" )
+	
 	
 }
 
