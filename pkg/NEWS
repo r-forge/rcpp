@@ -1,0 +1,52 @@
+
+0.7.4	(under development)
+    o	matrix matrix-like indexing using operator() for all vector 
+    	types : IntegerVector, NumericVector, RawVector, CharacterVector
+    	LogicalVector, GenericVector and ExpressionVector. 
+
+    o	an intermediate template class SimpleVector has been added. All
+    	simple vector classes are now generated from the SimpleVector 
+    	template : IntegerVector, NumericVector, RawVector, CharacterVector
+    	LogicalVector.
+
+    o	an intermediate template class SEXP_Vector has been added to 
+    	generate GenericVector and ExpressionVector. 
+
+    o	the clone template function was introduced to explicitely
+    	clone an RObject vy duplicating the SEXP it encapsulates.
+
+    o 	the as template is now smarter. The template now attempts to 
+    	build an object of the requested template parameter T by using the
+    	constructor for the type taking a SEXP. This allows third party code
+    	to create a class Foo with a constructor Foo(SEXP) to have 
+    	as<Foo> for free.
+
+    o	wrap becomes a template. For an object of type T, wrap<T> uses
+    	implicit conversion to SEXP to first convert the object to a SEXP
+    	and then uses the wrap(SEXP) function. This allows third party 
+    	code creating a class Bar with an operator SEXP() to have 
+    	wrap for free.
+
+    o	all specializations of wrap :  wrap<double>, wrap< vector<double> >
+    	use coercion to deal with missing values (NA) appropriately.
+
+    o	configure has been withdrawn. C++0x features can now be activated
+    	by setting the RCPP_CXX0X environment variable to "yes".
+
+    o	new template r_cast<int> to facilitate conversion of one SEXP
+    	type to another. This is mostly intended for internal use and 
+    	is used on all vector classes
+
+    o	Environment now takes advantage of the augmented smartness
+    	of as and wrap templates. If as<Foo> makes sense, one can 
+    	directly extract a Foo from the environment. If wrap<Bar> makes
+    	sense then one can insert a Bar directly into the environment. 
+    	Foo foo = env["x"] ;  /* as<Foo> is used */
+	Bar bar ;
+	env["y"] = bar ;      /* wrap<Foo> is used */    	
+
+    o	Environment::assign becomes a template and also uses wrap to 
+    	create a suitable SEXP
+
+    o	Many more unit tests, now totalling 136 test functions
+    	
