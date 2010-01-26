@@ -85,5 +85,79 @@
     o	Rcpp::GenericVector::Proxy gains an assignment operator to deal
     	with Environment::Proxy objects
 
+0.7.3	2010-01-12
 
+    o	a new benchmark was added to the examples directory
+    	around the classic convolution example from
+    	Writing R extensions to compare C and C++ implementations
+
+    o 	Rcpp::CharacterVector::StringProxy gains a += operator
+    
+    o	Rcpp::Environment gains an operator[](string) to get/set
+    	objects from the environment. operator[] returns an object
+    	of class Rcpp::Environment::Binding which implements the proxy
+    	pattern. Inspired from Item 30 of 'More Effective C++'
+    
+    o	Rcpp::Pairlist and Rcpp::Language gain an operator[](int) 
+    	also using the proxy pattern
+
+    o	Rcpp::RObject.attr can now be used on the rhs or the lhs, to get 
+    	or set an attribute. This also uses the proxy pattern
     	
+    o	Rcpp::Pairlist and Rcpp::Language gain new methods push_back
+    	replace, length, size, remove, insert
+    	
+    o	wrap now returns an object of a suitable class, not just RObject
+    	anymore. For example wrap( bool ) returns a LogicalVector
+    	
+    o	Rcpp::RObject gains methods to deal with S4 objects : isS4, 
+    	slot and hasSlot
+    
+    o	new class Rcpp::ComplexVector to manage complex vectors (CPLXSXP)
+    
+    o	new class Rcpp::Promise to manage promises (PROMSXP)
+    
+    o	new class Rcpp::ExpressionVector to manage expression vectors
+    	(EXPRSXP)
+
+    o	new class Rcpp::GenericVector to manage generic vectors, a.k.a
+    	lists (VECSXP)
+
+    o	new class Rcpp::IntegerVector to manage integer vectors (INTSXP)
+    
+    o	new class Rcpp::NumericVector to manage numeric vectors (REALSXP)
+    
+    o	new class Rcpp::RawVector to manage raw vectors (RAWSXP)
+    
+    o	new class Rcpp::CharacterVector to manage character vectors (STRSXP)
+    
+    o	new class Rcpp::Function to manage functions 
+    	(CLOSXP, SPECIALSXP, BUILTINSXP)
+    
+    o	new class Rcpp::Pairlist to manage pair lists (LISTSXP)
+    
+    o	new class Rcpp::Language to manage calls (LANGSXP)
+    	
+    o	new specializations of wrap to deal with std::initializer lists
+    	only available with GCC >= 4.4
+    	
+    o	new R function Rcpp:::capabilities that can query if various
+    	features are available : exception handling, variadic templates
+    	initializer lists
+    	
+    o	new set of functions wrap(T) converting from T to RObject
+    
+    o	new template function as<T> that can be used to convert a SEXP
+    	to type T. Many specializations implemented to deal with 
+    	C++ builtin and stl types. Factored out of RObject
+    	
+    o	new class Rcpp::Named to deal with named with named objects 
+	in a pairlist, or a call
+
+    o	new class Rcpp::Symbol to manage symbols (SYMSXP)
+    
+    o	The garbage collection has been improved and is now automatic 
+    	and hidden. The user needs not to worry about it at all.
+    	
+    o	Rcpp::Environment(SEXP) uses the as.environment R function
+    

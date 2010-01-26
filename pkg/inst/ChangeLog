@@ -426,8 +426,8 @@
 	* src/Rcpp/GenericVector.h : new class Rcpp::GenericVector
 	and an alias Rcpp::List to handle lists (VECSXP), aka generic
 	vectors
-	* src/NumericVector.cpp : implementation
-	* inst/unitTests/runit.NumericVector.R: unit tests
+	* src/GenericVector.cpp : implementation
+	* inst/unitTests/runit.GenericVector.R: unit tests
 
 	* src/Rcpp/IntegerVector.h : new class Rcpp::IntegerVector
 	to manage integer vector (INTSXP). IntegerVector can be
@@ -510,7 +510,7 @@
 	method that returns the parent environment
 
 	* src/Rcpp/as.h: template as<> to convert SEXP to classic
-	C++ types, fcactored out of RObject
+	C++ types, factored out of RObject
 
 	* src/as.cpp: specific implementations. as<int>, as<bool>
 	as<string>, ...
