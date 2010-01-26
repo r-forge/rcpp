@@ -37,18 +37,18 @@ public:
 	} ;
   
     VectorBase() ;
-    virtual ~VectorBase() = 0;
-	
+    virtual ~VectorBase() ;
+
     /**
      * the length of the vector, uses Rf_length
      */
     inline int length() const { return ::Rf_length( m_sexp ) ; }
-	
+
     /**
      * alias of length
      */
     inline int size() const { return ::Rf_length( m_sexp ) ; }
-	
+
 } ;
 
 template <int sexptype, typename T> T* get_pointer(SEXP x){ throw std::exception( "not implemented" ) ; return static_cast<T*>(0); }

@@ -25,6 +25,7 @@
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
+#include <Rcpp/r_cast.h>
 
 namespace Rcpp{ 
 
@@ -53,7 +54,7 @@ public:
 	} ;
 
 	CharacterVector(SEXP x) throw(not_compatible);
-	CharacterVector(int size) ;
+	CharacterVector( const size_t& size) ;
 	CharacterVector( const std::string& x );
 	CharacterVector( const std::vector<std::string>& x );
 	

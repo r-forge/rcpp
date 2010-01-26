@@ -27,14 +27,9 @@
 #include <Rcpp/Environment.h>
 
 namespace Rcpp{
-	
-/* this is only meant for internal use (at least for now) */
-SEXP convert_using_rfunction(SEXP x, const char* fun) ;
-template <int RTYPE> SEXP converter(SEXP x) ;
-template<> SEXP converter<VECSXP>(SEXP x) ;
-template<> SEXP converter<EXPRSXP>(SEXP x) ;
 
-template <int RTYPE> class SEXP_Vector : public VectorBase{
+template <int RTYPE> 
+class SEXP_Vector : public VectorBase {
 public:
 	
 	/* much inspired from item 30 of more effective C++ */
@@ -78,19 +73,12 @@ public:
 	SEXP_Vector(): VectorBase(){}
 	
 	SEXP_Vector(SEXP x) : VectorBase() {
-		int type = TYPEOF(x) ;
-		if( type == RTYPE ){
-			setSEXP( x ) ;
-		} else {
-			SEXP y = converter<RTYPE>(x) ;
-			setSEXP( y );
-		}
+		SEXP y = r_cast<RTYPE>(x) ;
+		setSEXP( y );
 	}
 	
-	/* FIXME : this should be in VectorBase, which also should 
-	  templated by RTYPE */
 	SEXP_Vector(const size_t& size) : VectorBase(){
-		setSEXP( Rf_allocVector( RTYPE, size) ) ; 
+		setSEXP( Rf_allocVector( RTYPE, size ) ) ;
 	}
 
 #ifdef HAS_INIT_LISTS

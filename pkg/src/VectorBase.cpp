@@ -24,9 +24,10 @@
 #include <Rcpp/VectorBase.h>
 
 namespace Rcpp{
-	VectorBase::VectorBase(): RObject(){} ;
+	
+	VectorBase::VectorBase() : RObject() {} ;
 	VectorBase::~VectorBase(){}
-
+	
 	template<> double* get_pointer<REALSXP,double>(SEXP x){ return REAL(x) ; }
 	template<> int* get_pointer<INTSXP,int>(SEXP x){ return INTEGER(x) ; }
 	template<> int* get_pointer<LGLSXP,int>(SEXP x){ return LOGICAL(x) ; }

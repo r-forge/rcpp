@@ -108,9 +108,17 @@ namespace Rcpp{
 	class Named ;
 	class Pairlist ;
 	class Function ;
-	class WeakReference; 
-	class CharacterVector; 
-} 
+	class WeakReference;
+
+/* internal namespace for things not intended to be used by the 
+   user */
+namespace internal{	
+	
+	/* defined in Evaluator.cpp */
+	SEXP convert_using_rfunction(SEXP x, const char* const fun) ;
+	
+} // namespace internal 
+} // namespace Rcpp 
 
 
 #endif
