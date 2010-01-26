@@ -43,6 +43,7 @@
 #include <RcppVectorView.h>
 
 /* new api */
+#include <Rcpp/r_cast.h>
 #include <Rcpp/grow.h>
 #include <Rcpp/wrap.h>
 #include <Rcpp/as.h>

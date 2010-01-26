@@ -24,23 +24,12 @@
 namespace Rcpp{
 	
 	CharacterVector::CharacterVector(SEXP x) throw(not_compatible) : VectorBase() {
-		switch( TYPEOF( x ) ){
-			case STRSXP:
-				setSEXP( x ) ;
-				break ;
-			case SYMSXP:
-				setSEXP( Rf_ScalarString(PRINTNAME(x)) ) ;
-				break ;
-			case CHARSXP:
-				setSEXP( Rf_ScalarString( x ) ) ;
-			default:
-				/* TODO: try coercion */
-				throw not_compatible( "not compatible with character vector" ) ;
-		}
+		SEXP y = r_cast<STRSXP>( x) ;
+		setSEXP( y ) ;
 	}
 	
-	CharacterVector::CharacterVector(int size) : VectorBase() {
-		setSEXP( Rf_allocVector(STRSXP, size) ) ;
+	CharacterVector::CharacterVector(const size_t& size) : VectorBase(){
+		setSEXP( Rf_allocVector( STRSXP, size ) ) ;
 	}
 	
 	CharacterVector::CharacterVector( const std::string& x) : VectorBase() {

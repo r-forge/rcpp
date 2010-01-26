@@ -31,7 +31,6 @@
 #include <Rcpp/NumericVector.h>
 #include <Rcpp/LogicalVector.h>
 #include <Rcpp/CharacterVector.h>
-// #include <Rcpp/GenericVector.h>
 
 namespace Rcpp{ 
 

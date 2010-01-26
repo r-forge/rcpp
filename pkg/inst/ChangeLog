@@ -1,3 +1,8 @@
+2010-01-26  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/r_cast.h: new template function to handle casts 
+	from one SEXP to another. This is mostly useful internally
+
 2010-01-25  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/wrap.h: wrap is back at being a template. The 
