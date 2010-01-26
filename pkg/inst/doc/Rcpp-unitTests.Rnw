@@ -9,7 +9,7 @@
 \begin{document}
 \maketitle
 
-<<echo=FALSE>>=
+<<echo=FALSE,results=hide>>=
 pkg <- "Rcpp"
 
 require( Rcpp )
