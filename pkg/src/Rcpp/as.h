@@ -61,8 +61,6 @@ template<> std::vector<bool>        	as< std::vector<bool> >(SEXP m_sexp) ;
 
 /* FIXME: turn the functions below into a template */
 
-
-
 /* these do not take care of coercion*/
 inline bool Rboolean_to_bool( int x){ return x == TRUE ; }
 inline bool int_to_bool(int x){ return x != 0 ; }
@@ -103,8 +101,6 @@ inline double Rboolean_to_double(int x){
 }
 
 inline int int_to_RBoolean(int x){ return ( x == NA_INTEGER ) ? NA_LOGICAL : (x!=0); }
-
-
 
 } // namespace Rcpp      
 
