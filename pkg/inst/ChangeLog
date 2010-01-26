@@ -1,5 +1,10 @@
 2010-01-26  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/clone.h: explicit cloning of RObjects. The clone
+	template function creates a new object of the same class
+	as the object it is passed in, encapsulating a duplicate
+	of the SEXP contained by the input RObject. 
+
 	* src/Rcpp/r_cast.h: new template function to handle casts 
 	from one SEXP to another. This is mostly useful internally
 

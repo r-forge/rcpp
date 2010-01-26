@@ -206,7 +206,7 @@ public:
     RObject slot(const std::string& name) const throw(not_s4) ;
     /* TODO : implement the proxy pattern here so that we can get and 
               set the slot the same way */
-
+                  
 protected:
 
     /**
