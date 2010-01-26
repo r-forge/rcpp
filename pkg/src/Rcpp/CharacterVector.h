@@ -67,7 +67,11 @@ public:
 	const StringProxy operator[]( int i ) const throw(index_out_of_bounds);
 	StringProxy operator[]( int i ) throw(index_out_of_bounds);
 
-	friend class StringProxy; 
+	friend class StringProxy;
+	
+	/* '(' indexing */
+	StringProxy operator()( const size_t& i) throw(index_out_of_bounds) ;
+	StringProxy operator()( const size_t& i, const size_t& j) throw(index_out_of_bounds,not_a_matrix) ;
 
 private:
 	template <typename InputIterator>
