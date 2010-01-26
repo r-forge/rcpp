@@ -12,7 +12,13 @@
 
 	* src/Rcpp/SimpleVector.h: outsourcing offset calculation 
 	to VectorBase::offset
-	
+
+	* src/Rcpp/CharacterVector.h: use offset to implement matrix-like
+	indexing for matrices of strings
+
+	* inst/unitTests/runit.CharacterVector.R: unit test for matrix
+	indexing
+
 2010-01-25  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/wrap.h: wrap is back at being a template. The 

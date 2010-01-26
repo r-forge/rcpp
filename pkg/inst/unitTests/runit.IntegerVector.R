@@ -71,7 +71,6 @@ test.IntegerVector.matrix.indexing <- function(){
 	
 	funx <- cfunction(signature(x = "integer" ), '
 		IntegerVector m(x) ;
-		int trace = 0.0 ;
 		for( size_t i=0 ; i<4; i++){
 			m(i,i) = 2 * i ;
 		}

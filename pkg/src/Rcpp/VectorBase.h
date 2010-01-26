@@ -55,7 +55,11 @@ public:
      */
     size_t offset(const size_t& i, const size_t& j) const throw(not_a_matrix,RObject::index_out_of_bounds) ;
     
-    size_t offset(const size_t& i) throw(RObject::index_out_of_bounds) ;
+    /**
+     * one dimensional offset doing bounds checking to ensure
+     * it is valid
+     */
+    size_t offset(const size_t& i) const throw(RObject::index_out_of_bounds);
     
     /* TODO: 3 dimensions, ... n dimensions through variadic templates */
     

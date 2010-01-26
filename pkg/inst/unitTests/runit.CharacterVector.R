@@ -68,3 +68,30 @@ test.CharacterVector.plusequals <- function(){
 		msg = "StringProxy::operator+=" )
 }
 
+test.CharacterVector.matrix.indexing <- function(){
+
+	funx <- cfunction(signature(x = "character" ), '
+		CharacterVector m(x) ;
+		std::string trace  ;
+		for( size_t i=0 ; i<4; i++){
+			trace += m(i,i) ;
+		}
+		return wrap( trace ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	x <- matrix( as.character(1:16), ncol = 4 )
+	checkEquals( funx(x), paste(diag(x), collapse = ""), msg = "matrix indexing" )
+	
+	y <- as.vector( x )
+	checkException( funx(y) , msg = "not a matrix" )
+	
+	funx <- cfunction(signature(x = "integer" ), '
+		CharacterVector m(x) ;
+		for( size_t i=0 ; i<4; i++){
+			m(i,i) = "foo" ;
+		}
+		return m ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( diag(funx(x)), rep("foo", 4) , 
+		msg = "matrix indexing lhs" )
+}
+
