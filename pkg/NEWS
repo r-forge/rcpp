@@ -85,7 +85,7 @@
     o	Rcpp::GenericVector::Proxy gains an assignment operator to deal
     	with Environment::Proxy objects
 
-0.7.3	2010-01-12
+0.7.2	2010-01-12
 
     o	a new benchmark was added to the examples directory
     	around the classic convolution example from
@@ -160,4 +160,5 @@
     	and hidden. The user needs not to worry about it at all.
     	
     o	Rcpp::Environment(SEXP) uses the as.environment R function
-    
+
+
