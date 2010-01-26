@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/RObject.h>
+#include <Rcpp/r_cast.h>
 
 namespace Rcpp{ 
 
@@ -49,6 +50,15 @@ public:
      */
     inline int size() const { return ::Rf_length( m_sexp ) ; }
 
+    /**
+     * offset based on the dimensions of this vector
+     */
+    size_t offset(const size_t& i, const size_t& j) const throw(not_a_matrix,RObject::index_out_of_bounds) ;
+    
+    size_t offset(const size_t& i) throw(RObject::index_out_of_bounds) ;
+    
+    /* TODO: 3 dimensions, ... n dimensions through variadic templates */
+    
 } ;
 
 template <int sexptype, typename T> T* get_pointer(SEXP x){ throw std::exception( "not implemented" ) ; return static_cast<T*>(0); }

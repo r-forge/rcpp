@@ -53,19 +53,12 @@ public:
 	inline CTYPE* begin() const{ return start ; }
 	inline CTYPE* end() const{ return start+Rf_length(m_sexp); }
 	
-	CTYPE& operator()( const size_t& i) throw(RObject::index_out_of_bounds){
-		if( i >= static_cast<size_t>(Rf_length(m_sexp)) ) throw RObject::index_out_of_bounds() ;
-		return start[i] ;
+	inline CTYPE& operator()( const size_t& i) throw(RObject::index_out_of_bounds){
+		return start[ offset(i) ] ;
 	}
 	
-	CTYPE& operator()( const size_t& i, const size_t& j) throw(VectorBase::not_a_matrix,RObject::index_out_of_bounds){
-		/* TODO: factor this code out into a Offset class otr something */
-		if( !Rf_isMatrix(m_sexp) ) throw VectorBase::not_a_matrix() ;
-		int *dim = INTEGER( Rf_getAttrib( m_sexp, R_DimSymbol ) ) ;
-		size_t nrow = static_cast<size_t>(dim[0]) ;
-		size_t ncol = static_cast<size_t>(dim[1]) ;
-		if( i >= nrow || j >= ncol ) throw RObject::index_out_of_bounds() ;
-		return start[ i + nrow*j ] ;
+	inline CTYPE& operator()( const size_t& i, const size_t& j) throw(VectorBase::not_a_matrix,RObject::index_out_of_bounds){
+		return start[ offset(i,j) ] ;
 	}
 
 protected:
