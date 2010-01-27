@@ -115,7 +115,7 @@ void CharacterVector::assign( const char** first, const char** last){
 	if( update ) setSEXP( x ) ;
 }
 	
-CharacterVector::CharacterVector( const char** first, const char** last) : VectorBase(){
+CharacterVector::CharacterVector( const char** const first, const char** const last) : VectorBase(){
 	assign( first, last ) ;
 }
 
