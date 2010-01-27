@@ -95,3 +95,50 @@ test.CharacterVector.matrix.indexing <- function(){
 		msg = "matrix indexing lhs" )
 }
 
+test.CharacterVector.assign <- function(){
+	
+	funx <- cfunction(signature(), '
+		const char* x[] = { "foo", "bar", "bling", "boom" } ;
+		CharacterVector y ;
+		y.assign( x, x+4 ) ;
+		return y;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), c("foo", "bar", "bling", "boom"), msg = "assign(char**, char**)" )
+	
+	
+	funx <- cfunction(signature(), '
+		std::vector<std::string> vec(4) ;
+		vec[0] = "foo";
+		vec[1] = "bar";
+		vec[2] = "bling";
+		vec[3] = "boom" ;
+		CharacterVector y ;
+		y.assign( vec.begin(), vec.end() ) ;
+		return y;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), c("foo", "bar", "bling", "boom"), msg = "assign(char**, char**)" )
+	
+}
+
+test.CharacterVector.range.constructors <- function(){
+
+	funx <- cfunction(signature(), '
+		const char* x[] = { "foo", "bar", "bling", "boom" } ;
+		CharacterVector y( x, x+4 ) ;
+		return y;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), c("foo", "bar", "bling", "boom"), msg = "assign(char**, char**)" )
+	
+	
+	funx <- cfunction(signature(), '
+		std::vector<std::string> vec(4) ;
+		vec[0] = "foo";
+		vec[1] = "bar";
+		vec[2] = "bling";
+		vec[3] = "boom" ;
+		CharacterVector y( vec.begin(), vec.end() ) ;
+		return y;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), c("foo", "bar", "bling", "boom"), msg = "assign(char**, char**)" )
+}
+

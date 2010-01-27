@@ -22,23 +22,25 @@
 #include <Rcpp/CharacterVector.h>
 
 namespace Rcpp{
+
+CharacterVector::CharacterVector() : VectorBase(){}
 	
-	CharacterVector::CharacterVector(SEXP x) throw(not_compatible) : VectorBase() {
-		SEXP y = r_cast<STRSXP>( x) ;
-		setSEXP( y ) ;
-	}
-	
-	CharacterVector::CharacterVector(const size_t& size) : VectorBase(){
-		setSEXP( Rf_allocVector( STRSXP, size ) ) ;
-	}
-	
-	CharacterVector::CharacterVector( const std::string& x) : VectorBase() {
-		setSEXP( Rf_mkString(x.c_str()) ) ;
-	}
-	
-	CharacterVector::CharacterVector( const std::vector<std::string>& x): VectorBase() {
-		fill( x.begin(), x.size() ) ;
-	}
+CharacterVector::CharacterVector(SEXP x) throw(not_compatible) : VectorBase() {
+	SEXP y = r_cast<STRSXP>( x) ;
+	setSEXP( y ) ;
+}
+
+CharacterVector::CharacterVector(const size_t& size) : VectorBase(){
+	setSEXP( Rf_allocVector( STRSXP, size ) ) ;
+}
+
+CharacterVector::CharacterVector( const std::string& x) : VectorBase() {
+	setSEXP( Rf_mkString(x.c_str()) ) ;
+}
+
+CharacterVector::CharacterVector( const std::vector<std::string>& x): VectorBase() {
+	assign( x.begin(), x.end() ) ;
+}
 	
 
 /* proxy stuff */
@@ -52,10 +54,6 @@ CharacterVector::StringProxy::operator SEXP() const{
 
 CharacterVector::StringProxy::operator char*() const {
 	return const_cast<char*>( CHAR(STRING_ELT( parent, index )) );
-}
-
-CharacterVector::StringProxy::operator std::string() const {
-	return std::string( CHAR(STRING_ELT( parent, index )) );
 }
 
 CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const StringProxy& rhs){
@@ -89,7 +87,7 @@ std::ostream& operator<<(std::ostream& os, const CharacterVector::StringProxy& p
 
 const CharacterVector::StringProxy CharacterVector::operator[](int i) const throw(index_out_of_bounds){
 	return StringProxy(const_cast<CharacterVector&>(*this), offset(i) ) ;
-}
+}                                          
 
 CharacterVector::StringProxy CharacterVector::operator[](int i) throw(index_out_of_bounds) {
 	return StringProxy(*this, offset(i) ) ;
@@ -101,6 +99,24 @@ CharacterVector::StringProxy CharacterVector::operator()( const size_t& i) throw
 
 CharacterVector::StringProxy CharacterVector::operator()( const size_t& i, const size_t&j ) throw(index_out_of_bounds,not_a_matrix){
 	return StringProxy(*this, offset(i,j) ) ;
+}
+
+void CharacterVector::assign( const char** first, const char** last){
+	size_t size = std::distance( first, last ) ;
+	SEXP x = m_sexp ;
+	bool update = false ;
+	if( length() != size ){
+		x = Rf_allocVector( STRSXP, size ) ;
+		update = true ;
+	}
+	for( size_t i=0; i<size; i++, ++first){
+		SET_STRING_ELT( x, i, Rf_mkChar(*first)) ;
+	}
+	if( update ) setSEXP( x ) ;
+}
+	
+CharacterVector::CharacterVector( const char** first, const char** last) : VectorBase(){
+	assign( first, last ) ;
 }
 
 } // namespace 
