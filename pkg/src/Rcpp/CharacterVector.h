@@ -93,7 +93,7 @@ public:
 		}
 		std::string y ;
 		for( size_t i=0; i<size; i++, ++first){
-			y = *first ;
+			y.assign( *first ) ;
 			SET_STRING_ELT( x, i, Rf_mkChar(y.c_str())) ;
 		}
 		if( update ) setSEXP(x) ;
