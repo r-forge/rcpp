@@ -1,5 +1,6 @@
 
 0.7.4	(under development)
+
     o	matrix matrix-like indexing using operator() for all vector 
     	types : IntegerVector, NumericVector, RawVector, CharacterVector
     	LogicalVector, GenericVector and ExpressionVector. 
@@ -85,6 +86,9 @@
     o	Rcpp::GenericVector::Proxy gains an assignment operator to deal
     	with Environment::Proxy objects
 
+    o	Rcpp::LdFlags() now defaults to static linking OS X, as it already
+        did on Windows; this default can be overridden. 
+
 0.7.2	2010-01-12
 
     o	a new benchmark was added to the examples directory
@@ -161,4 +165,166 @@
     	
     o	Rcpp::Environment(SEXP) uses the as.environment R function
 
+    o	Doxygen-generated documentation is no longer included as it is both
+        too large and too volatile. Zipfiles are provided on the website.
+
+0.7.1	2010-01-02
+
+    o	Romain is now a co-author of Rcpp
+
+    o	New base class Rcpp::RObject replace RcppSexp (which is provided for
+        backwards compatibility)
+
+    o	RObject has simple wrappers for object creation and conversion to SEXP
+
+    o	New classes Rcpp::Evaluator and Rcpp::Environment for expression
+        evaluation and environment access, respectively
+
+    o	New class Rcpp::XPtr for external pointers
+  
+    o	Enhanced exception handling allows for trapping of exceptions outside
+        of try/catch blocks
+
+    o	Namespace support with a new namespace 'Rcpp'
+
+    o	Unit tests for most of the new classes, based on the RUnit package
+
+    o	Inline support now provided by the update inline package, so a new
+        Depends on 'inline (>= 0.3.4)' replaces the code in that was
+        temporarily in Rcpp
+
+0.7.0   2009-12-19
+
+    o	Inline support via a modified version of 'cfunction' from Oleg
+        Sklyar's 'inline' package: simple C++ programs can now be compiled,
+        linked and loaded automagically from the R prompt, including support
+        for external packages. Also works on Windows (with R-tools installed)
+
+    o	New examples for the inline support based on 'Intro to HPC' tutorials
+
+    o	New type RcppSexp for simple int, double, std::string scalars and vectors
+
+    o	Every class is now in its own header and source file
+
+    o	Fix to RcppParams.Rd thanks to Frank S. Thomas
+
+    o	RcppVersion.R removed as redundant given DESCRIPTION and read.dcf()
+
+    o	Switched to R_PreserveObject and R_ReleaseObject for RcppSexp with
+        thanks to Romain
+
+    o	Licensing changed from LGPL 2.1 (or later) to GPL 2 (or later), file
+        COPYING updated
+
+0.6.8   2009-11-19
+
+    o	Several classes now split off into their own header and source files
+
+    o	New header file RcppCommon.h regrouping common defines and includes
+
+    o	Makevars{,.win} updated to reflect src/ reorg
+
+0.6.7   2009-11-08
+
+    o	New class RcppList for simple lists and data structures of different
+        types and dimensions, useful for RProtoBuf project on R-Forge
+
+    o	Started to split classes into their own header and source files
+
+    o	Added short README file about history and status
+
+    o	Small documentation markup fix thanks to Kurt; updated doxygen docs
+
+    o	New examples directory functionCallback/ for R function passed to C++ 
+        and being called
+
+0.6.6   2009-08-03
+
+    o	Updated Doxygen documentation
+
+    o	RcppParams class gains a new exists() member function
+
+0.6.5   2009-04-01
+
+    o	Small OS X build correction using R_ARCH variable
+
+    o	Include LGPL license as file COPYING
+
+0.6.4   2009-03-01
+
+    o	Use std:: namespace throughout instead of 'using namespace std'
+
+    o	Define R_NO_REMAP so that R provides Rf_length() etc in lieu of length()
+        to minimise clashes with other projects having similar functions
+
+    o	Include Doxygen documentation, and Doxygen configuration file 
+
+    o	Minor Windows build fix (with thanks to Uwe and Simon)
+
+0.6.3   2009-01-09
+
+    o	OS X build fix with thanks to Simon
+
+    o	Added 'view-only' classes for int and double vector and matrix clases
+        as well as string vector classses, kindly suggsted / provided by
+        David Reiss
+
+    o	Add two shorter helper functions Rcpp:::CxxFlags() and
+        Rcpp:::LdFlags() for compilation and linker flags 
+
+0.6.2   2008-12-02
+
+    o	Small but important fix for Linux builds in Rcpp:::RcppLdFlags()
+
+0.6.1   2008-11-30
+
+    o	Now src/Makevars replaces src/Makefile, this brings proper OS X
+        multi-arch support with thanks to Simon
+
+    o	Old #ifdef statements related to QuantLib removed; Rcpp is now
+        decoupled from QuantLib headers yet be used by RQuantLib
+
+    o   Added RcppLdPath() to return the lib. directory patch and on Linux
+        the rpath settings
+
+    o	Added new RcppVectorExample()
+
+    o	Augmented documentation on usage in Rcpp-package.Rd
+
+0.6.0.  2008-11-05
+
+    o	New maintainer, taking over RcppTemplate (which has been without an
+        update since Nov 2006) under its initial name Rcpp
+
+    o	New files src/Makefile{,.win} including functionality from both
+        configure and RcppSrc/Makefile; we now build two libraries, one for
+        use by the package which also runs the example, and one for users to
+        link against, and removed src/Makevars.in
+
+    o	Files src/Rcpp.{cpp,h} moved in from ../RcppSrc
+
+    o	Added new class RcppDatetime corresponding to POSIXct in with full 
+        support for microsecond time resolution between R and C++
+
+    o	Several new manual pages added
+
+    o	Removed  configure{,.in,.win} as src/Makefile* can handle this more
+        easily
+
+    o	Minor cleanup and reformatting for DESCRIPTION, Date: now uses
+        svn:keyword Date property
+
+    o	Renamed RcppTemplateVersion to RcppVersion, deleted RcppDemo
+
+    o	Directory demo/ removed as vignette("RcppAPI") is easier and more
+        reliable to show vignette documentation
+
+    o	RcppTemplateDemo() removed from R/zzz.R, vignette("RcppAPI") is easier;
+        man/RcppTemplateDemo.Rd removed as well
+
+    o	Some more code reindentation and formatting to R default arguments,
+        some renamed from RcppTemplate* to Rcpp*
+ 
+    o	Added footnote onto titlepage of inst/doc/RcppAPI.{Rnw,pdf} about how
+        this document has not (yet) been updated along with the channges made
 
