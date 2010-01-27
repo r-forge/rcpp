@@ -114,10 +114,6 @@ RObject::AttributeProxy::operator SEXP() const {
 	return Rf_getAttrib( parent , Rf_install( attr_name.c_str() ) ) ;
 }
 
-RObject::AttributeProxy::operator RObject() const {
-	return wrap( Rf_getAttrib( parent, Rf_install( attr_name.c_str() ) ) ) ;
-}
-
 RObject::AttributeProxy RObject::attr( const std::string& name) const{
 	return AttributeProxy( *this, name)  ;
 }

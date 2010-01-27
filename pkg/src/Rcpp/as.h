@@ -23,7 +23,6 @@
 #define Rcpp_as_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
 #include <algorithm>
 
 namespace Rcpp{ 

@@ -23,6 +23,7 @@
 #define Rcpp_RObject_h
 
 #include <RcppCommon.h>
+#include <Rcpp/as.h>
 #include <set>
 
 namespace Rcpp{ 
@@ -126,19 +127,24 @@ public:
     class AttributeProxy {
 	public:
 		AttributeProxy( const RObject& v, const std::string& attr_name) ;
-		
+
 		/* lvalue uses */
 		AttributeProxy& operator=(const AttributeProxy& rhs) ;
-		
+
 		template <typename T>
 		AttributeProxy& operator=(const T& rhs){
 			Rf_setAttrib( parent, Rf_install(attr_name.c_str()), wrap(rhs) ) ;
 			return *this ;
 		}
-		
+
 		/* rvalue use */
 		operator SEXP() const ;
-		operator RObject() const ;
+
+		template <typename T> operator T() const {
+			SEXP att = Rf_getAttrib( parent, Rf_install( attr_name.c_str() ) );
+			T t = Rcpp::as<T>(att) ;
+			return t ;
+		} ;
 		
 	private:
 		const RObject& parent; 
