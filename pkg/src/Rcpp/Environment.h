@@ -227,10 +227,12 @@ public:
     	    operator SEXP() const ;
     	    
     	    /**
-    	     * retrieves the value for this binding as an RObject
+    	     * Retrieves the value of the binding as a T object
+    	     *
+    	     * The requirement on the T type is that as<T> makes sense
+    	     * which can either mean that a specialization exists
+    	     * or that T has a T(SEXP) constructor
     	     */
-    	    operator RObject() const ;
-    	    
     	    template <typename T> 
     	    operator T() const{
     	    	    SEXP x = env.get(name) ;

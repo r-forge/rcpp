@@ -273,11 +273,7 @@ namespace Rcpp {
     Environment::Binding::operator SEXP() const{
     	return env.get( name );    
     }
-    
-    Environment::Binding::operator RObject() const{
-    	return wrap( env.get( name ) );
-    }
-    
+
     const Environment::Binding Environment::operator[]( const std::string& name) const{
     	return Binding( const_cast<Environment&>(*this), name );
     }
