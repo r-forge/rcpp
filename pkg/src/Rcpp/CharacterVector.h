@@ -87,7 +87,7 @@ public:
 		size_t size = std::distance( first, last ) ;
 		SEXP x = m_sexp ;
 		bool update = false ;
-		if( Rf_isNull(m_sexp) || length() != size ){
+		if( Rf_isNull(m_sexp) || static_cast<size_t>(length()) != size ){
 			x = Rf_allocVector( STRSXP, size ) ;
 			update = true ;
 		}
