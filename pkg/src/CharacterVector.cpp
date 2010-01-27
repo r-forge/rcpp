@@ -82,6 +82,10 @@ CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const std
 	return *this ;
 }
 
+std::ostream& operator<<(std::ostream& os, const CharacterVector::StringProxy& proxy) {
+    os << CHAR(STRING_ELT( proxy.parent, proxy.index )) ;
+    return os;
+}
 
 const CharacterVector::StringProxy CharacterVector::operator[](int i) const throw(index_out_of_bounds){
 	return StringProxy(const_cast<CharacterVector&>(*this), offset(i) ) ;
@@ -98,6 +102,5 @@ CharacterVector::StringProxy CharacterVector::operator()( const size_t& i) throw
 CharacterVector::StringProxy CharacterVector::operator()( const size_t& i, const size_t&j ) throw(index_out_of_bounds,not_a_matrix){
 	return StringProxy(*this, offset(i,j) ) ;
 }
-
 
 } // namespace 

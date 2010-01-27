@@ -2,6 +2,9 @@
 
 	* src/Rcpp/CharacterVector.h: CharacterVector::StringProxy
 	gains implicit conversion to std::string
+	
+	* src/Rcpp/CharacterVector.h: CharacterVector::StringProxy
+	gets a printing operator <<(std::ostream& )
 
 	* src/Rcpp/Environment.h: removed the static 
 	Environment::RCPP_NAMESPACE which caused problems when 
