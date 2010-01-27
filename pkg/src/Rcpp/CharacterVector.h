@@ -49,6 +49,9 @@ public:
 		operator char*() const ;
 		operator std::string() const ;
 		
+		/* printing */
+		friend std::ostream& operator<<(std::ostream& os, const StringProxy& proxy);
+		
 	private:
 		CharacterVector& parent; 
 		int index ;
