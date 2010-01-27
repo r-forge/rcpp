@@ -1,4 +1,4 @@
-2010-01-26  Dirk Eddelbuettel  <edd@dexter>
+2010-01-26  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppDatetime.cpp: New SEXP-based constructor
 	* src/RcppDatetime.h: idem, bug fix for operator-
@@ -40,7 +40,7 @@
 	* inst/unitTests/runit.GenericVector.R: unit test for matrix
 	indexing (test.List.matrix.indexing)
 
-2010-01-26  Dirk Eddelbuettel  <edd@dexter>
+2010-01-26  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runit.RcppDate.R: added
 
@@ -121,7 +121,7 @@
 
 	* src/Rcpp/Environment.h: make sure what() is const. (suncc finding)
 
-	* src/RcppCommon.h: pre declare classes, as an attempt to 
+	* src/RcppCommon.h: pre declare classes, as an attempt to
 	deal with the suncc warning "RObject may not have a type qualifier."
 
 	* src/Rcpp/*.h: make sure RcppCommon.h is the first included header
@@ -928,7 +928,7 @@
 
 	* inst/doc/: Updated doxygen documentation
 
-2009-09-29  Dirk Eddelbuettel  <edd@dexter>
+2009-09-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/examples/functionCallback/*: Added simple C++ / R example of
 	  defining an R function that is passed to and called from C++
