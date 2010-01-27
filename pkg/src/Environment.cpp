@@ -282,9 +282,8 @@ namespace Rcpp {
     	return Binding( *this, name ) ;
     }
     
-    Environment Environment::RCPP_NAMESPACE = Rf_eval( Rf_lcons( Rf_install("getNamespace"), Rf_cons( Rf_mkString("Rcpp") , R_NilValue) ), R_GlobalEnv );
-    Environment& Environment::Rcpp_namespace() throw() {
-    	    return RCPP_NAMESPACE ;
+    Environment Environment::Rcpp_namespace() throw() {
+    	    return Environment( Rf_eval( Rf_lcons( Rf_install("getNamespace"), Rf_cons( Rf_mkString("Rcpp") , R_NilValue) ), R_GlobalEnv ) ) ;
     }
     
     Environment Environment::new_child(bool hashed) {

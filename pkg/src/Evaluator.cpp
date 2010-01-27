@@ -32,8 +32,7 @@ namespace Rcpp {
 	
    	SEXP call = PROTECT( Rf_lang3( Rf_install("rcpp_tryCatch") , expr, env ) ) ;
 	
-   	/* already protected */
-   	SEXP RCPP = Environment::Rcpp_namespace(); 
+   	Environment RCPP = Environment::Rcpp_namespace(); 
    	
 	/* call the tryCatch call */
 	SEXP res = PROTECT( Rf_eval( call, RCPP ) );
