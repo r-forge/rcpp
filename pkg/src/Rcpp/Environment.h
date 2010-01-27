@@ -448,7 +448,7 @@ public:
     /**
      * @return the Rcpp namespace
      */
-    static Environment& Rcpp_namespace() throw() ;
+    static Environment Rcpp_namespace() throw() ;
     
     /**
      * @param name the name of the package of which we want the namespace
@@ -468,11 +468,7 @@ public:
      * creates a new environment whose this is the parent
      */
     Environment new_child(bool hashed) ; 
-    
-private:
-	/* we cache the Rcpp namespace environment since
-	it is used many times internally */
-	static Environment RCPP_NAMESPACE ;
+	
 };
 
 } // namespace Rcpp

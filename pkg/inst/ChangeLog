@@ -1,5 +1,9 @@
 2010-01-27  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Environment.h: removed the static 
+	Environment::RCPP_NAMESPACE which caused problems when 
+	embedding R
+
 	* src/Rcpp/RObject.h: RObject::AttributeProxy::operator RObject
 	replaced by templated implicit conversion operator, delegating the
 	actual work to as<>.
