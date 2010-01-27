@@ -27,8 +27,8 @@ test.RcppDate.get.functions <- function() {
             rs.add("month", dt.getMonth());
             rs.add("day",   dt.getDay());
             rs.add("year",  dt.getYear());
-            rs.add("julian",dt.getJDN());
-	        return rs.getReturnList();';
+            rs.add("julian",dt.getJulian());
+	    return rs.getReturnList();';
     funx <- cfunction(signature(), src, Rcpp=TRUE)
     checkEquals(funx(), list(month=12, day=31, year=1999, julian=10956), msg = "RcppDate.get.functions")
 }
@@ -43,7 +43,7 @@ test.RcppDate.operators <- function() {
             rs.add("equal",   d2 == d1);
             rs.add("ge",      d2 >= d1);
             rs.add("le",      d2 <= d1);
-	        return rs.getReturnList();';
+	    return rs.getReturnList();';
     funx <- cfunction(signature(), src, Rcpp=TRUE)
     checkEquals(funx(), list(diff=1, bigger=1, smaller=0, equal=0, ge=1, le=0), msg = "RcppDate.operators")
 }
