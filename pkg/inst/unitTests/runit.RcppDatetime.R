@@ -22,10 +22,8 @@
 }
 
 test.RcppDatetime.get.functions <- function() {
-    src <- '//RcppDatetime dt = RcppDatetime(946774923.123456); // 2001-02-03 01:02:03.123456
-            RcppDatetime dt = RcppDatetime(1152338523.456789); // as.POSIXct("2006-07-08 01:02:03.456789")
+    src <- 'RcppDatetime dt = RcppDatetime(x);
             RcppResultSet rs;
-            //std::cout << dt << std::endl;
             rs.add("year",     dt.getYear());
             rs.add("month",    dt.getMonth());
             rs.add("day",      dt.getDay());
@@ -34,12 +32,10 @@ test.RcppDatetime.get.functions <- function() {
             rs.add("minute",   dt.getMinute());
             rs.add("second",   dt.getSecond());
             rs.add("microsec", dt.getMicroSec());
-            //rs.add("dt",    dt);
-	        return rs.getReturnList();';
-    funx <- cfunction(signature(), src, Rcpp=TRUE)
-    checkEquals(funx(),
-                list(year=2006, month=7, day=8, wday=6,
-                     hour=1, minute=2, second=3, microsec=456789),
+            return rs.getReturnList();';
+    funx <- cfunction(signature(x="numeric"), src, Rcpp=TRUE)
+    checkEquals(funx(as.numeric(as.POSIXct("2001-02-03 01:02:03.123456"))),
+                list(year=2001, month=2, day=3, wday=6, hour=1, minute=2, second=3, microsec=123456),
                 msg = "RcppDate.get.functions")
 }
 
@@ -54,9 +50,10 @@ test.RcppDatetime.operators <- function() {
              rs.add("equal",   d2 == d1);
              rs.add("ge",      d2 >= d1);
              rs.add("le",      d2 <= d1);
-   	         return rs.getReturnList();';
-     funx <- cfunction(signature(), src, Rcpp=TRUE)
-     checkEquals(funx(), list(diff=3600, bigger=1, smaller=0, equal=0, ge=1, le=0), msg = "RcppDatetime.operators")
+   	     return rs.getReturnList();';
+     funx <- cfunction(signature(x="numeric"), src, Rcpp=TRUE)
+     checkEquals(funx(as.numeric(as.POSIXct("2001-02-03 01:02:03.123456"))),
+                      list(diff=3600, bigger=1, smaller=0, equal=0, ge=1, le=0), msg = "RcppDatetime.operators")
 }
 
 
