@@ -47,6 +47,7 @@ public:
 		/* rvalue use */
 		operator SEXP() const ;
 		operator char*() const ;
+		operator std::string() const ;
 		
 	private:
 		CharacterVector& parent; 
