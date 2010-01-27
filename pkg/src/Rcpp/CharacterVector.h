@@ -62,8 +62,6 @@ public:
 	CharacterVector( const std::string& x );
 	CharacterVector( const std::vector<std::string>& x );
 	
-	CharacterVector( const char** first, const char** last) ;
-	
 	template <typename InputIterator>
 	CharacterVector( InputIterator first, InputIterator last): VectorBase() {
 		assign( first, last ) ;
@@ -84,8 +82,6 @@ public:
 	StringProxy operator()( const size_t& i) throw(index_out_of_bounds) ;
 	StringProxy operator()( const size_t& i, const size_t& j) throw(index_out_of_bounds,not_a_matrix) ;
 
-	void assign( const char** const first, const char** const last) ; 
-	
 	template <typename InputIterator>
 	void assign( InputIterator first, InputIterator last){
 		size_t size = std::distance( first, last ) ;
@@ -95,8 +91,10 @@ public:
 			x = Rf_allocVector( STRSXP, size ) ;
 			update = true ;
 		}
+		std::string y ;
 		for( size_t i=0; i<size; i++, ++first){
-			SET_STRING_ELT( x, i, Rf_mkChar(first->c_str())) ;
+			y = *first ;
+			SET_STRING_ELT( x, i, Rf_mkChar(y.c_str())) ;
 		}
 		if( update ) setSEXP(x) ;
 	}
