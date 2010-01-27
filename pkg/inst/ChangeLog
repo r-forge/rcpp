@@ -1,20 +1,25 @@
+2010-01-27  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.RcppMatrix.R: added
+	* inst/unitTests/runit.RcppMatrixView.R: added
+
 2010-01-27  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/CharacterVector.h: CharacterVector gains a default
 	constructor
-	
+
 	* src/Rcpp/CharacterVector.h: CharacterVector gains range
-	constructors and range based assign methods facilitating 
+	constructors and range based assign methods facilitating
 	construction from iterators
-	
+
 	* inst/unitTests/runit.CharacterVector.R: unit tests for assign
 	and range based constructors
 
 	* src/Rcpp/CharacterVector.h: CharacterVector::StringProxy
 	gets a printing operator <<(std::ostream& )
 
-	* src/Rcpp/Environment.h: removed the static 
-	Environment::RCPP_NAMESPACE which caused problems when 
+	* src/Rcpp/Environment.h: removed the static
+	Environment::RCPP_NAMESPACE which caused problems when
 	embedding R
 
 	* src/Rcpp/RObject.h: RObject::AttributeProxy::operator RObject
