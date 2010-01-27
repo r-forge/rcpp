@@ -47,7 +47,6 @@ public:
 		/* rvalue use */
 		operator SEXP() const ;
 		operator char*() const ;
-		operator std::string() const ;
 		
 		/* printing */
 		friend std::ostream& operator<<(std::ostream& os, const StringProxy& proxy);
@@ -57,14 +56,22 @@ public:
 		int index ;
 	} ;
 
+	CharacterVector() ;
 	CharacterVector(SEXP x) throw(not_compatible);
 	CharacterVector( const size_t& size) ;
 	CharacterVector( const std::string& x );
 	CharacterVector( const std::vector<std::string>& x );
 	
+	CharacterVector( const char** first, const char** last) ;
+	
+	template <typename InputIterator>
+	CharacterVector( InputIterator first, InputIterator last): VectorBase() {
+		assign( first, last ) ;
+	}
+	
 #ifdef HAS_INIT_LISTS
 	CharacterVector( std::initializer_list<std::string> list ) : VectorBase() {
-		fill( list.begin(), list.size() ) ;
+		assign( list.begin(), list.size() ) ;
 	}
 #endif
 
@@ -77,16 +84,23 @@ public:
 	StringProxy operator()( const size_t& i) throw(index_out_of_bounds) ;
 	StringProxy operator()( const size_t& i, const size_t& j) throw(index_out_of_bounds,not_a_matrix) ;
 
-private:
+	void assign( const char** first, const char** last) ; 
+	
 	template <typename InputIterator>
-	void fill(InputIterator first, size_t size ){
-		SEXP x = PROTECT( Rf_allocVector( STRSXP, size) ) ;
-		for( size_t i=0; i<size; ++i, ++first ){
-			SET_STRING_ELT( x, i, Rf_mkChar(first->c_str()) ) ;
+	void assign( InputIterator first, InputIterator last){
+		size_t size = std::distance( first, last ) ;
+		SEXP x = m_sexp ;
+		bool update = false ;
+		if( Rf_isNull(m_sexp) || length() != size ){
+			x = Rf_allocVector( STRSXP, size ) ;
+			update = true ;
 		}
-		setSEXP( x );
-		UNPROTECT(1) ;
+		for( size_t i=0; i<size; i++, ++first){
+			SET_STRING_ELT( x, i, Rf_mkChar(first->c_str())) ;
+		}
+		if( update ) setSEXP(x) ;
 	}
+
 } ;
 
 typedef CharacterVector StringVector ;
