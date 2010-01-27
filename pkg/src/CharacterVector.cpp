@@ -101,22 +101,22 @@ CharacterVector::StringProxy CharacterVector::operator()( const size_t& i, const
 	return StringProxy(*this, offset(i,j) ) ;
 }
 
-void CharacterVector::assign( const char** first, const char** last){
-	size_t size = std::distance( first, last ) ;
-	SEXP x = m_sexp ;
-	bool update = false ;
-	if( length() != size ){
-		x = Rf_allocVector( STRSXP, size ) ;
-		update = true ;
-	}
-	for( size_t i=0; i<size; i++, ++first){
-		SET_STRING_ELT( x, i, Rf_mkChar(*first)) ;
-	}
-	if( update ) setSEXP( x ) ;
-}
+// void CharacterVector::assign( const char** first, const char** last){
+// 	size_t size = std::distance( first, last ) ;
+// 	SEXP x = m_sexp ;
+// 	bool update = false ;
+// 	if( length() != size ){
+// 		x = Rf_allocVector( STRSXP, size ) ;
+// 		update = true ;
+// 	}
+// 	for( size_t i=0; i<size; i++, ++first){
+// 		SET_STRING_ELT( x, i, Rf_mkChar(*first)) ;
+// 	}
+// 	if( update ) setSEXP( x ) ;
+// }
 	
-CharacterVector::CharacterVector( const char** const first, const char** const last) : VectorBase(){
-	assign( first, last ) ;
-}
+// CharacterVector::CharacterVector( const char** const first, const char** const last) : VectorBase(){
+// 	assign( first, last ) ;
+// }
 
 } // namespace 
