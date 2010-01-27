@@ -84,7 +84,7 @@ public:
 	StringProxy operator()( const size_t& i) throw(index_out_of_bounds) ;
 	StringProxy operator()( const size_t& i, const size_t& j) throw(index_out_of_bounds,not_a_matrix) ;
 
-	void assign( const char** first, const char** last) ; 
+	void assign( const char** const first, const char** const last) ; 
 	
 	template <typename InputIterator>
 	void assign( InputIterator first, InputIterator last){
