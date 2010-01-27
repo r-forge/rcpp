@@ -1,5 +1,8 @@
 2010-01-27  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/CharacterVector.h: CharacterVector::StringProxy
+	gains implicit conversion to std::string
+
 	* src/Rcpp/Environment.h: removed the static 
 	Environment::RCPP_NAMESPACE which caused problems when 
 	embedding R

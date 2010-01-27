@@ -54,6 +54,10 @@ CharacterVector::StringProxy::operator char*() const {
 	return const_cast<char*>( CHAR(STRING_ELT( parent, index )) );
 }
 
+CharacterVector::StringProxy::operator std::string() const {
+	return std::string( CHAR(STRING_ELT( parent, index )) );
+}
+
 CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const StringProxy& rhs){
 	SET_STRING_ELT( parent, index, STRING_ELT( rhs.parent, rhs.index) ) ;
 	return *this ;
