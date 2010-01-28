@@ -31,15 +31,12 @@
 
 namespace Rcpp{ 
 
-/* lazy typedef */
-typedef DottedPair<LANGSXP> Language_Base ;
-
 /** 
  * C++ wrapper around calls (LANGSXP SEXP)
  *
  * This represents calls that can be evaluated
  */
-class Language : public Language_Base {
+class Language : public DottedPair {
 public:
 
 	Language() ;
@@ -92,7 +89,7 @@ public:
 	 */
 #ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
-Language( const std::string& symbol, const Args&... args) : Language_Base(Rf_install(symbol.c_str()), args...) {
+Language( const std::string& symbol, const Args&... args) : DottedPair(Rf_install(symbol.c_str()), args...) {
 		update() ;
 	}
 #endif	

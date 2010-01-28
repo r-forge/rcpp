@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// Language.cpp: Rcpp R/C++ interface class library -- Language objects ( calls )
+// Pairlist.cpp: Rcpp R/C++ interface class library -- Pairlist objects
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,39 +19,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <Rcpp/Language.h>
+#include <Rcpp/Pairlist.h>
 
 namespace Rcpp {
 	
-	Language::Language() : DottedPair() {};
-	
-	Language::Language( SEXP x ) throw(not_compatible) : DottedPair(){
-		setSEXP( r_cast<LANGSXP>(x) ) ;
+	Pairlist::Pairlist() : DottedPair() {};
+	Pairlist::Pairlist( SEXP x ) throw(not_compatible) : DottedPair(){
+		setSEXP( r_cast<LISTSXP>(x) );
 	};
-	
-	Language::Language( const std::string& symbol ): DottedPair() {
-		setSEXP( Rf_lcons( Symbol(symbol), R_NilValue ) );
-	}
-	
-	Language::Language( const Symbol& symbol ){
-		setSEXP( Rf_lcons( symbol, R_NilValue ) ) ;
-	}
-	
-	Language::~Language(){}
-
-	void Language::setSymbol( const std::string& symbol){
-		setSymbol( Symbol( symbol ) ) ;
-	}
-	
-	void Language::setSymbol( const Symbol& symbol){
-		SETCAR( m_sexp, symbol ) ;
-		SET_TAG(m_sexp, R_NilValue);
-	}
-	
-	void Language::update(){ 
-		SET_TYPEOF( m_sexp, LANGSXP ) ;
-		SET_TAG( m_sexp, R_NilValue ) ;
-	}
+	Pairlist::~Pairlist(){}
 	
 	
 } // namespace Rcpp

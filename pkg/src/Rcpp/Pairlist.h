@@ -26,6 +26,19 @@
 #include <Rcpp/DottedPair.h>
 
 namespace Rcpp{
-	typedef DottedPair<LISTSXP> Pairlist ;
+
+class Pairlist : public DottedPair {
+public:		
+	Pairlist();
+	Pairlist(SEXP x) throw(not_compatible) ;
+		
+#ifdef HAS_VARIADIC_TEMPLATES
+template<typename... Args> 
+	Pairlist( const Args&... args) : DottedPair(args...) {}
+#endif	
+	~Pairlist() ;
+		
+} ;
+	
 }
 #endif
