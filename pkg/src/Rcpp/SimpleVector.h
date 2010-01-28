@@ -53,9 +53,14 @@ public:
 		}
 	}
 	
+	template <typename InputIterator>
+	SimpleVector( InputIterator first, InputIterator last) : VectorBase(), start(){
+		assign( first, last ) ;
+	}
+	
 #ifdef HAS_INIT_LISTS
 	SimpleVector( std::initializer_list<CTYPE> list ) : VectorBase(), start(0){
-		simple_fill( list.begin() , list.end() ) ;
+		assign( list.begin() , list.end() ) ;
 	}
 #endif
 
@@ -70,35 +75,30 @@ public:
 	inline CTYPE& operator()( const size_t& i, const size_t& j) throw(VectorBase::not_a_matrix,RObject::index_out_of_bounds){
 		return start[ offset(i,j) ] ;
 	}
-
-protected:
-	/* TODO: make this private ASAP */
-	CTYPE* start ;
 	
-private:
-	virtual void update(){ start = get_pointer<RTYPE,CTYPE>(m_sexp) ; }
-	
-	// simple is when there is no need for coercion
-	// called only when the input container contains doubles
-	// TODO: use traits or something to make sure this is an 
-	//       iterator over RTYPE
+	// TODO : deal with coercion by dispatching the call using 
+	//        the iterator traits, but for this we need a smart 
+	//        coerce template
 	template <typename InputIterator>
-	void simple_fill( InputIterator first, InputIterator last){
-		size_t size = std::distance( first, last) ;
-		SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
+	void assign( InputIterator first, InputIterator last){
+		size_t size = std::distance( first, last ) ;
+		SEXP x = PROTECT(Rf_allocVector( RTYPE, size )) ;
 		std::copy( first, last, get_pointer<RTYPE,CTYPE>(x) ) ;
-		setSEXP( x ) ;
+		setSEXP(x) ;
 		UNPROTECT(1) ;
 	}
+
+private:
+	CTYPE* start ;
+	
+	virtual void update(){ start = get_pointer<RTYPE,CTYPE>(m_sexp) ; }
 	
 	void init(){
-		size_t n = static_cast<size_t>(length()) ;
-		CTYPE zero = static_cast<CTYPE>(0) ;
-		for( size_t i=0; i<n; i++){
-			start[i] = zero;
-		}
+		init( static_cast<CTYPE>(0) ) ;
 	}
-	
+	void init( const CTYPE& value){
+		std::fill( start, start+length(), value ) ;
+	}
 } ;
 
 }// namespace Rcpp

@@ -94,7 +94,30 @@ test.List.matrix.indexing <- function(){
 	# drop dimensions
 	dim(x) <- NULL
 	checkException( funx(x) , msg = "not a matrix" )
-	
-	
 }
+
+test.List.Dimension.constructor <- function(){
+
+	funx <- cfunction(signature(), '
+		return List( Dimension( 5 ) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		rep(list(NULL),5) , 
+		msg = "List( Dimension(5))" )
+	
+	funx <- cfunction(signature(), '
+		return List( Dimension( 5, 5 ) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		structure( rep( list(NULL), 25), dim = c(5,5) ),
+		msg = "List( Dimension(5,5))" )
+	
+	funx <- cfunction(signature(), '
+		return List( Dimension( 2, 3, 4) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		array( rep(list(NULL)), dim = c(2,3,4) ) , 
+		msg = "List( Dimension(2,3,4))" )
+}
+
 
