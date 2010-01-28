@@ -119,6 +119,6 @@ test.IntegerVector.range.constructors <- function(){
 		IntegerVector y( vec.begin(), vec.end() ) ;
 		return y;
 	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
-	checkEquals( funx(), 0:4, msg = "assign(int*, int*)" )
+	checkEquals( funx(), 0:3, msg = "assign(int*, int*)" )
 }
 
