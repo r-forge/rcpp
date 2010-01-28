@@ -86,9 +86,14 @@ public:
 		if( dims.size() > 1) attr( "dim" ) = dims ;
 	}
 
+	template <typename InputIterator>
+	SEXP_Vector(InputIterator first, InputIterator last) : VectorBase() {
+		assign( first, last ) ;
+	}
+	
 #ifdef HAS_INIT_LISTS
 	SEXP_Vector( std::initializer_list<SEXP> list) : VectorBase(){
-		fill_from_sexp_iterator( list.begin(), list.end() ) ;
+		assign( list.begin(), list.end() ) ;
 	} ;
 #endif
 	
@@ -109,22 +114,20 @@ public:
 	
 	friend class Proxy; 
 	
-private:
-	
-	template <typename SEXP_Iterator>
-	void fill_from_sexp_iterator( SEXP_Iterator first, SEXP_Iterator last){
+	template <typename InputIterator>
+	void assign( InputIterator first, InputIterator last){
 		size_t size = std::distance( first, last );
 		SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) ) ;
 		SEXP y = R_NilValue ; /* -Wall */
 		for( size_t i=0; i<size ; i++, ++first){
-			/* this is where the actual type of SEXP_Iterator matters */
-			y = *first ; 
+			/* this is where the actual type of InputIterator matters */
+			y = *first ; /* as long as *first can implicitely convert to SEXP, we're good to go */
 			SET_VECTOR_ELT( x, i, y ) ;
 		}
 		setSEXP( x ) ;
 		UNPROTECT( 1 ); /* x */
 	}
-
+	
 } ;
 	
 } //namespace Rcpp
