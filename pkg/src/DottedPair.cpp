@@ -38,58 +38,36 @@ namespace Rcpp {
 		}
 	}
 	
-	DottedPair::Proxy::Proxy( DottedPair& v, const size_t& index_ ) : 
-		parent(v), index(index_){}
+	DottedPair::Proxy::Proxy( DottedPair& v, const size_t& index_ ) throw(index_out_of_bounds) : node(){
+		if( index_ >= v.length() ) throw index_out_of_bounds() ;
+		SEXP x = v ; /* implicit conversion */
+		size_t i = 0 ;
+		while( i<index_) {
+			x = CDR(x) ;
+			++i ;
+		}
+		node = x ;
+	}
 	
 	DottedPair::Proxy& DottedPair::Proxy::operator=(const Proxy& rhs){
-		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-		size_t i = 0 ;
-		SEXP x = parent.asSexp() ; 
-		while( i < index ) {
-			x = CDR(x) ;
-			i++ ;
-		}
 		SEXP y = rhs ; /* implicit conversion */
-		SETCAR( x, y ) ;
-		// if( index != 0 ) SET_TAG( x, Rf_install( rhs.getTag() ) ) ;
+		SETCAR( node, y ) ;
 		return *this ;
 	}
 	
 	DottedPair::Proxy& DottedPair::Proxy::operator=(SEXP rhs){
-		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-		SEXP x = parent.asSexp() ; 
-		size_t i = 0 ;
-		while( i < index ) {
-			x = CDR(x) ;
-			i++ ;
-		}
-		SETCAR( x, rhs) ;
+		SETCAR( node, rhs) ;
 		return *this ;
 	}
 	
 	DottedPair::Proxy& DottedPair::Proxy::operator=(const Named& rhs){
-		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-		size_t i = 0 ;
-		SEXP x = parent.asSexp() ; 
-		while( i < index ) {
-			x = CDR(x) ;
-			i++ ;
-		}
-		SEXP y = rhs.getSEXP() ;
-		SETCAR( x, y ) ;
-		if( index != 0 ) SET_TAG( x, Symbol( rhs.getTag() ) ) ;
+		SETCAR( node, rhs.getSEXP() ) ;
+		SET_TAG( node, Rf_install( rhs.getTag().c_str() ) ) ;
 		return *this ;
 	}
 		
 	DottedPair::Proxy::operator SEXP() {
-		if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-		SEXP x = parent.asSexp() ; 
-		size_t i = 0 ;
-		while( i < index ) {
-			x = CDR(x) ;
-			i++ ;
-		}
-		return CAR(x) ;
+		return CAR(node) ;
 	}
 		
 	const DottedPair::Proxy DottedPair::operator[]( int i ) const {
