@@ -1,24 +1,24 @@
 
 0.7.4	(under development)
 
-    o	new class Rcpp::Dimension to support creation of vectors with 
-    	dimensions. All vector classes gain a constructor taking a 
-    	Dimension reference.
-
     o	matrix matrix-like indexing using operator() for all vector 
     	types : IntegerVector, NumericVector, RawVector, CharacterVector
     	LogicalVector, GenericVector and ExpressionVector. 
 
-    o	an intermediate template class SimpleVector has been added. All
+    o	new class Rcpp::Dimension to support creation of vectors with 
+    	dimensions. All vector classes gain a constructor taking a 
+    	Dimension reference.
+
+    o	an intermediate template class "SimpleVector" has been added. All
     	simple vector classes are now generated from the SimpleVector 
     	template : IntegerVector, NumericVector, RawVector, CharacterVector
     	LogicalVector.
 
-    o	an intermediate template class SEXP_Vector has been added to 
-    	generate GenericVector and ExpressionVector. 
+    o	an intermediate template class "SEXP_Vector" has been added to 
+    	generate GenericVector and ExpressionVector.
 
     o	the clone template function was introduced to explicitely
-    	clone an RObject vy duplicating the SEXP it encapsulates.
+    	clone an RObject by duplicating the SEXP it encapsulates.
 
     o 	the as template is now smarter. The template now attempts to 
     	build an object of the requested template parameter T by using the
@@ -53,7 +53,7 @@
     o	Environment::assign becomes a template and also uses wrap to 
     	create a suitable SEXP
 
-    o	Many more unit tests, now totalling 136 test functions
+    o	Many more unit tests for the new features
 
 0.7.3	2010-01-21
 
