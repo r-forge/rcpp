@@ -1,5 +1,9 @@
 2010-01-28  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/DottedPair.h: factored out Language and Pairlist
+	into the new DottedPaitr template, parameterized by the 
+	SEXP type (LANGSXP or LISTSXP)
+
 	* src/Rcpp/SimpleVector.h: simple vectors gain a range
 	based assign method and a range based assign constructor
 	* inst/unitTests/runit.IntegerVector.R: new unit test 

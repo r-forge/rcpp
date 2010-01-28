@@ -59,6 +59,7 @@
 #include <Rcpp/Symbol.h>
 #include <Rcpp/Language.h>
 #include <Rcpp/Named.h>
+#include <Rcpp/DottedPair.h>
 #include <Rcpp/Pairlist.h>
 #include <Rcpp/Function.h>
 #include <Rcpp/IntegerVector.h>
