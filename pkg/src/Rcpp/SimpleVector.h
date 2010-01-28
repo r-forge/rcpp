@@ -26,9 +26,10 @@
 #include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
 #include <Rcpp/r_cast.h>
+#include <Rcpp/Dimension.h>
 
 namespace Rcpp{
-
+	
 template <int RTYPE, typename CTYPE>
 class SimpleVector : public VectorBase {
 public:
@@ -41,6 +42,15 @@ public:
 	
 	SimpleVector( const size_t& size){
 		setSEXP( Rf_allocVector( RTYPE, size) ) ;
+		init() ;
+	}
+	
+	SimpleVector( const Dimension& dims){
+		setSEXP( Rf_allocVector( RTYPE, dims.prod() ) ) ;
+		init() ;
+		if( dims.size() > 1 ){
+			attr( "dim" ) = dims ;
+		}
 	}
 	
 #ifdef HAS_INIT_LISTS
@@ -79,6 +89,14 @@ private:
 		std::copy( first, last, get_pointer<RTYPE,CTYPE>(x) ) ;
 		setSEXP( x ) ;
 		UNPROTECT(1) ;
+	}
+	
+	void init(){
+		size_t n = static_cast<size_t>(length()) ;
+		CTYPE zero = static_cast<CTYPE>(0) ;
+		for( size_t i=0; i<n; i++){
+			start[i] = zero;
+		}
 	}
 	
 } ;

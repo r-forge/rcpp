@@ -48,6 +48,7 @@
 #include <Rcpp/grow.h>
 #include <Rcpp/wrap.h>
 #include <Rcpp/as.h>
+#include <Rcpp/Dimension.h>
 #include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
 #include <Rcpp/SimpleVector.h>

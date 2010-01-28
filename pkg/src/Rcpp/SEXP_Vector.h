@@ -80,6 +80,11 @@ public:
 	SEXP_Vector(const size_t& size) : VectorBase(){
 		setSEXP( Rf_allocVector( RTYPE, size ) ) ;
 	}
+	
+	SEXP_Vector(const Dimension& dims) : VectorBase(){
+		setSEXP( Rf_allocVector( RTYPE, dims.prod() ) ) ;
+		if( dims.size() > 1) attr( "dim" ) = dims ;
+	}
 
 #ifdef HAS_INIT_LISTS
 	SEXP_Vector( std::initializer_list<SEXP> list) : VectorBase(){

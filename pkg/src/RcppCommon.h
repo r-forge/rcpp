@@ -109,7 +109,7 @@ namespace Rcpp{
 	class Pairlist ;
 	class Function ;
 	class WeakReference;
-
+	
 /* internal namespace for things not intended to be used by the 
    user */
 namespace internal{	

@@ -1,5 +1,17 @@
 2010-01-28  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/Dimension.h: new class Rcpp::Dimension to support
+	creation of vectors with dimensions
+	
+	* src/Rcpp/*Vector.h: using Rcpp::Dimension
+	
+	* src/Rcpp/SimpleVector.h: data is initialized with 0 when 
+	the object is constructed from size or Dimension constructor
+	
+	* inst/runit.CharacterVector.R: new unit test to test 
+	constructors using Dimension
+	* inst/runit.IntegerVector.R: idem
+	
 	* R/unit.tests.R: new unexported function "test" to trigger
 	unit tests using installed test cases
 

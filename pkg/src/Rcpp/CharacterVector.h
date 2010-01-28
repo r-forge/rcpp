@@ -26,6 +26,7 @@
 #include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
 #include <Rcpp/r_cast.h>
+#include <Rcpp/Dimension.h>
 
 namespace Rcpp{ 
 
@@ -61,6 +62,8 @@ public:
 	CharacterVector( const size_t& size) ;
 	CharacterVector( const std::string& x );
 	CharacterVector( const std::vector<std::string>& x );
+	
+	CharacterVector( const Dimension& dims) ;
 	
 	template <typename InputIterator>
 	CharacterVector( InputIterator first, InputIterator last): VectorBase() {
