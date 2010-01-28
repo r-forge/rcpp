@@ -142,3 +142,28 @@ test.CharacterVector.range.constructors <- function(){
 	checkEquals( funx(), c("foo", "bar", "bling", "boom"), msg = "assign(char**, char**)" )
 }
 
+test.CharacterVector.Dimension.constructor <- function(){
+
+	funx <- cfunction(signature(), '
+		return CharacterVector( Dimension( 5 ) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		character(5) , 
+		msg = "CharacterVector( Dimension(5))" )
+	
+	funx <- cfunction(signature(), '
+		return CharacterVector( Dimension( 5, 5 ) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		matrix( "", ncol = 5, nrow = 5) , 
+		msg = "CharacterVector( Dimension(5,5))" )
+	
+	funx <- cfunction(signature(), '
+		return CharacterVector( Dimension( 2, 3, 4) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		array( "", dim = c(2,3,4) ) , 
+		msg = "CharacterVector( Dimension(2,3,4))" )
+}
+
+

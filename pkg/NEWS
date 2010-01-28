@@ -1,6 +1,10 @@
 
 0.7.4	(under development)
 
+    o	new class Rcpp::Dimension to support creation of vectors with 
+    	dimensions. All vector classes gain a constructor taking a 
+    	Dimension reference.
+
     o	matrix matrix-like indexing using operator() for all vector 
     	types : IntegerVector, NumericVector, RawVector, CharacterVector
     	LogicalVector, GenericVector and ExpressionVector. 

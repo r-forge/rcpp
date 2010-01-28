@@ -32,6 +32,8 @@
 #include <Rcpp/LogicalVector.h>
 #include <Rcpp/CharacterVector.h>
 
+#include <Rcpp/Dimension.h>
+
 namespace Rcpp{ 
 
 // factories

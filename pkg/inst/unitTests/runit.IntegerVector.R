@@ -78,7 +78,30 @@ test.IntegerVector.matrix.indexing <- function(){
 	
 	y <- as.vector( x )
 	checkException( funx(y) , msg = "not a matrix" )
-	
-	
 }
+
+test.IntegerVector.Dimension.constructor <- function(){
+
+	funx <- cfunction(signature(), '
+		return IntegerVector( Dimension( 5 ) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		integer(5) , 
+		msg = "IntegerVector( Dimension(5))" )
+	
+	funx <- cfunction(signature(), '
+		return IntegerVector( Dimension( 5, 5 ) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		matrix( 0L, ncol = 5, nrow = 5) , 
+		msg = "IntegerVector( Dimension(5,5))" )
+	
+	funx <- cfunction(signature(), '
+		return IntegerVector( Dimension( 2, 3, 4) ) ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 
+		array( 0L, dim = c(2,3,4) ) , 
+		msg = "IntegerVector( Dimension(2,3,4))" )
+}
+
 
