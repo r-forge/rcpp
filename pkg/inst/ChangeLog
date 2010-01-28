@@ -1,3 +1,10 @@
+2010-01-28  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/CharacterVector.h: minor bug fix in assign
+
+	* inst/unitTest/runit.RcppResultSet.R: compare time using 
+	as.numeric to avoid timezone problems
+
 2010-01-27  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/unitTests/runit.RcppMatrix.R: added
