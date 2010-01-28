@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// grow.h: Rcpp R/C++ interface class library -- grow a pairlist
+// SimpleVector.h: Rcpp R/C++ interface class library -- simple vectors
 //
 // Copyright (C) 2010	Dirk Eddelbuettel and Romain Francois
 //
@@ -19,42 +19,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef Rcpp_grow_h
-#define Rcpp_grow_h
-
 #include <RcppCommon.h>
-#include <Rcpp/Named.h>
+#include <Rcpp/SimpleVector.h>
 
 namespace Rcpp{
+    	
+	template<> double* get_pointer<REALSXP,double>(SEXP x){ return REAL(x) ; }
+	template<> int* get_pointer<INTSXP,int>(SEXP x){ return INTEGER(x) ; }
+	template<> int* get_pointer<LGLSXP,int>(SEXP x){ return LOGICAL(x) ; }
+	template<> Rcomplex* get_pointer<CPLXSXP,Rcomplex>(SEXP x){ return COMPLEX(x) ; }
+	template<> Rbyte* get_pointer<RAWSXP,Rbyte>(SEXP x){ return RAW(x) ; }
 
-SEXP pairlist() ;
+	template<> Rcomplex get_zero<CPLXSXP,Rcomplex>(){
+		Rcomplex x ;
+		x.r = 0.0 ;
+		x.i = 0.0 ;
+		return x ;
+	}
 
-/* end of the recursion, wrap first to make the CAR and use 
-   R_NilValue as the CDR of the list */
-template<typename T>
-SEXP pairlist( const T& first){
-	return grow(first, R_NilValue ) ; 
-}
-
-#ifdef HAS_VARIADIC_TEMPLATES
-template<typename T, typename... Args>
-SEXP pairlist( const T& first, const Args&... args ){
-	return grow(first, pairlist(args...) ) ;
-}
-#endif
 	
-	
-/**
- * grows a pairlist. First wrap the head into a SEXP, then 
- * grow the tail pairlist
- */
-template<typename T>
-SEXP grow(const T& head, SEXP tail){
-	return Rf_cons( wrap(head), tail ) ;
-}
-SEXP grow(const Named& head, SEXP tail) ;
-
-
-} // namespace Rcpp
-
-#endif
+} // namespace 

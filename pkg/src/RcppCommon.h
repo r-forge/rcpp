@@ -106,9 +106,7 @@ namespace Rcpp{
 	class Environment;
 	class Evaluator ;
 	class Symbol ;
-	class Language ;
 	class Named ;
-	class Pairlist ;
 	class Function ;
 	class WeakReference;
 	
