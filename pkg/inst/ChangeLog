@@ -1,5 +1,10 @@
 2010-01-28  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/SimpleVector.h: simple vectors gain a range
+	based assign method and a range based assign constructor
+	* inst/unitTests/runit.IntegerVector.R: new unit test 
+	
+	
 	* src/Rcpp/Dimension.h: new class Rcpp::Dimension to support
 	creation of vectors with dimensions
 	
@@ -8,9 +13,10 @@
 	* src/Rcpp/SimpleVector.h: data is initialized with 0 when 
 	the object is constructed from size or Dimension constructor
 	
-	* inst/runit.CharacterVector.R: new unit test to test 
+	* inst/unitTestsrunit.CharacterVector.R: new unit test to test 
 	constructors using Dimension
-	* inst/runit.IntegerVector.R: idem
+	* inst/unitTests/runit.IntegerVector.R: idem
+	* inst/unitTests/runit.GenericVector.R: idem
 	
 	* R/unit.tests.R: new unexported function "test" to trigger
 	unit tests using installed test cases

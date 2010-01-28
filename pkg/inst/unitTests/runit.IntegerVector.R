@@ -104,4 +104,21 @@ test.IntegerVector.Dimension.constructor <- function(){
 		msg = "IntegerVector( Dimension(2,3,4))" )
 }
 
+test.IntegerVector.range.constructors <- function(){
+
+	funx <- cfunction(signature(), '
+		int x[] = { 0, 1, 2, 3 } ;
+		IntegerVector y( x, x+4 ) ;
+		return y;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 0:3, msg = "assign(int*, int*)" )
+	
+	funx <- cfunction(signature(), '
+		std::vector<int> vec(4) ;
+		for( size_t i = 0; i<4; i++) vec[i] = i;
+		IntegerVector y( vec.begin(), vec.end() ) ;
+		return y;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( funx(), 0:4, msg = "assign(int*, int*)" )
+}
 
