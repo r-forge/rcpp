@@ -139,7 +139,7 @@ template<typename... Args>
 	
 	class Proxy {
 	public:
-		Proxy( DottedPair& v, const size_t& index_ ) ; 
+		Proxy( DottedPair& v, const size_t& index_ ) throw(index_out_of_bounds) ; 
 		
 		/* lvalue uses */
 		Proxy& operator=(const Proxy& rhs) ; 
@@ -147,7 +147,8 @@ template<typename... Args>
 		
 		template <typename T>
 		Proxy& operator=(const T& rhs){
-			parent.replace( index, rhs ) ;
+			SEXP y = wrap(rhs) ;
+			SETCAR( node, y ) ;
 			return *this ;
 		}
 		Proxy& operator=(const Named& rhs) ;
@@ -156,19 +157,11 @@ template<typename... Args>
 		operator SEXP() ;
 		
 		template <typename T> operator T() const {
-			if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-			SEXP x = parent.asSexp() ; 
-			size_t i = 0 ;
-			while( i < index ) {
-				x = CDR(x) ;
-				i++ ;
-			}
-			return as<T>( CAR(x) ) ;
+			return as<T>( CAR(node) ) ;
 		}
 		
 	private:
-		DottedPair& parent; 
-		size_t index ;
+		RObject node ;
 	} ;
 	
 	const Proxy operator[]( int i ) const ;

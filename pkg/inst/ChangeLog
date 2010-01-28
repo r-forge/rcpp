@@ -1,5 +1,10 @@
 2010-01-28  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/DottedPair.h: DottedPair::Proxy are no more lazy, i.e
+	traversal of the pair list happens at construction time, so
+	that the proxy can be created once and used many times more
+	efficiently.
+
 	* src/Rcpp/DottedPair.h: Pairlist and Language are now derived
 	from the new virtual class DottedPair since both class were 
 	almost identical
