@@ -44,6 +44,8 @@
 #include <map>
 #include <stdexcept>
 #include <vector>
+#include <functional>
+#include <numeric>
 
 #ifdef HAS_INIT_LISTS
 #include <initializer_list>

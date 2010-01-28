@@ -3,11 +3,11 @@
 	* src/Rcpp/SimpleVector.h: simple vectors gain a range
 	based assign method and a range based assign constructor
 	* inst/unitTests/runit.IntegerVector.R: new unit test 
-	
+	test.IntegerVector.range.constructors
 	
 	* src/Rcpp/Dimension.h: new class Rcpp::Dimension to support
 	creation of vectors with dimensions
-	
+	        
 	* src/Rcpp/*Vector.h: using Rcpp::Dimension
 	
 	* src/Rcpp/SimpleVector.h: data is initialized with 0 when 

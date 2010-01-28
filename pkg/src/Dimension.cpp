@@ -55,14 +55,7 @@ namespace Rcpp{
 	}
 	
 	int Dimension::prod() const {
-		int prod = 1 ;
-		std::vector<int>::const_iterator begin = dims.begin() ;
-		std::vector<int>::const_iterator end   = dims.end() ;
-		while( begin != end ){
-			prod *= (*begin) ;
-			++begin ;
-		}
-		return prod ;
+		return std::accumulate( dims.begin(), dims.end(), 1, std::multiplies<int>() ) ;
 	}
 	
 	int& Dimension::operator[](int i) throw(std::range_error){
