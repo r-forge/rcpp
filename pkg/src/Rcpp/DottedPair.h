@@ -27,18 +27,15 @@
 #include <Rcpp/Symbol.h>
 #include <Rcpp/grow.h>
 #include <Rcpp/wrap.h>
+#include <Rcpp/Named.h>
 
 namespace Rcpp{ 
 
-template <int RTYPE> class DottedPair : public RObject{
+class DottedPair : public RObject{
 public:
 
-	DottedPair() : RObject(){}
+	DottedPair() ;
 	
-	DottedPair(SEXP x) throw(not_compatible) : RObject(){
-		setSEXP( r_cast<RTYPE>(x) ) ;
-	}
-
 #ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
 	DottedPair( const Args&... args) : RObject() {
@@ -138,78 +135,25 @@ template<typename... Args>
 	 *
 	 * @param index position where the element is to be removed
 	 */
-	void remove( const int& index ) throw(index_out_of_bounds){
-		if( index < 0 || index >= Rf_length(m_sexp) ) throw index_out_of_bounds() ;
-		if( index == 0 ){
-			setSEXP( CDR( m_sexp) ) ;
-		} else{
-			SEXP x = m_sexp ;
-			int i=1;
-			while( i<index ){ x = CDR(x) ; i++; }
-			SETCDR( x, CDDR(x) ) ;
-		}
-	}
+	void remove( const size_t& index ) throw(index_out_of_bounds) ; 
 	
 	class Proxy {
 	public:
-		Proxy( DottedPair<RTYPE>& v, const size_t& index_ ) : parent(v), index(index_){}
+		Proxy( DottedPair& v, const size_t& index_ ) ; 
 		
 		/* lvalue uses */
-		Proxy& operator=(const Proxy& rhs){
-			if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-			size_t i = 0 ;
-			SEXP x = parent.asSexp() ; 
-			while( i < index ) {
-				x = CDR(x) ;
-				i++ ;
-			}
-			SEXP y = rhs ;
-			SETCAR( x, y ) ;
-			// if( index != 0 ) SET_TAG( x, Rf_install( rhs.getTag() ) ) ;
-			return *this ;
-		}
-		Proxy& operator=(SEXP rhs){
-			if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-			SEXP x = parent.asSexp() ; 
-			size_t i = 0 ;
-			while( i < index ) {
-				x = CDR(x) ;
-				i++ ;
-			}
-			SETCAR( x, rhs) ;
-			return *this ;
-		}
+		Proxy& operator=(const Proxy& rhs) ; 
+		Proxy& operator=(SEXP rhs) ;
 		
 		template <typename T>
 		Proxy& operator=(const T& rhs){
 			parent.replace( index, rhs ) ;
 			return *this ;
 		}
-		Proxy& operator=(const Named& rhs){
-			if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-			size_t i = 0 ;
-			SEXP x = parent.asSexp() ; 
-			while( i < index ) {
-				x = CDR(x) ;
-				i++ ;
-			}
-			SEXP y = rhs ;
-			SETCAR( x, y ) ;
-			// if( index != 0 ) SET_TAG( x, Symbol( rhs.getTag() ) ) ;
-			return *this ;
-		}
+		Proxy& operator=(const Named& rhs) ;
 		
 		/* rvalue use */
-		operator SEXP() {
-			if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
-			SEXP x = parent.asSexp() ; 
-			size_t i = 0 ;
-			while( i < index ) {
-				x = CDR(x) ;
-				i++ ;
-			}
-			return CAR(x) ;
-		}
+		operator SEXP() ;
 		
 		template <typename T> operator T() const {
 			if( index < 0 || index >= parent.length() ) throw index_out_of_bounds() ;
@@ -223,20 +167,16 @@ template<typename... Args>
 		}
 		
 	private:
-		DottedPair<RTYPE>& parent; 
+		DottedPair& parent; 
 		size_t index ;
 	} ;
 	
-	const Proxy operator[]( int i ) const {
-		return Proxy( const_cast<DottedPair<RTYPE>&>(*this), i) ;
-	}
-	Proxy operator[]( int i ) {
-		return Proxy( *this, i );
-	}
+	const Proxy operator[]( int i ) const ;
+	Proxy operator[]( int i )  ;
 	
 	friend class Proxy; 
 	
-	virtual ~DottedPair() {};
+	virtual ~DottedPair() = 0 ;
 	
 };
 

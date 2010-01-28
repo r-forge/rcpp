@@ -1,8 +1,8 @@
 2010-01-28  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/DottedPair.h: factored out Language and Pairlist
-	into the new DottedPaitr template, parameterized by the 
-	SEXP type (LANGSXP or LISTSXP)
+	* src/Rcpp/DottedPair.h: Pairlist and Language are now derived
+	from the new virtual class DottedPair since both class were 
+	almost identical
 
 	* src/Rcpp/SimpleVector.h: simple vectors gain a range
 	based assign method and a range based assign constructor
