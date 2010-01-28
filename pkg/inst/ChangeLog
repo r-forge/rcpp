@@ -1,5 +1,8 @@
 2010-01-28  Romain Francois <francoisromain@free.fr>
 
+	* R/unit.tests.R: new unexported function "test" to trigger
+	unit tests using installed test cases
+
 	* src/Rcpp/CharacterVector.h: minor bug fix in assign
 
 	* inst/unitTest/runit.RcppResultSet.R: compare time using 
