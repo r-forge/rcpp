@@ -69,7 +69,7 @@ public:
 	
 #ifdef HAS_INIT_LISTS
 	CharacterVector( std::initializer_list<std::string> list ) : VectorBase() {
-		assign( list.begin(), list.size() ) ;
+		assign( list.begin(), list.end() ) ;
 	}
 #endif
 

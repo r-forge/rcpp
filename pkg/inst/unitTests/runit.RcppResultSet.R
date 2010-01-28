@@ -113,8 +113,13 @@ test.RcppResultSet.RcppDatetime <- function() {
              rs.add("foo", y);
   	     return rs.getReturnList();';
      funx <- cfunction(signature(x="numeric"), src, Rcpp=TRUE)
-     posixt <- as.POSIXct("2000-01-01 01:02:03.456", "%Y-%m-%d %H:%M:%OS")
-     checkEquals(funx(as.numeric(posixt))[[1]], posixt, msg = "RcppResultSet.RcppDatetime")
+     # setting tz = "UTC" because otherwise the format gets set as the tz
+     posixt <- as.POSIXct("2000-01-01 01:02:03.456", "%Y-%m-%d %H:%M:%OS", tz = "UTC" )
+     result <- funx(as.numeric(posixt))[[1]]
+     # RcppDateTime discards the timezone, so the only reliable way to 
+     # compare these times is to compare the numeric values
+     checkEquals( as.numeric(result), as.numeric(posixt), 
+     	msg = "RcppResultSet.RcppDatetime")
 }
 
 test.RcppResultSet.RcppDatetimeVector <- function() {
