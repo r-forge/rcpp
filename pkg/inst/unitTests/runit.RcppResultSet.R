@@ -116,10 +116,10 @@ test.RcppResultSet.RcppDatetime <- function() {
      # setting tz = "UTC" because otherwise the format gets set as the tz
      posixt <- as.POSIXct("2000-01-01 01:02:03.456", "%Y-%m-%d %H:%M:%OS", tz = "UTC" )
      result <- funx(as.numeric(posixt))[[1]]
-     # RcppDateTime discards the timezone, so the only reliable way to 
-     # compare these times is to compare the numeric values
-     checkEquals( as.numeric(result), as.numeric(posixt), 
-     	msg = "RcppResultSet.RcppDatetime")
+     # RcppDateTime discards the timezone, so we have to set it back 
+     # otherwise the comparison fails on the attributes
+     attr( result, "tzone") <- "UTC" 
+     checkEquals( result, posixt, msg = "RcppResultSet.RcppDatetime")
 }
 
 test.RcppResultSet.RcppDatetimeVector <- function() {
