@@ -36,7 +36,7 @@ if(require("RUnit", quietly = TRUE)) {
         		rx <- "^--output=(.*)$"
         		g  <- grep( rx, argv, value = TRUE )
         		if( length(g) ){
-        			sub( rx, "\\1", argv[g] )
+        			sub( rx, "\\1", g[1L] )
         		}
         	}
         }
@@ -64,6 +64,7 @@ if(require("RUnit", quietly = TRUE)) {
         ## Print results
         output.txt  <- file.path( output, sprintf("%s-unitTests.txt", pkg))
         output.html <- file.path( output, sprintf("%s-unitTests.html", pkg))
+       
         printTextProtocol(tests, fileName=output.txt)
         message( sprintf( "saving txt unit test report to '%s'", output.txt ) )
         
