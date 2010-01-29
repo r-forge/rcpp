@@ -23,17 +23,12 @@
 #define Rcpp_GenericVector_h
 
 #include <RcppCommon.h>
-#include <Rcpp/wrap.h>
 #include <Rcpp/SEXP_Vector.h>
 
 namespace Rcpp{ 
 
 typedef SEXP_Vector<VECSXP> GenericVector ;
 typedef GenericVector List ;
-
-#ifdef HAS_INIT_LISTS
-inline GenericVector wrap(std::initializer_list<SEXP> list ){ return GenericVector(list) ; }
-#endif
 
 } // namespace
 

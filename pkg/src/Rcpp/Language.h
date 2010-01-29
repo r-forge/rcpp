@@ -24,10 +24,10 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/DottedPair.h>
-#include <Rcpp/RObject.h>
 #include <Rcpp/Symbol.h>
+#include <Rcpp/Function.h>
 #include <Rcpp/grow.h>
-#include <Rcpp/wrap.h>
+#include <Rcpp/r_cast.h>
 
 namespace Rcpp{ 
 
@@ -70,6 +70,11 @@ public:
 	 */
 	explicit Language( const Symbol& symbol ); 
 
+	// /**
+	//  * Creates a call to the given function
+	//  */
+	// explicit Language( const Function& function ) ;
+	
 	/**
 	 * Creates a call to the given symbol using variable number of 
 	 * arguments
@@ -90,8 +95,12 @@ public:
 #ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
 Language( const std::string& symbol, const Args&... args) : DottedPair(Rf_install(symbol.c_str()), args...) {
-		update() ;
-	}
+	update() ;
+}
+//template<typename... Args> 
+//Language( const Function& function, const Args&... args) : DottedPair(function.asSexp(), args...) {
+//	update() ;
+//}
 #endif	
 	
 	/**

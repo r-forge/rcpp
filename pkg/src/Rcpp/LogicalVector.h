@@ -24,7 +24,6 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/SimpleVector.h>
-#include <Rcpp/as.h>
 
 namespace Rcpp{
 
@@ -54,6 +53,7 @@ private:
 	}
 
 } ;
+
 
 } // namespace
 

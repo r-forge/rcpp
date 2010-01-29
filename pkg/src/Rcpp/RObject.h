@@ -23,12 +23,10 @@
 #define Rcpp_RObject_h
 
 #include <RcppCommon.h>
-#include <Rcpp/as.h>
-#include <set>
 
 namespace Rcpp{ 
 
-class RObject{
+class RObject {
 public:
 
 	/**

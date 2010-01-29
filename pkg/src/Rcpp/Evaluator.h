@@ -23,8 +23,7 @@
 #define Rcpp_Evaluator_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
-#include <Rcpp/wrap.h>
+
 #include <Rcpp/Environment.h>
 
 namespace Rcpp{ 

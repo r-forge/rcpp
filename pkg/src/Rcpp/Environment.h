@@ -23,12 +23,10 @@
 #define Rcpp_Environment_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
+
 #include <Rcpp/Evaluator.h>
-#include <Rcpp/wrap.h>
 #include <Rcpp/Symbol.h>
 #include <Rcpp/Language.h>
-#include <Rcpp/as.h>
 
 namespace Rcpp{ 
 
@@ -358,8 +356,7 @@ public:
      */
     template <typename WRAPPABLE>
     bool assign( const std::string& name, const WRAPPABLE& x) const throw(binding_is_locked){
-    	    SEXP y = wrap( x ).asSexp() ;
-    	    return assign( name, y ) ;
+    	    return assign( name, wrap( x ) ) ;
     }
     
     /**

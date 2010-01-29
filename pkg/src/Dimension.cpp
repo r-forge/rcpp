@@ -20,8 +20,6 @@
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Rcpp/Dimension.h>
-#include <Rcpp/as.h>
-#include <Rcpp/wrap.h>
 
 namespace Rcpp{
 
@@ -47,7 +45,10 @@ namespace Rcpp{
 	}
 	
 	Dimension::operator SEXP() const {
-		return wrap( dims ) ;
+		SEXP x = PROTECT(Rf_allocVector(INTSXP,dims.size())) ;
+		std::copy( dims.begin(), dims.end(), INTEGER(x) ) ;
+		UNPROTECT(1) ; /* x */
+		return x ;
 	}
 	
 	int Dimension::size() const {
@@ -62,5 +63,5 @@ namespace Rcpp{
 		if( i < 0 || i>=static_cast<int>(dims.size()) ) throw std::range_error("index out of bounds") ;
 		return dims.at(i) ;
 	}
-	
+
 } // namespace Rcpp

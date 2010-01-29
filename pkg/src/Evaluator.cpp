@@ -57,13 +57,20 @@ namespace Rcpp {
     	return run(expr, R_GlobalEnv );
     }
     
-    
 namespace internal{
 /* this is defined here because we need to be sure that Evaluator is 
    defined */
     SEXP convert_using_rfunction(SEXP x, const char* const fun){
     	    return Evaluator::run( Rf_lcons( Rf_install(fun), Rf_cons(x, R_NilValue) ) ) ; 
     }
+    
+    SEXP try_catch( SEXP expr, SEXP env ){
+    	    return Evaluator::run(expr, env) ;
+    }
+    SEXP try_catch( SEXP expr ){
+    	    return Evaluator::run(expr) ;
+    }
+    
 } // namespace internal
     
 } // namespace Rcpp

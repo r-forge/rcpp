@@ -23,7 +23,6 @@
 #define Rcpp_clone_h
 
 #include <RcppCommon.h>
-#include <Rcpp/wrap.h>
 
 namespace Rcpp{ 
 

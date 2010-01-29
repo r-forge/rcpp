@@ -23,7 +23,6 @@
 #define Rcpp_ExpressionVector_h
 
 #include <RcppCommon.h>
-#include <Rcpp/wrap.h>
 #include <Rcpp/SEXP_Vector.h>
 
 namespace Rcpp{ 

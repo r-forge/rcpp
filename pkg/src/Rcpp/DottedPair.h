@@ -23,10 +23,9 @@
 #define Rcpp_DottedPair_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
+
 #include <Rcpp/Symbol.h>
 #include <Rcpp/grow.h>
-#include <Rcpp/wrap.h>
 #include <Rcpp/Named.h>
 
 namespace Rcpp{ 
@@ -147,8 +146,7 @@ template<typename... Args>
 		
 		template <typename T>
 		Proxy& operator=(const T& rhs){
-			SEXP y = wrap(rhs) ;
-			SETCAR( node, y ) ;
+			SETCAR( node, wrap(rhs) ) ;
 			return *this ;
 		}
 		Proxy& operator=(const Named& rhs) ;
