@@ -24,6 +24,7 @@
 
 #include <RcppCommon.h>
 #include <Rcpp/DottedPair.h>
+#include <Rcpp/r_cast.h>
 
 namespace Rcpp{
 

@@ -39,10 +39,10 @@ namespace Rcpp {
 		return PRSEEN(m_sexp);
 	}
 
-	RObject Promise::value() const throw(unevaluated_promise) {
+	SEXP Promise::value() const throw(unevaluated_promise) {
 		SEXP val = PRVALUE(m_sexp) ; 
 		if( val == R_UnboundValue ) throw unevaluated_promise() ;
-		return wrap( val ) ;
+		return val ;
 	}
 	
 	bool Promise::was_evaluated() const {

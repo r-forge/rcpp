@@ -23,7 +23,7 @@
 #define Rcpp_Named_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
+
 #include <Rcpp/Symbol.h>
 
 namespace Rcpp{  
@@ -50,7 +50,7 @@ public:
 	Named( const std::string& tag ) : object(R_NilValue), tag(tag){} ;
 	
 	template<typename T>
-	Named( const std::string& tag, const T& value ) : object(R_NilValue), tag(tag) {
+	Named( const std::string& tag, const T& value ) : object(), tag(tag) {
 		object = wrap( value ) ;
 	}
 	

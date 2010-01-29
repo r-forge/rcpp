@@ -20,7 +20,6 @@
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
 
 namespace Rcpp{

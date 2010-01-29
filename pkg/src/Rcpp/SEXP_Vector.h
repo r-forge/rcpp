@@ -25,6 +25,7 @@
 #include <RcppCommon.h>
 #include <Rcpp/VectorBase.h>
 #include <Rcpp/Environment.h>
+#include <Rcpp/Dimension.h>
 
 namespace Rcpp{
 

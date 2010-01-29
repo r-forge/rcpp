@@ -30,12 +30,4 @@ namespace Rcpp{
 	template<> Rcomplex* get_pointer<CPLXSXP,Rcomplex>(SEXP x){ return COMPLEX(x) ; }
 	template<> Rbyte* get_pointer<RAWSXP,Rbyte>(SEXP x){ return RAW(x) ; }
 
-	template<> Rcomplex get_zero<CPLXSXP,Rcomplex>(){
-		Rcomplex x ;
-		x.r = 0.0 ;
-		x.i = 0.0 ;
-		return x ;
-	}
-
-	
 } // namespace 

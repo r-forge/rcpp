@@ -20,7 +20,6 @@
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Rcpp/CharacterVector.h>
-#include <Rcpp/wrap.h>
 
 namespace Rcpp{
 
@@ -105,6 +104,12 @@ CharacterVector::StringProxy CharacterVector::operator()( const size_t& i) throw
 CharacterVector::StringProxy CharacterVector::operator()( const size_t& i, const size_t&j ) throw(index_out_of_bounds,not_a_matrix){
 	return StringProxy(*this, offset(i,j) ) ;
 }
+
+// template<> SEXP wrap(const char& v){ return CharacterVector(v); }
+SEXP wrap(const char* const v){ return CharacterVector(v); }
+template<> SEXP wrap(const std::string & v){ return CharacterVector(v); }
+template<> SEXP wrap(const std::vector<std::string> & v){ return CharacterVector(v); }
+
 
 
 } // namespace 

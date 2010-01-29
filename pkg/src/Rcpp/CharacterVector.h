@@ -23,10 +23,9 @@
 #define Rcpp_CharacterVector_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
 #include <Rcpp/VectorBase.h>
-#include <Rcpp/r_cast.h>
 #include <Rcpp/Dimension.h>
+#include <Rcpp/r_cast.h>
 
 namespace Rcpp{ 
 

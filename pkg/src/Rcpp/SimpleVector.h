@@ -23,15 +23,12 @@
 #define Rcpp_SimpleVector_h
 
 #include <RcppCommon.h>
-#include <Rcpp/RObject.h>
+
 #include <Rcpp/VectorBase.h>
 #include <Rcpp/r_cast.h>
 #include <Rcpp/Dimension.h>
 
 namespace Rcpp{
-
-template <int RTYPE,typename CTYPE> CTYPE get_zero(){ return static_cast<CTYPE>(0) ; } ;
-template<> Rcomplex get_zero<CPLXSXP,Rcomplex>() ;
 
 template <int sexptype, typename T> T* get_pointer(SEXP x){ throw std::exception( "not implemented" ) ; return static_cast<T*>(0); }
 template<> double* get_pointer<REALSXP,double>(SEXP x) ;
@@ -104,7 +101,7 @@ private:
 	virtual void update(){ start = get_pointer<RTYPE,CTYPE>(m_sexp) ; }
 	
 	void init(){
-		CTYPE zero = get_zero<RTYPE,CTYPE>() ;
+		CTYPE zero = internal::get_zero<RTYPE,CTYPE>() ;
 		init( zero ) ;
 	}
 	void init( const CTYPE& value){
