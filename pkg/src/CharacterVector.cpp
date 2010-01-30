@@ -105,11 +105,9 @@ CharacterVector::StringProxy CharacterVector::operator()( const size_t& i, const
 	return StringProxy(*this, offset(i,j) ) ;
 }
 
-// template<> SEXP wrap(const char& v){ return CharacterVector(v); }
-SEXP wrap(const char* const v){ return CharacterVector(v); }
-template<> SEXP wrap(const std::string & v){ return CharacterVector(v); }
-template<> SEXP wrap(const std::vector<std::string> & v){ return CharacterVector(v); }
-
-
+SEXP wrap(const char* const v){ return Rf_mkString(v); }
+// template<> SEXP<const char*>( const char* object ){
+// 	return Rf_mkString(object) ;
+// }
 
 } // namespace 

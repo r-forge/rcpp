@@ -63,11 +63,12 @@ $(PKGLIB): 	$(PKGOBJ)
 		$(CXX) -shared -o $(PKGLIB) $(PKGOBJ) $(PKG_LIBS)
 
 $(USERLIB):	$(USEROBJ)
-		-mkdir -p $(USERDIR)/Rcpp 2>/dev/null
+		-mkdir -p $(USERDIR)/Rcpp/internal 2>/dev/null
 		ar r $(USERLIB) $(USEROBJ)
 		ranlib $(USERLIB)
-		cp -vax Rcp*.h $(USERDIR)
+		cp -vax *.h $(USERDIR)
 		cp -vax Rcpp/*.h $(USERDIR)/Rcpp
+		cp -vax Rcpp/internal/*.h $(USERDIR)/Rcpp/internal
 
 
 
