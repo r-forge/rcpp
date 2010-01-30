@@ -1,8 +1,13 @@
+2010-01-30  Dirk Eddelbuettel  <edd@debian.org>
+
+ 	* inst/unitTests/runit.RcppMatrix.R: also test STL return
+	* inst/unitTests/runit.RcppVector.R: added
+
 2010-01-30  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/internal/wrap.h: rework wrap using traits and 
-	template meta programming. wrap is now really a template 
-	and has many generated specializations. This file is 
+	* src/Rcpp/internal/wrap.h: rework wrap using traits and
+	template meta programming. wrap is now really a template
+	and has many generated specializations. This file is
 	a private header and should only be included by RcppCommon.h
 
 	* src/Rcpp/Language.h: Language gains Function aware constructors
@@ -16,33 +21,33 @@
 	efficiently.
 
 	* src/Rcpp/DottedPair.h: Pairlist and Language are now derived
-	from the new virtual class DottedPair since both class were 
+	from the new virtual class DottedPair since both class were
 	almost identical
 
 	* src/Rcpp/SimpleVector.h: simple vectors gain a range
 	based assign method and a range based assign constructor
-	* inst/unitTests/runit.IntegerVector.R: new unit test 
+	* inst/unitTests/runit.IntegerVector.R: new unit test
 	test.IntegerVector.range.constructors
-	
+
 	* src/Rcpp/Dimension.h: new class Rcpp::Dimension to support
 	creation of vectors with dimensions
-	        
+
 	* src/Rcpp/*Vector.h: using Rcpp::Dimension
-	
-	* src/Rcpp/SimpleVector.h: data is initialized with 0 when 
+
+	* src/Rcpp/SimpleVector.h: data is initialized with 0 when
 	the object is constructed from size or Dimension constructor
-	
-	* inst/unitTestsrunit.CharacterVector.R: new unit test to test 
+
+	* inst/unitTestsrunit.CharacterVector.R: new unit test to test
 	constructors using Dimension
 	* inst/unitTests/runit.IntegerVector.R: idem
 	* inst/unitTests/runit.GenericVector.R: idem
-	
+
 	* R/unit.tests.R: new unexported function "test" to trigger
 	unit tests using installed test cases
 
 	* src/Rcpp/CharacterVector.h: minor bug fix in assign
 
-	* inst/unitTest/runit.RcppResultSet.R: compare time using 
+	* inst/unitTest/runit.RcppResultSet.R: compare time using
 	as.numeric to avoid timezone problems
 
 2010-01-27  Dirk Eddelbuettel  <edd@debian.org>

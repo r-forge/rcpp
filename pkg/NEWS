@@ -1,5 +1,5 @@
 
-0.7.4	(under development)
+0.7.4	2010-01-30
 
     o	matrix matrix-like indexing using operator() for all vector 
     	types : IntegerVector, NumericVector, RawVector, CharacterVector
@@ -19,6 +19,10 @@
 
     o	the clone template function was introduced to explicitely
     	clone an RObject by duplicating the SEXP it encapsulates.
+
+    o	even smarter wrap programming using traits and template
+        meta-programming using a private header to be include only
+        RcppCommon.h
 
     o 	the as template is now smarter. The template now attempts to 
     	build an object of the requested template parameter T by using the
@@ -53,7 +57,8 @@
     o	Environment::assign becomes a template and also uses wrap to 
     	create a suitable SEXP
 
-    o	Many more unit tests for the new features
+    o	Many more unit tests for the new features; also added unit tests
+        for older API
 
 0.7.3	2010-01-21
 

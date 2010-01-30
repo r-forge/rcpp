@@ -26,9 +26,11 @@ test.RcppVector.int <- function() {
             RcppResultSet rs;
             rs.add("size",  m.size());
             rs.add("p2",    m(1));
+            std::vector<int> v = m.stlVector();
+            rs.add("v",     v);
 	    return rs.getReturnList();';
     funx <- cfunction(signature(x="numeric"), src, Rcpp=TRUE)
-    checkEquals(funx(x=c(1:6)), list(size=6, p2=2), msg="RcppVector.int")
+    checkEquals(funx(x=c(1:6)), list(size=6, p2=2, v=c(1:6)), msg="RcppVector.int")
 }
 
 test.RcppVector.double <- function() {
@@ -36,9 +38,11 @@ test.RcppVector.double <- function() {
             RcppResultSet rs;
             rs.add("size", m.size());
             rs.add("p2",   m(1));
+            std::vector<double> v = m.stlVector();
+            rs.add("v",     v);
 	    return rs.getReturnList();';
     funx <- cfunction(signature(x="numeric"), src, Rcpp=TRUE)
-    checkEquals(funx(x=c(1:6)), list(size=6, p2=2), msg="RcppVector.double")
+    checkEquals(funx(x=c(1:6)), list(size=6, p2=2, v=c(1:6)), msg="RcppVector.double")
 }
 
 
