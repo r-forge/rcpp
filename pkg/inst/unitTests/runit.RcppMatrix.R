@@ -29,10 +29,12 @@ test.RcppMatrix.int <- function() {
             rs.add("rows",  m.rows());
             rs.add("cols",  m.cols());
             rs.add("p22",   m(1,1));
+            std::vector<std::vector<int> > mm = m.stlMatrix();
+            rs.add("m",     mm);
 	    return rs.getReturnList();';
     funx <- cfunction(signature(x="numeric"), src, Rcpp=TRUE)
-    checkEquals(funx(x=matrix(1:6,2,3,byrow=TRUE)),
-                     list(dim1=2, dim2=3, rows=2, cols=3, p22=5),
+    M <- matrix(1:6,2,3,byrow=TRUE)
+    checkEquals(funx(x=M), list(dim1=2, dim2=3, rows=2, cols=3, p22=5, m=M),
                      msg = "RcppMatrix.int")
 }
 
@@ -44,10 +46,12 @@ test.RcppMatrix.double <- function() {
             rs.add("rows",  m.rows());
             rs.add("cols",  m.cols());
             rs.add("p22",   m(1,1));
+            std::vector<std::vector<double> > mm = m.stlMatrix();
+            rs.add("m",     mm);
 	    return rs.getReturnList();';
     funx <- cfunction(signature(x="numeric"), src, Rcpp=TRUE)
-    checkEquals(funx(x=matrix(1:6,2,3,byrow=TRUE)),
-                     list(dim1=2, dim2=3, rows=2, cols=3, p22=5),
+    M <- matrix(1:6,2,3,byrow=TRUE)
+    checkEquals(funx(x=M), list(dim1=2, dim2=3, rows=2, cols=3, p22=5, m=M),
                      msg = "RcppMatrix.double")
 }
 
