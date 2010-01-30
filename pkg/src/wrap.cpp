@@ -63,122 +63,88 @@ namespace Rcpp{
 // 	return RObject(m_sexp) ;
 // }
  
-template<> SEXP wrap(const bool & v){
-    logTxt("RObject from bool\n");
-    LogicalVector o(Rf_ScalarLogical(v));
-    return o ;
-}
+// template<> SEXP wrap(const bool & v){
+//     logTxt("RObject from bool\n");
+//     LogicalVector o(Rf_ScalarLogical(v));
+//     return o ;
+// }
+// 
+// template<> SEXP wrap(const double & v){
+//     logTxt("RObject from double\n");
+//     NumericVector o(Rf_ScalarReal(v));
+//     return o ;
+// }
+// 
+// template<> SEXP wrap(const int & v){
+//     logTxt("RObject from int\n");
+//     IntegerVector o(Rf_ScalarInteger(v));
+//     return o ;
+// }
+// 
+// template<> SEXP wrap(const size_t & v){
+//     logTxt("RObject from size_t\n");
+//     IntegerVector o(Rf_ScalarInteger(static_cast<int>(v)));
+//     return o ;
+// }
+//    
+// template<> SEXP wrap(const Rbyte & v){
+//     logTxt("RObject from raw\n");
+//     RawVector o(Rf_ScalarRaw(v));
+//     return o ;
+// }
 
-template<> SEXP wrap(const double & v){
-    logTxt("RObject from double\n");
-    NumericVector o(Rf_ScalarReal(v));
-    return o ;
-}
-
-template<> SEXP wrap(const int & v){
-    logTxt("RObject from int\n");
-    IntegerVector o(Rf_ScalarInteger(v));
-    return o ;
-}
-
-template<> SEXP wrap(const size_t & v){
-    logTxt("RObject from size_t\n");
-    IntegerVector o(Rf_ScalarInteger(static_cast<int>(v)));
-    return o ;
-}
-   
-template<> SEXP wrap(const Rbyte & v){
-    logTxt("RObject from raw\n");
-    RawVector o(Rf_ScalarRaw(v));
-    return o ;
-}
-
-template<> SEXP wrap(const std::vector<bool> & v){
-    logTxt("RObject from bool vector\n");
-    size_t n = v.size();
-    SEXP m_sexp = PROTECT( Rf_allocVector(LGLSXP, n) );
-    std::copy( v.begin(), v.end(), LOGICAL(m_sexp) ) ;
-    LogicalVector o(m_sexp) ;
-    UNPROTECT(1) ; /* m_sexp now preserved by o */
-    return o ;
-}
-
-template<> SEXP wrap(const std::vector<int> & v){
-    logTxt("RObject from int vector\n");
-    size_t n = v.size();
-    SEXP m_sexp = PROTECT( Rf_allocVector(INTSXP, n) );
-    std::copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
-    IntegerVector o(m_sexp) ;
-    UNPROTECT(1) ;
-    return o ;
-}
-
-template<> SEXP wrap(const std::vector<double> & v){
-    logTxt("RObject from double vector\n");
-    size_t n = v.size();
-    SEXP m_sexp = PROTECT( Rf_allocVector(REALSXP, n) );
-    std::copy( v.begin(), v.end(), REAL(m_sexp) ) ;
-    NumericVector o(m_sexp) ;
-    UNPROTECT(1) ;
-    return o ;
-}
-
-template<> SEXP wrap(const std::vector<Rbyte> & v){
-    logTxt("RObject from vector<Rbyte> \n");
-    size_t n = v.size();
-    SEXP m_sexp = PROTECT(Rf_allocVector(RAWSXP, n));
-    std::copy( v.begin(), v.end(), RAW(m_sexp) ) ;
-    RawVector o(m_sexp) ;
-    UNPROTECT(1) ;
-    return o ;
-}
+// template<> SEXP wrap(const std::vector<bool> & v){ return internal::range_wrap( v.begin(), v.end() ) ; }
+// template<> SEXP wrap(const std::vector<int> & v){ return internal::range_wrap( v.begin(), v.end() ) ; }
+// template<> SEXP wrap(const std::vector<double> & v){ return internal::range_wrap( v.begin(), v.end() ) ; }
+// template<> SEXP wrap(const std::vector<Rbyte> & v){ return internal::range_wrap( v.begin(), v.end() ) ; }
+// template<> SEXP wrap(const std::vector<std::string> & v){ return internal::range_wrap(v.begin(), v.end()); }
 
 /* sets */
 
-template<> SEXP wrap(const std::set<int> & v){
-    logTxt("RObject from set<int>\n");
-    size_t n = v.size();
-    SEXP m_sexp = PROTECT( Rf_allocVector(INTSXP, n) );
-    copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
-    IntegerVector o(m_sexp) ;
-    UNPROTECT(1) ;
-    return o ;
-}
-
-template<> SEXP wrap(const std::set<double> & v){
-    logTxt("RObject from set<double>\n");
-    size_t n = v.size();
-    SEXP m_sexp = PROTECT( Rf_allocVector(REALSXP, n) );
-    copy( v.begin(), v.end(), REAL(m_sexp) ) ;
-    NumericVector o(m_sexp) ;
-    UNPROTECT(1) ;
-    return o ;
-}
-
-template<> SEXP wrap(const std::set<Rbyte> & v){
-    logTxt("RObject from set<Rbyte> \n");
-    size_t n = v.size();
-    SEXP m_sexp = PROTECT( Rf_allocVector(RAWSXP, n) );
-    copy( v.begin(), v.end(), RAW(m_sexp) ) ;
-    RawVector o(m_sexp) ;
-    UNPROTECT(1) ;
-    return o ;
-}
-
-template<> SEXP wrap(const std::set<std::string> & v){
-    logTxt("RObject from set<string>\n");
-    size_t n = v.size();
-    SEXP m_sexp = PROTECT( Rf_allocVector(STRSXP, n) );
-    size_t i=0;
-    std::set<std::string>::iterator it = v.begin(); 
-    while( i<n ){
-    	SET_STRING_ELT(m_sexp, i, Rf_mkChar(it->c_str()));
-    	i++ ;
-    	it++; 
-    }
-    CharacterVector o(m_sexp) ;
-    UNPROTECT(1) ;
-    return o ;
-}
+// template<> SEXP wrap(const std::set<int> & v){
+//     logTxt("RObject from set<int>\n");
+//     size_t n = v.size();
+//     SEXP m_sexp = PROTECT( Rf_allocVector(INTSXP, n) );
+//     copy( v.begin(), v.end(), INTEGER(m_sexp) ) ;
+//     IntegerVector o(m_sexp) ;
+//     UNPROTECT(1) ;
+//     return o ;
+// }
+// 
+// template<> SEXP wrap(const std::set<double> & v){
+//     logTxt("RObject from set<double>\n");
+//     size_t n = v.size();
+//     SEXP m_sexp = PROTECT( Rf_allocVector(REALSXP, n) );
+//     copy( v.begin(), v.end(), REAL(m_sexp) ) ;
+//     NumericVector o(m_sexp) ;
+//     UNPROTECT(1) ;
+//     return o ;
+// }
+// 
+// template<> SEXP wrap(const std::set<Rbyte> & v){
+//     logTxt("RObject from set<Rbyte> \n");
+//     size_t n = v.size();
+//     SEXP m_sexp = PROTECT( Rf_allocVector(RAWSXP, n) );
+//     copy( v.begin(), v.end(), RAW(m_sexp) ) ;
+//     RawVector o(m_sexp) ;
+//     UNPROTECT(1) ;
+//     return o ;
+// }
+// 
+// template<> SEXP wrap(const std::set<std::string> & v){
+//     logTxt("RObject from set<string>\n");
+//     size_t n = v.size();
+//     SEXP m_sexp = PROTECT( Rf_allocVector(STRSXP, n) );
+//     size_t i=0;
+//     std::set<std::string>::iterator it = v.begin(); 
+//     while( i<n ){
+//     	SET_STRING_ELT(m_sexp, i, Rf_mkChar(it->c_str()));
+//     	i++ ;
+//     	it++; 
+//     }
+//     CharacterVector o(m_sexp) ;
+//     UNPROTECT(1) ;
+//     return o ;
+// }
 
 } // namespace Rcpp

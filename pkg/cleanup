@@ -2,6 +2,7 @@
 rm -f confdefs.h config.log config.status \
 	src/*.o src/*.so src/*.a src/*.d src/*.dll src/*.rc \
 	RcppSrc/*.o RcppSrc/*.a inst/Rcpp-version.txt \
+	inst/lib/Rcpp/internal/* \
 	inst/lib/Rcpp/* \
 	inst/lib/libRcpp.so inst/lib/Rcpp*.h inst/lib/libRcpp.a \
 	inst/doc/*.cpp inst/doc/*.hpp \
@@ -14,6 +15,7 @@ rm -f confdefs.h config.log config.status \
         inst/discovery/cxx0x.Rout \
 	src/Makedeps 
 rm -rf	autom4te.cache
+test -d inst/lib/Rcpp/internal && rmdir inst/lib/Rcpp/internal
 test -d inst/lib/Rcpp && rmdir inst/lib/Rcpp
 test -d inst/lib && rmdir inst/lib
 find . -name \*~ -exec rm {} \;
