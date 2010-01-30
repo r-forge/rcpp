@@ -11,7 +11,7 @@ rm -f confdefs.h config.log config.status \
 	inst/examples/ConvolveBenchmarks/*.o  \
         inst/examples/ConvolveBenchmarks/*.so \
         inst/discovery/cxx0x.Rout \
-	src/Makedeps 
+	src/Makedeps libRcpp.a
 rm -rf	autom4te.cache
 rm -rf  inst/lib/
 find . -name \*~ -exec rm {} \;
