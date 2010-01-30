@@ -70,10 +70,12 @@ public:
 	 */
 	explicit Language( const Symbol& symbol ); 
 
-	// /**
-	//  * Creates a call to the given function
-	//  */
-	// explicit Language( const Function& function ) ;
+	/**
+	 * Creates a call to the function
+	 * 
+	 * @param function function to call
+	 */
+	explicit Language( const Function& function) ;
 	
 	/**
 	 * Creates a call to the given symbol using variable number of 
@@ -97,10 +99,10 @@ template<typename... Args>
 Language( const std::string& symbol, const Args&... args) : DottedPair(Rf_install(symbol.c_str()), args...) {
 	update() ;
 }
-//template<typename... Args> 
-//Language( const Function& function, const Args&... args) : DottedPair(function.asSexp(), args...) {
-//	update() ;
-//}
+template<typename... Args> 
+Language( const Function& function, const Args&... args) : DottedPair(function, args...) {
+	update() ;
+}
 #endif	
 	
 	/**
@@ -113,6 +115,21 @@ Language( const std::string& symbol, const Args&... args) : DottedPair(Rf_instal
 	 */
 	void setSymbol( const Symbol& symbol ) ;
 
+	/**
+	 * sets the function
+	 */
+	void setFunction( const Function& function) ;
+	
+	/**
+	 * eval this call in the global environment
+	 */
+	SEXP eval() ;
+	
+	/**
+	 * eval this call in the requested environment
+	 */
+	SEXP eval(SEXP env) ;
+	
 	~Language() ;
 	
 private:	
