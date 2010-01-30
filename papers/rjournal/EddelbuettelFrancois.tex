@@ -1,3 +1,5 @@
+%% Emacs please consider this:  -*- mode: latex; TeX-master: "RJwrapper.tex"; -*-
+
 \title{Mesh R and C++ with Rcpp}
 \author{by Dirk Eddelbuettel and Romain Franc\c{c}ois}
 
@@ -7,7 +9,15 @@
 
 \section{Introduction}
 
-\subsection{Overview}
+TBD, probably close to last
+
+One idea: call 'classic Rcpp' a \textsl{vertical} approach as it is chiefly
+concerned with getting data from R to C++ and back from C++ to R. On the
+other hand, 'new Rcpp' is more \textsl{horizontal as well as vertical} as it
+also significantly eases access from C++ itself (and to the C++
+representation of R objects).  Does that make sense?
+
+\section{Overview}
 
 % [Romain:] the overview is really messy and probably 
 % needs a complete rewrite when all other sections are finished
@@ -42,14 +52,15 @@ efficiency --- under the carpet of object orientation. In addition,
 \pkg{Rcpp} takes advantage of some features of the forthcoming \code{C++0x} 
 standard, already supported by recent versions of the GCC.
 
-\subsection{Context}
+\subsection{Historical Context}
 
-\pkg{Rcpp} was first released in 2005 as a contribution
-to the \pkg{RQuantLib} package \citep{eddelbuettelkhan09:rquantlib}.
-\pkg{Rcpp} was then released as a package of the same name in early 2006,
-quickly followed by several releases before being renamed to
-\pkg{RcppTemplate}. More releases followed during 2006 under the new name,
-but no releases or updates were made during 2007, 2008 or most of 2009.
+\pkg{Rcpp} first appeared in 2005 as a contribution to the \pkg{RQuantLib}
+package \citep{eddelbuettelkhan09:rquantlib} before being released as a CRAN
+package in early 2006. Several releases followed in quick succession; all of
+these were under the name \pkg{Rcpp}. The package was then renamed to
+\pkg{RcppTemplate} and several more releases followed during 2006 under the
+new name.  However, no new releases or updates were made during 2007, 2008
+and most of 2009.
 
 Given the continued use of the package, it was revived using the former name
 \pkg{Rcpp}. New releases started in November 2008 which include an improved
@@ -58,25 +69,24 @@ functionality---while retaining the existing interface.  This constitutes the
 `classic \pkg{Rcpp}' interface (described in the next section)
 which will be provided for the forseeable future.
 
-Yet C++ coding standards continued to evolved. So, in late 2009 the codebase
-was significantly extended and numerous new features were added.  Several of
-these are described below following section
-This constitutes the `enhanced \pkg{Rcpp}' interface which we 
-also intend to support going forward.
+Yet C++ coding standards continued to evolved. So, starting in late 2009 the
+codebase was significantly extended and numerous new features were added.
+Several of these are described below in the section on the the `New
+\pkg{Rcpp}' interface which we also intend to support going forward.
 
 \subsection{Comparison}
 
-Integration of C++ and R has been addressed by several authors starting with
-\cite{batesdebroy01:cppclasses}. \cite{javagailemanly07:r_cpp}, in an
-unpublished paper, express several ideas that are close to some of our
-approaches, though not yet fully fleshed out.
+Integration of C++ and R has been addressed by several authors; the earliest
+published reference is probably \cite{batesdebroy01:cppclasses}.
+An unpublished paper by \cite{javagailemanly07:r_cpp} expresses several ideas
+that are close to some of our approaches, though not yet fully fleshed out.
 %
 The \pkg{Rserve} package \citep{cran:Rserve} was another early approach,
-going back to 2002. On the server side, \pkg{Rserve} translates
-R data structures into a binary serialization format and uses TCP/IP
-for transfer. On the client side, objects are reconstructed as instances
-of C++ classes that emulate the structure of R objects.
-%
+going back to 2002. On the server side, \pkg{Rserve} translates R data
+structures into a binary serialization format and uses TCP/IP for
+transfer. On the client side, objects are reconstructed as instances of Java
+or C++ classes that emulate the structure of R objects. 
+
 The packages \pkg{rcppbind} \citep{liang08:rcppbind}, \pkg{RAbstraction}
 \citep{armstrong09:RAbstraction} and \pkg{RObjects}
 \citep{armstrong09:RObjects} are all implemented using C++ templates.
@@ -108,11 +118,22 @@ addition to the literature, but is beyond the scope of this article.
 % [Romain:] I'd argue it is still the case with the new api
 The core focus of \pkg{Rcpp}---particularly for the earlier API described in
 this section---has always been on allowing the programmer to add C++-based
-functions where we use this term in the standard mathematical sense of
-providing results (output) given a set of parameters or data (input). This
-was facilitated from the earliest releases using C++ classes for receiving
+functions. We use this term in the standard mathematical sense of providing
+results (output) given a set of parameters or data (input). This was
+facilitated from the earliest releases using C++ classes for receiving
 various types of R objects, converting them to C++ objects and allowing the
-programmer to return the results to R with relative use.
+programmer to return the results to R with relative use. 
+
+This API therefore supports two typical use cases. First, one can think of
+replacing existing R code with equivalent C++ code in order to reap
+performance gains.  This case can be conceptually easy as there may not be
+(built- or run-time) dependencies on other C or C++ libraries.  It typically
+involves setting up data and parameters---the right-hand side components of a
+function call---before making the call in order to provide the result that is
+to be assigned to the left-hand side. Second, \pkg{Rcpp} facilitates calling
+functions provided by other libraries. The use resembles the first case: data
+and parameters are passed via \pkg{Rcpp} to a function set-up to call code
+from an external library.  
 
 An illustration can be provided using the time-tested example of a
 convolution of two vectors. This example is shown in sections 5.2 (for the
@@ -141,41 +162,49 @@ RcppExport SEXP convolve2cpp(SEXP a, SEXP b) \{
 \}
 \end{example}
 
-We can highlight several aspects. First, only one header file is needed.
-Second, given two \code{SEXP} types---the bread-and-butter of all internal R
-programming---a third is returned.  Third, both inputs are converted to C++
-vector types that are \textsl{templated} (which means that such a vector
-template can use used to create vectors of different base types). Here a
-standard \code{double} type is used to create a vector of doubles from the
-template type.
+We can highlight several aspects. First, only a single header file
+\code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
+\code{SEXP} types---the bread-and-butter of all internal R programming---a
+third is returned.  Third, both inputs are converted to C++ vector types that
+are \textsl{templated} (which means that such a vector template can use used
+to create vectors of different base types). Here a standard \code{double}
+type is used to create a vector of doubles from the template type.
 % [Romain:] I think the previous sentence is confusing, one might think
 % that the same vector can hold int and double
 % [Dirk:] Better?
 % [Romain:] I think so, maybe the (...) should be a footnote
+% [Dirk:] Sorry, which '(...)' ?
 Fourth, the usefulness off these classes can be seen when we query the
 vectors directly for their size---using the \code{size} member function---in
-order to reserved a new result type of appropriate length.  Fifth, the
+order to reserved a new result type of appropriate length whereas use based
+on C arrays would have required additional parameters for the length of
+vectors $a$ and $b$, leaving open the possibility of mismatches between the
+actual length and the length reported by the programmer.  Fifth, the
 computation itself is straightforward embedded looping just as in the
 original examples in the 'Writing R Extensions' manual \citep{R:exts}.
 Sixth, a return type (\code{RcppResultSet}) is then prepared as a named
 object (something that should be familiar to R programmers) which is then
-converted to a list object that is returned.
+converted to a list object that is returned.  We should note that the
+\code{RcppResultSet} permits the return of numerous (named) objects which can
+also be of different types.
 
 We argue that this usage is already easier to read, write and debug than the
 C macro-based approach supported by R itself. Possible performance issues and
 other potentual limitations will be discussed throughout the article and
 reviewed at the end.
 
-\section{inline code}
+\section{Using code `inline'}
 
-Extending R with compiled code also needs to address how to reliably load the
-code.  While this can be achieved directly using \code{dyn.load}, using a
-package is preferable in the long run.  Another option is
+Extending R with compiled code also needs to address how to reliably compile,
+link and load the code.  While using a package is preferable in the long run,
+it may be to heavy a framework for quick explorations.  An alternative is
 provided by the \pkg{inline} package \citep{cran:inline} which compiles,
-links and loads a C or C++ function---directly from the R prompt.  It was
-recently extended to work with \pkg{Rcpp} by allowing for additional header
-files and libraries, and in particularly those used by the \pkg{Rcpp} package
-which are automatically located and used.
+links and loads a C, C++ or Fortran function---directly from the R prompt
+using a simple function \code{cfunction}.  It was recently extended to work
+with \pkg{Rcpp} by allowing for the use of additional header files and
+libraries. This works particularly well with the \pkg{Rcpp} package where
+headers and the library are automatically found if the appropriate option
+\code{Rcpp} to \texttt{cfunction} is set to true.
 
 % [Romain] : the next paragraph is very confusing
 % [Dirk] Is this better?
@@ -185,19 +214,49 @@ which are automatically located and used.
 %          it might also be useful to show a quick example of inlining
 %          c++ code, for example say that we use it for our unit tests
 %          and show an example unit test
-The use of \pkg{inline} is possible as \pkg{Rcpp} can be used and updated
-just like any other R package. Even though it provides a library and header
-files for other packages to use, it can be installed via
-\code{install.packages()} just like other CRAN packages. Similarly, new
-versions can be obtained via \code{update.packages()}.  What makes \pkg{Rcpp}
-useful for other packages for their interfacing of R and C++ is that it is
-provided as a dynamic library.\footnote{Windows users however only obtain a
-  static library though this could be changed.} The location of this library,
-and the associated compiler and header arguments can be queried directly from
-the installed package using the functions \code{Rcpp:::CxxFlags()} and
-\code{Rcpp:::LdFlags()}.  So even though R / C++ interfacing would otherwise
-require source code, the Rcpp library is always provided ready for use as a
-pre-built library through the CRAN package mechanism.
+The use of \pkg{inline} is possible as \pkg{Rcpp} can be installed and
+updated just like any other R package using \textsl{e.g.} the
+\code{install.packages()} function for initial installation as well as
+\code{update.packages()} for upgrades.  So even though R / C++ interfacing
+would otherwise require source code, the \pkg{Rcpp} library is always provided
+ready for use as a pre-built library through the CRAN package mechanism.
+
+The library and header files provided by \pkg{Rcpp} for use by other packages
+are installed along with the \pkg{Rcpp} package making it possible for
+\pkg{Rcpp} to provide the appropriate \code{-I} and \code{-L} switches needed
+for compilation and linking.  So internally, \pkg{inline} makes uses of the
+two functions \code{Rcpp:::CxxFlags()} and \code{Rcpp:::LdFlags()} that
+provide this information (and which are also used by \code{Makefiles} of
+other packages).  Here, however, all this is done behind the scenes and the
+user need not worry about compiler or linker options or settings.
+
+The convolution example provided above now can be rewritten for use by
+\pkg{inline} as shown here.  The function body is provided by character
+variable \code{src}, the function header is defined by the argument
+\code{signature}---and we only need to enable \code{Rcpp=TRUE} to obtain a
+new function \code{fun} based on the C++ code in \code{src}:
+\begin{example}
+src <- '
+  RcppVector<double> xa(a);
+  RcppVector<double> xb(b);
+  int nab = xa.size() + xb.size() - 1;
+
+  RcppVector<double> xab(nab);
+  for (int i = 0; i < nab; i++) xab(i) = 0.0;
+
+  for (int i = 0; i < xa.size(); i++)
+    for (int j = 0; j < xb.size(); j++)
+       xab(i + j) += xa(i) * xb(j);
+
+  RcppResultSet rs;
+  rs.add("ab", xab);
+  return rs.getReturnList();
+';
+fun <- cfunction(signature(a="numeric", 
+                           b="numeric"),
+                 src, Rcpp=TRUE)
+\end{example}
+
 
 \section{New \pkg{Rcpp} API}
 \label{sec:new_rcpp}
@@ -241,6 +300,7 @@ that he/she is solving.
 
 The \code{RObject} class also defines a set of member functions that
 can be used on any R object, regardless of its type.
+% [Dirk]: Do we need the table if we shorten the paper?}
 
 \begin{center}
 \begin{small}
