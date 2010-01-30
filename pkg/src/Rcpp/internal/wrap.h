@@ -240,14 +240,9 @@ template <typename T> SEXP wrap_dispatch( const T& object, wrap_type_unknown_tag
 
 } // internal
 
-/* partial specialization */
 template <typename T> SEXP wrap(const T& object){
 	return internal::wrap_dispatch( object, typename internal::wrap_type_traits<T>::category() ) ;
-	//	SEXP x = object ; /* let implicit conversion work */
-	//	return x ;
 }
-// template<> SEXP wrap<const char*>( const char* object ) ;
-
 // {{{ // explicit instanciations (not needed)
 // template SEXP wrap<int>(const int& object) ;
 // template SEXP wrap<double>(const double& object) ;
@@ -272,17 +267,19 @@ template <typename T> SEXP wrap(const T& object){
 // template SEXP wrap< std::deque<bool> >( const std::deque<bool>& object ) ;
 // }}}
 
-#ifdef HAS_INIT_LISTS
-// template SEXP wrap< std::initializer_list<bool> >(const std::initializer_list<bool>& list) ;
-// template SEXP wrap< std::initializer_list<std::string> >(const std::initializer_list<std::string>& list ) ;
-// // template SEXP wrap< std::initializer_list<SEXP> >(const std::initializer_list<SEXP>& list ) ;
-// template SEXP wrap< std::initializer_list<Rbyte> >(const std::initializer_list<Rbyte>& list) ;
-// template SEXP wrap< std::initializer_list<double> >(const std::initializer_list<double>& list) ; 
-// template SEXP wrap< std::initializer_list<int> >(const std::initializer_list<int>& list) ; 
-#endif
+// special cases - FIXME : these are not template specializations of wrap<>
+inline SEXP wrap(const char* const v ){ return Rf_mkString(v) ; } ;
 
-// special case
-SEXP wrap(const char* const v );
+// wrap( { ... } ) : disabled for now
+// #ifdef HAS_INIT_LISTS
+// inline SEXP wrap(std::initializer_list<bool> v) { return internal::range_wrap( v.begin() , v.end() ); };
+// inline SEXP wrap(std::initializer_list<std::string> v ) { return internal::range_wrap( v.begin() , v.end() ); };
+// inline SEXP wrap(std::initializer_list<SEXP> v ) { return internal::range_wrap( v.begin() , v.end() ); };
+// inline SEXP wrap(std::initializer_list<Rbyte> v) { return internal::range_wrap( v.begin() , v.end() ); };
+// inline SEXP wrap(std::initializer_list<double> v) { return internal::range_wrap( v.begin() , v.end() ); } ; 
+// inline SEXP wrap(std::initializer_list<int> v) { return internal::range_wrap( v.begin() , v.end() ); } ; 
+// #endif
+
 
 } // Rcpp
 
