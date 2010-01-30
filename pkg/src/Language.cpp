@@ -33,8 +33,12 @@ namespace Rcpp {
 		setSEXP( Rf_lcons( Symbol(symbol), R_NilValue ) );
 	}
 	
-	Language::Language( const Symbol& symbol ){
+	Language::Language( const Symbol& symbol ): DottedPair() {
 		setSEXP( Rf_lcons( symbol, R_NilValue ) ) ;
+	}
+	
+	Language::Language( const Function& function): DottedPair() {
+		setSEXP( Rf_lcons( function, R_NilValue ) ) ;		
 	}
 	
 	Language::~Language(){}
@@ -45,7 +49,12 @@ namespace Rcpp {
 	
 	void Language::setSymbol( const Symbol& symbol){
 		SETCAR( m_sexp, symbol ) ;
-		SET_TAG(m_sexp, R_NilValue);
+		SET_TAG(m_sexp, R_NilValue);/* probably not necessary */
+	}
+	
+	void Language::setFunction( const Function& function){
+		SETCAR( m_sexp, function );
+		SET_TAG(m_sexp, R_NilValue); /* probably not necessary */
 	}
 	
 	void Language::update(){ 
@@ -53,5 +62,12 @@ namespace Rcpp {
 		SET_TAG( m_sexp, R_NilValue ) ;
 	}
 	
+	SEXP Language::eval(){
+		return eval( R_GlobalEnv ) ;
+	}
+	
+	SEXP Language::eval( SEXP env ){
+		return internal::try_catch( m_sexp, env );
+	}
 	
 } // namespace Rcpp

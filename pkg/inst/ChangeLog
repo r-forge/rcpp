@@ -1,3 +1,13 @@
+2010-01-30  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/internal/wrap.h: rework wrap using traits and 
+	template meta programming. wrap is now really a template 
+	and has many generated specializations. This file is 
+	a private header and should only be included by RcppCommon.h
+
+	* src/Rcpp/Language.h: Language gains Function aware constructors
+	and eval methods
+
 2010-01-28  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/DottedPair.h: DottedPair::Proxy are no more lazy, i.e
