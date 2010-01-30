@@ -27,10 +27,12 @@
 // don't include it directly
 
 namespace Rcpp{
-namespace internal{
 
 // pre-declaring wrap :
 template <typename T> SEXP wrap(const T& object) ;
+
+namespace internal{
+
 
 // {{{ information about R vectors
 // welcome to template metaprogramming !!
@@ -149,7 +151,7 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type
 	SEXP x = PROTECT( Rf_allocVector( VECSXP, size ) );
 	size_t i =0 ;
 	while( i < size ){
-		SET_VECTOR_ELT( x, i, wrap(*first) ) ;
+		SET_VECTOR_ELT( x, i, ::Rcpp::wrap(*first) ) ;
 		i++ ;
 		++first ;
 	}
