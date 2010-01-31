@@ -1,7 +1,11 @@
 
-0.7.5	(under development
+0.7.5	(under development)
 
     o	std::multiset<T> becomes wrap<>()'able
+
+    o	std::map<std::string,T> becomes wrap<>()'able
+
+    o	std::multimap<std::string,T> becomes wrap<>()'able
 
 0.7.4	2010-01-30
 

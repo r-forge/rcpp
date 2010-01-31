@@ -1,7 +1,9 @@
 2010-01-31  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/internal/wrap.h: added support for wrap( multiset<T> )
-	where T is wrappable
+	* src/Rcpp/internal/wrap.h: more wrap for stl templates: 
+	multiset<T> where T can be wrap()'ed -> vector or list
+	map<string,T> where T can be wrap()'ed -> named vector or named list
+	multimap<string,T> where T can be wrap()'ed -> named vector or named list
 
 2010-01-30  Dirk Eddelbuettel  <edd@debian.org>
 
