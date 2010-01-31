@@ -9,6 +9,8 @@
     	- std::tr1::unordered_map<std::string,T>
     	- std::tr1::unordered_multimap<std::string,T>
 
+    o 	The doxygen documentation now shows the examples
+
 0.7.4	2010-01-30
 
     o	matrix matrix-like indexing using operator() for all vector 
