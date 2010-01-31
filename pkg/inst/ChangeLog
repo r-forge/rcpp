@@ -1,6 +1,12 @@
+2010-01-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* doxyfile: several updates plus improvements related to examples/
+        * src/RcppDoxygenExamples.h: A phony empty file needed mainly to
+	  define a few \example tags for Doxygen
+
 2010-01-31  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/internal/wrap.h: more wrap for stl templates are 
+	* src/Rcpp/internal/wrap.h: more wrap for stl templates are
 	candidate for wrap (when T can be wrapped)
 	multiset<T>                   -> vector or list
 	map<string,T>                 -> named vector or named list
@@ -9,9 +15,9 @@
 	tr1::unordered_set<T>         -> vector or list
 	tr1::unordered_multiset<T>    -> vector or list
 
-	* inst/unitTests/runit.wrap.R : unit tests for the new 
+	* inst/unitTests/runit.wrap.R : unit tests for the new
 	wrappable types
-	
+
 2010-01-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.7.4
