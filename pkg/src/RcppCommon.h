@@ -38,6 +38,7 @@
 	// probably introduced before GCC 4.3
 	#if GCC_VERSION >= 40300
 		#define HAS_TR1_UNORDERED_MAP
+		#define HAS_TR1_UNORDERED_SET
 	#endif
 #endif
 
@@ -61,6 +62,10 @@
 
 #ifdef HAS_TR1_UNORDERED_MAP
 #include <tr1/unordered_map>
+#endif
+
+#ifdef HAS_TR1_UNORDERED_SET
+#include <tr1/unordered_set>
 #endif
 
 // include R headers, but set R_NO_REMAP and access everything via Rf_ prefixes

@@ -100,6 +100,10 @@ template <typename T> struct wrap_type_traits< std::multimap<std::string,T> > { 
 template <typename T> struct wrap_type_traits< std::tr1::unordered_map<std::string,T> > { typedef wrap_type_stl_container_tag category ; } ;
 template <typename T> struct wrap_type_traits< std::tr1::unordered_multimap<std::string,T> > { typedef wrap_type_stl_container_tag category ; } ;
 #endif
+#ifdef HAS_TR1_UNORDERED_SET
+template <typename T> struct wrap_type_traits< std::tr1::unordered_set<T> > { typedef wrap_type_stl_container_tag category ; } ;
+template <typename T> struct wrap_type_traits< std::tr1::unordered_multiset<T> > { typedef wrap_type_stl_container_tag category ; } ;
+#endif
 
 // #ifdef HAS_INIT_LISTS
 // template <typename T> struct wrap_type_traits< std::initializer_list<T> > { typedef wrap_type_stl_container_tag category ; } ;
