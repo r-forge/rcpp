@@ -223,3 +223,123 @@ test.wrap.multimap.string.generic <- function(){
 		msg = "wrap( multimap<string,vector<int>>) " )
 }
 
+
+
+# tr1::unordered_map
+
+if( Rcpp:::capabilities()[["tr1 unordered maps"]] ) {
+	
+test.wrap.unordered.map.string.int <- function(){
+	
+	funx <- cfunction(signature(), 
+	'
+	std::tr1::unordered_map< std::string, int > m ;
+	m["b"] = 100;
+  	m["a"] = 200;
+  	m["c"] = 300;
+  	return wrap(m) ;
+	', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	res <- funx()
+	checkEquals( res[["a"]], 200L,  msg = "wrap( tr1::unordered_map<string,int>) " )
+	checkEquals( res[["b"]], 100L,  msg = "wrap( tr1::unordered_map<string,int>) " )
+	checkEquals( res[["c"]], 300L,  msg = "wrap( tr1::unordered_map<string,int>) " )
+}
+
+test.wrap.unordered.map.string.double <- function(){
+	
+	funx <- cfunction(signature(), 
+	'
+	std::tr1::unordered_map<std::string,double> m ;
+	m["b"] = 100;
+  	m["a"] = 200;
+  	m["c"] = 300;
+  	return wrap(m) ;
+	', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	res <- funx()
+	checkEquals( res[["a"]], 200,  msg = "wrap( tr1::unordered_map<string,double>) " )
+	checkEquals( res[["b"]], 100,  msg = "wrap( tr1::unordered_map<string,double>) " )
+	checkEquals( res[["c"]], 300,  msg = "wrap( tr1::unordered_map<string,double>) " )
+}
+
+test.wrap.unordered.map.string.bool <- function(){
+	
+	funx <- cfunction(signature(), 
+	'
+	std::tr1::unordered_map<std::string,bool> m ;
+	m["b"] = true;
+  	m["a"] = false;
+  	m["c"] = true;
+  	return wrap(m) ;
+	', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	res <- funx()
+	checkEquals( res[["a"]], FALSE,  msg = "wrap( tr1::unordered_map<string,bool>) " )
+	checkEquals( res[["b"]], TRUE ,  msg = "wrap( tr1::unordered_map<string,bool>) " )
+	checkEquals( res[["c"]], TRUE ,  msg = "wrap( tr1::unordered_map<string,bool>) " )
+}
+
+test.wrap.unordered.map.string.Rbyte <- function(){
+	
+	funx <- cfunction(signature(), 
+	'
+	std::tr1::unordered_map<std::string,Rbyte> m ;
+	m["b"] = (Rbyte)0;
+  	m["a"] = (Rbyte)1;
+  	m["c"] = (Rbyte)2;
+  	return wrap(m) ;
+	', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	res <- funx()
+	checkEquals( res[["a"]], as.raw(1),  msg = "wrap( tr1::unordered_map<string,Rbyte>) " )
+	checkEquals( res[["b"]], as.raw(0),  msg = "wrap( tr1::unordered_map<string,Rbyte>) " )
+	checkEquals( res[["c"]], as.raw(2),  msg = "wrap( tr1::unordered_map<string,Rbyte>) " )
+}
+
+test.wrap.unordered.map.string.string <- function(){
+	
+	funx <- cfunction(signature(), 
+	'
+	std::tr1::unordered_map<std::string,std::string> m ;
+	m["b"] = "foo" ;
+  	m["a"] = "bar" ;
+  	m["c"] = "bling" ;
+  	return wrap(m) ;
+	', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	res <- funx()
+	checkEquals( res[["a"]], "bar"   ,  msg = "wrap( tr1::unordered_map<string,string>) " )
+	checkEquals( res[["b"]], "foo"   ,  msg = "wrap( tr1::unordered_map<string,string>) " )
+	checkEquals( res[["c"]], "bling" ,  msg = "wrap( tr1::unordered_map<string,string>) " )
+}
+
+test.wrap.unordered.map.string.generic <- function(){
+	
+	funx <- cfunction(signature(), 
+	'
+	std::tr1::unordered_map< std::string,std::vector<int> > m ;
+	std::vector<int> b ; b.push_back(1) ; b.push_back(2) ; m["b"] = b ;
+  	std::vector<int> a ; a.push_back(1) ; a.push_back(2) ; a.push_back(2) ; m["a"] = a ;
+  	std::vector<int> c ; c.push_back(1) ; c.push_back(2) ; c.push_back(2) ; c.push_back(2) ; m["c"] = c ;
+  	return wrap(m) ;
+	', 
+	Rcpp=TRUE, verbose=FALSE, includes = "using namespace Rcpp;" )
+	
+	res <- funx()
+	checkEquals( res[["a"]], c(1L,2L,2L) ,  msg = "wrap( tr1::unordered_map<string,vector<int>>) " )
+	checkEquals( res[["b"]], c(1L,2L) ,  msg = "wrap( tr1::unordered_map<string,vector<int>>) " )
+	checkEquals( res[["c"]], c(1L,2L,2L,2L) ,  msg = "wrap( tr1::unordered_map<string,vector<int>>) " )
+	
+}
+	
+} # if( Rcpp:::capabilities("tr1 unordered maps") )
+
+
+
+
