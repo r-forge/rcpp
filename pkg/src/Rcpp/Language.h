@@ -86,7 +86,7 @@ public:
 	 *        argument must be wrappable, meaning there need to be 
 	 *        a wrap function that takes this type as its parameter
 	 * 
-	 * @example Language( "rnorm", 10, 0.0 ) 
+	 * For example, Language( "rnorm", 10, 0.0 ) 
 	 * will create the same call as 
 	 * > call( "rnorm", 10L, 0.0 )
 	 *
