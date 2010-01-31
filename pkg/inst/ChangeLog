@@ -8,13 +8,14 @@
 
 	* src/Rcpp/internal/wrap.h: more wrap for stl templates are
 	candidate for wrap (when T can be wrapped)
-	multiset<T>                   -> vector or list
-	map<string,T>                 -> named vector or named list
-	multimap<string,T>            -> named vector or named list
-	tr1::unordered_map<string,T>  -> named vector or named list
-	tr1::unordered_set<T>         -> vector or list
-	tr1::unordered_multiset<T>    -> vector or list
-
+	std::list<T>	                      -> vector or list
+	std::multiset<T>                   -> vector or list
+	std::map<std::string,T>                 -> named vector or named list
+	std::multimap<std::string,T>            -> named vector or named list
+	std::tr1::unordered_map<std::string,T>  -> named vector or named list
+	std::tr1::unordered_set<T>         -> vector or list
+	std::tr1::unordered_multiset<T>    -> vector or list
+	
 	* inst/unitTests/runit.wrap.R : unit tests for the new
 	wrappable types
 
