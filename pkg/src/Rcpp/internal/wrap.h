@@ -91,6 +91,7 @@ template <typename T> struct wrap_type_traits { typedef wrap_type_unknown_tag ca
 template <typename T> struct wrap_type_traits< std::vector<T> > { typedef wrap_type_stl_container_tag category ; } ;
 template <typename T> struct wrap_type_traits< std::set<T> > { typedef wrap_type_stl_container_tag category ; } ;
 template <typename T> struct wrap_type_traits< std::deque<T> > { typedef wrap_type_stl_container_tag category ; } ;
+template <typename T> struct wrap_type_traits< std::multiset<T> > { typedef wrap_type_stl_container_tag category ; } ;
 // #ifdef HAS_INIT_LISTS
 // template <typename T> struct wrap_type_traits< std::initializer_list<T> > { typedef wrap_type_stl_container_tag category ; } ;
 // #endif
