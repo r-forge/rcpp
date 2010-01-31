@@ -1,8 +1,8 @@
 
 0.7.5	(under development)
 
-    o 	wrap is now able to handle more stl types. Given that T can 
-    	be wrapped, the following can be wrapped: 
+    o 	wrap is now able to handle more stl and tr1 types. Given that T
+    	can be wrapped, the following can be wrapped: 
     	- std::multiset<T>
     	- std::map<std::string,T>
     	- std::multimap<std::string,T>

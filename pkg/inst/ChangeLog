@@ -8,6 +8,9 @@
 	tr1::unordered_map<string,T>  -> named vector or named list
 	tr1::unordered_set<T>         -> vector or list
 	tr1::unordered_multiset<T>    -> vector or list
+
+	* inst/unitTests/runit.wrap.R : unit tests for the new 
+	wrappable types
 	
 2010-01-30  Dirk Eddelbuettel  <edd@debian.org>
 
