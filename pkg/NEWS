@@ -1,15 +1,13 @@
 
 0.7.5	(under development)
 
-    o	std::multiset<T> becomes wrap<>()'able
-
-    o	std::map<std::string,T> becomes wrap<>()'able
-
-    o	std::multimap<std::string,T> becomes wrap<>()'able
-    
-    o	std::tr1::unordered_map<std::string,T> becomes wrap<>()'able
-    
-    o	std::tr1::unordered_multimap<std::string,T> becomes wrap<>()'able
+    o 	wrap is now able to handle more stl types. Given that T can 
+    	be wrapped, the following can be wrapped: 
+    	- std::multiset<T>
+    	- std::map<std::string,T>
+    	- std::multimap<std::string,T>
+    	- std::tr1::unordered_map<std::string,T>
+    	- std::tr1::unordered_multimap<std::string,T>
 
 0.7.4	2010-01-30
 
