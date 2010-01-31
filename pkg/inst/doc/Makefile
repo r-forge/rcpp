@@ -1,9 +1,21 @@
 
-all: clean index.html
+all: clean index.html Rcpp-unitTests.pdf
 
 clean:
+	touch Rcpp-unitTests.pdf
+	rm Rcpp-unitTests.pdf
 	rm index.html
 
 index.html: rcpp.index.html
 	cp rcpp.index.html index.html
+
+Rcpp-unitTests.pdf:
+	rm -fr unitTests-results/*
+	cp unitTests/Rcpp-unitTests.Rnw .
+	cp unitTests/Rcpp-unitTests.R .
+	Rscript Rcpp-unitTests.R
+	R CMD Sweave Rcpp-unitTests.Rnw
+	Rscript -e "tools::texi2dvi( 'Rcpp-unitTests.tex', pdf = TRUE, clean = TRUE )"
+	rm -fr Rcpp-unitTests.R
+	rm -fr Rcpp-unitTests.tex
 
