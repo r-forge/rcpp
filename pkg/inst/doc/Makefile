@@ -12,10 +12,8 @@ index.html: rcpp.index.html
 Rcpp-unitTests.pdf:
 	rm -fr unitTests-results/*
 	cp unitTests/Rcpp-unitTests.Rnw .
-	cp unitTests/Rcpp-unitTests.R .
-	Rscript Rcpp-unitTests.R
-	R CMD Sweave Rcpp-unitTests.Rnw
+	Rscript unitTests/Rcpp-unitTests.R
+	R CMD Sweave unitTests/Rcpp-unitTests.Rnw
 	Rscript -e "tools::texi2dvi( 'Rcpp-unitTests.tex', pdf = TRUE, clean = TRUE )"
-	rm -fr Rcpp-unitTests.R
 	rm -fr Rcpp-unitTests.tex
 
