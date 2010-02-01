@@ -1,8 +1,6 @@
 %% Emacs please consider this:  -*- mode: latex; TeX-master: "RJwrapper.tex"; -*-
 
-\title{Mesh R and C++ with Rcpp}
-% how about
-% \title{Rcpp: Seamless R and C++}
+\title{Rcpp: Seamless R and C++}
 \author{by Dirk Eddelbuettel and Romain Franc\c{c}ois}
 
 \maketitle
@@ -168,8 +166,8 @@ We can highlight several aspects. First, only a single header file
 \code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
 \code{SEXP} types---the bread-and-butter of all internal R programming---a
 third is returned.  Third, both inputs are converted to C++ vector types that
-are \textsl{templated} (which means that such a vector template can use used
-to create vectors of different base types). Here a standard \code{double}
+are \textsl{templated} (meaning that a type-indepedent framework can be
+applied to create actual vectors of the specified type). Here a standard \code{double}
 type is used to create a vector of doubles from the template type.
 % [Romain:] I think the previous sentence is confusing, one might think
 % that the same vector can hold int and double
@@ -177,6 +175,7 @@ type is used to create a vector of doubles from the template type.
 % [Romain:] I think so, maybe the (...) should be a footnote
 % [Dirk:] Sorry, which '(...)' ?
 % [Romain:] (which means ... base types)
+% [Dirk:] Ah. Better now? 
 Fourth, the usefulness off these classes can be seen when we query the
 vectors directly for their size---using the \code{size} member function---in
 order to reserved a new result type of appropriate length whereas use based
@@ -217,6 +216,7 @@ headers and the library are automatically found if the appropriate option
 %          it might also be useful to show a quick example of inlining
 %          c++ code, for example say that we use it for our unit tests
 %          and show an example unit test
+% [Dirk] Done in last round
 The use of \pkg{inline} is possible as \pkg{Rcpp} can be installed and
 updated just like any other R package using \textsl{e.g.} the
 \code{install.packages()} function for initial installation as well as
@@ -344,6 +344,14 @@ a C++ class for most SEXP types.
 %
 % [Romain] Please be honest, I'd rather have the comment from you than
 %          from the reviewer. the text after will need some cleaning also then
+% [Dirk]   I'd say cut. There is too much 'low-level' stuff here. I see the
+%          paper as trying to interest a non-C/C++ programmer in trying Rcpp, 
+%          This scares children and grown me alike.  Better for the 'long
+%          paper' on all the juicy details.
+%          But we need better context. How can we hash out what a concise and
+%          and convincing section on 'New API' should look like?  Show how
+%          easy the code, and make a gentle mention of some of the key C++
+%          technologies?  I am open to any idea.
 \begin{center}
 \begin{small}
 \begin{tabular}{ccc}
@@ -398,8 +406,6 @@ The following code snippet is extracted from Writing R extensions
 \citep{R:exts}. It creates a \code{numeric} vector of two elements 
 and assigns some values to it. 
 
-% #include <R.h>
-% #include <Rinternals.h>
 \begin{example}
 SEXP ab;
 PROTECT(ab = allocVector(REALSXP, 2));
@@ -423,8 +429,6 @@ actual array; its indexing is does not resemble either R or C++.
 
 Using the \code{Rcpp::NumericVector}, the code can be rewritten: 
 
-%#include <Rcpp.h>
-%using namespace Rcpp;
 
 \begin{example}
 Rcpp::NumericVector ab(2) ;
@@ -448,8 +452,6 @@ With the most recent compilers (e.g. G++ >= 4.4) which already implement
 parts of the forthcoming C++ standard (C++0x), the preceding code may even be
 reduced to this:
 
-%#include <Rcpp.h>
-%using namespace Rcpp;
 \begin{example}
 Rcpp::NumericVector ab = \{123.45, 67.89\};
 \end{example}
