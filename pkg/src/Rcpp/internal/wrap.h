@@ -49,7 +49,11 @@ template<> Rcomplex* r_vector_start<CPLXSXP,Rcomplex>(SEXP x) ;
 template <int RTYPE,typename CTYPE> CTYPE get_zero(){ return static_cast<CTYPE>(0) ; } ;
 template<> Rcomplex get_zero<CPLXSXP,Rcomplex>() ;
 
-// initializes a vector. The template does nothing because there is
+/**
+ * Initializes a vector of the given SEXP type. The template fills the 
+ * vector with the value 0 of the appropriate type, for example
+ * an INTSXP vector is initialized with (int)0, etc...
+ */
 template<int RTYPE> void r_init_vector(SEXP x){
 	typedef ::Rcpp::traits::storage_type<RTYPE>::type CTYPE ;
 	CTYPE* start=r_vector_start<RTYPE>(x) ;
