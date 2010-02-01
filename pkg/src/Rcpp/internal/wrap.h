@@ -39,17 +39,6 @@ template <typename InputIterator> SEXP range_wrap(InputIterator first, InputIter
 // {{{ information about R vectors
 // welcome to template metaprogramming !!
 
-// template that returns the SEXP type that is appropriate for 
-// the type T, this is allways VECSXP (lists) unless it is specialized
-template <typename T> struct r_sexptype{ enum{ rtype = VECSXP }; } ;
-template<> struct r_sexptype<int>{ enum{ rtype = INTSXP } ; } ;
-template<> struct r_sexptype<size_t>{ enum{ rtype = INTSXP } ; } ;
-template<> struct r_sexptype<double>{ enum{ rtype = REALSXP } ; } ;
-template<> struct r_sexptype<bool>{ enum{ rtype = LGLSXP } ; } ;
-template<> struct r_sexptype<std::string>{ enum{ rtype = STRSXP } ; } ;
-template<> struct r_sexptype<Rcomplex>{ enum{ rtype = CPLXSXP } ; } ;
-template<> struct r_sexptype<Rbyte>{ enum{ rtype = RAWSXP } ; } ;
-
 template<int RTYPE> struct storage_type{ typedef SEXP type ; } ;
 template<> struct storage_type<INTSXP>{  typedef int type ; } ;
 template<> struct storage_type<REALSXP>{ typedef double type ; } ;
@@ -93,7 +82,7 @@ template<> void r_init_vector<STRSXP>(SEXP x) ;
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_primitive_tag){ 
 	size_t size = std::distance( first, last ) ;
-	const int RTYPE = r_sexptype<T>::rtype ;
+	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
 	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
 	std::copy( first, last, r_vector_start<RTYPE, typename storage_type<RTYPE>::type >(x) ) ; 
 	UNPROTECT(1) ;
@@ -177,7 +166,7 @@ SEXP range_wrap_dispatch( InputIterator first, InputIterator last ){
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_primitive_tag){ 
 	size_t size = std::distance( first, last ) ;
-	const int RTYPE = r_sexptype<typename T::second_type>::rtype ;
+	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<typename T::second_type>::rtype ;
 	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
 	SEXP names = PROTECT( Rf_allocVector( STRSXP, size ) ) ;
 	typename storage_type<RTYPE>::type* start = r_vector_start<RTYPE, typename storage_type<RTYPE>::type >(x) ;
@@ -303,7 +292,7 @@ SEXP range_wrap(InputIterator first, InputIterator last){
  */
 template <typename T>
 SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_primitive_tag ){
-	const int RTYPE = r_sexptype<T>::rtype ;
+	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
 	SEXP x = PROTECT( Rf_allocVector( RTYPE, 1 ) );
 	r_vector_start<RTYPE, typename storage_type<RTYPE>::type >(x)[0] = object ;
 	UNPROTECT(1);
