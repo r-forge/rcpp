@@ -225,6 +225,7 @@ inline int int_to_RBoolean(int x){ return ( x == NA_INTEGER ) ? NA_LOGICAL : (x!
 } // namespace Rcpp
 
 // DO NOT CHANGE THE ORDER OF THESE INCLUDES
+#include <Rcpp/traits/r_sexptype_traits.h>
 #include <Rcpp/traits/r_type_traits.h>
 #include <Rcpp/traits/wrap_type_traits.h>
 
