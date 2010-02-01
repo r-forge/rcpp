@@ -346,6 +346,27 @@ SEXP primitive_wrap(const T& object){
 }
 // }}}
 
+// {{{ unknown
+template <typename T>
+SEXP wrap_dispatch_unknown( const T& object, true_type ){
+	// here we know (or assume) that T is convertible to SEXP
+	SEXP x = object ;
+	return x ;
+}
+template <typename T>
+SEXP wrap_dispatch_unknown( const T& object, false_type){
+	// here we know that T is not convertible to SEXP
+#ifdef HAS_CXX0X
+	static_assert( !sizeof(T), "cannot convert type to SEXP" ) ;
+#else
+	// leave the cryptic message
+	SEXP x = object ; 
+	return x ;
+#endif
+	return R_NilValue ; // -Wall
+}
+// }}}
+
 // {{{ wrap dispatch
 // generic wrap for stl containers
 template <typename T> SEXP wrap_dispatch( const T& object, wrap_type_stl_container_tag ){
@@ -356,9 +377,9 @@ template <typename T> SEXP wrap_dispatch( const T& object, wrap_type_primitive_t
 	return primitive_wrap( object ) ;
 }
 // when we don't know how to deal with it, we try implicit conversion
+// if the type T is convertible to SEXP
 template <typename T> SEXP wrap_dispatch( const T& object, wrap_type_unknown_tag ){
-	SEXP x = object ;
-	return x ;
+	return wrap_dispatch_unknown( object, typename is_convertible<T,SEXP>::type() ) ;
 }
 // }}}
 

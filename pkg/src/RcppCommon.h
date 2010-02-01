@@ -27,6 +27,7 @@
 #ifdef __GNUC__
 	#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 	#ifdef __GXX_EXPERIMENTAL_CXX0X__
+		#define HAS_CXX0X
 		#if GCC_VERSION >= 40300
 			#define HAS_VARIADIC_TEMPLATES
 		#endif
@@ -37,6 +38,7 @@
 	// FIXME: [romain] I did not actually check, tr1::unordered_map was 
 	// probably introduced before GCC 4.3
 	#if GCC_VERSION >= 40300
+		#define HAS_TR1
 		#define HAS_TR1_UNORDERED_MAP
 		#define HAS_TR1_UNORDERED_SET
 	#endif
@@ -206,8 +208,9 @@ inline int int_to_RBoolean(int x){ return ( x == NA_INTEGER ) ? NA_LOGICAL : (x!
 
 } // namespace Rcpp
 
+// DO NOT CHANGE THE ORDER OF THESE INCLUDES
+#include <Rcpp/internal/convertible.h>
 #include <Rcpp/internal/wrap.h>
-
 #include <Rcpp/RObject.h>
 
 #endif
