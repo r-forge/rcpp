@@ -1,6 +1,8 @@
 %% Emacs please consider this:  -*- mode: latex; TeX-master: "RJwrapper.tex"; -*-
 
 \title{Mesh R and C++ with Rcpp}
+% how about
+% \title{Rcpp: Seamless R and C++}
 \author{by Dirk Eddelbuettel and Romain Franc\c{c}ois}
 
 \maketitle
@@ -174,6 +176,7 @@ type is used to create a vector of doubles from the template type.
 % [Dirk:] Better?
 % [Romain:] I think so, maybe the (...) should be a footnote
 % [Dirk:] Sorry, which '(...)' ?
+% [Romain:] (which means ... base types)
 Fourth, the usefulness off these classes can be seen when we query the
 vectors directly for their size---using the \code{size} member function---in
 order to reserved a new result type of appropriate length whereas use based
@@ -300,7 +303,8 @@ that he/she is solving.
 
 The \code{RObject} class also defines a set of member functions that
 can be used on any R object, regardless of its type.
-% [Dirk]: Do we need the table if we shorten the paper?}
+% [Dirk]: Do we need the table if we shorten the paper?
+% [Romain]: Probably not. Noth that interesting anyway.
 
 \begin{center}
 \begin{small}
@@ -611,8 +615,6 @@ Language call("rnorm", 10, Named("sd", 100 ) ) ;
 call.eval() ;
 \end{example}
 
-%TODO: implement Language::eval( ) !!
-
 In this version, we first create a call to the symbol "rnorm" and
 evaluate the call in the global environment, this is similar to the 
 R code : 
@@ -702,6 +704,9 @@ Seemingly, this code is as efficient as it can be.
 However, when considering the implementation of the \code{operator[]}
 for the \code{NumericVector} class: 
 
+% FIXME: not the case anymore, this has been optimized by caching the 
+%        pointer inside the NumericVector. This needs update
+
 \begin{example}
 inline double& operator[]( const int& i ) { 
 	return REAL(m_sexp)[i];
@@ -748,7 +753,7 @@ RcppExport SEXP convolve4cpp(SEXP a, SEXP b) \{
 The following timings show the time taken (in milliseconds) 
 by 1000 replicates of each function with \code{a} and 
 \code{b} containing 100 elements.
-    
+
 \begin{center}
 \begin{tabular}{cc}
 Method & elapsed time (ms) \\ 
