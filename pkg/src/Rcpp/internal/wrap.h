@@ -84,6 +84,12 @@ template<> void r_init_vector<STRSXP>(SEXP x) ;
 
 // {{{ range wrap 
 // {{{ unnamed range wrap
+/**
+ * Range based wrap implementation that deals with iterator over
+ * primitive types (int, double, etc ...)
+ * 
+ * This produces an unnamed vector of the appropriate type
+ */
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_primitive_tag){ 
 	size_t size = std::distance( first, last ) ;
@@ -94,6 +100,11 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	return x ;
 } ;
 
+/**
+ * Range based wrap implementation that deals with iterators over bool
+ * 
+ * This produces an unnamed logical vector
+ */
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_bool_tag){ 
 	size_t size = std::distance( first, last ) ;
@@ -104,8 +115,12 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 } ;
 
 
-// this implementation is used when T is not a primitive type.
-// T needs to be wrappable though
+/** 
+ * range based wrap implementation that deals with iterators over 
+ * some type U. each U object is itself wrapped
+ * 
+ * This produces an unnamed generic vector (list)
+ */
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_generic_tag ){ 
 	size_t size = std::distance( first, last ) ;
@@ -120,6 +135,11 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	return x ;
 } ;
 
+/**
+ * Range based wrap implementation for iterators over std::string
+ * 
+ * This produces an unnamed character vector
+ */
 template<typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_string_tag ){
 	size_t size = std::distance( first, last ) ;
@@ -136,6 +156,11 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	return x ;
 }
 
+/**
+ * Dispatcher for all range based wrap implementations
+ * 
+ * This uses the Rcpp::traits::r_type_traits to perform further dispatch
+ */
 template<typename InputIterator, typename T>
 SEXP range_wrap_dispatch( InputIterator first, InputIterator last ){
 	return range_wrap_dispatch___impl<InputIterator,T>( first, last, typename ::Rcpp::traits::r_type_traits<T>::r_category() ) ;
@@ -143,8 +168,12 @@ SEXP range_wrap_dispatch( InputIterator first, InputIterator last ){
 // }}}
 
 // {{{ named range wrap
-// we get into these when iterating over a pair<const string,T> 
-// which is what e.g. map<string,T> produces
+/** 
+ * range based wrap implementation that deals with iterators over
+ * pair<const string,T> where T is a primitive type : int, double ...
+ * 
+ * This produces a named R vector of the appropriate type
+ */
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_primitive_tag){ 
 	size_t size = std::distance( first, last ) ;
@@ -164,6 +193,12 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	return x ;
 } ;
 
+/**
+ * Range based wrap implementation that deals with iterators
+ * over pair<const string,bool>
+ *
+ * This produces a named character vector
+ */
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_bool_tag){ 
 	size_t size = std::distance( first, last ) ;
@@ -183,8 +218,17 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 } ;
 
 
-// this implementation is used when T is not a primitive type.
-// T needs to be wrappable though
+/**
+ * Range based wrap implementation that deals with iterators over
+ * pair<const string, U> where U is wrappable. This is the kind of 
+ * iterators that are produced by map<string,U>
+ * 
+ * This produces a named generic vector (named list). The first 
+ * element of the list contains the result of a call to wrap on the 
+ * object of type U, etc ...
+ *
+ * The names are taken from the keys
+ */
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_generic_tag ){ 
 	size_t size = std::distance( first, last ) ;
@@ -206,6 +250,16 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	return x ;
 } ;
 
+/**
+ * Range based wrap for iterators over std::pair<const std::string, std::string>
+ *
+ * This is mainly used for wrapping map<string,string> and friends 
+ * which happens to produce iterators over pair<const string, string>
+ *
+ * This produces a character vector containing copies of the 
+ * string iterated over. The names of the vector is set to the keys
+ * of the pair
+ */
 template<typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_string_tag ){
 	size_t size = std::distance( first, last ) ;
@@ -230,6 +284,10 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 // }}}
 
 // we use the iterator trait to make the dispatch
+/**
+ * range based wrap. This uses the std::iterator_traits class
+ * to perform further dispatch
+ */
 template <typename InputIterator>
 SEXP range_wrap(InputIterator first, InputIterator last){
 	return range_wrap_dispatch<InputIterator,typename std::iterator_traits<InputIterator>::value_type>( first, last ) ;
@@ -238,7 +296,11 @@ SEXP range_wrap(InputIterator first, InputIterator last){
 
 // {{{ primitive wrap (wrapping a single primitive value)
 
-// for 'easy' primitive types: int, double, Rbyte, Rcomplex
+/**
+ * primitive wrap for 'easy' primitive types: int, double, Rbyte, Rcomplex
+ *
+ * This produces a vector of length 1 of the appropriate type
+ */
 template <typename T>
 SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_primitive_tag ){
 	const int RTYPE = r_sexptype<T>::rtype ;
@@ -248,7 +310,11 @@ SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_primitive_tag
 	return x;
 }
 
-// for bool
+/**
+ * primitive wrap for bool
+ *
+ * This produces a logical vector of length 1
+ */
 template <typename T>
 SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_bool_tag){
 	SEXP x = PROTECT( ::Rf_allocVector( LGLSXP, 1) );
@@ -257,7 +323,11 @@ SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_bool_tag){
 	return x;
 }
 
-// for std::string
+/**
+ * primitive wrap for types that can be converted implicitely to std::string
+ * 
+ * This produces a character vector of length 1 containing the std::string
+ */
 template <typename T>
 SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_string_tag){
 	SEXP x = PROTECT( ::Rf_allocVector( STRSXP, 1) ) ;
@@ -267,8 +337,12 @@ SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_string_tag){
 	return x; 
 }
 
-// T is a primitive type : int, bool, double, std::string, etc ...
-// wrapping this in an R vector of the appropriate type
+/**
+ * called when T is a primitive type : int, bool, double, std::string, etc ...
+ * This uses the Rcpp::traits::r_type_traits on the type T to perform
+ * further dispatching and wrap the object into an vector of length 1
+ * of the appropriate SEXP type 
+ */
 template <typename T>
 SEXP primitive_wrap(const T& object){
 	return primitive_wrap__impl( object, typename ::Rcpp::traits::r_type_traits<T>::r_category() ) ;
@@ -276,12 +350,22 @@ SEXP primitive_wrap(const T& object){
 // }}}
 
 // {{{ unknown
+/**
+ * Called when the type T is known to be implicitely convertible to 
+ * SEXP. It uses the implicit conversion to SEXP to wrap the object
+ * into a SEXP
+ */
 template <typename T>
 SEXP wrap_dispatch_unknown( const T& object, true_type ){
 	// here we know (or assume) that T is convertible to SEXP
 	SEXP x = object ;
 	return x ;
 }
+
+/** 
+ * Called when no implicit conversion to SEXP is possible
+ * This generates compile time errors
+ */
 template <typename T>
 SEXP wrap_dispatch_unknown( const T& object, false_type){
 	// here we know that T is not convertible to SEXP
@@ -297,16 +381,32 @@ SEXP wrap_dispatch_unknown( const T& object, false_type){
 // }}}
 
 // {{{ wrap dispatch
-// generic wrap for stl containers
+/** 
+ * generic wrap for stl containers. This implementation is used
+ * when the type T is an STL-like container, with a begin() method
+ * and an end() method
+ *
+ * further dispatch is performed internally by the range_wrap 
+ * template based on the type of object iterated over
+ */
 template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_type_stl_container_tag ){
 	return range_wrap( object.begin(), object.end() ) ;
 }
-// wrapping a primitive type : int, double, std::string
+
+/**
+ * wrapping a __single__ primitive type : int, double, std::string, size_t, 
+ * Rbyte, Rcomplex
+ */
 template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_type_primitive_tag ){
 	return primitive_wrap( object ) ;
 }
-// when we don't know how to deal with it, we try implicit conversion
-// if the type T is convertible to SEXP
+
+/** 
+ * This is called by wrap when the wrap_type_traits is wrap_type_unknown_tag
+ * This tries to identify is an implicit conversion to SEXP is possible
+ * ( the type T defines operator SEXP() ) and uses it, otherwise generates
+ * a compile error
+ */
 template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_type_unknown_tag ){
 	return wrap_dispatch_unknown( object, typename is_convertible<T,SEXP>::type() ) ;
 }
@@ -314,6 +414,17 @@ template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_
 
 } // internal
 
+/**
+ * wraps an object of type T in a SEXP
+ *
+ * This method depends on the Rcpp::traits::wrap_type_traits trait 
+ * class to dispatch to the appropriate internal implementation 
+ * method
+ * 
+ * If your type has a begin and end method returning stl-like iterator
+ * you should specialize the wrap_type_traits template so that it 
+ * defines wrap_category to be ::Rcpp::traits::wrap_type_stl_container_tag
+ */
 template <typename T> SEXP wrap(const T& object){
 	return internal::wrap_dispatch( object, typename ::Rcpp::traits::wrap_type_traits<T>::wrap_category() ) ;
 }
