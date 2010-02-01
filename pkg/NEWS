@@ -1,6 +1,9 @@
 
 0.7.5	(under development)
 
+    o	a new namespace Rcpp::traits has been added to host the various
+    	type traits used by wrap
+
     o 	wrap is now able to handle more stl and tr1 types. Given that T
     	can be wrapped, the following can be wrapped: 
     	- std::list<T>

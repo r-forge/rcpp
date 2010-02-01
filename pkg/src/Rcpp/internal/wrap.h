@@ -82,43 +82,6 @@ template<> void r_init_vector<EXPRSXP>(SEXP x) ;
 template<> void r_init_vector<STRSXP>(SEXP x) ;
 // }}}
 
-// {{{ wrap_type_traits
-struct wrap_type_stl_container_tag{};    // stl type container, with begin and end methods
-struct wrap_type_primitive_tag{};        // primitive type
-struct wrap_type_unknown_tag{};          // unknown, not sure what to do with this type
-
-template <typename T> struct wrap_type_traits { typedef wrap_type_unknown_tag category; } ;
-
-// partial specialization for stl containers
-template <typename T> struct wrap_type_traits< std::vector<T> > { typedef wrap_type_stl_container_tag category ; } ;
-template <typename T> struct wrap_type_traits< std::list<T> > { typedef wrap_type_stl_container_tag category ; } ;
-template <typename T> struct wrap_type_traits< std::set<T> > { typedef wrap_type_stl_container_tag category ; } ;
-template <typename T> struct wrap_type_traits< std::deque<T> > { typedef wrap_type_stl_container_tag category ; } ;
-template <typename T> struct wrap_type_traits< std::multiset<T> > { typedef wrap_type_stl_container_tag category ; } ;
-template <typename T> struct wrap_type_traits< std::map<std::string,T> > { typedef wrap_type_stl_container_tag category ; } ;
-template <typename T> struct wrap_type_traits< std::multimap<std::string,T> > { typedef wrap_type_stl_container_tag category ; } ;
-#ifdef HAS_TR1_UNORDERED_MAP
-template <typename T> struct wrap_type_traits< std::tr1::unordered_map<std::string,T> > { typedef wrap_type_stl_container_tag category ; } ;
-template <typename T> struct wrap_type_traits< std::tr1::unordered_multimap<std::string,T> > { typedef wrap_type_stl_container_tag category ; } ;
-#endif
-#ifdef HAS_TR1_UNORDERED_SET
-template <typename T> struct wrap_type_traits< std::tr1::unordered_set<T> > { typedef wrap_type_stl_container_tag category ; } ;
-template <typename T> struct wrap_type_traits< std::tr1::unordered_multiset<T> > { typedef wrap_type_stl_container_tag category ; } ;
-#endif
-
-// #ifdef HAS_INIT_LISTS
-// template <typename T> struct wrap_type_traits< std::initializer_list<T> > { typedef wrap_type_stl_container_tag category ; } ;
-// #endif
-template <> struct wrap_type_traits<int> { typedef wrap_type_primitive_tag category; } ;
-template <> struct wrap_type_traits<double> { typedef wrap_type_primitive_tag category; } ;
-template <> struct wrap_type_traits<Rbyte> { typedef wrap_type_primitive_tag category; } ;
-template <> struct wrap_type_traits<Rcomplex> { typedef wrap_type_primitive_tag category; } ;
-template <> struct wrap_type_traits<size_t> { typedef wrap_type_primitive_tag category; } ;
-template <> struct wrap_type_traits<bool> { typedef wrap_type_primitive_tag category; } ;
-template <> struct wrap_type_traits<std::string> { typedef wrap_type_primitive_tag category; } ;
-template <> struct wrap_type_traits<char> { typedef wrap_type_primitive_tag category; } ;
-// }}}
-
 // {{{ r_type_traits
 struct r_type_primitive_tag{} ;
 struct r_type_string_tag{} ;
@@ -369,16 +332,16 @@ SEXP wrap_dispatch_unknown( const T& object, false_type){
 
 // {{{ wrap dispatch
 // generic wrap for stl containers
-template <typename T> SEXP wrap_dispatch( const T& object, wrap_type_stl_container_tag ){
+template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_type_stl_container_tag ){
 	return range_wrap( object.begin(), object.end() ) ;
 }
 // wrapping a primitive type : int, double, std::string
-template <typename T> SEXP wrap_dispatch( const T& object, wrap_type_primitive_tag ){
+template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_type_primitive_tag ){
 	return primitive_wrap( object ) ;
 }
 // when we don't know how to deal with it, we try implicit conversion
 // if the type T is convertible to SEXP
-template <typename T> SEXP wrap_dispatch( const T& object, wrap_type_unknown_tag ){
+template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_type_unknown_tag ){
 	return wrap_dispatch_unknown( object, typename is_convertible<T,SEXP>::type() ) ;
 }
 // }}}
@@ -386,7 +349,7 @@ template <typename T> SEXP wrap_dispatch( const T& object, wrap_type_unknown_tag
 } // internal
 
 template <typename T> SEXP wrap(const T& object){
-	return internal::wrap_dispatch( object, typename internal::wrap_type_traits<T>::category() ) ;
+	return internal::wrap_dispatch( object, typename ::Rcpp::traits::wrap_type_traits<T>::wrap_category() ) ;
 }
 // {{{ // explicit instanciations (not needed)
 // template SEXP wrap<int>(const int& object) ;
