@@ -24,6 +24,22 @@
 #ifndef RcppCommon_h
 #define RcppCommon_h
 
+/**
+ * \brief Rcpp API
+ */
+namespace Rcpp{
+/**
+ * \brief traits used to dispatch wrap
+ */
+namespace traits{
+} // traits
+/**
+ * \brief internal implementation details
+ */
+namespace internal{	
+} // internal 
+} // Rcpp
+
 #ifdef __GNUC__
 	#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 	#ifdef __GXX_EXPERIMENTAL_CXX0X__
@@ -209,6 +225,8 @@ inline int int_to_RBoolean(int x){ return ( x == NA_INTEGER ) ? NA_LOGICAL : (x!
 } // namespace Rcpp
 
 // DO NOT CHANGE THE ORDER OF THESE INCLUDES
+#include <Rcpp/traits/wrap_type_traits.h>
+
 #include <Rcpp/internal/convertible.h>
 #include <Rcpp/internal/wrap.h>
 #include <Rcpp/RObject.h>
