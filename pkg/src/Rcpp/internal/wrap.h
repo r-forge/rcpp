@@ -82,44 +82,10 @@ template<> void r_init_vector<EXPRSXP>(SEXP x) ;
 template<> void r_init_vector<STRSXP>(SEXP x) ;
 // }}}
 
-// {{{ r_type_traits
-struct r_type_primitive_tag{} ;
-struct r_type_string_tag{} ;
-struct r_type_generic_tag{} ;
-struct r_type_bool_tag{} ;
-
-struct r_type_pairstring_primitive_tag{} ;
-struct r_type_pairstring_string_tag{} ;
-struct r_type_pairstring_generic_tag{} ;
-struct r_type_pairstring_bool_tag{} ;
-
-template <typename T> struct r_type_traits { typedef r_type_generic_tag category ; } ;
-
-// special cases pair<string,T> to deal with map<string,T> etc ...
-template <typename T> struct r_type_traits< std::pair<const std::string,T> > { typedef r_type_pairstring_generic_tag category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,int> >{ typedef r_type_pairstring_primitive_tag category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,size_t> >{ typedef r_type_pairstring_primitive_tag category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,double> >{ typedef r_type_pairstring_primitive_tag category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,Rbyte> >{ typedef r_type_pairstring_primitive_tag category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,Rcomplex> >{ typedef r_type_pairstring_primitive_tag category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,bool> >{ typedef r_type_pairstring_bool_tag category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,std::string> >{ typedef r_type_pairstring_string_tag category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,char> >{ typedef r_type_pairstring_string_tag category ; } ;
-
-template<> struct r_type_traits<int>{ typedef r_type_primitive_tag category ; } ;
-template<> struct r_type_traits<size_t>{ typedef r_type_primitive_tag category ; } ;
-template<> struct r_type_traits<double>{ typedef r_type_primitive_tag category ; } ;
-template<> struct r_type_traits<Rbyte>{ typedef r_type_primitive_tag category ; } ;
-template<> struct r_type_traits<Rcomplex>{ typedef r_type_primitive_tag category ; } ;
-template<> struct r_type_traits<bool>{ typedef r_type_bool_tag category ; } ;
-template<> struct r_type_traits<std::string>{ typedef r_type_string_tag category ; } ;
-template<> struct r_type_traits<char>{ typedef r_type_string_tag category ; } ;
-// }}}
-
 // {{{ range wrap 
 // {{{ unnamed range wrap
 template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type_primitive_tag){ 
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_primitive_tag){ 
 	size_t size = std::distance( first, last ) ;
 	const int RTYPE = r_sexptype<T>::rtype ;
 	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
@@ -129,7 +95,7 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type
 } ;
 
 template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type_bool_tag){ 
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_bool_tag){ 
 	size_t size = std::distance( first, last ) ;
 	SEXP x = PROTECT( Rf_allocVector( LGLSXP, size ) );
 	std::transform( first, last, LOGICAL(x), bool_to_Rboolean ) ; 
@@ -141,7 +107,7 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type
 // this implementation is used when T is not a primitive type.
 // T needs to be wrappable though
 template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type_generic_tag ){ 
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_generic_tag ){ 
 	size_t size = std::distance( first, last ) ;
 	SEXP x = PROTECT( Rf_allocVector( VECSXP, size ) );
 	size_t i =0 ;
@@ -155,7 +121,7 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type
 } ;
 
 template<typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type_string_tag ){
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_string_tag ){
 	size_t size = std::distance( first, last ) ;
 	SEXP x = PROTECT( Rf_allocVector( STRSXP, size ) ) ;
 	size_t i = 0 ;
@@ -172,7 +138,7 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type
 
 template<typename InputIterator, typename T>
 SEXP range_wrap_dispatch( InputIterator first, InputIterator last ){
-	return range_wrap_dispatch___impl<InputIterator,T>( first, last, typename r_type_traits<T>::category() ) ;
+	return range_wrap_dispatch___impl<InputIterator,T>( first, last, typename ::Rcpp::traits::r_type_traits<T>::r_category() ) ;
 }
 // }}}
 
@@ -180,7 +146,7 @@ SEXP range_wrap_dispatch( InputIterator first, InputIterator last ){
 // we get into these when iterating over a pair<const string,T> 
 // which is what e.g. map<string,T> produces
 template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type_pairstring_primitive_tag){ 
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_primitive_tag){ 
 	size_t size = std::distance( first, last ) ;
 	const int RTYPE = r_sexptype<typename T::second_type>::rtype ;
 	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
@@ -199,7 +165,7 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type
 } ;
 
 template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type_pairstring_bool_tag){ 
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_bool_tag){ 
 	size_t size = std::distance( first, last ) ;
 	SEXP x = PROTECT( Rf_allocVector( LGLSXP, size ) );
 	SEXP names = PROTECT( Rf_allocVector( STRSXP, size ) ) ;
@@ -220,7 +186,7 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type
 // this implementation is used when T is not a primitive type.
 // T needs to be wrappable though
 template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type_pairstring_generic_tag ){ 
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_generic_tag ){ 
 	size_t size = std::distance( first, last ) ;
 	SEXP x = PROTECT( Rf_allocVector( VECSXP, size ) );
 	SEXP names = PROTECT( Rf_allocVector( STRSXP, size ) ) ;
@@ -241,7 +207,7 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type
 } ;
 
 template<typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, r_type_pairstring_string_tag ){
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_string_tag ){
 	size_t size = std::distance( first, last ) ;
 	SEXP x = PROTECT( Rf_allocVector( STRSXP, size ) ) ;
 	SEXP names = PROTECT( Rf_allocVector( STRSXP, size ) ) ;
@@ -274,7 +240,7 @@ SEXP range_wrap(InputIterator first, InputIterator last){
 
 // for 'easy' primitive types: int, double, Rbyte, Rcomplex
 template <typename T>
-SEXP primitive_wrap__impl( const T& object, r_type_primitive_tag ){
+SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_primitive_tag ){
 	const int RTYPE = r_sexptype<T>::rtype ;
 	SEXP x = PROTECT( Rf_allocVector( RTYPE, 1 ) );
 	r_vector_start<RTYPE, typename storage_type<RTYPE>::type >(x)[0] = object ;
@@ -284,7 +250,7 @@ SEXP primitive_wrap__impl( const T& object, r_type_primitive_tag ){
 
 // for bool
 template <typename T>
-SEXP primitive_wrap__impl( const T& object, r_type_bool_tag){
+SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_bool_tag){
 	SEXP x = PROTECT( ::Rf_allocVector( LGLSXP, 1) );
 	LOGICAL(x)[0] = static_cast<int>(object);
 	UNPROTECT(1) ; /* x */
@@ -293,7 +259,7 @@ SEXP primitive_wrap__impl( const T& object, r_type_bool_tag){
 
 // for std::string
 template <typename T>
-SEXP primitive_wrap__impl( const T& object, r_type_string_tag){
+SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_string_tag){
 	SEXP x = PROTECT( ::Rf_allocVector( STRSXP, 1) ) ;
 	std::string y = object ; /* give a chance to implicit conversion */
 	SET_STRING_ELT( x, 0, Rf_mkChar(y.c_str()) ) ;
@@ -305,7 +271,7 @@ SEXP primitive_wrap__impl( const T& object, r_type_string_tag){
 // wrapping this in an R vector of the appropriate type
 template <typename T>
 SEXP primitive_wrap(const T& object){
-	return primitive_wrap__impl( object, typename r_type_traits<T>::category() ) ;
+	return primitive_wrap__impl( object, typename ::Rcpp::traits::r_type_traits<T>::r_category() ) ;
 }
 // }}}
 
