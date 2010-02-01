@@ -23,7 +23,7 @@
 
 namespace Rcpp {
 
-    Environment::Environment( SEXP x = R_GlobalEnv) throw(not_compatible) : RObject::RObject(x){
+    Environment::Environment( SEXP x = R_GlobalEnv) throw(not_compatible) : RObject(x){
     	if( ! Rf_isEnvironment(x) ) {
     		/* not an environment, but maybe convertible to one using 
     		   as.environment, try that */

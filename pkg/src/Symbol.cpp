@@ -23,7 +23,7 @@
 
 namespace Rcpp {
 
-	Symbol::Symbol( SEXP x ) throw(not_compatible) : RObject::RObject() {
+	Symbol::Symbol( SEXP x ) throw(not_compatible) : RObject() {
 		if( x != R_NilValue ){
 			int type = TYPEOF(x) ;
 			switch( type ){
