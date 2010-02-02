@@ -1,3 +1,10 @@
+2010-02-02  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/wrap.h: The range based wrap function is exposed
+	at the Rcpp:: level. The interface is 
+	wrap( InputIterator first, InputIterator last )
+	and dispatch is performed internally using iterator traits
+	
 2010-02-01  Romain Francois <francoisromain@free.fr>
 
 	* src/traits/wrap_type_traits.h: new namespace Rcpp::traits::
