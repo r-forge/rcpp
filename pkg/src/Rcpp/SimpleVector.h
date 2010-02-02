@@ -85,6 +85,9 @@ public:
 	
 	template <typename InputIterator>
 	void assign( InputIterator first, InputIterator last){
+		/* FIXME: we can do better than this r_cast to avoid 
+		          allocating an unnecessary temporary object
+		 */
 		SEXP x = PROTECT( r_cast<RTYPE>( wrap( first, last ) ) );
 		setSEXP( x) ;
 		UNPROTECT(1) ;
@@ -93,7 +96,9 @@ public:
 private:
 	CTYPE* start ;
 	
-	virtual void update(){ start = get_pointer<RTYPE,CTYPE>(m_sexp) ; }
+	virtual void update(){ 
+		start = get_pointer<RTYPE,CTYPE>(m_sexp) ;
+	}
 	
 	void init(){
 		internal::r_init_vector<RTYPE>(m_sexp) ;
