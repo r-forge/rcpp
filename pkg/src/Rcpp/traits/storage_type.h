@@ -36,7 +36,6 @@ template<int RTYPE> struct storage_type{
 	typedef SEXP type ;
 } ;
 
-
 /**
  * Total specialization for integer vector (INTSXP)
  * typedef to int
