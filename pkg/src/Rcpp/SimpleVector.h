@@ -83,15 +83,10 @@ public:
 		return start[ offset(i,j) ] ;
 	}
 	
-	// TODO : deal with coercion by dispatching the call using 
-	//        the iterator traits, but for this we need a smart 
-	//        coerce template
 	template <typename InputIterator>
 	void assign( InputIterator first, InputIterator last){
-		size_t size = std::distance( first, last ) ;
-		SEXP x = PROTECT(Rf_allocVector( RTYPE, size )) ;
-		std::copy( first, last, get_pointer<RTYPE,CTYPE>(x) ) ;
-		setSEXP(x) ;
+		SEXP x = PROTECT( r_cast<RTYPE>( wrap( first, last ) ) );
+		setSEXP( x) ;
 		UNPROTECT(1) ;
 	}
 
@@ -101,12 +96,9 @@ private:
 	virtual void update(){ start = get_pointer<RTYPE,CTYPE>(m_sexp) ; }
 	
 	void init(){
-		CTYPE zero = internal::get_zero<RTYPE,CTYPE>() ;
-		init( zero ) ;
+		internal::r_init_vector<RTYPE>(m_sexp) ;
 	}
-	void init( const CTYPE& value){
-		std::fill( start, start+length(), value ) ;
-	}
+	
 } ;
 
 }// namespace Rcpp
