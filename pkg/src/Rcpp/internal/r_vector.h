@@ -49,7 +49,7 @@ template<> Rcomplex get_zero<CPLXSXP,Rcomplex>() ;
  * an INTSXP vector is initialized with (int)0, etc...
  */
 template<int RTYPE> void r_init_vector(SEXP x){
-	typedef ::Rcpp::traits::storage_type<RTYPE>::type CTYPE ;
+	typedef typename ::Rcpp::traits::storage_type<RTYPE>::type CTYPE ;
 	CTYPE* start=r_vector_start<RTYPE>(x) ;
 	std::fill( start, start + Rf_length(x), get_zero<RTYPE,CTYPE>(0) ) ;
 }
