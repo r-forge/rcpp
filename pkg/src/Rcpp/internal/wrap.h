@@ -37,35 +37,6 @@ namespace internal{
 template <typename InputIterator> SEXP range_wrap(InputIterator first, InputIterator last) ;
 
 // {{{ information about R vectors
-// welcome to template metaprogramming !!
-
-template<int RTYPE, typename CTYPE> CTYPE* r_vector_start(SEXP x){ return static_cast<CTYPE*>(0) ; } ;
-template<> int* r_vector_start<INTSXP,int>(SEXP x) ; 
-template<> int* r_vector_start<LGLSXP,int>(SEXP x) ;
-template<> double* r_vector_start<REALSXP,double>(SEXP x) ;
-template<> Rbyte* r_vector_start<RAWSXP,Rbyte>(SEXP x) ; 
-template<> Rcomplex* r_vector_start<CPLXSXP,Rcomplex>(SEXP x) ;                         
-
-template <int RTYPE,typename CTYPE> CTYPE get_zero(){ return static_cast<CTYPE>(0) ; } ;
-template<> Rcomplex get_zero<CPLXSXP,Rcomplex>() ;
-
-/**
- * Initializes a vector of the given SEXP type. The template fills the 
- * vector with the value 0 of the appropriate type, for example
- * an INTSXP vector is initialized with (int)0, etc...
- */
-template<int RTYPE> void r_init_vector(SEXP x){
-	typedef ::Rcpp::traits::storage_type<RTYPE>::type CTYPE ;
-	CTYPE* start=r_vector_start<RTYPE>(x) ;
-	std::fill( start, start + Rf_length(x), get_zero<RTYPE,CTYPE>(0) ) ;
-}
-// these are specifically overwritten so that they do nothing
-// - character vectors : already initialized with ""
-// - generic vectors   : already initialized with R_NilValue
-// - expression vectors: already initialized with R_NilValue
-template<> void r_init_vector<VECSXP>(SEXP x) ;
-template<> void r_init_vector<EXPRSXP>(SEXP x) ;
-template<> void r_init_vector<STRSXP>(SEXP x) ;
 // }}}
 
 // {{{ range wrap 
