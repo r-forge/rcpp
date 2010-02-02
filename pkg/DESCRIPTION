@@ -1,5 +1,5 @@
 Package: Rcpp
-Title: Seamless R and C++ integration
+Title: Rcpp R/C++ interface package
 Version: 0.7.4.1
 Date: $Date$
 Author: Dirk Eddelbuettel and Romain Francois, with contributions 
@@ -7,36 +7,35 @@ Author: Dirk Eddelbuettel and Romain Francois, with contributions
  2005 and 2006 by Dominick Samperi 
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: Seamless R and C++ integration
- .
- The Rcpp package contains is C++ library that facilitates
- integration of R and C++ in various ways
+ The Rcpp package contains a C++ library that facilitates the
+ integration of R and C++ in various ways.
  .
  R data types (SEXP) are matched to C++ objects in a class hierarchy.
- All R types are supporter (vectors, functions, environment, etc ...)
- and each type is mapped to a dedicated class. For example numeric 
+ All R types are supported (vectors, functions, environment, etc ...)
+ and each type is mapped to a dedicated class. For example, numeric 
  vectors are represented as instances of the Rcpp::NumericVector class, 
  environments are represented as instances of Rcpp::Environment, 
  functions are represented as Rcpp::Function, etc ...
  .
- The underlying c++ library also offers the Rcpp::wrap function which 
+ The underlying C++ library also offers the Rcpp::wrap function which 
  is a templated function that transforms an arbitrary object into a SEXP. 
- This makes straightforward to implement C++ logic in terms of standard
- C++ types such as stl containers and then wrap them when they need
- to be returned to R. wrap uses advanced template meta programming 
+ This makes it straightforward to implement C++ logic in terms of standard
+ C++ types such as STL containers and then wrap them when they need
+ to be returned to R. Internally, wrap uses advanced template meta programming 
  techniques and currently supports : primitive types 
- (bool, int, double, size_t, Rbyte, Rcomplex, std::string), stl-type
- containers (e.g std::vector<T>) where T is wrappable, stl-type 
+ (bool, int, double, size_t, Rbyte, Rcomplex, std::string), STL-type
+ containers (e.g std::vector<T>) where T is wrappable, STL-type 
  maps (e.g std::map<std::string,T>) where T is wrappable, and arbitrary 
- types that support implicit conversion to SEXP
+ types that support implicit conversion to SEXP.
  .
- The reversed conversion (from R to C++) is performed by the Rcpp::as
- function template offering a similar degree of flexibility
+ The reverse conversion (from R to C++) is performed by the Rcpp::as
+ function template offering a similar degree of flexibility.
  .
  The package also contains a set of classes --- which we call the 
- `classic Rcpp api` --- that were an initial attempt at 
- R and C++ integration. Due to its continued use, the classic api
+ `classic Rcpp API' --- that were provided in an earlier API for 
+ R and C++ integration. Due to its continued use, the classic API
  is retained and will be supported for the foreseable future. The 
- classic api and includes support
+ classic API includes support
  for R types real, integer, character, vector, matrix, Date, datetime (i.e.
  POSIXct) at microsecond resolution, data frame, and function. Transfer to and
  from simple or complex SEXP objects is made easy thanks to automatic
@@ -49,7 +48,7 @@ Description: Seamless R and C++ integration
  .
  Several examples are included, and over 150 unit tests provide addtional
  usage examples.
-Depends: R (>= 2.0.0)
+Depends: R (>= 2.10.0)
 Suggests: inline (>= 0.3.4), RUnit 
 SystemRequirements: None
 URL: http://dirk.eddelbuettel.com/code/rcpp.html, http://romainfrancois.blog.free.fr/index.php?category/R-package/Rcpp
