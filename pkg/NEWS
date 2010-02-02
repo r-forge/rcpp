@@ -1,6 +1,12 @@
 
 0.7.5	(under development)
 
+    o 	The range based version of wrap is now exposed at the Rcpp::
+    	level with the following interface : 
+    	wrap( InputIterator first, InputIterator last )
+    	This is dispatched internally to the most appropriate implementation
+    	using traits
+
     o	a new namespace Rcpp::traits has been added to host the various
     	type traits used by wrap
 

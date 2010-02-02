@@ -413,6 +413,10 @@ template <typename T> SEXP wrap(const T& object){
 // special cases - FIXME : these are not template specializations of wrap<>
 inline SEXP wrap(const char* const v ){ return Rf_mkString(v) ; } ;
 
+template <typename InputIterator>
+SEXP wrap(InputIterator first, InputIterator last){ return internal::range_wrap( first, last ) ; }
+
+
 // wrap( { ... } ) : disabled for now
 // #ifdef HAS_INIT_LISTS
 // inline SEXP wrap(std::initializer_list<bool> v) { return internal::range_wrap( v.begin() , v.end() ); };
