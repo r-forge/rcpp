@@ -50,8 +50,8 @@ template<> Rcomplex get_zero<CPLXSXP,Rcomplex>() ;
  */
 template<int RTYPE> void r_init_vector(SEXP x){
 	typedef typename ::Rcpp::traits::storage_type<RTYPE>::type CTYPE ;
-	CTYPE* start=r_vector_start<RTYPE>(x) ;
-	std::fill( start, start + Rf_length(x), get_zero<RTYPE,CTYPE>(0) ) ;
+	CTYPE* start=r_vector_start<RTYPE,CTYPE>(x) ;
+	std::fill( start, start + Rf_length(x), get_zero<RTYPE,CTYPE>() ) ;
 }
 /**
  * Initializes a generic vector (VECSXP). Does nothing since 
