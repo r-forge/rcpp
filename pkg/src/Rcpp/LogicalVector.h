@@ -27,33 +27,7 @@
 
 namespace Rcpp{
 
-typedef SimpleVector<LGLSXP,int> LogicalVector_Base ;
-
-class LogicalVector : public LogicalVector_Base{ 
-public:
-	LogicalVector() : LogicalVector_Base(){} ;
-	LogicalVector(SEXP x) : LogicalVector_Base(x){} ;
-	LogicalVector(const size_t& size) : LogicalVector_Base(size){}; 
-
-#ifdef HAS_INIT_LISTS
-	LogicalVector( std::initializer_list<int> list) : LogicalVector_Base(list){};
-	LogicalVector( std::initializer_list<bool> list) : LogicalVector_Base(){ 
-		bool_fill(list.begin(), list.end());
-	} ;
-#endif
-	
-private:
-	template <typename InputIterator>
-	void bool_fill( InputIterator first, InputIterator last){
-		size_t size = std::distance( first, last) ;
-		SEXP x = PROTECT( Rf_allocVector( LGLSXP, size ) );
-		std::transform( first, last, get_pointer<LGLSXP,int>(x), bool_to_Rboolean  ) ;
-		setSEXP( x ) ;
-		UNPROTECT(1) ;
-	}
-
-} ;
-
+typedef SimpleVector<LGLSXP,int> LogicalVector ;
 
 } // namespace
 
