@@ -112,16 +112,6 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	UNPROTECT(1) ;
 	return x ;
 }
-
-/**
- * Dispatcher for all range based wrap implementations
- * 
- * This uses the Rcpp::traits::r_type_traits to perform further dispatch
- */
-template<typename InputIterator, typename T>
-SEXP range_wrap_dispatch( InputIterator first, InputIterator last ){
-	return range_wrap_dispatch___impl<InputIterator,T>( first, last, typename ::Rcpp::traits::r_type_traits<T>::r_category() ) ;
-}
 // }}}
 
 // {{{ named range wrap
@@ -240,6 +230,16 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	return x ;
 }
 // }}}
+
+/**
+ * Dispatcher for all range based wrap implementations
+ * 
+ * This uses the Rcpp::traits::r_type_traits to perform further dispatch
+ */
+template<typename InputIterator, typename T>
+SEXP range_wrap_dispatch( InputIterator first, InputIterator last ){
+	return range_wrap_dispatch___impl<InputIterator,T>( first, last, typename ::Rcpp::traits::r_type_traits<T>::r_category() ) ;
+}
 
 // we use the iterator trait to make the dispatch
 /**
