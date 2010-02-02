@@ -1,5 +1,14 @@
 2010-02-02  Romain Francois <francoisromain@free.fr>
 
+	* src/internal/r_coerce.h : coercion is now handled by a templated
+	function r_coerce<int,int>, for example r_coerce<INTSXP,REALSXP>
+	takes an int, performs coercion and returns a double
+
+	* src/traits/has_iterator.h : introduce a trait that uses the
+	SFINAE idiom to check if a class T has a nested type called
+	"iterator". This helps wrap dispatch which now uses the 
+	range based wrap implementation in that case
+
 	* src/Rcpp/wrap.h: The range based wrap function is exposed
 	at the Rcpp:: level. The interface is 
 	wrap( InputIterator first, InputIterator last )

@@ -320,12 +320,19 @@ SEXP wrap_dispatch_unknown( const T& object, ::Rcpp::traits::true_type ){
 	return x ;
 }
 
-/** 
- * Called when no implicit conversion to SEXP is possible
- * This generates compile time errors
+/**
+ * This is the worst case : 
+ * - not a primitive
+ * - not implicitely convertible tp SEXP
+ * - not iterable
+ *
+ * so we just give up and attempt to use static_assert to generate 
+ * a compile time message if it is available, otherwise we use 
+ * implicit conversion to SEXP to bomb the compiler, which will give
+ * quite a cryptic message
  */
 template <typename T>
-SEXP wrap_dispatch_unknown( const T& object, ::Rcpp::traits::false_type){
+SEXP wrap_dispatch_unknown_iterable(const T& object, ::Rcpp::traits::false_type){
 	// here we know that T is not convertible to SEXP
 #ifdef HAS_CXX0X
 	static_assert( !sizeof(T), "cannot convert type to SEXP" ) ;
@@ -336,21 +343,36 @@ SEXP wrap_dispatch_unknown( const T& object, ::Rcpp::traits::false_type){
 #endif
 	return R_NilValue ; // -Wall
 }
-// }}}
 
-// {{{ wrap dispatch
-/** 
- * generic wrap for stl containers. This implementation is used
- * when the type T is an STL-like container, with a begin() method
- * and an end() method
+/**
+ * Here we know for sure that type T has a T::iterator typedef
+ * so we hope for the best and call the range based wrap with begin
+ * and end
  *
- * further dispatch is performed internally by the range_wrap 
- * template based on the type of object iterated over
+ * This works fine for all stl containers and classes T that have : 
+ * - T::iterator
+ * - T::iterator begin()
+ * - T::iterator end()
+ *
+ * If someone knows a better way, please advise
  */
-template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_type_stl_container_tag ){
+template <typename T>
+SEXP wrap_dispatch_unknown_iterable(const T& object, ::Rcpp::traits::true_type){
 	return range_wrap( object.begin(), object.end() ) ;
 }
 
+/** 
+ * Called when no implicit conversion to SEXP is possible and this is 
+ * not tagged as a primitive type, checks whether the type is 
+ * iterable
+ */
+template <typename T>
+SEXP wrap_dispatch_unknown( const T& object, ::Rcpp::traits::false_type){
+	return wrap_dispatch_unknown_iterable( object, typename ::Rcpp::traits::has_iterator<T>::type() ) ;
+}
+// }}}
+
+// {{{ wrap dispatch
 /**
  * wrapping a __single__ primitive type : int, double, std::string, size_t, 
  * Rbyte, Rcomplex
@@ -386,46 +408,15 @@ template <typename T> SEXP wrap_dispatch( const T& object, ::Rcpp::traits::wrap_
 template <typename T> SEXP wrap(const T& object){
 	return internal::wrap_dispatch( object, typename ::Rcpp::traits::wrap_type_traits<T>::wrap_category() ) ;
 }
-// {{{ // explicit instanciations (not needed)
-// template SEXP wrap<int>(const int& object) ;
-// template SEXP wrap<double>(const double& object) ;
-// template SEXP wrap<Rbyte>(const Rbyte& object) ;
-// template SEXP wrap<Rcomplex>(const Rcomplex& object) ;
-// template SEXP wrap<bool>(const bool& object) ;
-// template SEXP wrap<std::string>(const std::string& object) ;
-// template SEXP wrap< std::vector<int> >( const std::vector<int>& object ) ;
-// template SEXP wrap< std::vector<double> >( const std::vector<double>& object ) ;
-// template SEXP wrap< std::vector<Rbyte> >( const std::vector<Rbyte>& object ) ;
-// template SEXP wrap< std::vector<Rcomplex> >( const std::vector<Rcomplex>& object ) ;
-// template SEXP wrap< std::vector<bool> >( const std::vector<bool>& object ) ;
-// 
-// template SEXP wrap< std::set<int> >( const std::set<int>& object ) ;
-// template SEXP wrap< std::set<double> >( const std::set<double>& object ) ;
-// template SEXP wrap< std::set<Rbyte> >( const std::set<Rbyte>& object ) ;
-// 
-// template SEXP wrap< std::deque<int> >( const std::deque<int>& object ) ;
-// template SEXP wrap< std::deque<double> >( const std::deque<double>& object ) ;
-// template SEXP wrap< std::deque<Rbyte> >( const std::deque<Rbyte>& object ) ;
-// template SEXP wrap< std::deque<Rcomplex> >( const std::deque<Rcomplex>& object ) ;
-// template SEXP wrap< std::deque<bool> >( const std::deque<bool>& object ) ;
-// }}}
 
-// special cases - FIXME : these are not template specializations of wrap<>
+// special case - FIXME : this is not template specializations of wrap<>
 inline SEXP wrap(const char* const v ){ return Rf_mkString(v) ; } ;
 
+/**
+ * Range based version of wrap
+ */
 template <typename InputIterator>
 SEXP wrap(InputIterator first, InputIterator last){ return internal::range_wrap( first, last ) ; }
-
-
-// wrap( { ... } ) : disabled for now
-// #ifdef HAS_INIT_LISTS
-// inline SEXP wrap(std::initializer_list<bool> v) { return internal::range_wrap( v.begin() , v.end() ); };
-// inline SEXP wrap(std::initializer_list<std::string> v ) { return internal::range_wrap( v.begin() , v.end() ); };
-// inline SEXP wrap(std::initializer_list<SEXP> v ) { return internal::range_wrap( v.begin() , v.end() ); };
-// inline SEXP wrap(std::initializer_list<Rbyte> v) { return internal::range_wrap( v.begin() , v.end() ); };
-// inline SEXP wrap(std::initializer_list<double> v) { return internal::range_wrap( v.begin() , v.end() ); } ; 
-// inline SEXP wrap(std::initializer_list<int> v) { return internal::range_wrap( v.begin() , v.end() ); } ; 
-// #endif
 
 
 } // Rcpp

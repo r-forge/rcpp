@@ -26,7 +26,7 @@
 namespace Rcpp{
 namespace traits{
 	
-template <class _T, _T _V> struct integral_constant {
+template <typename _T, _T _V> struct integral_constant {
     static  const _T                value = _V;
     typedef _T                      value_type;
     typedef integral_constant<_T,_V> type;
@@ -34,6 +34,9 @@ template <class _T, _T _V> struct integral_constant {
  typedef integral_constant<bool, true> true_type;
  typedef integral_constant<bool, false> false_type;
 
+template <typename T, typename U> struct both : 
+	public integral_constant<bool, T::value && U::value>{};
+ 
 }
 }
 
