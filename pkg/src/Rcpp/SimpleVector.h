@@ -30,13 +30,6 @@
 
 namespace Rcpp{
 
-template <int sexptype, typename T> T* get_pointer(SEXP x){ throw std::exception( "not implemented" ) ; return static_cast<T*>(0); }
-template<> double* get_pointer<REALSXP,double>(SEXP x) ;
-template<> int* get_pointer<INTSXP,int>(SEXP x) ;
-template<> int* get_pointer<LGLSXP,int>(SEXP x) ;
-template<> Rcomplex* get_pointer<CPLXSXP,Rcomplex>(SEXP x) ;
-template<> Rbyte* get_pointer<RAWSXP,Rbyte>(SEXP x) ;
-
 template <int RTYPE, typename CTYPE>
 class SimpleVector : public VectorBase {
 public:
@@ -97,7 +90,7 @@ private:
 	CTYPE* start ;
 	
 	virtual void update(){ 
-		start = get_pointer<RTYPE,CTYPE>(m_sexp) ;
+		start = internal::r_vector_start<RTYPE,CTYPE>(m_sexp) ;
 	}
 	
 	void init(){
