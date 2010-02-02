@@ -27,25 +27,13 @@
 
 // this is a private header, do not include it directly
 
-namespace Rcpp{
-namespace internal{
-template <class _T, _T _V> struct integral_constant {
-    static  const _T                value = _V;
-    typedef _T                      value_type;
-    typedef integral_constant<_T,_V> type;
- };
- typedef integral_constant<bool, true> true_type;
- typedef integral_constant<bool, false> false_type;
-}
-}
-
 #ifdef HAS_CXX0X
 // use the c++0x implementation
 #include <type_traits>
 namespace Rcpp{
 namespace internal{
 template <typename FROM, typename TO> struct is_convertible : 
-	public integral_constant<bool,std::is_convertible<FROM,TO>::value>{} ;
+	public ::Rcpp::traits::integral_constant<bool,std::is_convertible<FROM,TO>::value>{} ;
 } // internal
 } // Rcpp
 #else
@@ -55,7 +43,7 @@ template <typename FROM, typename TO> struct is_convertible :
 namespace Rcpp{
 namespace internal{
 template <typename FROM, typename TO> struct is_convertible : 
-	public integral_constant<bool,std::tr1::is_convertible<FROM,TO>::value>{} ;
+	public ::Rcpp::traits::integral_constant<bool,std::tr1::is_convertible<FROM,TO>::value>{} ;
 } // internal
 } // Rcpp
 #else
@@ -63,7 +51,7 @@ template <typename FROM, typename TO> struct is_convertible :
 namespace Rcpp{
 namespace internal{
 template <typename FROM, typename TO> struct is_convertible : 
-	public integral_constant<bool,true>{} ;
+	public ::Rcpp::traits::true_type{} ;
 } // internal
 } // Rcpp
 #endif

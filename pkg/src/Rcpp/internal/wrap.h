@@ -314,7 +314,7 @@ SEXP primitive_wrap(const T& object){
  * into a SEXP
  */
 template <typename T>
-SEXP wrap_dispatch_unknown( const T& object, true_type ){
+SEXP wrap_dispatch_unknown( const T& object, ::Rcpp::traits::true_type ){
 	// here we know (or assume) that T is convertible to SEXP
 	SEXP x = object ;
 	return x ;
@@ -325,7 +325,7 @@ SEXP wrap_dispatch_unknown( const T& object, true_type ){
  * This generates compile time errors
  */
 template <typename T>
-SEXP wrap_dispatch_unknown( const T& object, false_type){
+SEXP wrap_dispatch_unknown( const T& object, ::Rcpp::traits::false_type){
 	// here we know that T is not convertible to SEXP
 #ifdef HAS_CXX0X
 	static_assert( !sizeof(T), "cannot convert type to SEXP" ) ;
