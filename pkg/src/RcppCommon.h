@@ -230,6 +230,7 @@ inline int int_to_RBoolean(int x){ return ( x == NA_INTEGER ) ? NA_LOGICAL : (x!
 #include <Rcpp/traits/r_type_traits.h>
 #include <Rcpp/traits/wrap_type_traits.h>
 
+#include <Rcpp/internal/r_vector.h>
 #include <Rcpp/internal/convertible.h>
 #include <Rcpp/internal/wrap.h>
 #include <Rcpp/RObject.h>
