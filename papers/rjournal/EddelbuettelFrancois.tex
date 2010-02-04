@@ -497,9 +497,11 @@ The converters are also used implicitely in various places in the
 \begin{example}
 # assuming the global environment contains 
 # a variable 'x' that is a numeric vector
-Rcpp::Environment global = Rcpp::Environment::global_env()
+Rcpp::Environment global = 
+	Rcpp::Environment::global_env()
 
-# extract a std::vector<double> from the global environment
+# extract a std::vector<double> from 
+# the global environment
 std::vector<double> vx = global["x"] ;
 
 # create a map<string,string>
@@ -507,7 +509,7 @@ std::map<std::string,std::string> map ;
 map["foo"] = "oof" ;
 map["bar"] = "rab" ;
 
-# push the STL map to the global environment
+# push the STL map to R
 global["y"] = map ;
 \end{example}
 
