@@ -51,6 +51,16 @@ public:
    			virtual const char* what() const throw() ; 
    	} ;
    	
+   	/**
+   	 * Exception thrown when attempting to convert a SEXP
+   	 */
+   	class no_such_slot : public std::exception{
+   		public:
+   			no_such_slot() throw(){};
+   			virtual ~no_such_slot() throw(){} ;
+   			virtual const char* what() const throw() ;
+   	} ;
+   	
    	class index_out_of_bounds: public std::exception{
    	public:
    		index_out_of_bounds() throw(){};
@@ -149,6 +159,36 @@ public:
 		std::string attr_name ;
 	} ;
     
+	class SlotProxy {
+	public:
+		SlotProxy( const RObject& v, const std::string& name) ;
+
+		/* lvalue uses */
+		SlotProxy& operator=(const SlotProxy& rhs) ;
+
+		template <typename T>
+		SlotProxy& operator=(const T& rhs){
+			set( wrap(rhs) ) ;
+			return *this ;
+		}
+
+		/* rvalue use */
+		operator SEXP() const ;
+
+		template <typename T> operator T() const {
+			T t = Rcpp::as<T>(get()) ;
+			return t ;
+		} ;
+		
+	private:
+		const RObject& parent; 
+		std::string slot_name ;
+		
+		SEXP get() const ;
+		void set(SEXP x ) const;
+	} ;
+    	
+	
     /**
      * extract or set the given attribute
      *
@@ -204,10 +244,8 @@ public:
      *
      * @throw not_s4 if this is not an S4 object
      */
-    RObject slot(const std::string& name) const throw(not_s4) ;
-    /* TODO : implement the proxy pattern here so that we can get and 
-              set the slot the same way */
-                  
+    SlotProxy slot(const std::string& name) const throw(not_s4) ;
+    
 protected:
 
     /**

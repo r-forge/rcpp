@@ -44,13 +44,8 @@ struct r_type_string_tag{} ;
 struct r_type_generic_tag{} ;
 
 /**
- * Indentifies the bool type
- */
-struct r_type_bool_tag{} ;
-
-/**
  * Identifies that the type if pair<const std::string,T> where T 
- * is a primitive type that needs no special handling
+ * is a primitive type
  */
 struct r_type_pairstring_primitive_tag{} ;
 
@@ -65,11 +60,6 @@ struct r_type_pairstring_string_tag{} ;
 struct r_type_pairstring_generic_tag{} ;
 
 /**
- * Identifies pair<const std::string,bool>
- */
-struct r_type_pairstring_bool_tag{} ;
-
-/**
  * R type trait. Helps wrap.
  */
 template <typename T> struct r_type_traits { typedef r_type_generic_tag r_category ; } ;
@@ -79,22 +69,26 @@ template <typename T> struct r_type_traits { typedef r_type_generic_tag r_catego
  */
 template <typename T> struct r_type_traits< std::pair<const std::string,T> > { typedef r_type_pairstring_generic_tag r_category ; } ;
 template<> struct r_type_traits< std::pair<const std::string,int> >{ typedef r_type_pairstring_primitive_tag r_category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,size_t> >{ typedef r_type_pairstring_primitive_tag r_category ; } ;
 template<> struct r_type_traits< std::pair<const std::string,double> >{ typedef r_type_pairstring_primitive_tag r_category ; } ;
 template<> struct r_type_traits< std::pair<const std::string,Rbyte> >{ typedef r_type_pairstring_primitive_tag r_category ; } ;
 template<> struct r_type_traits< std::pair<const std::string,Rcomplex> >{ typedef r_type_pairstring_primitive_tag r_category ; } ;
-template<> struct r_type_traits< std::pair<const std::string,bool> >{ typedef r_type_pairstring_bool_tag r_category ; } ;
+template<> struct r_type_traits< std::pair<const std::string,bool> >{ typedef r_type_pairstring_primitive_tag r_category ; } ;
 template<> struct r_type_traits< std::pair<const std::string,std::string> >{ typedef r_type_pairstring_string_tag r_category ; } ;
 template<> struct r_type_traits< std::pair<const std::string,char> >{ typedef r_type_pairstring_string_tag r_category ; } ;
 
+template<> struct r_type_traits< std::pair<const std::string,size_t> >{ typedef r_type_pairstring_primitive_tag r_category ; } ;
+template<> struct r_type_traits< std::pair<const std::string,float> >{ typedef r_type_pairstring_primitive_tag r_category ; } ;
+
 template<> struct r_type_traits<int>{ typedef r_type_primitive_tag r_category ; } ;
-template<> struct r_type_traits<size_t>{ typedef r_type_primitive_tag r_category ; } ;
 template<> struct r_type_traits<double>{ typedef r_type_primitive_tag r_category ; } ;
 template<> struct r_type_traits<Rbyte>{ typedef r_type_primitive_tag r_category ; } ;
 template<> struct r_type_traits<Rcomplex>{ typedef r_type_primitive_tag r_category ; } ;
-template<> struct r_type_traits<bool>{ typedef r_type_bool_tag r_category ; } ;
+template<> struct r_type_traits<bool>{ typedef r_type_primitive_tag r_category ; } ;
 template<> struct r_type_traits<std::string>{ typedef r_type_string_tag r_category ; } ;
 template<> struct r_type_traits<char>{ typedef r_type_string_tag r_category ; } ;
+
+template<> struct r_type_traits<size_t>{ typedef r_type_primitive_tag r_category ; } ;
+template<> struct r_type_traits<float>{ typedef r_type_primitive_tag r_category ; } ;
 
 } // traits
 } // Rcpp
