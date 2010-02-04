@@ -189,8 +189,8 @@ SEXP range_wrap_dispatch___impl__cast( InputIterator first, InputIterator last, 
 	size_t i =0;
 	std::string buf ; 
 	for( ; i<size; i++, ++first){
-		start[i] = static_cast<CTYPE>( (*first).second );
-		buf = (*first).first ;
+		start[i] = static_cast<CTYPE>( first->second );
+		buf = first->first ;
 		SET_STRING_ELT( names, i, Rf_mkChar(buf.c_str()) ) ;
 	}
 	::Rf_setAttrib( x, R_NamesSymbol, names ) ;

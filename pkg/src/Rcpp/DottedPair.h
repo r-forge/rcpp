@@ -40,6 +40,29 @@ template<typename... Args>
 	DottedPair( const Args&... args) : RObject() {
 		setSEXP( pairlist(args...) ) ;
 	}
+#else
+/* <code-bloat> */
+template <typename T1>
+DottedPair( const T1& t1) : RObject() {
+	setSEXP( pairlist(t1) );
+}
+template <typename T1, typename T2>
+DottedPair( const T1& t1, const T2& t2) : RObject(){
+	setSEXP( pairlist(t1,t2) ); 
+}
+template <typename T1, typename T2, typename T3>
+DottedPair( const T1& t1, const T2& t2, const T3& t3): RObject() {
+	setSEXP( pairlist(t1,t2,t3) );
+}
+template <typename T1, typename T2, typename T3, typename T4>
+DottedPair( const T1& t1, const T2& t2, const T3& t3, const T4& t4): RObject(){
+	setSEXP( pairlist(t1,t2,t3,t4) );
+}
+template <typename T1, typename T2, typename T3, typename T4, typename T5>
+DottedPair( const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5) : RObject() {
+	setSEXP( pairlist(t1,t2,t3,t4,t5) );
+}
+/* </code-bloat> */
 #endif	
 
 	/**
