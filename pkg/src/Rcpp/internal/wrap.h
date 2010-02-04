@@ -41,6 +41,51 @@ template <typename InputIterator> SEXP range_wrap(InputIterator first, InputIter
 
 // {{{ range wrap 
 // {{{ unnamed range wrap
+
+template <typename FROM, typename TO> TO caster(FROM from){
+	return static_cast<TO>(from) ;
+}
+
+/**
+ * Range based primitive wrap implementation. used when 
+ * - T is a primitive type, indicated by the r_type_traits
+ * - T needs a static_cast to be of the type suitable to fit in the R vector
+ *
+ * This produces an unnamed vector of the appropriate type using the 
+ * std::transform algorithm
+ */
+template <typename InputIterator, typename T>
+SEXP primitive_range_wrap__impl( InputIterator first, InputIterator last, ::Rcpp::traits::true_type ){
+	size_t size = std::distance( first, last ) ;
+	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
+	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
+	std::transform( first, last, 
+		r_vector_start< RTYPE, typename ::Rcpp::traits::storage_type<RTYPE>::type >(x), 
+		caster< T, typename ::Rcpp::traits::storage_type<RTYPE>::type >
+		) ; 
+	UNPROTECT(1) ;
+	return x ;
+}
+
+/**
+ * Range based primitive wrap implementation. used when : 
+ * - T is a primitive type
+ * - T does not need a cast
+ *
+ * This produces an unnamed vector of the appropriate type using 
+ * the std::copy algorithm
+ */
+template <typename InputIterator, typename T>
+SEXP primitive_range_wrap__impl( InputIterator first, InputIterator last, ::Rcpp::traits::false_type ){
+	size_t size = std::distance( first, last ) ;
+	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
+	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
+	std::copy( first, last, r_vector_start<RTYPE, typename ::Rcpp::traits::storage_type<RTYPE>::type >(x) ) ; 
+	UNPROTECT(1) ;
+	return x ;
+}
+
+
 /**
  * Range based wrap implementation that deals with iterator over
  * primitive types (int, double, etc ...)
@@ -49,28 +94,8 @@ template <typename InputIterator> SEXP range_wrap(InputIterator first, InputIter
  */
 template <typename InputIterator, typename T>
 SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_primitive_tag){ 
-	size_t size = std::distance( first, last ) ;
-	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
-	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
-	std::copy( first, last, r_vector_start<RTYPE, typename ::Rcpp::traits::storage_type<RTYPE>::type >(x) ) ; 
-	UNPROTECT(1) ;
-	return x ;
+	return primitive_range_wrap__impl<InputIterator,T>( first, last, typename ::Rcpp::traits::r_sexptype_needscast<T>() ) ;
 } ;
-
-/**
- * Range based wrap implementation that deals with iterators over bool
- * 
- * This produces an unnamed logical vector
- */
-template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_bool_tag){ 
-	size_t size = std::distance( first, last ) ;
-	SEXP x = PROTECT( Rf_allocVector( LGLSXP, size ) );
-	std::transform( first, last, LOGICAL(x), bool_to_Rboolean ) ; 
-	UNPROTECT(1) ;
-	return x ;
-} ;
-
 
 /** 
  * range based wrap implementation that deals with iterators over 
@@ -115,14 +140,17 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 // }}}
 
 // {{{ named range wrap
+
 /** 
  * range based wrap implementation that deals with iterators over
  * pair<const string,T> where T is a primitive type : int, double ...
  * 
+ * This version is used when there is no need to cast T
+ * 
  * This produces a named R vector of the appropriate type
  */
 template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_primitive_tag){ 
+SEXP range_wrap_dispatch___impl__cast( InputIterator first, InputIterator last, ::Rcpp::traits::false_type ){
 	size_t size = std::distance( first, last ) ;
 	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<typename T::second_type>::rtype ;
 	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
@@ -141,22 +169,27 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	return x ;
 } ;
 
-/**
- * Range based wrap implementation that deals with iterators
- * over pair<const string,bool>
- *
- * This produces a named character vector
+/** 
+ * range based wrap implementation that deals with iterators over
+ * pair<const string,T> where T is a primitive type : int, double ...
+ * 
+ * This version is used when T needs to be cast to the associated R
+ * type
+ * 
+ * This produces a named R vector of the appropriate type
  */
 template <typename InputIterator, typename T>
-SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_bool_tag){ 
+SEXP range_wrap_dispatch___impl__cast( InputIterator first, InputIterator last, ::Rcpp::traits::true_type ){
 	size_t size = std::distance( first, last ) ;
-	SEXP x = PROTECT( Rf_allocVector( LGLSXP, size ) );
+	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<typename T::second_type>::rtype ;
+	SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) );
 	SEXP names = PROTECT( Rf_allocVector( STRSXP, size ) ) ;
+	typedef typename ::Rcpp::traits::storage_type<RTYPE>::type CTYPE ;
+	CTYPE* start = r_vector_start<RTYPE,CTYPE>(x) ;
 	size_t i =0;
-	std::string buf ;
-	int* start = LOGICAL(x) ;
+	std::string buf ; 
 	for( ; i<size; i++, ++first){
-		start[i] = bool_to_Rboolean( (*first).second );
+		start[i] = static_cast<CTYPE>( (*first).second );
 		buf = (*first).first ;
 		SET_STRING_ELT( names, i, Rf_mkChar(buf.c_str()) ) ;
 	}
@@ -165,6 +198,21 @@ SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp
 	return x ;
 } ;
 
+
+/** 
+ * range based wrap implementation that deals with iterators over
+ * pair<const string,T> where T is a primitive type : int, double ...
+ * 
+ * This dispatches further depending on whether the type needs 
+ * a cast to fit into the associated R type
+ * 
+ * This produces a named R vector of the appropriate type
+ */
+template <typename InputIterator, typename T>
+SEXP range_wrap_dispatch___impl( InputIterator first, InputIterator last, ::Rcpp::traits::r_type_pairstring_primitive_tag){ 
+	return range_wrap_dispatch___impl__cast<InputIterator,T>( first, last, 
+		typename ::Rcpp::traits::r_sexptype_needscast<typename T::second_type>() ) ;
+} ;
 
 /**
  * Range based wrap implementation that deals with iterators over
@@ -255,31 +303,38 @@ SEXP range_wrap(InputIterator first, InputIterator last){
 // {{{ primitive wrap (wrapping a single primitive value)
 
 /**
+ * wraps a single primitive value when there is no need for a cast
+ */
+template <typename T>
+SEXP primitive_wrap__impl__cast( const T& object, ::Rcpp::traits::false_type ){
+	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
+	SEXP x = PROTECT( Rf_allocVector( RTYPE, 1 ) );
+	r_vector_start<RTYPE, typename ::Rcpp::traits::storage_type<RTYPE>::type >(x)[0] = object ;
+	UNPROTECT(1);
+	return x;
+} ;
+
+/**
+ * wraps a single primitive value when a cast is needed
+ */ 
+template <typename T>
+SEXP primitive_wrap__impl__cast( const T& object, ::Rcpp::traits::true_type ){
+	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
+	SEXP x = PROTECT( Rf_allocVector( RTYPE, 1 ) );
+	r_vector_start<RTYPE, typename ::Rcpp::traits::storage_type<RTYPE>::type >(x)[0] = static_cast< typename ::Rcpp::traits::storage_type<RTYPE>::type >(object) ;
+	UNPROTECT(1);
+	return x;
+} ;
+
+/**
  * primitive wrap for 'easy' primitive types: int, double, Rbyte, Rcomplex
  *
  * This produces a vector of length 1 of the appropriate type
  */
 template <typename T>
 SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_primitive_tag ){
-	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
-	SEXP x = PROTECT( Rf_allocVector( RTYPE, 1 ) );
-	r_vector_start<RTYPE, typename ::Rcpp::traits::storage_type<RTYPE>::type >(x)[0] = object ;
-	UNPROTECT(1);
-	return x;
-}
-
-/**
- * primitive wrap for bool
- *
- * This produces a logical vector of length 1
- */
-template <typename T>
-SEXP primitive_wrap__impl( const T& object, ::Rcpp::traits::r_type_bool_tag){
-	SEXP x = PROTECT( ::Rf_allocVector( LGLSXP, 1) );
-	LOGICAL(x)[0] = static_cast<int>(object);
-	UNPROTECT(1) ; /* x */
-	return x;
-}
+	return primitive_wrap__impl__cast( object, typename ::Rcpp::traits::r_sexptype_needscast<T>() ); 
+} ;
 
 /**
  * primitive wrap for types that can be converted implicitely to std::string

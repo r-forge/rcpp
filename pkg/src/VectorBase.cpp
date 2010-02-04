@@ -42,4 +42,31 @@ namespace Rcpp{
     	    return i ;
     	}
 
-} // namespace 
+    	VectorBase::NamesProxy::NamesProxy( const VectorBase& v) : parent(v){} ;
+    	VectorBase::NamesProxy& VectorBase::NamesProxy::operator=( const NamesProxy& rhs){
+    		set( rhs.get() ) ;
+    		return *this ;
+    	}
+    	VectorBase::NamesProxy::operator SEXP() const { return get() ; }
+    	SEXP VectorBase::NamesProxy::get() const {
+    		return RCPP_GET_NAMES(parent) ;
+    	}
+    	void VectorBase::NamesProxy::set(SEXP x) const {
+    		SEXP new_vec = PROTECT( internal::try_catch( 
+			Rf_lcons( Rf_install("names<-"), 
+					Rf_cons( parent, Rf_cons( x , R_NilValue) )))) ;
+		/* names<- makes a new vector, so we have to change 
+		   the SEXP of the parent of this proxy, it might be 
+		   worth to work directly with the names attribute instead
+		   of using the names<- R function, but then we need to 
+		   take care of coercion, recycling, etc ... we cannot just 
+		   brutally assign the names attribute */
+		const_cast<VectorBase&>(parent).setSEXP( new_vec ) ;
+		UNPROTECT(1) ; /* new_vec */
+    	}
+    	
+    	VectorBase::NamesProxy VectorBase::names() const{
+    		return NamesProxy(*this) ;
+    	}
+    	
+} // namespace )

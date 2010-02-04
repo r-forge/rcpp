@@ -63,6 +63,35 @@ public:
     
     /* TODO: 3 dimensions, ... n dimensions through variadic templates */
     
+    class NamesProxy {
+	public:
+		NamesProxy( const VectorBase& v) ;
+	
+		/* lvalue uses */
+		NamesProxy& operator=(const NamesProxy& rhs) ;
+	
+		template <typename T>
+		NamesProxy& operator=(const T& rhs){
+			set( wrap(rhs) ) ;
+			return *this ;
+		}
+	
+		/* rvalue use */
+		operator SEXP() const ;
+	
+		template <typename T> operator T() const {
+			T t = Rcpp::as<T>(get()) ;
+			return t ;
+		} ;
+		
+	private:
+		const VectorBase& parent; 
+		
+		SEXP get() const ;
+		void set(SEXP x) const;
+	} ;
+    	
+    NamesProxy names() const ;
 } ;
 
 } // namespace

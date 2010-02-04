@@ -169,6 +169,18 @@ template<typename... Args>
 	
 	virtual ~DottedPair() = 0 ;
 	
+	template <typename T>
+	friend DottedPair& operator<<(DottedPair& os, const T& t){
+		os.push_back( t ) ;
+		return os ;
+	}
+	
+	template <typename T>
+	friend DottedPair& operator>>( const T& t, DottedPair& s){
+		s.push_front(t);
+		return s ;
+	}
+	
 };
 
 } // namespace Rcpp

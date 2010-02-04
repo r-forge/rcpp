@@ -1,3 +1,29 @@
+2010-02-03  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/internal/wrap.h : one more level of dispatch to 
+	identify if there needs a cast between the primitive
+	iterated over and the target storage type. For example
+	size_t needs a cast to be stored in an integer vector. This
+	will be useful for the RProtoBuf package with e.g. types like
+	google::protobuf::int64 which needs to be cast to double. 
+	Consequently the special handling of bool has been withdrawn 
+	as bool can now be assimilated to a primitive type that does 
+	require casting (to int)
+
+2010-02-03  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/VectorBase.h: VectorBase gains a names method that 
+	uses the proxy pattern to get or set the names of a vector
+
+	* src/Rcpp/DottedPair.h: DottedPair gains a << operator to 
+	add an object to the queue of the list. this is much useful
+	when variadic templates are not available
+
+	* src/Rcpp/RObject.h: support for slot assignment. The slot 
+	method now uses the proxy pattern.
+
+	* inst/unitTests/runit.S4.R: unit test for slot assignment
+
 2010-02-02  Romain Francois <francoisromain@free.fr>
 
 	* src/internal/r_coerce.h : coercion is now handled by a templated

@@ -148,7 +148,6 @@ namespace internal{
 	
 } // namespace internal 
 
-inline int bool_to_Rboolean(bool x){ return x ? TRUE : FALSE ; }
 inline bool Rboolean_to_bool( int x){ return x == TRUE ; }
 inline bool int_to_bool(int x){ return x != 0 ; }
 inline bool double_to_bool(double x){ return x != 0.0 ; }
