@@ -217,6 +217,9 @@ headers and the library are automatically found if the appropriate option
 %          c++ code, for example say that we use it for our unit tests
 %          and show an example unit test
 % [Dirk] Done in last round
+% [Romain] But this shows the old api !!! and the same code as above so that 
+%          people get to see it twice. I'd prefer moving these bits after 
+%          the new Rcpp api section and show new api code inlined
 The use of \pkg{inline} is possible as \pkg{Rcpp} can be installed and
 updated just like any other R package using \textsl{e.g.} the
 \code{install.packages()} function for initial installation as well as
@@ -269,136 +272,64 @@ section, we now turn to the `New Rcpp'. The new API is a complete redesign
 based on the usage experience of several years of Rcpp deployment, as well as
 current C++ design approaches.
 
-% we should include key design aspects here. 
-% what are they ?
-% - thin wrappers : an RObject only contains a SEXP, no copy
-% - RAII
-% - member functions define the extent of what is possible to do with an
-%   object, instead of the catch all SEXP
-% - easy translation between R and c++ types
-% - need to talk about implicit conversion somewhere
-%
-% [Dirk] Sounds great -- give a go!
+\subsection{Rcpp Class hierarchy}
 
+The \code{Rcpp::RObject} class is the basic class of the new Rcpp api. 
+An instance of the \code{RObject} class encapsulates an R object
+(\code{SEXP}), exposes methods that are appropriate for all types 
+of objects and transparently manage garbage collection.
 
-\subsection{The RObject class}
+The most important aspect of the \code{RObject} class is that it is 
+a very thin wrapper around the \code{SEXP} it encapsulates, the 
+\code{SEXP} is indeed the only data member of an \code{RObject}.
 
-% [Romain] this needs cleaning
-Here, the \code{RObject} class is the base class of all
-objects in the extended API of the \pkg{Rcpp} package. An \code{RObject} has only one
-data member, the protected \code{SEXP} it encapsulates.  The \code{RObject}
-treats the \code{SEXP} as a resource, following the RAII (resource
-acquisition is initialization) pattern. As long as the \code{RObject}
-instance is alive, its underlying \code{SEXP} remains protected from garbage
-collection. When the \code{RObject} goes out of scope (either via a function
-return or through an exception), it removes the protection so that if the \code{SEXP} is not
-otherwise protected when it becomes subject to garbage collection.
+The \code{RObject} class takes advantage of the explicit life cyle of 
+c++ objects to implement garbage collection of R objects. The 
+\code{RObject} effectively treats its underlying \code{SEXP} as 
+a resource. The constructor of the \code{RObject} class takes 
+the necessary measures to guarantee that the underlying \code{SEXP}
+is protected from the garbage collector, and the destructor
+assumes the responsability to withdraw that protection. 
 
-% [Dirk]: Shorten and make a footnote?
-% [Romain]: yes, but the whole section needs cleaning anyway
-Garbage collection is only mentioned here to illustrate the basic design
-of the \code{RObject} class, the user of \pkg{Rcpp} need not to concern 
-himself/herself with such matters and can instead focus on the problem
-that he/she is solving.
+By assuming the entire responsability of garbage collection, \code{Rcpp}
+relieves the programmer from writing boiler plate code to manage
+the protection stack with \code{PROTECT} and \code{UNPROTECT} macros.
 
-The \code{RObject} class also defines a set of member functions that
-can be used on any R object, regardless of its type.
-% [Dirk]: Do we need the table if we shorten the paper?
-% [Romain]: Probably not. Noth that interesting anyway.
+The \code{RObject} class defines a set of member functions that
+can be used on any R object, regardless of its type. The member
+functions \code{isNULL}, \code{isObject} and \code{isS4} can be 
+used to query properties of the object. 
 
-\begin{center}
-\begin{small}
-\begin{tabular}{cc}
-method & action \\
-\hline
-\code{isNULL} & is the object \code{NULL}\\
-\hline
-\code{attributeNames} & the names of its attributes\\
-\code{hasAttribute} & does it have a given attribute\\
-\code{attr} & retrieve or set an attribute \\
-\hline
-\code{isS4} & is it an S4 object \\
-\code{hasSlot} & if S4, does it have the given slot\\
-\code{slot} & retrieve a given slot \\
-\hline
-\end{tabular}
-\end{small} 
-\end{center}
+Regarding attributes, the member functions 
+\code{attributeNames} can be used to retrieve the names of the attributes, 
+the \code{hasAttribute} can be used to query the existence of an attribute and 
+the \code{attr} can be used to either get the current value of an 
+attribute, or set the value to some other object.
+
+Similarly, the member functions \code{hasSlot} and \code{slot}
+can be used to manage slots of an S4 object. These function throw 
+c++ exceptions when used on objects that are not S4 objects. 
+
+% example of using attr or slot ?
+% mention proxy pattern ?
 
 \subsection{Derived classes}
 
 Internally, an R object must have one type amongst the set of 
 predefined types, commonly referred to as SEXP types. R internals
-\citep{R:ints} documents the various types. \pkg{Rcpp} associates
-a C++ class for most SEXP types.
-
-% [Romain] I don't like this table anymore
-% including also the description of each SEXP type would make it better
-% but it then takes too much space
-% 
-% maybe we need some sort of UML like diagram
-%
-% [Dirk] To be honest I never liked it much either.  Good go into an
-% Appendix, or we just pick a few key combinations and describe them in
-% text. 
-%
-% [Romain] Please be honest, I'd rather have the comment from you than
-%          from the reviewer. the text after will need some cleaning also then
-% [Dirk]   I'd say cut. There is too much 'low-level' stuff here. I see the
-%          paper as trying to interest a non-C/C++ programmer in trying Rcpp, 
-%          This scares children and grown me alike.  Better for the 'long
-%          paper' on all the juicy details.
-%          But we need better context. How can we hash out what a concise and
-%          and convincing section on 'New API' should look like?  Show how
-%          easy the code, and make a gentle mention of some of the key C++
-%          technologies?  I am open to any idea.
-\begin{center}
-\begin{small}
-\begin{tabular}{ccc}
-SEXP type &  \pkg{Rcpp} class \\
-\hline 
-\code{NILSXP} &  	\\
-\code{SYMSXP} &	 \code{Symbol} \\
-\code{LISTSXP} & \code{Pairlist} \\
-\code{CLOSXP} &	 \code{Function} \\
-\code{ENVSXP} &	 \code{Environment} \\
-\code{PROMSXP} & \code{Promise} \\
-\code{LANGSXP} & \code{Language} \\
-\code{SPECIALSXP} & \code{Function} \\
-\code{BUILTINSXP} & \code{Function} \\
-\code{CHARSXP} & \\
-\code{LGLSXP} &	 \code{LogicalVector} \\
-\code{INTSXP} &	 \code{IntegerVector} \\
-\code{REALSXP} & \code{NumericVector} \\
-\code{CPLXSXP} & \code{ComplexVector}\\
-\code{STRSXP} &	 \code{CharacterVector} \\
-\code{DOTSXP} &	 \code{Pairlist} \\
-\code{ANYSXP} &	 \\
-\code{VECSXP} &	 \code{List} \\
-\code{EXPRSXP} & \code{ExpressionVector}\\
-\code{BCODESXP} & \\
-\code{EXTPTRSXP} & \code{XPtr<T>}\\
-\code{WEAKREFSXP} & \code{WeakReference}\\
-\code{RAWSXP} &	 \code{RawVector}\\
-\code{S4SXP} & \\
-\hline
-\end{tabular}
-\end{small}
-\end{center}
-
-Some types do not have their own C++ class. \code{NILSXP} and 
-\code{S4SXP} have their functionality covered by the \code{RObject}
-class; \code{ANYSXP} is just a placeholder to facilitate S4 dispatch 
-(and no object in R has this type); and \code{BCODESXP} is not currently 
-used.
+\citep{R:ints} documents these various types. 
+\pkg{Rcpp} associates a dedicated C++ class for most SEXP types.
 
 Each class contains functionality that is relevant to the R object
-that it encapsulates. For example \code{Environment} contains 
-member methods to query the list of objects in the associated environment, 
-classes with the \code{Vector} overload the \code{operator[]} in order
-to extract/modify values at the given position in the vector, ...
+that it encapsulates. For example \code{Rcpp::Environment} contains 
+member functions to manage objects in the associated environment. 
+Classes related to vectors (\code{IntegerVector}, \code{NumericVector}, 
+\code{RawVector}, \code{LogicalVector}, \code{CharacterVector}, 
+\code{GenericVector} and \code{ExpressionVector}) expose functionality
+to extract and set values from the vectors, etc ...
 
-The rest of this section presents example uses of \pkg{Rcpp} classes. 
+The following sub sections present typical uses Rcpp classes in
+comparison with the same code expressed using functions of the R api.
 
 \subsection{numeric vector}
 
@@ -427,8 +358,7 @@ finished with it.
 actual array; its indexing is does not resemble either R or C++.
 \end{itemize}
 
-Using the \code{Rcpp::NumericVector}, the code can be rewritten: 
-
+Using the \code{Rcpp::NumericVector} class, the code can be rewritten: 
 
 \begin{example}
 Rcpp::NumericVector ab(2) ;
@@ -489,106 +419,106 @@ code can be trimmed to the essential :
 CharacterVector ab = \{"foo","bar"\};
 \end{example}
 
+\section{Data interchange between R and C++}
 
-\section{wrap and as}
+In addition to classes, the \pkg{Rcpp} package contains two additional
+functions to perform conversion of C++ objects to R objects and back. 
 
-Besides classes, the \pkg{Rcpp} package also contains utilities allowing
-conversion from R objects to C++ types and vice-versa. Through 
-polymorphism, the \code{wrap} set of functions can be used to wrap 
-some data structure into an \code{RObject} instance. 
-
-In total, the \pkg{Rcpp} defines 23 different \code{wrap} 
-functions, including :
+The C++ to R conversion is performed by the \code{Rcpp::wrap} templated 
+function. It uses advanced template meta programming techniques
+to convert a wide and extensible set of types and classes to the
+most appropriate type of R object. \code{wrap} will 
+currently handle these C++ types: 
 \begin{itemize}
-\item SEXP
-\item primitive types : \code{bool}, \code{int}, \code{double}, 
-\code{size\_t}, \code{unsigned char} (byte), \code{std::string} and
-\code{char*}
-\item STL vectors of these types: \code{vecor<int>},
-\code{vector<double>}, \code{vector<bool>}, \code{vector<unsigned char>}, 
-\code{vector<string>}
-\item STL sets : \code{set<int>}, \code{set<double>}, \code{set<unsigned char>}, 
-\code{set<string>}
-\item initializer lists (only available in G++ 4.4 or later).
+\item primitive types, \code{int}, \code{double}, ... are converted 
+into R vectors of the appropriate type
+\item \code{std::string} are converted to R character vectors
+\item STL-like containers, e.g \code{std::vector<T>}, \code{std::list<T>}, 
+are wrappable as long as the type they contain (T) is wrappable. 
+\item STL-like maps, e.g. \code{std::map<std::string,T>}, 
+which uses \code{std::string} for their keys, are wrappable as long as 
+the type \code{T} is wrappable
+\item any type that implements implicit conversion to \code{SEXP}, through the 
+\code{operator SEXP()} are wrappable
 \end{itemize}
 
-Each type is wrapped in the most sensible class, e.g. \code{vector<double>}
-is wrapped into an \pkg{NumericVector} object, which in turns encapsulates
-a numeric vector (a \code{SEXP} of type \code{REALSXP}). 
-Here are a few examples of \code{wrap} calls: 
+In addition, the \code{wrap} template may be partially or fully specialized by
+third party code to extend its capabilities. The design allow composition, 
+so for example objects of the class
+\code{std::vector< std::map<std::string,int> >} are wrappable. This is 
+because \code{int} is wrappable (as a primitive type), consequently 
+\code{std::map<std::string,int>} is wrappable (as an STL-like map of 
+wrappable types keyed by strings, and therefore
+\code{std::vector< std::map<std::string,int> >} is wrappable (as a 
+STL-like container of wrappable objects). The example code below
+illustrates this: 
 
 \begin{example}
-LogicalVector x1 = wrap( false ); 
-IntegerVector x2 = wrap( 1 ) ;    
+std::vector< std::map<std::string,int> > v ;
 
-vector<double> v ; 
-v.push_back(0.0); v.push_back( 1.0 ); 
-NumericVector x3 = wrap( v ) ;  
+std::map< std::string, int > m1 ;
+m1["foo"] = 1 ; m1["bar"] = 2 ;
 
-// initializer list (only on GCC >= 4.4)
-LogicalVector x4 = wrap( \{ false, true\} );
-CharacterVector x5 = wrap( \{"foo", "bar"\} );
+std::map< std::string, int > m2 ;
+m2["foo"] = 1 ; m2["bar"] = 2 ; m2["bling"] = 3 ;
+
+v.push_back( m1) ;
+v.push_back( m2) ;
+
+wrap( v ) ;
 \end{example}
 
-Similarly, converting an R object to a C++ standard type is implemented
-by variations on the \code{as} template function. In this case, we must 
-use the angle brackets to specify which version of as we want to use. 
+The code creates a list of two named vectors, equal to the list that 
+can be created by the following R code: 
 
 \begin{example}
-bool x = as<bool>(x) ;
-double x = as<double>(x) ;
-vector<int> x = as< vector<int> >(x) ;
+list( c( bar = 2L, foo = 1L) , c( bar = 2L, bling = 3L, foo = 1L) )
 \end{example}
 
-\section{external pointers}
+The reversed conversion is implemented by variations of the 
+\code{Rcpp::as} template. \code{as} offers less flexibility and currently
+handles conversion of R objects into primitive types (bool, int, std::string, ...), 
+STL vectors of primitive types  (\code{std::vector<bool>}, 
+\code{std::vector<double>}, etc ...) and arbitrary types that offer 
+a constructor that takes a \code{SEXP}. In addition \code{as} can 
+be fully or partially specialized to manage conversion of R data 
+structures to third party types.
 
-In addition to primitive data types, R can handle arbitrary pointers
-by encapsulating the pointer in a special R object, the external 
-pointer. \cite{R:exts} documents the available API R has to offer to 
-deal with external pointers. 
+The converters offered by \code{wrap} and \code{as} provide a very 
+useful framework to implement the logic of the code in terms of C++ 
+data structures and then explicitely convert data back to R, ...
 
-\pkg{Rcpp} takes advantage of C++ templates and smart pointers and 
-defines the templated class \code{XPtr} that acts as a smart 
-pointer to the underlying C++ object. 
-
-Assuming we get from R an external pointer to a \code{std::vector<int>}
-c++ object, we can manipulate it as such using the \code{XPtr} class:
+The converters are also used implicitely in various places in the 
+\code{Rcpp} api. Consider the following code that uses the
+\code{Rcpp::Environment} class to interchange data between C++ and R.
 
 \begin{example}
-// xp is an external pointer 
-// to a std::vector<int>
-XPtr< std::vector<int> > p(xp) ;
-p->push\_back(1) ;
-p->push\_back(2) ;
-p->size() ; 
+# assuming the global environment contains 
+# a variable 'x' that is a numeric vector
+Rcpp::Environment global = Rcpp::Environment::global_env()
+
+# extract a std::vector<double> from the global environment
+std::vector<double> vx = global["x"] ;
+
+# create a map<string,string>
+std::map<std::string,std::string> map ;
+map["foo"] = "oof" ;
+map["bar"] = "rab" ;
+
+# push the STL map to the global environment
+global["y"] = map ;
 \end{example}
 
-The \code{XPtr} class directly derives from the \code{RObject} class.
-Thanks to its template parameter and overloading of the \code{->} 
-and \code{*} operators, objects of the \code{XPtr<Foo>} generated
-class look and feel like raw pointers (\code{Foo*}).
-
-Making an external pointer from a raw pointer is equally easy using 
-another constructor. 
-
-\begin{example}
-std::vector<int> *pv = new std::vector<int> ;
-XPtr< std::vector<int> > p(pv,true) ;
-\end{example}
-
-The creation of the instance of the \code{XPtr< std::vector<int> >} 
-smart extenal pointer to a \code{std::vector<int>} hides the 
-R API that is typically used for external pointers, including registration
-of a finalizer to be executed to free the memory of the vector when the
-external pointer goes out of scope. 
+In the first part of the example, \code{as} is used implicitely to convert
+the object "x" from the global environment into an instance
+of the \code{std::vector<double>} class. In the second part of the example, 
+\code{wrap} is used implicitely to convert the object of class
+\code{std::map<std::string,std::string>} into an R object, a named
+character vector in this case.
 
 \section{other examples}
 
 The last example shows how to use \pkg{Rcpp} to emulate the R code below.
-For more examples, the reader is invited to 
-refer to the comprehensive documentation included in \pkg{Rcpp}
-as well as the many examples that the package contains as part of 
-its unit tests. 
 
 \begin{example}
 > rnorm( 10L, sd = 100.0 )
@@ -605,9 +535,8 @@ return rnorm(10, Named("sd", 100.0) ) ;
 
 We first pull out the \code{rnorm} function from the environment 
 called \samp{package:stats} in the search path, then call the function
-using syntax similar to calling the function in R. The \code{Named} 
-class is an utility class that helps emulating the use of 
-named arguments.
+using syntax similar to calling the function in R. The \code{Rcpp::Named} 
+class is an utility class that is used to emulate named arguments.
 
 The second version shows the use of the \code{Language} class, which 
 manage calls (LANGSXP). 
@@ -618,15 +547,11 @@ call.eval() ;
 \end{example}
 
 In this version, we first create a call to the symbol "rnorm" and
-evaluate the call in the global environment, this is similar to the 
-R code : 
+evaluate the call in the global environment. In both cases, \code{wrap}
+is used implicitely to convert \code{10} and \code{100} 
+into R integer vectors. 
 
-\begin{example}
-> eval( call( "rnorm", 10L, sd = 100 ) )
-\end{example}
-
-Using the R API, the first example, using the actual
-\code{rnorm} function,
+Using the R API, the first example, using the actual \code{rnorm} function,
 translates to :
 
 \begin{example}
@@ -644,8 +569,9 @@ UNPROTECT(4) ;
 return res ;
 \end{example}
 
-and the second example, using the \samp{rnorm} symbol, and therefore
-involving implicit lookup in hte search path, can be written as:
+and the second example, using the \samp{rnorm} symbol --- and therefore
+involving potentially expensive implicit lookup in the search path ---
+can be written as:
 
 \begin{example}
 SEXP call  = PROTECT( 
@@ -658,6 +584,10 @@ UNPROTECT(2) ;
 return res ;
 \end{example}
 
+For more examples, the reader is invited to 
+refer to the documentation included in \pkg{Rcpp}
+as well as the many examples that the package contains as part of 
+its unit tests. 
 
 \section{Performance/Limitations}
 
@@ -680,7 +610,8 @@ the best of it. The classic Rcpp translation of the convolve example from
 \cite{R:exts} appears in section~\ref{sec:classic_rcpp}.  With the new API,
 the code can be written as shown below. The main difference is that the input
 parameters are directly passed to types \code{Rcpp::NumericVector}, and that
-the return vector is automatically converted to a \code{SEXP} type.
+the return vector is automatically converted to a \code{SEXP} type through 
+implicit conversion.
 
 \begin{example}
 #include <Rcpp.h>
@@ -702,31 +633,22 @@ RcppExport SEXP convolve3cpp(SEXP a, SEXP b)\{
 \}
 \end{example}
 
-Seemingly, this code is as efficient as it can be. 
-However, when considering the implementation of the \code{operator[]}
-for the \code{NumericVector} class: 
+The implementation of the \code{operator[]} is implemented as 
+efficiently as possible, using inlining and caching, 
+but the implementation above is however less efficient than the 
+reference C imlementation described in \cite{R:exts}. 
 
-% FIXME: not the case anymore, this has been optimized by caching the 
-%        pointer inside the NumericVector. This needs update
+In order to achieve maximulm effociency, the reference implementation
+extracts the underlying array pointer : \code{double*} and works 
+with pointer arithmetics, which is a built-in operation as opposed to 
+calling the \code{operator[]} on a user-defined class which has to 
+pay the price of object encapsulation.
 
-\begin{example}
-inline double& operator[]( const int& i ) { 
-	return REAL(m_sexp)[i];
-}
-\end{example}
-
-Each call to the \code{operator[]} on a \code{NumericVector}
-calls the \code{REAL} macro of the R API to retrieve the pointer to the
-underlying array of \code{double}. The code in \cite{R:exts} is much 
-more parsimonious with exactly only 3 calls to the \code{REAL} macro, 
-delegating extraction to pointer arithmetics which are usually much more 
-efficient. 
-
-The \code{NumericVector} class provides two member functions \code{begin}
+Modelled after containers of the standard template library, 
+the \code{NumericVector} class provides two member functions \code{begin}
 and \code{end} that can use used to retrieve respectively 
-the pointer to the first element and to the element after the last element
-of the underlying array. We can revisit the code to take advantage
-of \code{begin} : 
+the pointer to the first and past to end elements of the underlying array.
+We can revisit the code to take advantage of this feature : 
 
 \begin{example}
 #include <Rcpp.h>
@@ -767,6 +689,11 @@ R API & 34 \\
 \hline
 \end{tabular}
 \end{center}
+
+% need to comment the results, give reasons why the RcppVector<double> is
+% 10 times less efficient than the reference, show that 55-36 is the price for 
+% encapsulation and say that the difference between 34 and 36 is not 
+% significant
 
 \section{Summary}
 
