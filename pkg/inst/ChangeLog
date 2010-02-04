@@ -1,4 +1,11 @@
-2010-02-03  Romain Francois <francoisromain@free.fr>
+2010-02-04  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/DottedPair.h: code bloat to allow creation of 
+	DottedPair containing up to 5 objects without variadic templates
+	RInside for example needs this. 
+	* src/Rcpp/Language.h: same
+	* src/Rcpp/Pairlist.h: same
+	* src/Rcpp/grow.h: same
 
 	* src/Rcpp/internal/wrap.h : one more level of dispatch to 
 	identify if there needs a cast between the primitive
