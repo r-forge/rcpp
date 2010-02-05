@@ -14,55 +14,35 @@ is managed by simple, flexible and extensible concepts.
 \pkg{Rcpp} substancially lowers the language barrier for programmers
 who want to plug compiled code in an R package.}
 
-% \section{Introduction}
+Writing R Extensions \citep{R:exts} describes in great details
+the various ways to augment R capabilities with compiled code, 
+mostly about C code. The R API described in 
+Writing R Extensions is based on a set of functions and macros
+operating on \code{SEXP}, the internal representation of R objects.
 
-TBD, probably close to last
+% appendix A of Chambers's software for data analysis ?
+In this article, we discuss the functionality of the \pkg{Rcpp}
+package, which we believe simplifies dramatically the usage of C++ code
+in R. Combining R and C++ is not a new idea, so we'll start by
+a light review of approaches from other authors and give some historical
+background on the development of \pkg{Rcpp}.
 
-One idea: call 'classic Rcpp' a \textsl{vertical} approach as it is chiefly
-concerned with getting data from R to C++ and back from C++ to R. On the
-other hand, 'new Rcpp' is more \textsl{horizontal as well as vertical} as it
-also significantly eases access from C++ itself (and to the C++
-representation of R objects).  Does that make sense?
+The current version of \pkg{Rcpp} actually hosts together two distincts
+api's. The first --- which we call `classic Rcpp API` --- exists since 
+the first version of \pkg{Rcpp}. The second api, enclosed in the 
+\code{Rcpp} C++ namespace is a newer codebase, which we started to develop
+in late 2009. This article mostly concerns the newer api, and 
+highlights some of the key design choices and implementation: 
+lightweight encapsulation of R object in C++ classes, automatic
+garbage collection strategy, code inlining, data interchange between 
+R and C++ and error handling. 
 
-% \section{Overview}
-% [Romain:] we don't need introduction and overview, one should be enough
-%           also some articles don't have anything. For example 
-%           the party on article in the last issue directly start with 
-%           text after the abstract. I like that. Also is the case of the
-%           "new R help system" article
+Several examples are included to 
+illustrate the advantage of using \pkg{Rcpp} as opposed to 
+the traditional R api and many more examples are available within 
+the package. 
 
-% [Romain:] the overview is really messy and probably 
-% needs a complete rewrite when all other sections are finished
-% [Dirk:] Agreed, see Gelman piece. We need more meat on the bones first.
-
-The \pkg{Rcpp} package provides a consistent and comprehensive set 
-of C++ classes designed to ease coupling of C++ code
-with R. The \code{RObject} class is responsible for 
-protecting and releasing its encapsulated R object (\code{SEXP})
-from garbage collection. The \code{wrap} set of functions allows
-wrapping many C++ built-in types and data structures from the standard
-template library into R objects. Similarly, the \code{as} set of 
-templated functions allows conversion of R objects back into C++
-types, such as \code{std::string}. With recent additions to the 
-\pkg{inline} package \citep{cran:inline}, 
-C++ code using the classes of the 
-\pkg{Rcpp} package can be inlined, compiled, loaded and wrapped 
-into an R function without leaving the R console. 
-This article reviews some of the design choices of the
-\pkg{Rcpp} package, in particular with respect to existing solutions
-that deal with coupling R and C++ and shows several use cases.
-
-Writing R Extensions \citep{R:exts} provides extensive 
-documentation about the ways to couple R with code written in C. 
-Writing such code requires both expertise and discipline from the 
-programmer.
-
-The \pkg{Rcpp} package makes extensive use of C++ features (encapsulation, 
-constructors, destructors, operator overloading, templates) in order
-to hide the complexity of the R API --- without losing its 
-efficiency --- under the carpet of object orientation. In addition, 
-\pkg{Rcpp} takes advantage of some features of the forthcoming \code{C++0x} 
-standard, already supported by recent versions of the GCC.
+\section{Background}
 
 \subsection{Historical Context}
 
