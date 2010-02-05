@@ -154,17 +154,19 @@ RcppExport SEXP convolve2cpp(SEXP a, SEXP b) \{
 We can highlight several aspects. First, only a single header file
 \code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
 \code{SEXP} types, a third is returned.
-Third, both inputs are converted to C++ vector types that
-are \textsl{templated} (meaning that a type-independent framework can be
-applied to create actual vectors of the specified type). Here a standard \code{double}
+Third, both inputs are converted to templated\footnote{C++ templates
+allow functions or classes to be written somewhat independently from the 
+template parameter. The actual class is instanciated by the compiler
+by replacing occurences of the templated parameter(s).}
+C++ vector types, here a standard \code{double}
 type is used to create a vector of doubles from the template type.
 Fourth, the usefulness of these classes can be seen when we query the
 vectors directly for their size---using the \code{size} member function---in
 order to reserved a new result type of appropriate length whereas use based
 on C arrays would have required additional parameters for the length of
 vectors $a$ and $b$, leaving open the possibility of mismatches between the
-actual length and the length reported by the programmer.  Fifth, the
-computation itself is straightforward embedded looping just as in the
+actual length and the length reported by the programmer. 
+Fifth, the computation itself is straightforward embedded looping just as in the
 original examples in the 'Writing R Extensions' manual \citep{R:exts}.
 Sixth, a return type (\code{RcppResultSet}) is then prepared as a named
 object (something that should be familiar to R programmers) which is then
