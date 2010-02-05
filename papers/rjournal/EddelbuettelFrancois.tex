@@ -7,32 +7,34 @@
 
 \abstract{The \pkg{Rcpp} package dramatically simplifies the 
 process of integrating C++ code with R. It provides a
-consistent C++ class hierarchy that map various types of 
+consistent C++ class hierarchy that maps various types of 
 R objects (vectors, functions, environments, ...) to 
-dedicated C++ class. Data interchange between R and C++
+dedicated C++ classes. Data interchange between R and C++
 is managed by simple, flexible and extensible concepts.
-\pkg{Rcpp} substancially lowers the language barrier for programmers
-who want to plug compiled code in an R package.}
+\pkg{Rcpp} substantially lowers the language barrier for programmers
+wanting to combine compiled code with R.}
 
-Writing R Extensions \citep{R:exts} describes in great details
-the various ways to augment R capabilities with compiled code, 
-mostly about C code. The R API described in 
-Writing R Extensions is based on a set of functions and macros
-operating on \code{SEXP}, the internal representation of R objects.
+\section{Introduction}  % [Dirk] I am a tradionalist here ...
+
+R is an extensible system. The 'Writing R Extensions' manual \citep{R:exts}
+describes in great detail the various ways to augment R with compiled code,
+focussing mostly about C code. The R API described in Writing R Extensions is
+based on a set of functions and macros operating on \code{SEXP}, the internal
+representation of R objects.
 
 % appendix A of Chambers's software for data analysis ?
 In this article, we discuss the functionality of the \pkg{Rcpp}
 package, which we believe simplifies dramatically the usage of C++ code
-in R. Combining R and C++ is not a new idea, so we'll start by
-a light review of approaches from other authors and give some historical
+in R. Combining R and C++ is not a new idea, so we start by
+a short review of approaches from other authors and give some historical
 background on the development of \pkg{Rcpp}.
 
-The current version of \pkg{Rcpp} actually hosts together two distincts
-API's. The first --- which we call `classic Rcpp API` --- exists since 
+The current version of \pkg{Rcpp} combines two distincts
+APIs. The first---which we call `classic Rcpp API'---exists since 
 the first version of \pkg{Rcpp}. The second API, enclosed in the 
 \code{Rcpp} C++ namespace is a newer codebase, which we started to develop
-in late 2009. This article mostly concerns the newer API, and 
-highlights some of the key design choices and implementation: 
+more recently. This article %mostly concerns the newer API, and  %% [Dirk] Really?
+highlights some of the key design and implementation choices: 
 lightweight encapsulation of R object in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
 R and C++ and error handling. 
@@ -47,24 +49,25 @@ the package.
 \subsection{Historical Context}
 
 \pkg{Rcpp} first appeared in 2005 as a contribution to the \pkg{RQuantLib}
-package \citep{eddelbuettelkhan09:rquantlib} before being released as a CRAN
+package \citep{eddelbuettelkhan09:rquantlib} before becoming a CRAN
 package in early 2006. Several releases followed in quick succession; all of
 these were under the name \pkg{Rcpp}. The package was then renamed to
 \pkg{RcppTemplate} and several more releases followed during 2006 under the
 new name.  However, no new releases or updates were made during 2007, 2008
 and most of 2009.
 
-Given the continued use of the package, it was revived using the former name
+Given the continued use of the package, we revived it using the former name
 \pkg{Rcpp}. New releases started in November 2008 which include an improved
 build and distribution process, additional documentation, and new
 functionality---while retaining the existing interface.  This constitutes the
 `classic \pkg{Rcpp}' interface (described in the next section)
-which will be provided for the forseeable future.
+which will be maintained for the forseeable future.
 
-Yet C++ coding standards continued to evolved. So, starting in late 2009 the
+Yet C++ coding standards continued to evolved. So, starting in 2009 the
 codebase was significantly extended and numerous new features were added.
 Several of these are described below in the section on the the `New
-\pkg{Rcpp}' interface which we also intend to support going forward.
+\pkg{Rcpp}' interface. This new API is our current focus, and we intend to
+both extend and support going forward.
 
 \subsection{Comparison}
 
@@ -88,7 +91,7 @@ unclear how much usage these packages are seeing beyond their own authors.
 CXXR \citep{runnalls09:cxxr} comes to this topic from the other side: 
 its aim is to completely refactor R on a stronger C++ foundation. 
 CXXR is therefore concerned with all aspects of the R interpreter,
-REPL loop, threading --- and object interchange between R and C++ is but one part.
+REPL loop, threading---and object interchange between R and C++ is but one part.
 %
 Another slightly different angle is offered by
 \cite{templelang09:rgcctranslationunit} who uses compiler output for
