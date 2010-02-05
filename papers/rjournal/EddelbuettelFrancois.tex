@@ -612,6 +612,51 @@ directly passed to types \code{Rcpp::NumericVector}, and that the return
 vector is automatically converted to a \code{SEXP} type through implicit
 conversion.
 
+\section{Error handling}
+
+Code that uses both R and C++ has to deal with two concurrent
+error handling models. \pkg{Rcpp} simplifies this and allow both 
+systems to work together.
+
+\subsection{C++ exceptions in R}
+
+The traditional way of dealing with C++ exceptions in R is to
+catch the C++ exception through the explicit try/catch blocks and
+convert this exception to an R error. 
+
+In C++, when an application throws an exception that is not caught, 
+a special function is invoked, the terminate handler, typically causing 
+the program to abort. \pkg{Rcpp} takes advantage of this mechanism
+and sets its own terminate handler which translates the c++
+exception into an R condition and throws this condition so that it can 
+be caught in R. The following code gives an illustration. 
+
+\begin{example}
+> fun <- cfunction( signature( x = "integer" ), 
++ ' 
++   int dx = as<int>(x) ;
++   if( dx > 10 ) 
++      throw std::range_error("too big") ;
++   return wrap(dx*dx) ;
++ ', Rcpp = TRUE, 
++  includes = "using namespace Rcpp;" )
+> tryCatch( fun(12), 
++ "std::range_error" = function(e){
++    writeLines( conditionMessage(e) )
++ } )
+too big
+\end{example}
+
+\subsection{R error in C++}
+
+R currently does not offer C-level mechanisms to deal with errors. To 
+deal with this problem, \pkg{Rcpp} uses the \code{Rcpp::Evaluator}
+class to evaluate en expression with an R-level \code{tryCatch}
+block. The error, if any, that occurs while evaluating the 
+function is then translated in terms of C++ exception. 
+
+% example ?
+
 \section{Performance/Limitations}
 
 In this section, we illustrate that C++ features come with a price
@@ -679,8 +724,9 @@ We've benchmarked the various implementations using
 table below:
 
 \begin{center}
+\begin{small}
 \begin{tabular}{cc}
-Method & elapsed time (ms) \\ 
+\textbf{Method} & \textbf{Elapsed Time} (ms) \\ 
 \hline
 R API & 34 \\
 \hline
@@ -689,6 +735,7 @@ R API & 34 \\
 \code{NumericVector::begin} & 36 \\
 \hline
 \end{tabular}
+\end{small}
 \end{center}
 
 The first implementation, using the traditional R api, unsurprisingly 
