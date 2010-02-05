@@ -22,6 +22,8 @@
 
     o 	The doxygen documentation now shows the examples
 
+    o 	A new file inst/THANKS acknowledges the kind help we got from others
+
 0.7.4	2010-01-30
 
     o	matrix matrix-like indexing using operator() for all vector 

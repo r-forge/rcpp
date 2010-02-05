@@ -1,32 +1,36 @@
+2010-02-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/THANKS: Added in order to show our appreciation
+
 2010-02-04  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/DottedPair.h: code bloat to allow creation of 
+	* src/Rcpp/DottedPair.h: code bloat to allow creation of
 	DottedPair containing up to 5 objects without variadic templates
-	RInside for example needs this. 
+	RInside for example needs this.
 	* src/Rcpp/Language.h: same
 	* src/Rcpp/Pairlist.h: same
 	* src/Rcpp/grow.h: same
 
-	* src/Rcpp/internal/wrap.h : one more level of dispatch to 
+	* src/Rcpp/internal/wrap.h : one more level of dispatch to
 	identify if there needs a cast between the primitive
 	iterated over and the target storage type. For example
 	size_t needs a cast to be stored in an integer vector. This
 	will be useful for the RProtoBuf package with e.g. types like
-	google::protobuf::int64 which needs to be cast to double. 
-	Consequently the special handling of bool has been withdrawn 
-	as bool can now be assimilated to a primitive type that does 
+	google::protobuf::int64 which needs to be cast to double.
+	Consequently the special handling of bool has been withdrawn
+	as bool can now be assimilated to a primitive type that does
 	require casting (to int)
 
 2010-02-03  Romain Francois <francoisromain@free.fr>
 
-	* src/Rcpp/VectorBase.h: VectorBase gains a names method that 
+	* src/Rcpp/VectorBase.h: VectorBase gains a names method that
 	uses the proxy pattern to get or set the names of a vector
 
-	* src/Rcpp/DottedPair.h: DottedPair gains a << operator to 
+	* src/Rcpp/DottedPair.h: DottedPair gains a << operator to
 	add an object to the queue of the list. this is much useful
 	when variadic templates are not available
 
-	* src/Rcpp/RObject.h: support for slot assignment. The slot 
+	* src/Rcpp/RObject.h: support for slot assignment. The slot
 	method now uses the proxy pattern.
 
 	* inst/unitTests/runit.S4.R: unit test for slot assignment
@@ -39,14 +43,14 @@
 
 	* src/traits/has_iterator.h : introduce a trait that uses the
 	SFINAE idiom to check if a class T has a nested type called
-	"iterator". This helps wrap dispatch which now uses the 
+	"iterator". This helps wrap dispatch which now uses the
 	range based wrap implementation in that case
 
 	* src/Rcpp/wrap.h: The range based wrap function is exposed
-	at the Rcpp:: level. The interface is 
+	at the Rcpp:: level. The interface is
 	wrap( InputIterator first, InputIterator last )
 	and dispatch is performed internally using iterator traits
-	
+
 2010-02-01  Romain Francois <francoisromain@free.fr>
 
 	* src/traits/wrap_type_traits.h: new namespace Rcpp::traits::
@@ -70,7 +74,7 @@
 	std::tr1::unordered_map<std::string,T>  -> named vector or named list
 	std::tr1::unordered_set<T>         -> vector or list
 	std::tr1::unordered_multiset<T>    -> vector or list
-	
+
 	* inst/unitTests/runit.wrap.R : unit tests for the new
 	wrappable types
 
@@ -304,8 +308,8 @@
 
 	* src/RcppFrame.cpp: listen to some suncc warnings
 
-	* src/as.cpp: use transform instead of assign, which should 
-	make the code more portable (particularly suncc) and also 
+	* src/as.cpp: use transform instead of assign, which should
+	make the code more portable (particularly suncc) and also
 	deal with coercion
 
 2010-01-21  Dirk Eddelbuettel  <edd@debian.org>
@@ -410,7 +414,7 @@
 	code that uses Rcpp, also the generated Makevars contains
 	a hack so that the generated package can pass check (after
 	edition of Rd files, NAMESPACE, etc ...)
-	* inst/skeleton: added example code used by the skeleton 
+	* inst/skeleton: added example code used by the skeleton
 	generator
 
 2010-01-15  Romain Francois <francoisromain@free.fr>
@@ -443,11 +447,11 @@
 
 	* src/Rcpp/Environment.h: Environment::Binding gains a templated
 	conversion operator, to facilitate distance 2 implicit conversion
-	making this possible: 
+	making this possible:
 	Environment env("package:stats") ;
 	Function f = env["rnorm"] ;
 
-	* src/Rcpp/GenericVector.h: GenericVector::Proxy gains an 
+	* src/Rcpp/GenericVector.h: GenericVector::Proxy gains an
 	assignement operator to deal with Environment::Binding. This is
 	to work around distance 1 implicit conversion restrictions
 
@@ -855,7 +859,7 @@
 	* src/Rcpp_RObject.{h,cpp}: new namespace Rcpp and new class
 	Rcpp::RObject to replace RcppSexp with the same functionality.
 
-	* src/Rcpp_XPtr.h: replaces RcppXPtr.h and the class is now 
+	* src/Rcpp_XPtr.h: replaces RcppXPtr.h and the class is now
 	Rcpp::XPtr<> and extends Rcpp::RObject
 
 	* inst/examples/RcppInline/external_pointer.r: use the new namespace
