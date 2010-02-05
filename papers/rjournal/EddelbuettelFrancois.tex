@@ -169,7 +169,7 @@ actual length and the length reported by the programmer.
 Fifth, the computation itself is straightforward embedded looping just as in the
 original examples in the 'Writing R Extensions' manual \citep{R:exts}.
 Sixth, a return type (\code{RcppResultSet}) is then prepared as a named
-object (something that should be familiar to R programmers) which is then
+object which is then
 converted to a list object that is returned.  We should note that the
 \code{RcppResultSet} permits the return of numerous (named) objects which can
 also be of different types.
@@ -187,8 +187,8 @@ reviewed at the end.
 % section, we now turn to the `New Rcpp'. 
 In late 2009, the Rcpp API has been dramatically extended, leading to a 
 complete redesign, based on the usage experience of several 
-years of Rcpp deployment, needs from other projects, 
-as well as current C++ design approaches.
+years of \pkg{Rcpp} deployment, needs from other projects, knowledge 
+of internal R API, as well as current C++ design approaches. 
 
 \subsection{Rcpp Class hierarchy}
 
