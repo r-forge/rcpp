@@ -195,11 +195,17 @@ of internal R API, as well as current C++ design approaches.
 The \code{Rcpp::RObject} class is the basic class of the new Rcpp API. 
 An instance of the \code{RObject} class encapsulates an R object
 (\code{SEXP}), exposes methods that are appropriate for all types 
-of objects and transparently manage garbage collection.
+of objects and transparently manages garbage collection.
 
 The most important aspect of the \code{RObject} class is that it is 
 a very thin wrapper around the \code{SEXP} it encapsulates, the 
-\code{SEXP} is indeed the only data member of an \code{RObject}.
+\code{SEXP} is indeed the only data member of an \code{RObject}. The 
+\code{RObject} class does not interfere with the way R manages its 
+memory, does not perform copies of the object into a suboptimal 
+C++ representation, but instead merely acts as a proxy to the 
+object it encapsulates, so that methods applied to the \code{RObject}
+instance are relayed back to the \code{SEXP} in terms of the standard
+R API.
 
 The \code{RObject} class takes advantage of the explicit life cycle of 
 c++ objects to manage exposure of the underlying R object to the 
