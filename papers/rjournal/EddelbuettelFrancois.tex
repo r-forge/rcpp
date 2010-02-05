@@ -14,7 +14,10 @@ is managed by simple, flexible and extensible concepts.
 \pkg{Rcpp} substantially lowers the language barrier for programmers
 wanting to combine compiled code with R.}
 
-\section{Introduction}  % [Dirk] I am a tradionalist here ...
+\section{Introduction} 
+% [Dirk] I am a tradionalist here ...
+% [Romain] fine. should we then remove the background section
+% and just let its contents be part of 'introduction'
 
 R is an extensible system. The 'Writing R Extensions' manual \citep{R:exts}
 describes in great detail the various ways to augment R with compiled code,
@@ -33,7 +36,9 @@ The current version of \pkg{Rcpp} combines two distincts
 APIs. The first---which we call `classic Rcpp API'---exists since 
 the first version of \pkg{Rcpp}. The second API, enclosed in the 
 \code{Rcpp} C++ namespace is a newer codebase, which we started to develop
-more recently. This article %mostly concerns the newer API, and  %% [Dirk] Really?
+more recently. This article 
+% mostly concerns the newer API, and  %% [Dirk] Really?
+% [Romain] based on relative lengths of coverage ... 
 highlights some of the key design and implementation choices: 
 lightweight encapsulation of R object in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
