@@ -28,10 +28,10 @@ a light review of approaches from other authors and give some historical
 background on the development of \pkg{Rcpp}.
 
 The current version of \pkg{Rcpp} actually hosts together two distincts
-api's. The first --- which we call `classic Rcpp API` --- exists since 
-the first version of \pkg{Rcpp}. The second api, enclosed in the 
+API's. The first --- which we call `classic Rcpp API` --- exists since 
+the first version of \pkg{Rcpp}. The second API, enclosed in the 
 \code{Rcpp} C++ namespace is a newer codebase, which we started to develop
-in late 2009. This article mostly concerns the newer api, and 
+in late 2009. This article mostly concerns the newer API, and 
 highlights some of the key design choices and implementation: 
 lightweight encapsulation of R object in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
@@ -39,7 +39,7 @@ R and C++ and error handling.
 
 Several examples are included to 
 illustrate the advantage of using \pkg{Rcpp} as opposed to 
-the traditional R api and many more examples are available within 
+the traditional R API and many more examples are available within 
 the package. 
 
 \section{Background}
@@ -183,14 +183,14 @@ reviewed at the end.
 % [Romain]: removing this pedestrian sentence :
 % Having discussed the `Classic Rcpp' API and its deployment in the previous
 % section, we now turn to the `New Rcpp'. 
-In late 2009, the Rcpp api has been dramatically extended, leading to a 
+In late 2009, the Rcpp API has been dramatically extended, leading to a 
 complete redesign, based on the usage experience of several 
 years of Rcpp deployment, needs from other projects, 
 as well as current C++ design approaches.
 
 \subsection{Rcpp Class hierarchy}
 
-The \code{Rcpp::RObject} class is the basic class of the new Rcpp api. 
+The \code{Rcpp::RObject} class is the basic class of the new Rcpp API. 
 An instance of the \code{RObject} class encapsulates an R object
 (\code{SEXP}), exposes methods that are appropriate for all types 
 of objects and transparently manage garbage collection.
@@ -245,7 +245,7 @@ Classes related to vectors (\code{IntegerVector}, \code{NumericVector},
 to extract and set values from the vectors, etc ...
 
 The following sub-sections present typical uses Rcpp classes in
-comparison with the same code expressed using functions of the R api.
+comparison with the same code expressed using functions of the R API.
 
 \subsection{Numeric vectors}
 
@@ -418,7 +418,7 @@ useful framework to implement the logic of the code in terms of C++
 data structures and then explicitely convert data back to R. 
 
 In addition, the converters are also used implicitely
-in various places in the \code{Rcpp} api. 
+in various places in the \code{Rcpp} API. 
 Consider the following code that uses the \code{Rcpp::Environment} class to 
 interchange data between C++ and R.
 
@@ -453,7 +453,7 @@ first delegates to wrap the production of an R object based on the
 type that is passed in (\code{std::map<std::string,std::string>}), 
 and then assign the object to the requested name.
 
-The same mechanism is used throughout the api, including : access/modification
+The same mechanism is used throughout the API, including : access/modification
 of object attributes, slots, elements of generic vectors (lists), 
 function arguments. 
 
@@ -718,7 +718,7 @@ R API & 34 \\
 \end{small}
 \end{center}
 
-The first implementation, using the traditional R api, unsurprisingly 
+The first implementation, using the traditional R API, unsurprisingly 
 appears to be the most efficient. It takes advantage of pointer 
 arithmetics and needs not to pay the price of object encapsulation. 
 
@@ -729,7 +729,7 @@ The third implementation illustrates the price of object encapsulation
 and calling an overloaded \code{operator[]} as opposed to using 
 pointer arithmetics.
 
-Finally the second implementation --- from the classic Rcpp api --- 
+Finally the second implementation --- from the classic Rcpp API --- 
 is clearly behind in terms of efficiency. The difference is mainly 
 caused by the many unnecessary copies that the \code{RcppVector<double>}
 class performs. First, both objects (\code{a} and \code{b})
@@ -748,7 +748,7 @@ The class hierarchy allows manipulation of R data structures in C++
 using member functions and operators directly related to the type
 of object being used, therefore reducing the level of expertise
 required to master the various functions and macros offered by the
-traditional R internal api. The classes assume the entire 
+traditional R internal API. The classes assume the entire 
 responsability of garbage collection of objects, relieving the 
 programmer from book-keeping operations with the protection stack 
 and enabling him/her to focus on the scientific problem. 
@@ -759,13 +759,13 @@ to write logic in terms of c++ data structures, facilitating use
 of modern libraries such as the standard template library and its 
 containers and algorithms. \code{wrap} and \code{as} are extensible
 by design and can be used either explicitely or implicitely throughout 
-the api. 
+the API. 
 
 Only using thin wrappers around \code{SEXP} objects, 
-the footprint of the \code{Rcpp} api is very lightweight, and does not 
+the footprint of the \code{Rcpp} API is very lightweight, and does not 
 induces a significant performance price. 
 
-Using the \code{Rcpp} api dramatically reduces the complexity 
+Using the \code{Rcpp} API dramatically reduces the complexity 
 of the code, which improves code readability and maintainability.
 The redesign of \code{Rcpp} was motivated by the needs of other 
 projects such as \code{RInside} for easy embedding 
