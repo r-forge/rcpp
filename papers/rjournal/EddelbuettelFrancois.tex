@@ -5,9 +5,16 @@
 
 \maketitle
 
-\abstract{TBD}
+\abstract{The \pkg{Rcpp} package dramatically simplifies the 
+process of integrating C++ code with R. It provides a
+consistent C++ class hierarchy that map various types of 
+R objects (vectors, functions, environments, ...) to 
+dedicated C++ class. Data interchange between R and C++
+is managed by simple, flexible and extensible concepts.
+\pkg{Rcpp} substancially lowers the language barrier for programmers
+who want to plug compiled code in an R package.}
 
-\section{Introduction}
+% \section{Introduction}
 
 TBD, probably close to last
 
@@ -17,7 +24,12 @@ other hand, 'new Rcpp' is more \textsl{horizontal as well as vertical} as it
 also significantly eases access from C++ itself (and to the C++
 representation of R objects).  Does that make sense?
 
-\section{Overview}
+% \section{Overview}
+% [Romain:] we don't need introduction and overview, one should be enough
+%           also some articles don't have anything. For example 
+%           the party on article in the last issue directly start with 
+%           text after the abstract. I like that. Also is the case of the
+%           "new R help system" article
 
 % [Romain:] the overview is really messy and probably 
 % needs a complete rewrite when all other sections are finished
@@ -730,8 +742,8 @@ Using the \code{Rcpp} api dramatically reduces the complexity
 of the code, which improves code readability and maintainability.
 The redesign of \code{Rcpp} was motivated by the needs of other 
 projects such as \code{RInside} for easy embedding 
-of R in a c++ application and \code{RProtoBuf} that interfaces
-with the protocol buffer library. 
+of R in a c++ application and \code{RProtoBuf} \citep{cran:rprotobuf} 
+that interfaces with the protocol buffer library. 
 
 \bibliography{EddelbuettelFrancois}
 
