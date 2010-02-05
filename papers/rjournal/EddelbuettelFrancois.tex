@@ -153,8 +153,8 @@ RcppExport SEXP convolve2cpp(SEXP a, SEXP b) \{
 
 We can highlight several aspects. First, only a single header file
 \code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
-\code{SEXP} types---the bread-and-butter of all internal R programming---a
-third is returned.  Third, both inputs are converted to C++ vector types that
+\code{SEXP} types, a third is returned.
+Third, both inputs are converted to C++ vector types that
 are \textsl{templated} (meaning that a type-independent framework can be
 applied to create actual vectors of the specified type). Here a standard \code{double}
 type is used to create a vector of doubles from the template type.
@@ -765,7 +765,7 @@ Only using thin wrappers around \code{SEXP} objects,
 the footprint of the \code{Rcpp} API is very lightweight, and does not 
 induces a significant performance price. 
 
-Using the \code{Rcpp} API dramatically reduces the complexity 
+Using the \code{Rcpp} api dramatically reduces the complexity 
 of the code, which improves code readability and maintainability.
 The redesign of \code{Rcpp} was motivated by the needs of other 
 projects such as \code{RInside} for easy embedding 
