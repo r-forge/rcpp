@@ -585,7 +585,8 @@ src <- '
        xab[i + j] += xa[i] * xb[j];
   return xab;
 '
-fun <- cfunction( signature(a="numeric", b="numeric"), 
+fun <- cfunction( 
+	signature(a="numeric", b="numeric"), 
 	src, Rcpp=TRUE)
 \end{example}
 
