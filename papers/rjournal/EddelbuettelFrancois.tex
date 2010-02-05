@@ -309,7 +309,7 @@ Rcpp::NumericVector ab = \{123.45, 67.89\};
 A second example deals with character vectors and emulates this R code
 
 \begin{example}
-> x <- c("foo", "bar")
+> c("foo", "bar")
 \end{example}
 
 Using the traditional R API, the vector can be allocated and filled as such:
@@ -353,7 +353,7 @@ SEXP wrap(const T& object) ;
 \end{example}
 
 The templated function takes a reference to a `wrappable` 
-object and convert this object into a SEXP, which is what R expects. 
+object and convert this object into a \code{SEXP}, which is what R expects. 
 Currently wrappable types are :
 \begin{itemize}
 \item primitive types, \code{int}, \code{double}, ... which are converted 
@@ -463,7 +463,7 @@ and then assign the object to the requested name.
 
 The same mechanism is used throughout the API, including : access/modification
 of object attributes, slots, elements of generic vectors (lists), 
-function arguments. 
+function arguments, nodes of dotted pair lists and language calls, etc ... 
 
 \section{Function calls}
 
@@ -474,7 +474,9 @@ The last example shows how to use \pkg{Rcpp} to emulate the R code below.
 \end{example}
 
 The code can be expressed in several ways in \pkg{Rcpp}, the first version
-shows the use of the \code{Environment} and \code{Function} classes. 
+shows the use of the \code{Environment} and \code{Function} classes
+\footnote{We have removed the \code{Rcpp::} prefix from the
+following examples for readability.}. 
 
 \begin{example}
 Environment stats("package:stats") ;
@@ -498,7 +500,10 @@ call.eval() ;
 In this version, we first create a call to the symbol "rnorm" and
 evaluate the call in the global environment. In both cases, \code{wrap}
 is used implicitely to convert \code{10} and \code{100} 
-into R integer vectors. 
+into R integer vectors. It should be noted that this 
+version involves potentially expensive implicit lookup in the search path
+to find the "rnorm" function. 
+% should we quote luke's : http://www.cs.uiowa.edu/~luke/R/bytecode.html
 
 Using the R API, the first example, using the actual \code{rnorm} function,
 translates to :
@@ -518,9 +523,7 @@ UNPROTECT(4) ;
 return res ;
 \end{example}
 
-and the second example, using the \samp{rnorm} symbol --- and therefore
-involving potentially expensive implicit lookup in the search path ---
-can be written as:
+and the second example, using the \samp{rnorm} symbol, can be written as:
 
 \begin{example}
 SEXP call  = PROTECT( 
@@ -590,15 +593,12 @@ fun <- cfunction(
 	src, Rcpp=TRUE)
 \end{example}
 
-% [Romain]: I've removed the line
-% for (int i = 0; i < nab; i++) xab[i] = 0.0;
-% because the constructor now does it automatically to match 
-% what numeric( 10 ) would do in R
-
 The main difference to the previous solution is that the input parameters are
 directly passed to types \code{Rcpp::NumericVector}, and that the return
 vector is automatically converted to a \code{SEXP} type through implicit
-conversion.
+conversion. Also in this version, the vector \code{xab} is not 
+initialized because the constructor already performs initialization
+to match the behaviour of the R function \code{numeric}.
 
 \section{Error handling}
 
