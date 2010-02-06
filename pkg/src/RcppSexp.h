@@ -67,17 +67,16 @@ public:
     
     /* we don't provide implicit converters because 
        of Item 5 in More Effective C++ */
-       inline bool                     asBool() const  {return object.asBool() ; } ;
-       inline double                   asDouble() const   { return object.asDouble() ; }
-       inline int                      asInt() const { return object.asInt() ; }
-       inline Rbyte                    asRaw() const { return object.asRaw() ; }
-       inline std::string              asStdString() const { return object.asStdString() ; }
-       inline std::vector<int>         asStdVectorInt() const { return object.asStdVectorInt() ; }
-       inline std::vector<double>      asStdVectorDouble() const { return object.asStdVectorDouble(); }
-       inline std::vector<std::string> asStdVectorString() const { return object.asStdVectorString(); }
-       inline std::vector<Rbyte>       asStdVectorRaw() const { return object.asStdVectorRaw() ;}
-       inline std::vector<bool>        asStdVectorBool() const { return object.asStdVectorBool() ; }
-    
+       inline bool                     asBool() const  {return as<bool>( object ) ; } ;
+       inline double                   asDouble() const   { return as<double>(object) ; }
+       inline int                      asInt() const { return as<int>(object) ; }
+       inline Rbyte                    asRaw() const { return as<Rbyte>(object) ; }
+       inline std::string              asStdString() const { return as<std::string>(object) ; }
+       inline std::vector<int>         asStdVectorInt() const { return as< std::vector<int> >( object ) ; }
+       inline std::vector<double>      asStdVectorDouble() const { return as< std::vector<double>(object); }
+       inline std::vector<std::string> asStdVectorString() const { return as< std::vector<std::string> >(object); }
+       inline std::vector<Rbyte>       asStdVectorRaw() const { return as< std::vector<Rbyte> >(object) ;}
+       inline std::vector<bool>        asStdVectorBool() const { return as< std::vector<bool> >(object) ; }
     
     	/**
 	 * Calls the preserve method of the wrapped RObject, which 
