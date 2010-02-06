@@ -174,9 +174,6 @@ DottedPair( const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5
 		}
 		Proxy& operator=(const Named& rhs) ;
 		
-		/* rvalue use */
-		operator SEXP() ;
-		
 		template <typename T> operator T() const {
 			return as<T>( CAR(node) ) ;
 		}
@@ -189,6 +186,8 @@ DottedPair( const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5
 	Proxy operator[]( int i )  ;
 	
 	friend class Proxy; 
+	
+	
 	
 	virtual ~DottedPair() = 0 ;
 	

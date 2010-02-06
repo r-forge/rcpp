@@ -76,12 +76,8 @@ public:
 			return *this ;
 		}
 	
-		/* rvalue use */
-		operator SEXP() const ;
-	
 		template <typename T> operator T() const {
-			T t = Rcpp::as<T>(get()) ;
-			return t ;
+			return Rcpp::as<T>(get()) ;
 		} ;
 		
 	private:

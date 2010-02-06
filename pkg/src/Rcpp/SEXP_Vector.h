@@ -55,11 +55,6 @@ public:
 			return *this; 
 		}
 		
-		/* rvalue use */
-		operator SEXP() {
-			return VECTOR_ELT( parent, index ) ; 
-		}
-		
 		template <typename U> operator U(){
 			SEXP xx = VECTOR_ELT( parent, index) ;
 			return as<U>( xx ) ;

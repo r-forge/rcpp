@@ -128,20 +128,20 @@ void RObject::SlotProxy::set( SEXP x) const {
 						Rf_cons( x , R_NilValue)  ) )))) ; 
 }
 
-RObject::SlotProxy::operator SEXP() const {
-	return get() ;
+SEXP RObject::AttributeProxy::get() const {
+	return Rf_getAttrib( parent, Rf_install( attr_name.c_str() ) ) ;
+}
+
+void RObject::AttributeProxy::set(SEXP x) const{
+	Rf_setAttrib( parent, Rf_install(attr_name.c_str()), x ) ;
 }
 
 RObject::AttributeProxy::AttributeProxy( const RObject& v, const std::string& name) :
 	parent(v), attr_name(name) {};
 
 RObject::AttributeProxy& RObject::AttributeProxy::operator=(const AttributeProxy& rhs){
-	Rf_setAttrib( parent, Rf_install(attr_name.c_str()), parent.asSexp() ) ;
+	set( rhs.get() ) ;
 	return *this ;
-}
-
-RObject::AttributeProxy::operator SEXP() const {
-	return Rf_getAttrib( parent , Rf_install( attr_name.c_str() ) ) ;
 }
 
 RObject::AttributeProxy RObject::attr( const std::string& name) const{

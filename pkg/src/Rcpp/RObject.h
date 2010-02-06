@@ -139,24 +139,21 @@ public:
 		/* lvalue uses */
 		AttributeProxy& operator=(const AttributeProxy& rhs) ;
 
-		template <typename T>
-		AttributeProxy& operator=(const T& rhs){
-			Rf_setAttrib( parent, Rf_install(attr_name.c_str()), wrap(rhs) ) ;
+		template <typename T> AttributeProxy& operator=(const T& rhs){
+			set( wrap(rhs) ) ;
 			return *this ;
 		}
-
-		/* rvalue use */
-		operator SEXP() const ;
-
+		
 		template <typename T> operator T() const {
-			SEXP att = Rf_getAttrib( parent, Rf_install( attr_name.c_str() ) );
-			T t = Rcpp::as<T>(att) ;
-			return t ;
+			return as<T>(get()) ;
 		} ;
 		
 	private:
 		const RObject& parent; 
 		std::string attr_name ;
+		
+		SEXP get() const ;
+		void set(SEXP x) const ;
 	} ;
     
 	class SlotProxy {
@@ -172,12 +169,8 @@ public:
 			return *this ;
 		}
 
-		/* rvalue use */
-		operator SEXP() const ;
-
 		template <typename T> operator T() const {
-			T t = Rcpp::as<T>(get()) ;
-			return t ;
+			return as<T>(get()) ;
 		} ;
 		
 	private:
