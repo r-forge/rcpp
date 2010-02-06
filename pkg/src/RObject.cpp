@@ -62,17 +62,6 @@ RObject::~RObject() {
 	logTxt("~RObject");
 }
 
-double RObject::asDouble() const { return as<double>( m_sexp ) ; }
-int RObject::asInt() const { return as<int>( m_sexp ) ; }
-Rbyte RObject::asRaw() const { return as<Rbyte>( m_sexp ) ; }
-bool RObject::asBool() const { return as<bool>(m_sexp) ; }
-std::string RObject::asStdString() const { return as< std::string >( m_sexp ) ; }
-std::vector<bool> RObject::asStdVectorBool() const { return as< std::vector<bool> >( m_sexp ) ; }
-std::vector<int> RObject::asStdVectorInt() const { return as< std::vector<int> >( m_sexp ) ; }
-std::vector<Rbyte> RObject::asStdVectorRaw() const { return as< std::vector<Rbyte> >( m_sexp ) ; }
-std::vector<double> RObject::asStdVectorDouble() const { return as< std::vector<double> >( m_sexp ) ; }
-std::vector<std::string> RObject::asStdVectorString() const { return as< std::vector<std::string> >( m_sexp ) ; }
-
 std::vector<std::string> RObject::attributeNames() const {
 	/* inspired from do_attributes@attrib.c */
 	
