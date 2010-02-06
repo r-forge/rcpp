@@ -1,5 +1,7 @@
 2010-02-06  Romain Francois <francoisromain@free.fr>
 
+	* src/Rcpp/RObject.h : asFoo methods are deprecated.
+
 	* src/Rcpp/DottedPair.h : using R_len_t instead of int
 	to anticipate future changes in R
 	* src/Rcpp/VectorBase.h: idem
