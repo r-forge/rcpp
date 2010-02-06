@@ -726,15 +726,15 @@ table below:
 
 \begin{center}
 \begin{small}
-\begin{tabular}{cc}
-\textbf{Method} & \textbf{Elapsed Time} (ms) \\ 
-\hline
-R API & 34 \\
-\hline
-\code{RcppVector<double>} & 353 \\
-\code{NumericVector::operator[]} & 55 \\
-\code{NumericVector::begin} & 36 \\
-\hline
+\begin{tabular}{lrr}
+\toprule
+\textbf{Method} & \textbf{Time} (ms) & Ratio \\ 
+\cmidrule(r){2-3}
+R API & 34 & \\
+\code{RcppVector<double>} & 353 & 10.38 \\
+\code{NumericVector::operator[]} & 55 & 1.61 \\
+\code{NumericVector::begin} & 36 &  1.06 \\
+\bottomrule
 \end{tabular}
 \end{small}
 \end{center}
