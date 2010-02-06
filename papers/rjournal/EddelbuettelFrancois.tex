@@ -42,6 +42,9 @@ more recently. This article
 % [Romain] There are a few more things we could show. That said I'm not 
 %          desperate to dive into another article just now, and we'd probably 
 %          want to be able to quote this one (if accepted, etc ...)
+% [Dirk] It will get accepted and be out before we get around to sending
+%        something to JSS. Realistically, that will be the fall anyway. No
+%        problem there.
 highlights some of the key design and implementation choices: 
 lightweight encapsulation of R object in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
@@ -378,10 +381,12 @@ specialized.
 % [Dirk:] *Plonk* Yes.
 % [Romain:] Hmmm. not sure about that anymore. Maybe it is a bit confusing. Don't know. Will sleep on it.
 %           and you don't actually quote RInside. 
+% [Dirk:] Now I do
 \end{itemize}
-An example for the full specialisation of the templated \code{wrap} function
-is provided by \code{vector< vector< double > >} and \code{vector< vector< int
- > >} which are frequently used for representating numeric matrices.
+One example for the specialisation of the templated \code{wrap} function is
+provided in \pkg{RInside} \citep{cran:rinside} by \code{vector< vector<
+  double > >} and \code{vector< vector< int > >} which are used for
+representating numeric matrices.
 
 Whether an object is wrappable is resolved at compile time, and the 
 dispatch of the appropriate implementation is performed by the compiler
@@ -389,6 +394,8 @@ using modern techniques of template meta programming and class traits.
 
 % [Romain] : should we put the explanation after the code ?
 % [Romain] : trying this now
+% [Dirk:]  It's not bad but it just goes on and on. Page 4 is overall 
+%          a little repetitive.
 The following code snippet illustrates that the design allows
 composition:
 
@@ -416,7 +423,7 @@ list( c( bar = 2L, foo = 1L) ,
       c( bar = 2L, bling = 3L, foo = 1L) )
 \end{example}
 
-The C++ type \code{std::vector< std::map<std::string,int> >} is wrappable because: 
+The C++ type \code{std::vector< std::map< std::string,int > >} is wrappable because: 
 \texttt{int} is wrappable (as a primitive type), therefore 
 \texttt{std::map<std::string,int>} is wrappable (as a STL map 
 of wrappable types keyed by strings), and finally 
