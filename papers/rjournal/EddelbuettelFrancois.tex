@@ -35,6 +35,11 @@ the first version of \pkg{Rcpp}. The second API, enclosed in the
 more recently. This article 
 % mostly concerns the newer API, and  %% [Dirk] Really?
 % [Romain] based on relative lengths of coverage ... 
+% [Dirk] agreed -- I'd be up for shortening to keep this closer to six
+%        pages. But that is just an ideal. If we do not get down to six
+%        pages so be it. I like the paper as it is. But it may be harder
+%        to argue for a new publication in JSS or elsewhere is the only
+%        new piece is XPtr. That said by then we may have new toys ...
 highlights some of the key design and implementation choices: 
 lightweight encapsulation of R object in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
@@ -189,6 +194,10 @@ More recently, the \pkg{Rcpp} API has been dramatically extended, leading to a
 complete redesign, based on the usage experience of several 
 years of \pkg{Rcpp} deployment, needs from other projects, knowledge 
 of the internal R API, as well as current C++ design approaches. 
+This redesign of \code{Rcpp} was also motivated by the needs of other 
+projects such as \code{RInside}  \citep{cran:rinside} for easy embedding 
+of R in a C++ application and \code{RProtoBuf} \citep{cran:rprotobuf} 
+that interfaces with the protocol buffer library. 
 
 \subsection{Rcpp Class hierarchy}
 
@@ -223,6 +232,8 @@ the protection stack with \code{PROTECT} and \code{UNPROTECT} macros.
 % [Romain] : maybe we can shorten the next 3 paragraphs
 %            it does not say much more than if we just spell out the 
 %            names of the methods
+% [Dirk]  I was looking at that too this morning. Maybe combine from three
+%         short paragraphs into one?  Do you want to give it a try?
 The \code{RObject} class defines a set of member functions that
 can be used on any R object, regardless of its type. The member
 functions \code{isNULL}, \code{isObject} and \code{isS4} can be 
@@ -376,7 +387,11 @@ specialized.
 % [Dirk] Example for _what_ ?
 % [Romain]: RInside fully specializes wrap for these types: 
 %           vector<vector<double>> and vector<vector<int>>
+% [Dirk:] *Plonk* Yes.
 \end{itemize}
+An example for the full specialisation of the templated \code{wrap} function
+is provided by \code{vector< vector< double > >} and \code{vector< vector< int
+ > >} which are frequently used for representating numeric matrices.
 
 Whether an object is wrappable is resolved at compile time, and the 
 dispatch of the appropriate implementation is performed by the compiler
@@ -511,8 +526,8 @@ is used implicitely to convert \code{10} and \code{100}
 into R integer vectors. It should be noted that this 
 version involves a potentially expensive implicit lookup in the search path
 to find the \code{rnorm} function. 
-% should we quote luke's : http://www.cs.uiowa.edu/~luke/R/bytecode.html
-
+% [Romain] should we quote luke's : http://www.cs.uiowa.edu/~luke/R/bytecode.html
+% [Dirk]   space constraints....
 For comparison, using the standard R API, the first example using the actual \code{rnorm} function
 translates to :
 
@@ -783,28 +798,22 @@ responsability of garbage collection of objects, relieving the
 programmer from book-keeping operations with the protection stack 
 and enabling him/her to focus on the underlying problem. 
 
-Data interchange between R and C++---performed by the 
-\code{wrap} and \code{as} template functions---allow the programmer
-to write logic in terms of C++ data structures, facilitating use
-of modern libraries such as the standard template library and its 
-containers and algorithms. The \code{wrap} and \code{as} functions are extensible
-by design and can be used either explicitely or implicitely throughout 
-the API. 
-
-Only using thin wrappers around \code{SEXP} objects, 
+Data interchange between R and C++ code---performed by the \code{wrap} and
+\code{as} template functions---allows the programmer to write logic in terms
+of C++ data structures and facilitates use of modern libraries such as the
+standard template library and its containers and algorithms. The
+\code{wrap()} and \code{as()} template functions are extensible by design and
+can be used either explicitely or implicitely throughout the API.
+By using only thin wrappers around \code{SEXP} objects, 
 the footprint of the \code{Rcpp} API is very lightweight, and does not 
 induces a significant performance price. 
 
-Using the \code{Rcpp} API dramatically reduces the complexity 
-of the code, which improves code readability and maintainability.
-The redesign of \code{Rcpp} was motivated by the needs of other 
-projects such as \code{RInside}  \citep{cran:rinside} for easy embedding 
-of R in a C++ application and \code{RProtoBuf} \citep{cran:rprotobuf} 
-that interfaces with the protocol buffer library. 
+The \code{Rcpp} API offers opportunities to dramatically reduce the complexity 
+of code, which should improve code readability, maintainability and reuse.
 % [Dirk]  Do we really need to cite RInside and RProtoBuf?
 % [Romain] Not really. I guess I wanted to give a reason why we did it 
 %          and how it pays of, but we don't have to
-
+% [Dirk] How about if we lift that last sentence at place it earlier?
 \bibliography{EddelbuettelFrancois}
 
 \address{Dirk Eddelbuettel\\
