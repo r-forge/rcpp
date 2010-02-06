@@ -38,7 +38,7 @@ namespace Rcpp{
 	}
 
 	size_t VectorBase::offset(const size_t& i) const throw(RObject::index_out_of_bounds){
-    	    if( i >= static_cast<size_t>(Rf_length(m_sexp)) ) throw RObject::index_out_of_bounds() ;
+    	    if( static_cast<R_len_t>(i) >= Rf_length(m_sexp) ) throw RObject::index_out_of_bounds() ;
     	    return i ;
     	}
 

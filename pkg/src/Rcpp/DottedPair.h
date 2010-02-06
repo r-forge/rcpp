@@ -107,16 +107,16 @@ DottedPair( const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5
 	 * @param object object to wrap
 	 */
 	template <typename T>
-	void insert( const int& index, const T& object) throw(index_out_of_bounds) {
+	void insert( const size_t& index, const T& object) throw(index_out_of_bounds) {
 		if( index == 0 ) {
 			push_front( object ) ;
 		} else{
 			if( index <  0 ) throw index_out_of_bounds() ;
 			if( isNULL( ) ) throw index_out_of_bounds() ;
 			
-			if( index < 0 || index > ::Rf_length(m_sexp) ) throw index_out_of_bounds() ;
+			if( static_cast<R_len_t>(index) > ::Rf_length(m_sexp) ) throw index_out_of_bounds() ;
 			
-			int i=1;
+			size_t i=1;
 			SEXP x = m_sexp ;
 			while( i < index ){
 				x = CDR(x) ;
@@ -136,7 +136,7 @@ DottedPair( const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5
 	 */
 	template <typename T>
 	void replace( const int& index, const T& object ) throw(index_out_of_bounds){
- 	        if( index < 0 || index >= ::Rf_length(m_sexp) ) throw index_out_of_bounds() ;
+ 	        if( static_cast<R_len_t>(index) >= ::Rf_length(m_sexp) ) throw index_out_of_bounds() ;
 		
 		/* pretend we do a pairlist so that we get Named to work for us */
 		SEXP x = PROTECT(pairlist( object ));
@@ -149,8 +149,8 @@ DottedPair( const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5
 		UNPROTECT(1) ;
 	}
 
-        inline size_t length() const { return ::Rf_length(m_sexp) ; }
-        inline size_t size() const { return ::Rf_length(m_sexp) ; }
+        inline R_len_t length() const { return ::Rf_length(m_sexp) ; }
+        inline R_len_t size() const { return ::Rf_length(m_sexp) ; }
 	
 	/**
 	 * Remove the element at the given position
