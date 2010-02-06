@@ -371,6 +371,8 @@ the type \code{T} is wrappable;
 specialized.
 % [Romain]: should we mention RInside as an example 
 % [Dirk] Example for _what_ ?
+% [Romain]: RInside fully specializes wrap for these types: 
+%           vector<vector<double>> and vector<vector<int>>
 \end{itemize}
 
 Whether an object is wrappable is resolved at compile time, and the 
@@ -655,6 +657,7 @@ function is then translated in terms of an C++ exception.
 
 % example ?
 % [Dirk] We're running out of space.  In the JSS piece...
+% [Romain] Agreed
 
 \section{Performance comparison}
 
@@ -794,6 +797,8 @@ projects such as \code{RInside}  \citep{cran:rinside} for easy embedding
 of R in a C++ application and \code{RProtoBuf} \citep{cran:rprotobuf} 
 that interfaces with the protocol buffer library. 
 % [Dirk]  Do we really need to cite RInside and RProtoBuf?
+% [Romain] Not really. I guess I wanted to give a reason why we did it 
+%          and how it pays of, but we don't have to
 
 \bibliography{EddelbuettelFrancois}
 
