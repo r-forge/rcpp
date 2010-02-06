@@ -45,10 +45,7 @@ namespace Rcpp{
 	}
 	
 	Dimension::operator SEXP() const {
-		SEXP x = PROTECT(Rf_allocVector(INTSXP,dims.size())) ;
-		std::copy( dims.begin(), dims.end(), INTEGER(x) ) ;
-		UNPROTECT(1) ; /* x */
-		return x ;
+		return wrap( dims.begin(), dims.end() ) ;
 	}
 	
 	int Dimension::size() const {
