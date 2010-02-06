@@ -27,7 +27,7 @@
 
 namespace Rcpp{ 
 
-typedef SimpleVector<REALSXP,double> NumericVector ;
+typedef SimpleVector<REALSXP> NumericVector ;
 
 } // namespace
 

@@ -27,7 +27,7 @@
 
 namespace Rcpp{ 
 
-typedef SimpleVector<CPLXSXP,Rcomplex> ComplexVector ;	
+typedef SimpleVector<CPLXSXP> ComplexVector ;	
 
 } // namespace
 

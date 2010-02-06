@@ -27,7 +27,7 @@
 
 namespace Rcpp{
 
-typedef SimpleVector<LGLSXP,int> LogicalVector ;
+typedef SimpleVector<LGLSXP> LogicalVector ;
 
 } // namespace
 

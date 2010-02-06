@@ -1,3 +1,9 @@
+2010-02-06  Romain Francois <francoisromain@free.fr>
+
+	* src/Rcpp/SimpleVector.h: SimpleVector is now only parameterized
+	by the SEXP type. The c type is automatically retrieved using 
+	the storage_type trait class.
+
 2010-02-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/THANKS: Added in order to show our appreciation
