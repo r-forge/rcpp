@@ -5,14 +5,13 @@
 
 \maketitle
 
-\abstract{The \pkg{Rcpp} package dramatically simplifies the 
-process of integrating C++ code with R. It provides a
-consistent C++ class hierarchy that maps various types of 
-R objects (vectors, functions, environments, ...) to 
-dedicated C++ classes. Data interchange between R and C++
-is managed by simple, flexible and extensible concepts.
-\pkg{Rcpp} substantially lowers the language barrier for programmers
-wanting to combine compiled code with R.}
+\abstract{The \pkg{Rcpp} package simplifies integrating C++ code with R. It
+  provides a consistent C++ class hierarchy that maps various types of R
+  objects (vectors, functions, environments, ...) to dedicated C++
+  classes. Data interchange between R and C++ is managed by simple, flexible
+  and extensible concepts. C++ code can be compiled, linked and loaded on the
+  fly.  \pkg{Rcpp} substantially lowers the barrier for programmers
+  wanting to combine compiled C++ code with R.}
 
 \section{Introduction} 
 
@@ -41,10 +40,9 @@ lightweight encapsulation of R object in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
 R and C++ and error handling. 
 
-Several examples are included to 
-illustrate the advantage of using \pkg{Rcpp} as opposed to 
-the traditional R API and many more examples are available within 
-the package. 
+Several examples are included to illustrate the advantage of using \pkg{Rcpp}
+as opposed to the traditional R API. Many more examples are available within
+the package, both as explicit examples and as part of the numerous unit tests.
 
 %\section{Background}
 
@@ -58,12 +56,12 @@ these were under the name \pkg{Rcpp}. The package was then renamed to
 new name.  However, no new releases or updates were made during 2007, 2008
 and most of 2009.
 
-Given the continued use of the package, we revived it using the former name
-\pkg{Rcpp}. New releases started in November 2008 which include an improved
-build and distribution process, additional documentation, and new
-functionality---while retaining the existing interface.  This constitutes the
-`classic \pkg{Rcpp}' interface (described in the next section)
-which will be maintained for the forseeable future.
+Given the continued use of the package, we decided revitalize it. New
+releases, using the initial name \pkg{Rcpp}, started in November 2008. These
+already included an improved build and distribution process, additional
+documentation, and new functionality---while retaining the existing
+interface.  This constitutes the `classic \pkg{Rcpp}' interface (described in
+the next section) which will be maintained for the forseeable future.
 
 Yet C++ coding standards continued to evolve. So starting in 2009 the
 codebase was significantly extended and numerous new features were added.
