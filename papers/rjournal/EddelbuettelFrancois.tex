@@ -381,6 +381,8 @@ specialized.
 Whether an object is wrappable is resolved at compile time, and the 
 dispatch of the appropriate implementation is performed by the compiler
 using modern techniques of template meta programming and class traits.
+
+% [Romain] : should we put the explanation after the code ?
 The design allows composition, so for example objects of the class
 \code{std::vector< std::map<std::string,int> >} are wrappable. This is 
 because \code{int} is wrappable (as a primitive type), consequently 
