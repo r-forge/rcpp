@@ -220,6 +220,9 @@ By assuming the entire responsability of garbage collection, \code{Rcpp}
 relieves the programmer from writing boiler plate code to manage
 the protection stack with \code{PROTECT} and \code{UNPROTECT} macros.
 
+% [Romain] : maybe we can shorten the next 3 paragraphs
+%            it does not say much more than if we just spell out the 
+%            names of the methods
 The \code{RObject} class defines a set of member functions that
 can be used on any R object, regardless of its type. The member
 functions \code{isNULL}, \code{isObject} and \code{isS4} can be 
