@@ -27,7 +27,7 @@
 
 namespace Rcpp{ 
 
-typedef SimpleVector<RAWSXP,Rbyte> RawVector ;
+typedef SimpleVector<RAWSXP> RawVector ;
 
 } // namespace
 

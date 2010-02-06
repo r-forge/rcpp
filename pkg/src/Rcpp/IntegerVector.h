@@ -27,7 +27,7 @@
 
 namespace Rcpp{ 
 
-typedef SimpleVector<INTSXP,int> IntegerVector ;
+typedef SimpleVector<INTSXP> IntegerVector ;
 
 } // namespace
 
