@@ -132,18 +132,49 @@ public:
      */
     bool hasAttribute( const std::string& attr) const ; 
 
+    /**
+     * Proxy for an object's attribute. Instances of this class
+     * are created by the attr member function of RObject.
+     *
+     * When the proxy is used on the lhs of an assignment it 
+     * forwards the object it is assigned to to the attribute, 
+     * outsourcing to wrap the job of creating the SEXP from the 
+     * input type
+     *
+     * When the proxy is used on the rhs of the assignment, it retrieves
+     * the current value of the attribute and outsources to as the job
+     * of making an object of the appropriate type
+     */
     class AttributeProxy {
 	public:
+		
+		/** 
+		 * @param v object of which we manipulate the attributes
+		 * @param attr_name name of the attribute the proxy manipulates
+		 */
 		AttributeProxy( const RObject& v, const std::string& attr_name) ;
 
-		/* lvalue uses */
+		/**
+		 * lhs use. This assigns the target attribute by using the 
+		 * current attribute referred by another proxy
+		 */
 		AttributeProxy& operator=(const AttributeProxy& rhs) ;
-
+		
+		/**
+		 * lhs use. assigns the target attribute by wrapping 
+		 * the rhs object
+		 *
+		 * @param rhs wrappable object
+		 */
 		template <typename T> AttributeProxy& operator=(const T& rhs){
 			set( wrap(rhs) ) ;
 			return *this ;
 		}
 		
+		/**
+		 * rhs use. Retrieves the current value for the target
+		 * attribute and structure it as a T object using as
+		 */
 		template <typename T> operator T() const {
 			return as<T>(get()) ;
 		} ;
@@ -155,20 +186,46 @@ public:
 		SEXP get() const ;
 		void set(SEXP x) const ;
 	} ;
-    
+	
+	/**
+	 * Proxy for objects slots. 
+	 */
 	class SlotProxy {
 	public:
+		/**
+		 * Creates a slot proxy. This throws an exception 
+		 * if the parent object is not an S4 object or if the 
+		 * class of parent object does not have the requested 
+		 * slot
+		 *
+		 * @param v parent object of which we get/set a slot
+		 * @param name slot name
+		 */
 		SlotProxy( const RObject& v, const std::string& name) ;
 
-		/* lvalue uses */
+		/**
+		 * lhs use. Assigns the target slot using the current 
+		 * value of another slot proxy.
+		 *
+		 * @param rhs another slot proxy
+		 */
 		SlotProxy& operator=(const SlotProxy& rhs) ;
-
-		template <typename T>
-		SlotProxy& operator=(const T& rhs){
+		
+		/**
+		 * lhs use. Assigns the slot by wrapping the rhs object
+		 *
+		 * @param rhs wrappable object
+		 */
+		template <typename T> SlotProxy& operator=(const T& rhs){
 			set( wrap(rhs) ) ;
 			return *this ;
-		}
-
+		} ;
+		
+		/**
+		 * rhs use. Retrieves the current value of the slot
+		 * and structures it as a T object. This only works 
+		 * when as<T> makes sense
+		 */ 
 		template <typename T> operator T() const {
 			return as<T>(get()) ;
 		} ;
