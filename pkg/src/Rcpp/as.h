@@ -43,6 +43,9 @@ template <typename T> T as( SEXP m_sexp) {
 	T t(m_sexp);
 	return t ;
 }
+
+template<> SEXP as(SEXP m_sexp) ;
+
 /**
  * Converts the R object to a bool. 
  * 
