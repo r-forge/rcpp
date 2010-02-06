@@ -725,18 +725,19 @@ We have benchmarked the various implementations using
 table below:
 
 \begin{center}
-\begin{small}
-\begin{tabular}{lrr}
-\toprule
-\textbf{Method} & \textbf{Time} (ms) & Ratio \\ 
-\cmidrule(r){2-3}
-R API & 34 & \\
-\code{RcppVector<double>} & 353 & 10.38 \\
-\code{NumericVector::operator[]} & 55 & 1.61 \\
-\code{NumericVector::begin} & 36 &  1.06 \\
-\bottomrule
-\end{tabular}
-\end{small}
+  \begin{small}
+    \begin{tabular}{lrr}
+      \toprule
+      \textbf{Method} & \textbf{Time} (ms) & Ratio \\ 
+      \cmidrule(r){2-3}
+      R API & 32 & \\
+      \code{RcppVector<double>} & 354 & 11.1 \\
+      \code{NumericVector::operator[]} & 52 & 1.6 \\
+      \code{NumericVector::begin} & 33 &  1.0 \\
+      \bottomrule
+    \end{tabular}
+  \end{small}
+  %\caption{Performance comparison for convolution example}
 \end{center}
 
 The first implementation, using the traditional R API, unsurprisingly 
