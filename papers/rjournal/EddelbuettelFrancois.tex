@@ -739,10 +739,11 @@ RcppExport SEXP convolve4cpp(SEXP a, SEXP b) \{
 \}
 \end{example}
 
-We have benchmarked the various implementations using 
-1000 replicates of each function with \code{a} and 
-\code{b} containing 100 elements each. The timings are summarized in the 
-table below:
+We have benchmarked the various implementations using 1000 replicates of each
+function with \code{a} and \code{b} containing 100 elements
+each.\footnote{The code for this example is contained in the directory
+  \code{inst/examples/ConvolveBenchmarks} in the \pkg{Rcpp} package.} The timings
+are summarized in the table below:
 
 \begin{table}[H]  
   \begin{center}
@@ -810,10 +811,7 @@ induces a significant performance price.
 
 The \code{Rcpp} API offers opportunities to dramatically reduce the complexity 
 of code, which should improve code readability, maintainability and reuse.
-% [Dirk]  Do we really need to cite RInside and RProtoBuf?
-% [Romain] Not really. I guess I wanted to give a reason why we did it 
-%          and how it pays of, but we don't have to
-% [Dirk] How about if we lift that last sentence at place it earlier?
+
 \bibliography{EddelbuettelFrancois}
 
 \address{Dirk Eddelbuettel\\
