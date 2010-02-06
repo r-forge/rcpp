@@ -23,6 +23,10 @@
 
 namespace Rcpp{ 
 
+template<> SEXP as<SEXP>(SEXP m_sexp){
+	return m_sexp ;
+}
+
 template<> double as<double>(SEXP m_sexp) {
     if (Rf_length(m_sexp) != 1) {
 	throw std::range_error("as<double> expects single value");
