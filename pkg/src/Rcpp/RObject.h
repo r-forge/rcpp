@@ -96,9 +96,8 @@ public:
     RObject& operator=( SEXP other ) ;
 
     /**
-     * if this object is protected rom R's GC, then it is released
-     * and become subject to garbage collection. See preserve 
-     * and release member functions.
+     * Removes the protection. The enclosed SEXP becomes subject
+     * to garbage collection, if not otherwise protected
      */
     virtual ~RObject() ;
 
@@ -109,16 +108,16 @@ public:
 
     /* we don't provide implicit converters because 
        of Item 5 in More Effective C++ */
-    bool                     asBool() const;
-    double                   asDouble() const;
-    int                      asInt() const;
-    Rbyte                    asRaw() const;
-    std::string              asStdString() const;
-    std::vector<int>         asStdVectorInt() const;
-    std::vector<double>      asStdVectorDouble() const;
-    std::vector<std::string> asStdVectorString() const;
-    std::vector<Rbyte>       asStdVectorRaw() const;
-    std::vector<bool>        asStdVectorBool() const;
+    inline bool                     asBool()            { DEPRECATED_AS("asBool") ; return as<bool>(m_sexp) ; } ;
+    inline double                   asDouble()          { DEPRECATED_AS("asDouble") ; return as<double>(m_sexp) ; } ;
+    inline int                      asInt()             { DEPRECATED_AS("asInt") ; return as<int>(m_sexp) ; } ;
+    inline Rbyte                    asRaw()             { DEPRECATED_AS("asRaw") ; return as<Rbyte>(m_sexp) ; } ;
+    inline std::string              asStdString()       { DEPRECATED_AS("asStdString") ; return as<std::string>(m_sexp) ; } ;
+    inline std::vector<int>         asStdVectorInt()    { DEPRECATED_AS("asStdVectorInt") ; return as< std::vector<int> >(m_sexp) ; } ;
+    inline std::vector<double>      asStdVectorDouble() { DEPRECATED_AS("asStdVectorDouble") ; return as< std::vector<double> >(m_sexp) ; } ;
+    inline std::vector<std::string> asStdVectorString() { DEPRECATED_AS("asStdVectorString") ; return as< std::vector<std::string> >(m_sexp) ; } ;
+    inline std::vector<Rbyte>       asStdVectorRaw()    { DEPRECATED_AS("asStdVectorRaw") ; return as< std::vector<Rbyte> >(m_sexp) ; } ;
+    inline std::vector<bool>        asStdVectorBool()   { DEPRECATED_AS("asStdVectorBool") ; return as< std::vector<bool> >(m_sexp) ; } ;
 
     /* attributes */
 
@@ -316,6 +315,9 @@ private:
     void preserve(){ if( m_sexp != R_NilValue ) R_PreserveObject(m_sexp) ; } 
     void release() { if( m_sexp != R_NilValue ) R_ReleaseObject(m_sexp) ; } 
     virtual void update() {} ;
+    inline void DEPRECATED_AS( const std::string& method ){ 
+    	Rf_warning( "The %s method is deprecated, and will eventually be removed, please use the as<> template function instead", method.c_str() ) ;
+    }
 };
 
 } // namespace Rcpp
