@@ -58,6 +58,15 @@ public:
 		}
 	}
 	
+	SimpleVector( const SimpleVector& other) : VectorBase() {
+		setSEXP( other.asSexp() ) ;
+	}
+	
+	SimpleVector& operator=(const SimpleVector& other){
+		setSEXP( other.asSexp() ) ;
+		return *this ;
+	}
+	
 	template <typename InputIterator>
 	SimpleVector( InputIterator first, InputIterator last) : VectorBase(), start(){
 		assign( first, last ) ;
@@ -103,6 +112,12 @@ private:
 	}
 	
 } ;
+
+typedef SimpleVector<CPLXSXP> ComplexVector ;
+typedef SimpleVector<INTSXP> IntegerVector ;
+typedef SimpleVector<LGLSXP> LogicalVector ;
+typedef SimpleVector<REALSXP> NumericVector ;
+typedef SimpleVector<RAWSXP> RawVector ;
 
 }// namespace Rcpp
 

@@ -58,6 +58,13 @@ public:
      */
     explicit XPtr(T* p, bool set_delete_finalizer) ;
 
+    XPtr( const XPtr& other ) : RObject( other.asSexp() ) {}
+    
+    XPtr& operator=(const XPtr& other){
+    	    setSEXP( other.asSexp() ) ;
+    	    return *this ;
+    }
+    
     /**
      * Returns a reference to the object wrapped. This allows this
      * object to look and feel like a dumb pointer to T

@@ -57,7 +57,9 @@ public:
 	} ;
 
 	CharacterVector() ;
-	CharacterVector(SEXP x) throw(not_compatible);
+	CharacterVector( const CharacterVector& other ) ;
+	CharacterVector& operator=( const CharacterVector& other ) ;
+	CharacterVector( SEXP x) throw(not_compatible);
 	CharacterVector( const size_t& size) ;
 	CharacterVector( const std::string& x );
 	CharacterVector( const std::vector<std::string>& x );

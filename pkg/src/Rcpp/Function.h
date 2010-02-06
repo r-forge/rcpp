@@ -71,6 +71,9 @@ public:
 	 */
 	Function(const std::string& name) throw(no_such_function) ;
 	
+	Function(const Function& other) ;
+	Function& operator=(const Function& other );
+	
 	// /**
 	//  * Finds a function, searching from a specific environment
 	//  *

@@ -48,6 +48,15 @@ namespace Rcpp {
 		UNPROTECT(1) ;
 	}
 	
+	Function::Function(const Function& other) : RObject(){
+		setSEXP( other.asSexp() );
+	}
+	
+	Function& Function::operator=(const Function& other){
+		setSEXP( other.asSexp() );
+		return *this ;
+	}
+	
 	Function::~Function(){}	
 	
 	SEXP Function::environment() const throw(not_a_closure){

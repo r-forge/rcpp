@@ -32,6 +32,8 @@ class Pairlist : public DottedPair {
 public:		
 	Pairlist();
 	Pairlist(SEXP x) throw(not_compatible) ;
+	Pairlist(const Pairlist& other) ;
+	Pairlist& operator=(const Pairlist& other) ;
 		
 #ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 

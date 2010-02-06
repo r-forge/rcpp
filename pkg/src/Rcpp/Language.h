@@ -49,6 +49,9 @@ public:
 	 */
 	Language(SEXP lang) throw(not_compatible) ;
 
+	Language(const Language& other) ;
+	Language& operator=(const Language& other) ;
+	
 	/**
 	 * Creates a call using the given symbol as the function name
 	 *
