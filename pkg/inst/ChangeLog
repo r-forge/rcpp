@@ -1,3 +1,9 @@
+2010-02-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/examples/functionCallback/newApiExamples.r: Added simpler
+	  version using the new API
+	* inst/examples/functionCallback/newApiExamples.r: Updated
+
 2010-02-06  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/RObject.h : asFoo methods are deprecated.
@@ -10,7 +16,7 @@
 	* src/as.cpp: idem
 
 	* src/Rcpp/SimpleVector.h: SimpleVector is now only parameterized
-	by the SEXP type. The c type is automatically retrieved using 
+	by the SEXP type. The c type is automatically retrieved using
 	the storage_type trait class.
 
 2010-02-05  Dirk Eddelbuettel  <edd@debian.org>
