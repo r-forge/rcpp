@@ -47,7 +47,7 @@ namespace Rcpp{
     		set( rhs.get() ) ;
     		return *this ;
     	}
-    	VectorBase::NamesProxy::operator SEXP() const { return get() ; }
+    	
     	SEXP VectorBase::NamesProxy::get() const {
     		return RCPP_GET_NAMES(parent) ;
     	}

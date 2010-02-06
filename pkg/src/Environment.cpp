@@ -269,10 +269,6 @@ namespace Rcpp {
     	    env.assign( name, rhs.env.get(rhs.name) ) ;
     	    return *this ;
     }
-    
-    Environment::Binding::operator SEXP() const{
-    	return env.get( name );    
-    }
 
     const Environment::Binding Environment::operator[]( const std::string& name) const{
     	return Binding( const_cast<Environment&>(*this), name );
