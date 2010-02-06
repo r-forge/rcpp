@@ -17,3 +17,9 @@ Rcpp-unitTests.pdf:
 	Rscript -e "tools::texi2dvi( 'Rcpp-unitTests.tex', pdf = TRUE, clean = TRUE )"
 	rm -fr Rcpp-unitTests.tex
 
+Rcpp-api.pdf: Rcpp-api.Rnw
+	R CMD Sweave Rcpp-api.Rnw
+	Rscript -e "tools::texi2dvi( 'Rcpp-api.tex', pdf = TRUE, clean = TRUE ) "
+	rm -fr Rcpp-api.tex
+
+

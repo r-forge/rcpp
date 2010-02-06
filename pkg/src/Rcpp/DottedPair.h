@@ -35,6 +35,12 @@ public:
 
 	DottedPair() ;
 	
+	DottedPair( const DottedPair& other) : RObject(){
+		setSEXP( other.asSexp() ) ;
+	}
+	
+	DottedPair& operator=( const DottedPair& other) ; 
+	
 #ifdef HAS_VARIADIC_TEMPLATES
 template<typename... Args> 
 	DottedPair( const Args&... args) : RObject() {

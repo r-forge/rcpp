@@ -26,6 +26,11 @@ namespace Rcpp {
 	DottedPair::~DottedPair(){}
 	DottedPair::DottedPair() : RObject(){}
 	
+	DottedPair& DottedPair::operator=(const DottedPair& other){
+		setSEXP( other.asSexp() ) ;
+		return *this ;
+	}
+	
 	void DottedPair::remove( const size_t& index ) throw(index_out_of_bounds) {
 		if( static_cast<R_len_t>(index) >= Rf_length(m_sexp) ) throw index_out_of_bounds() ;
 		if( index == 0 ){
