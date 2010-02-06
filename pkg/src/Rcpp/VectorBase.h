@@ -43,12 +43,12 @@ public:
     /**
      * the length of the vector, uses Rf_length
      */
-    inline int length() const { return ::Rf_length( m_sexp ) ; }
+    inline R_len_t length() const { return ::Rf_length( m_sexp ) ; }
 
     /**
      * alias of length
      */
-    inline int size() const { return ::Rf_length( m_sexp ) ; }
+    inline R_len_t size() const { return ::Rf_length( m_sexp ) ; }
 
     /**
      * offset based on the dimensions of this vector

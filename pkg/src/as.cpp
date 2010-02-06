@@ -110,7 +110,7 @@ template<> std::string as<std::string>(SEXP m_sexp) {
 }
 
 template<> std::vector<bool> as< std::vector<bool> >(SEXP m_sexp) {
-    int n = Rf_length(m_sexp);
+    R_len_t n = Rf_length(m_sexp);
     std::vector<bool> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
@@ -133,7 +133,7 @@ template<> std::vector<bool> as< std::vector<bool> >(SEXP m_sexp) {
 
 
 template<> std::vector<int> as< std::vector<int> >(SEXP m_sexp){
-    int n = Rf_length(m_sexp);
+    R_len_t n = Rf_length(m_sexp);
     std::vector<int> v(n);
     switch( TYPEOF(m_sexp) ){
     case INTSXP:
@@ -155,7 +155,7 @@ template<> std::vector<int> as< std::vector<int> >(SEXP m_sexp){
 }
 
 template<> std::vector<Rbyte> as< std::vector<Rbyte> >(SEXP m_sexp) {
-    int n = Rf_length(m_sexp);
+    R_len_t n = Rf_length(m_sexp);
     std::vector<Rbyte> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
@@ -177,7 +177,7 @@ template<> std::vector<Rbyte> as< std::vector<Rbyte> >(SEXP m_sexp) {
 }
 
 template<> std::vector<double> as< std::vector<double> >(SEXP m_sexp){
-    int n = Rf_length(m_sexp);
+    R_len_t n = Rf_length(m_sexp);
     std::vector<double> v(n);
     switch( TYPEOF(m_sexp) ){
     case LGLSXP:
@@ -200,7 +200,7 @@ template<> std::vector<double> as< std::vector<double> >(SEXP m_sexp){
 
 
 template<> std::vector<std::string> as< std::vector<std::string> >(SEXP m_sexp){
-    int n = Rf_length(m_sexp);
+    R_len_t n = Rf_length(m_sexp);
     std::vector<std::string> v(n);
     if (!Rf_isString(m_sexp)) {
     	    throw std::range_error("as< vector<string> >:  expects string");
