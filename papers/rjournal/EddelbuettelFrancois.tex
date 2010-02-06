@@ -656,7 +656,7 @@ function is then translated in terms of an C++ exception.
 % example ?
 % [Dirk] We're running out of space.  In the JSS piece...
 
-\section{Performance and Limitations}
+\section{Performance comparison}
 
 In this section, we illustrate how C++ features may well come with a price
 in terms of performance. However, as users of \pkg{Rcpp}, we do not need to
@@ -676,7 +676,6 @@ In this section, we illustrate how to take advantage of \code{Rcpp} to get
 the best of both worlds. The classic \pkg{Rcpp} translation of the convolve example from
 \cite{R:exts} appears twice above where the second example showed the use
 with the new API.
-% [Dirk] Seemingly, no \ref with the RJournal style
 
 The implementation of the \code{operator[]} is designed as 
 efficiently as possible, using both inlining and caching, 
@@ -727,8 +726,8 @@ table below:
     \begin{small}
       \begin{tabular}{lrr}
         \toprule
-        \textbf{Method} & \textbf{Time}  & Relative \\ 
-                        &  (millisec)    & to R API \\ 
+        Implementation & Time in   & Relative \\ 
+                       &  millisec  & to R API \\ 
         \cmidrule(r){2-3}
         R API (as benchmark) & 32 & \\
         \code{RcppVector<double>} & 354 & 11.1 \\
