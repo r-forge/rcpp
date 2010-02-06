@@ -724,21 +724,24 @@ We have benchmarked the various implementations using
 \code{b} containing 100 elements each. The timings are summarized in the 
 table below:
 
-\begin{center}
-  \begin{small}
-    \begin{tabular}{lrr}
-      \toprule
-      \textbf{Method} & \textbf{Time} (ms) & Ratio \\ 
-      \cmidrule(r){2-3}
-      R API & 32 & \\
-      \code{RcppVector<double>} & 354 & 11.1 \\
-      \code{NumericVector::operator[]} & 52 & 1.6 \\
-      \code{NumericVector::begin} & 33 &  1.0 \\
-      \bottomrule
-    \end{tabular}
-  \end{small}
-  %\caption{Performance comparison for convolution example}
-\end{center}
+\begin{table}[H]  
+  \begin{center}
+    \begin{small}
+      \begin{tabular}{lrr}
+        \toprule
+        \textbf{Method} & \textbf{Time}  & Relative \\ 
+                        &  (millisec)    & to R API \\ 
+        \cmidrule(r){2-3}
+        R API (as benchmark) & 32 & \\
+        \code{RcppVector<double>} & 354 & 11.1 \\
+        \code{NumericVector::operator[]} & 52 & 1.6 \\
+        \code{NumericVector::begin} & 33 &  1.0 \\
+        \bottomrule
+      \end{tabular}
+    \end{small}
+    \caption{Performance for convolution example}
+  \end{center}
+\end{table}
 
 The first implementation, using the traditional R API, unsurprisingly 
 appears to be the most efficient. It takes advantage of pointer 
