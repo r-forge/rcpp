@@ -4,6 +4,9 @@
 	  version using the new API
 	* inst/examples/functionCallback/newApiExamples.r: Updated
 
+	* inst/unitTests/runit.RcppVector.R: added test for NA/NaN
+	* inst/unitTests/runit.RcppMatrix.R: idem
+
 2010-02-06  Romain Francois <francoisromain@free.fr>
 
 	* src/Rcpp/RObject.h : asFoo methods are deprecated.
