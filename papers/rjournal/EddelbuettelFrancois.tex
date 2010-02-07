@@ -51,10 +51,6 @@ these were under the name \pkg{Rcpp}. The package was then renamed to
 new name.  However, no new releases or updates were made during 2007, 2008
 and most of 2009.
 
-% [Romain] : Should this not be "we decided __to__ revitalize"
-%            (also to be quite correct __you__ decided this, I followed only much later, 
-%            maybe this should be unpersonnal ?)
-% [Dirk] Unpersonal is better
 Given the continued use of the package, it was revitalized. New
 releases, using the initial name \pkg{Rcpp}, started in November 2008. These
 already included an improved build and distribution process, additional
@@ -84,8 +80,6 @@ or C++ classes that emulate the structure of R objects.
 The packages \pkg{rcppbind} \citep{liang08:rcppbind}, \pkg{RAbstraction}
 \citep{armstrong09:RAbstraction} and \pkg{RObjects}
 \citep{armstrong09:RObjects} are all implemented using C++ templates.
-% [Romain] Is the 'one' useful below ?
-% [Dirk] No, nuke
 However, neither has matured to the point of a CRAN release and it
 unclear how much usage these packages are seeing beyond their own authors.
 %
@@ -177,10 +171,8 @@ original examples in the 'Writing R Extensions' manual \citep{R:exts}.
 Sixth, a return type (\code{RcppResultSet}) is prepared as a named
 object which is then
 converted to a list object that is returned.  We should note that the
-\code{RcppResultSet} permits the return of numerous (named) objects which can
+\code{RcppResultSet} supports the return of numerous (named) objects which can
 also be of different types.
-% [Romain] s/permits/allows/ ?
-% [Dirk] Maybe enables ? Or supports?  Maybe 'supports' is best?
 
 We argue that this usage is already much easier to read, write and debug than the
 C macro-based approach supported by R itself. Possible performance issues and
@@ -236,7 +228,6 @@ querying properties of the object (\texttt{isNULL}, \texttt{isObject},
 (\texttt{attributeNames}, \texttt{hasAttribute}, \texttt{attr}) and 
 handling of slots\footnote{The member functions that deal with slots
 are only applicable on S4 objects; otherwise an exception is thrown.} 
-%[Dirk] Was:  Using these functions on non-S4 objects throws exceptions. } 
 (\texttt{hasSlot}, \texttt{slot}).
 
 \subsection{Derived classes}
@@ -272,8 +263,6 @@ REAL(ab)[1] = 67.89;
 UNPROTECT(1);
 \end{example}
 
-% [Romain] Is this too much conversation style
-% [Dirk] I like it
 Although this is one of the simplest examples in Writing R extensions, 
 it seems verbose and it is not obvious at first sight to understand what is happening.
 Memory is allocated by \code{allocVector}; we must also supply it with
@@ -497,6 +486,8 @@ return res ;
   \end{minipage}
 % [Dirk] Doesn't 'call.eval()' also need a preceding 'return ' ?
 %        I added one.
+% [Romain] off course. thank you.
+
   \begin{minipage}[t]{0.465\linewidth}
     \centering{\underline{Language: Using the \pkg{Rcpp} API}}
     \begin{example}
