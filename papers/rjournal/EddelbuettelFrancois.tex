@@ -489,8 +489,40 @@ function arguments, nodes of dotted pair lists and language calls and more.
 
 \section{Function calls}
 
-The last example shows how to use \pkg{Rcpp} to emulate the R code below.
+\begin{figure*}[t]
+  \begin{minipage}[t]{0.465\linewidth}
+    \underline{Using the R API}
+    \begin{example}
+SEXP stats = PROTECT( 
+\ \ R_FindNamespace( mkString("stats") ) );
+SEXP rnorm = PROTECT( 
+\ \ findVarInFrame( stats, install("rnorm") ) );
+SEXP call  = PROTECT( 
+\ \ LCONS( rnorm, 
+\ \ \ \ CONS(ScalarInteger(10), 
+\ \ \ \ \ \ CONS(ScalarReal(100.0), R_NilValue))));
+SET_TAG( CDDR(call), install("sd") );
+SEXP res = PROTECT( eval( call, R_GlobalEnv));
+UNPROTECT(4) ;
+return res ;
+    \end{example}
+  \end{minipage}
+  \begin{minipage}{0.06\linewidth}
+    \phantom{XXX}
+  \end{minipage}
+  \begin{minipage}[t]{0.465\linewidth}
+\underline{Using the \pkg{Rcpp} API}
+    \begin{example}
+Environment stats("package:stats");
+Function rnorm = stats.get("rnorm");
+return rnorm(10, Named("sd", 100.0) );
+    \end{example}
+  \end{minipage}
+  \caption{R API versus \pkg{Rcpp}: Calling \code{rnorm(10, sd=100)} in C or
+    C++ using an Environment}
+\end{figure*}
 
+The last example shows how to use \pkg{Rcpp} to emulate the R code below:
 \begin{example}
 > rnorm( 10L, sd = 100.0 )
 \end{example}
@@ -564,6 +596,7 @@ to read, write and maintain. More examples are available as part of the document
 included in the \pkg{Rcpp} package, as well as among its over one hundred and
 fifty unit tests.
 
+
 \section{Using code `inline'}
 \label{sec:inline}
 
@@ -632,6 +665,35 @@ conversion. Also in this version, the vector \code{xab} is not
 initialized because the constructor already performs initialization
 to match the behaviour of the R function \code{numeric}.
 
+\begin{figure*}[t]
+  \begin{minipage}[t]{0.465\linewidth}
+    \underline{Using the R API}
+    \begin{example}
+SEXP call  = PROTECT( 
+\ \ LCONS( install("rnorm"), 
+\ \ \ \ CONS(ScalarInteger(10), 
+\ \ \ \ \ \ CONS(ScalarReal(100.0), R_NilValue))));
+SET_TAG( CDDR(call), install("sd") ) ;
+SEXP res = PROTECT( eval( call, R_GlobalEnv));
+UNPROTECT(2) ;
+return res ;
+    \end{example}
+  \end{minipage}
+  \begin{minipage}{0.06\linewidth}
+    \phantom{XXX}
+  \end{minipage}
+  \begin{minipage}[t]{0.465\linewidth}
+\underline{Using the \pkg{Rcpp} API}
+    \begin{example}
+Language call("rnorm", 10, Named("sd", 100 ));
+call.eval();
+    \end{example}
+  \end{minipage}
+  \caption{R API versus \pkg{Rcpp}: Calling \code{rnorm(10, sd=100)} in C or
+    C++ using a LANGSXP}
+\end{figure*}
+
+
 \section{Error handling}
 
 Code that uses both R and C++ has to deal with two concurrent
@@ -678,6 +740,7 @@ function is then translated in terms of an C++ exception.
 % example ?
 % [Dirk] We're running out of space.  In the JSS piece...
 % [Romain] Agreed
+
 
 \section{Performance comparison}
 
