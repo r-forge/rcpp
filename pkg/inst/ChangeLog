@@ -1,3 +1,7 @@
+2010-02-07  Romain Francois <francoisromain@free.fr>
+
+	* src/RcppSexp.h: class RcppSexp removed (was deprecated)
+
 2010-02-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/examples/functionCallback/newApiExamples.r: Added simpler
