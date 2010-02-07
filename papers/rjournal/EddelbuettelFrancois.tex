@@ -54,7 +54,8 @@ and most of 2009.
 % [Romain] : Should this not be "we decided __to__ revitalize"
 %            (also to be quite correct __you__ decided this, I followed only much later, 
 %            maybe this should be unpersonnal ?)
-Given the continued use of the package, we decided revitalize it. New
+% [Dirk] Unpersonal is better
+Given the continued use of the package, it was revitalized. New
 releases, using the initial name \pkg{Rcpp}, started in November 2008. These
 already included an improved build and distribution process, additional
 documentation, and new functionality---while retaining the existing
@@ -84,7 +85,8 @@ The packages \pkg{rcppbind} \citep{liang08:rcppbind}, \pkg{RAbstraction}
 \citep{armstrong09:RAbstraction} and \pkg{RObjects}
 \citep{armstrong09:RObjects} are all implemented using C++ templates.
 % [Romain] Is the 'one' useful below ?
-However, neither one has matured to the point of a CRAN release and it
+% [Dirk] No, nuke
+However, neither has matured to the point of a CRAN release and it
 unclear how much usage these packages are seeing beyond their own authors.
 %
 CXXR \citep{runnalls09:cxxr} comes to this topic from the other side: 
@@ -108,6 +110,7 @@ addition to the literature, but is beyond the scope of this article.
 \label{sec:classic_rcpp}
 
 % [Romain] should this be earliest instead of earlier
+% [Dirk] Does it really matter as we only compare two things (Classic,New) ?
 The core focus of \pkg{Rcpp}---particularly for the earlier API described in
 this section---has always been on allowing the programmer to add C++-based
 functions. We use this term in the standard mathematical sense of providing
@@ -177,6 +180,7 @@ converted to a list object that is returned.  We should note that the
 \code{RcppResultSet} permits the return of numerous (named) objects which can
 also be of different types.
 % [Romain] s/permits/allows/ ?
+% [Dirk] Maybe enables ? Or supports?  Maybe 'supports' is best?
 
 We argue that this usage is already much easier to read, write and debug than the
 C macro-based approach supported by R itself. Possible performance issues and
@@ -231,8 +235,9 @@ querying properties of the object (\texttt{isNULL}, \texttt{isObject},
 \texttt{isS4}), management of the attributes 
 (\texttt{attributeNames}, \texttt{hasAttribute}, \texttt{attr}) and 
 handling of slots\footnote{The member functions that deal with slots
-are only applicable on S4 objects. Using these functions on 
-non-S4 objects throws exceptions. } (\texttt{hasSlot}, \texttt{slot}).
+are only applicable on S4 objects; otherwise an exception is thrown.} 
+%[Dirk] Was:  Using these functions on non-S4 objects throws exceptions. } 
+(\texttt{hasSlot}, \texttt{slot}).
 
 \subsection{Derived classes}
 
@@ -268,13 +273,14 @@ UNPROTECT(1);
 \end{example}
 
 % [Romain] Is this too much conversation style
+% [Dirk] I like it
 Although this is one of the simplest examples in Writing R extensions, 
 it seems verbose and it is not obvious at first sight to understand what is happening.
 Memory is allocated by \code{allocVector}; we must also supply it with
 the type of data (\code{REALSXP}) and the number of elements.  Once
 allocated, the \code{ab} object must be protected from garbage
 collection\footnote{Since the garbage collection can be triggered at any time, not
-protecting an object means its memory might be reclaimed too soon}. 
+protecting an object means its memory might be reclaimed too soon.}. 
 Lastly, the \code{REAL} macro returns a pointer to the
 beginning of the actual array; its indexing does not resemble either R or
 C++.
@@ -335,7 +341,7 @@ ab[1] = "bar" ;
 
 \section{R and C++ data interchange}
 
-In addition to classes, the \pkg{Rcpp} package contains two %additional
+In addition to classes, the \pkg{Rcpp} package contains two 
 functions to perform conversion of C++ objects to R objects and back. 
 
 \subsection{C++ to R : wrap}
@@ -489,12 +495,13 @@ UNPROTECT(4) ;
 return res ;
     \end{example}
   \end{minipage}
-
+% [Dirk] Doesn't 'call.eval()' also need a preceding 'return ' ?
+%        I added one.
   \begin{minipage}[t]{0.465\linewidth}
     \centering{\underline{Language: Using the \pkg{Rcpp} API}}
     \begin{example}
 Language call("rnorm", 10, Named("sd", 100.0));
-call.eval();
+return call.eval();
     \end{example}
   \end{minipage}
   \begin{minipage}{0.06\linewidth}
@@ -536,11 +543,12 @@ use of the \code{Environment} and \code{Function} classes by
 %
 % [Romain] is the explanation below needed or can it be sort of 
 %          deduced from the code ?
-We first pull out the \code{rnorm} function from the environment 
-called \samp{package:stats} in the search path, then simply call the function 
-using syntax similar to calling the function in R. The \code{Rcpp::Named} 
-class is an utility class that is used to emulate named arguments.
-
+% [Dirk] Agreed, can be commented out
+%We first pull out the \code{rnorm} function from the environment 
+%called \samp{package:stats} in the search path, then simply call the function 
+%using syntax similar to calling the function in R. The \code{Rcpp::Named} 
+%class is an utility class that is used to emulate named arguments.
+%
 The second version shows the use of the \code{Language} class, which 
 manage calls (LANGSXP). 
 %
@@ -551,13 +559,14 @@ manage calls (LANGSXP).
 %
 % [Romain] is the explanation below needed or can it be sort of 
 %          deduced from the code ?
-In this version, we first create a call to the symbol "rnorm" and
-evaluate the call\footnote{It should be noted that using a symbol name
-involves a potentially expensive implicit lookup in the search path
-to find the \code{rnorm} function.} in the global environment. In both cases, \code{wrap}
-is used implicitely to convert \code{10} and \code{100} 
-into R integer vectors. 
-
+% [Dirk] Agreed
+%In this version, we first create a call to the symbol "rnorm" and
+%evaluate the call\footnote{It should be noted that using a symbol name
+%involves a potentially expensive implicit lookup in the search path
+%to find the \code{rnorm} function.} in the global environment. In both cases, \code{wrap}
+%is used implicitely to convert \code{10} and \code{100} 
+%into R integer vectors. 
+%
 For comparison, we also show both versions using the standard R API.
 % 
 %The first example using the actual \code{rnorm} function translates to 
@@ -604,6 +613,7 @@ Extending R with compiled code also needs to address how to reliably compile,
 link and load the code.  While using a package is preferable in the long run,
 it may be too heavy a framework for quick explorations.
 % [Romain] it may be a too heavy framework ?
+% [Dirk] no this work. Will check with my English speaking wife :)
 An alternative is
 provided by the \pkg{inline} package \citep{cran:inline} which compiles,
 links and loads a C, C++ or Fortran function---directly from the R prompt
@@ -634,6 +644,7 @@ provide this information (and which are also used by \code{Makevars} files of
 other packages).  Here, however, all this is done behind the scenes and the
 user need not worry about compiler or linker options or settings.
 % [Romain] need not worrying ?
+% [Dirk] Good to me, will check
 
 The convolution example provided above can be rewritten for use by
 \pkg{inline} as shown below.  The function body is provided by the character
