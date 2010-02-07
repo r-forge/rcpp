@@ -484,9 +484,6 @@ UNPROTECT(4) ;
 return res ;
     \end{example}
   \end{minipage}
-% [Dirk] Doesn't 'call.eval()' also need a preceding 'return ' ?
-%        I added one.
-% [Romain] off course. thank you.
 
   \begin{minipage}[t]{0.465\linewidth}
     \centering{\underline{Language: Using the \pkg{Rcpp} API}}
@@ -495,6 +492,7 @@ Language call("rnorm", 10, Named("sd", 100.0));
 return call.eval();
     \end{example}
   \end{minipage}
+
   \begin{minipage}{0.06\linewidth}
     \phantom{XXX}
   \end{minipage}
@@ -525,71 +523,9 @@ As shown in table~\ref{fig:rnormCode}, the code can be expressed in several
 ways in either \pkg{Rcpp} or the standard R API. The first version shows the
 use of the \code{Environment} and \code{Function} classes by
 \pkg{Rcpp}.
-%
-%\begin{example}
-%Environment stats("package:stats");
-%Function rnorm = stats.get("rnorm");
-%return rnorm(10, Named("sd", 100.0) );
-%\end{example}
-%
-% [Romain] is the explanation below needed or can it be sort of 
-%          deduced from the code ?
-% [Dirk] Agreed, can be commented out
-%We first pull out the \code{rnorm} function from the environment 
-%called \samp{package:stats} in the search path, then simply call the function 
-%using syntax similar to calling the function in R. The \code{Rcpp::Named} 
-%class is an utility class that is used to emulate named arguments.
-%
 The second version shows the use of the \code{Language} class, which 
 manage calls (LANGSXP). 
-%
-%\begin{example}
-%Language call("rnorm", 10, Named("sd", 100 ));
-%call.eval();
-%\end{example}
-%
-% [Romain] is the explanation below needed or can it be sort of 
-%          deduced from the code ?
-% [Dirk] Agreed
-%In this version, we first create a call to the symbol "rnorm" and
-%evaluate the call\footnote{It should be noted that using a symbol name
-%involves a potentially expensive implicit lookup in the search path
-%to find the \code{rnorm} function.} in the global environment. In both cases, \code{wrap}
-%is used implicitely to convert \code{10} and \code{100} 
-%into R integer vectors. 
-%
 For comparison, we also show both versions using the standard R API.
-% 
-%The first example using the actual \code{rnorm} function translates to 
-%
-% \begin{example}
-% SEXP stats = PROTECT( 
-% \ \ R_FindNamespace( mkString("stats") ) );
-% SEXP rnorm = PROTECT( 
-% \ \ findVarInFrame( stats, install("rnorm") ) );
-% SEXP call  = PROTECT( 
-% \ \ LCONS( rnorm, 
-% \ \ \ \ CONS(ScalarInteger(10), 
-% \ \ \ \ \ \ CONS(ScalarReal(100.0), R_NilValue))));
-% SET_TAG( CDDR(call), install("sd") );
-% SEXP res = PROTECT( eval( call, R_GlobalEnv));
-% UNPROTECT(4) ;
-% return res ;
-% \end{example}
-
-% and the second example, using the \samp{rnorm} symbol, can be written as:
-
-% \begin{example}
-% SEXP call  = PROTECT( 
-% \ \ LCONS( install("rnorm"), 
-% \ \ \ \ CONS(ScalarInteger(10), 
-% \ \ \ \ \ \ CONS(ScalarReal(100.0), R_NilValue))));
-% SET_TAG( CDDR(call), install("sd") ) ;
-% SEXP res = PROTECT( eval( call, R_GlobalEnv));
-% UNPROTECT(2) ;
-% return res ;
-% \end{example}
-%
 
 This example illustrates that the \pkg{Rcpp} API permits us to work with code
 that is easier to read, write and maintain. More examples are available as
@@ -602,9 +538,11 @@ among its over one hundred and fifty unit tests.
 
 Extending R with compiled code also needs to address how to reliably compile,
 link and load the code.  While using a package is preferable in the long run,
-it may be too heavy a framework for quick explorations.
+%it may be too rigid a framework for quick explorations.
+it may be too involved for for quick explorations.
 % [Romain] it may be a too heavy framework ?
 % [Dirk] no this work. Will check with my English speaking wife :)
+% [Dirk] how is 'rigid'? Or how about 'it may be too involved ...' as above
 An alternative is
 provided by the \pkg{inline} package \citep{cran:inline} which compiles,
 links and loads a C, C++ or Fortran function---directly from the R prompt
@@ -632,10 +570,11 @@ are installed along with the \pkg{Rcpp} package making it possible for
 for compilation and linking.  So internally, \pkg{inline} makes uses of the
 two functions \code{Rcpp:::CxxFlags()} and \code{Rcpp:::LdFlags()} that
 provide this information (and which are also used by \code{Makevars} files of
-other packages).  Here, however, all this is done behind the scenes and the
-user need not worry about compiler or linker options or settings.
+other packages).  Here, however, all this is done behind the scenes 
+% and the user need not worry about compiler or linker options or settings.
 % [Romain] need not worrying ?
-% [Dirk] Good to me, will check
+% [Dirk] Good to me, will check -- how is this?
+without the need for explicitly setting compiler or linker options.
 
 The convolution example provided above can be rewritten for use by
 \pkg{inline} as shown below.  The function body is provided by the character
