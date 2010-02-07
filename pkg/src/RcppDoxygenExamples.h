@@ -55,7 +55,7 @@
 //! Four simple examples of how to combine Rcpp and an external library 
 //! (where we use the GNU GSL) using inline. 
 
-//! \example RcppInline/RcppSexpTests.r  
+//! \example RcppInline/RObject.r  
 //! A number of examples on how to use wrap() to automatically convert data types.
 
 //! \example RcppInline/RcppSimpleExample.r
