@@ -37,7 +37,7 @@ lightweight encapsulation of R object in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
 R and C++ and error handling. 
 
-Several examples are included to illustrate the advantage of using \pkg{Rcpp}
+Several examples are included to illustrate the benefits of using \pkg{Rcpp}
 as opposed to the traditional R API. Many more examples are available within
 the package, both as explicit examples and as part of the numerous unit tests.
 
@@ -51,6 +51,9 @@ these were under the name \pkg{Rcpp}. The package was then renamed to
 new name.  However, no new releases or updates were made during 2007, 2008
 and most of 2009.
 
+% [Romain] : Should this not be "we decided __to__ revitalize"
+%            (also to be quite correct __you__ decided this, I followed only much later, 
+%            maybe this should be unpersonnal ?)
 Given the continued use of the package, we decided revitalize it. New
 releases, using the initial name \pkg{Rcpp}, started in November 2008. These
 already included an improved build and distribution process, additional
@@ -80,6 +83,7 @@ or C++ classes that emulate the structure of R objects.
 The packages \pkg{rcppbind} \citep{liang08:rcppbind}, \pkg{RAbstraction}
 \citep{armstrong09:RAbstraction} and \pkg{RObjects}
 \citep{armstrong09:RObjects} are all implemented using C++ templates.
+% [Romain] Is the 'one' useful below ?
 However, neither one has matured to the point of a CRAN release and it
 unclear how much usage these packages are seeing beyond their own authors.
 %
@@ -103,6 +107,7 @@ addition to the literature, but is beyond the scope of this article.
 \section{Classic Rcpp API}
 \label{sec:classic_rcpp}
 
+% [Romain] should this be earliest instead of earlier
 The core focus of \pkg{Rcpp}---particularly for the earlier API described in
 this section---has always been on allowing the programmer to add C++-based
 functions. We use this term in the standard mathematical sense of providing
@@ -171,6 +176,7 @@ object which is then
 converted to a list object that is returned.  We should note that the
 \code{RcppResultSet} permits the return of numerous (named) objects which can
 also be of different types.
+% [Romain] s/permits/allows/ ?
 
 We argue that this usage is already much easier to read, write and debug than the
 C macro-based approach supported by R itself. Possible performance issues and
@@ -261,15 +267,16 @@ REAL(ab)[1] = 67.89;
 UNPROTECT(1);
 \end{example}
 
+% [Romain] Is this too much conversation style
 Although this is one of the simplest examples in Writing R extensions, 
-it seems verbose and it is not obvious at first sight what is happening.
+it seems verbose and it is not obvious at first sight to understand what is happening.
 Memory is allocated by \code{allocVector}; we must also supply it with
 the type of data (\code{REALSXP}) and the number of elements.  Once
 allocated, the \code{ab} object must be protected from garbage
-collection. Since the garbage collector can happen at any time, not
-protecting an object means its memory might be reclaimed before we are
-finished with it. Lastly, the \code{REAL} macro returns a pointer to the
-beginning of the actual array; its indexing is does not resemble either R or
+collection\footnote{Since the garbage collection can be triggered at any time, not
+protecting an object means its memory might be reclaimed too soon}. 
+Lastly, the \code{REAL} macro returns a pointer to the
+beginning of the actual array; its indexing does not resemble either R or
 C++.
 
 Using the \code{Rcpp::NumericVector} class, the code can be rewritten: 
@@ -367,9 +374,8 @@ provided in \pkg{RInside} \citep{cran:rinside} by \code{vector< vector<
   double > >} and \code{vector< vector< int > >} which are used for
 representating numeric matrices.
 
-Whether an object is wrappable is resolved at compile time, and the 
-dispatch of the appropriate implementation is performed by the compiler
-using modern techniques of template meta programming and class traits.
+Wrappability of an object type is resolved at compile time using 
+modern techniques of template meta programming and class traits.
 
 The following code snippet illustrates that the design allows
 composition:
@@ -387,9 +393,8 @@ v.push_back( m2) ;
 Rcpp::wrap( v ) ;
 \end{example}
 
-The code creates a list of two named vectors, equal to the list that 
-can be created by the following R code, equivalent to the 
-data structure created by this R code. 
+The code creates a list of two named vectors, equal to the 
+result of this R statement:
 
 \begin{example}
 list( c( bar = 2L, foo = 1L) , 
@@ -488,7 +493,7 @@ return res ;
   \begin{minipage}[t]{0.465\linewidth}
     \centering{\underline{Language: Using the \pkg{Rcpp} API}}
     \begin{example}
-Language call("rnorm", 10, Named("sd", 100));
+Language call("rnorm", 10, Named("sd", 100.0));
 call.eval();
     \end{example}
   \end{minipage}
@@ -508,9 +513,9 @@ UNPROTECT(2) ;
 return res ;
     \end{example}
   \end{minipage}
-  \caption{\pkg{Rcpp} versus the R API: Four ways of calling \code{rnorm(10, sd=100)} in C / C++. 
+  \caption{\pkg{Rcpp} versus the R API: Four ways of calling \code{rnorm(10L, sd=100)} in C / C++. 
   We have removed the \code{Rcpp::} prefix from the
-  following examples for readability; this corresponds to adding a statement
+  examples for readability; this corresponds to adding a statement
   \texttt{using namespace Rcpp;} in the code}
   \label{fig:rnormCode}
 \end{table*}
@@ -529,6 +534,8 @@ use of the \code{Environment} and \code{Function} classes by
 %return rnorm(10, Named("sd", 100.0) );
 %\end{example}
 %
+% [Romain] is the explanation below needed or can it be sort of 
+%          deduced from the code ?
 We first pull out the \code{rnorm} function from the environment 
 called \samp{package:stats} in the search path, then simply call the function 
 using syntax similar to calling the function in R. The \code{Rcpp::Named} 
@@ -542,6 +549,8 @@ manage calls (LANGSXP).
 %call.eval();
 %\end{example}
 %
+% [Romain] is the explanation below needed or can it be sort of 
+%          deduced from the code ?
 In this version, we first create a call to the symbol "rnorm" and
 evaluate the call\footnote{It should be noted that using a symbol name
 involves a potentially expensive implicit lookup in the search path
@@ -593,7 +602,9 @@ among its over one hundred and fifty unit tests.
 
 Extending R with compiled code also needs to address how to reliably compile,
 link and load the code.  While using a package is preferable in the long run,
-it may be too heavy a framework for quick explorations.  An alternative is
+it may be too heavy a framework for quick explorations.
+% [Romain] it may be a too heavy framework ?
+An alternative is
 provided by the \pkg{inline} package \citep{cran:inline} which compiles,
 links and loads a C, C++ or Fortran function---directly from the R prompt
 using a simple function \code{cfunction}.  It was recently extended to work
@@ -622,6 +633,7 @@ two functions \code{Rcpp:::CxxFlags()} and \code{Rcpp:::LdFlags()} that
 provide this information (and which are also used by \code{Makevars} files of
 other packages).  Here, however, all this is done behind the scenes and the
 user need not worry about compiler or linker options or settings.
+% [Romain] need not worrying ?
 
 The convolution example provided above can be rewritten for use by
 \pkg{inline} as shown below.  The function body is provided by the character
@@ -663,20 +675,18 @@ systems to work together.
 \subsection{C++ exceptions in R}
 
 The traditional way of dealing with C++ exceptions in R is to
-catch the C++ exception through the explicit try/catch blocks and
-convert this exception to an R error. 
+catch them through explicit try/catch blocks and
+convert this exception into an R error manually. 
 
 In C++, when an application throws an exception that is not caught, 
 a special function (called the terminate handler) is invoked. This typically causes 
 the program to abort. \pkg{Rcpp} takes advantage of this mechanism
-and sets its own terminate handler which translates the C++
-exception into an R condition and throws this condition so that it can 
-be caught in R. The following code gives an illustration. 
+and installs its own terminate handler which translates C++
+exceptions into R conditions. The following code gives an illustration. 
 
 \begin{example}
-> fun <- cfunction( signature( x = "integer" ), 
-+ ' 
-+   int dx = as<int>(x) ;
+> fun <- cfunction( signature( x = "integer" ), '
++  int dx = as<int>(x) ;
 +   if( dx > 10 ) 
 +      throw std::range_error("too big") ;
 +   return wrap(dx*dx) ;
