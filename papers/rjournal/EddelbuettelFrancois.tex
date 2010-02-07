@@ -32,19 +32,6 @@ APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since
 the first version of \pkg{Rcpp}. The second API, enclosed in the 
 \code{Rcpp} C++ namespace is a newer codebase which we started to develop
 more recently. This article 
-% mostly concerns the newer API, and  %% [Dirk] Really?
-% [Romain] based on relative lengths of coverage ... 
-% [Dirk] agreed -- I'd be up for shortening to keep this closer to six
-%        pages. But that is just an ideal. If we do not get down to six
-%        pages so be it. I like the paper as it is. But it may be harder
-%        to argue for a new publication in JSS or elsewhere is the only
-%        new piece is XPtr. That said by then we may have new toys ...
-% [Romain] There are a few more things we could show. That said I'm not 
-%          desperate to dive into another article just now, and we'd probably 
-%          want to be able to quote this one (if accepted, etc ...)
-% [Dirk] It will get accepted and be out before we get around to sending
-%        something to JSS. Realistically, that will be the fall anyway. No
-%        problem there.
 highlights some of the key design and implementation choices: 
 lightweight encapsulation of R object in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
@@ -374,14 +361,6 @@ the type \code{T} is wrappable;
 \code{operator SEXP()}.
 \item any type for which the \code{wrap} template is partially or fully 
 specialized.
-% [Romain]: should we mention RInside as an example 
-% [Dirk] Example for _what_ ?
-% [Romain]: RInside fully specializes wrap for these types: 
-%           vector<vector<double>> and vector<vector<int>>
-% [Dirk:] *Plonk* Yes.
-% [Romain:] Hmmm. not sure about that anymore. Maybe it is a bit confusing. Don't know. Will sleep on it.
-%           and you don't actually quote RInside. 
-% [Dirk:] Now I do
 \end{itemize}
 One example for the specialisation of the templated \code{wrap} function is
 provided in \pkg{RInside} \citep{cran:rinside} by \code{vector< vector<
@@ -392,10 +371,6 @@ Whether an object is wrappable is resolved at compile time, and the
 dispatch of the appropriate implementation is performed by the compiler
 using modern techniques of template meta programming and class traits.
 
-% [Romain] : should we put the explanation after the code ?
-% [Romain] : trying this now
-% [Dirk:]  It's not bad but it just goes on and on. Page 4 is overall 
-%          a little repetitive.
 The following code snippet illustrates that the design allows
 composition:
 
@@ -420,14 +395,6 @@ data structure created by this R code.
 list( c( bar = 2L, foo = 1L) , 
       c( bar = 2L, bling = 3L, foo = 1L) )
 \end{example}
-
-% [Dirk] Is the following redundant?
-%The C++ type \code{std::vector< std::map< std::string,int > >} is wrappable because: 
-%\texttt{int} is wrappable (as a primitive type), therefore 
-%\texttt{std::map<std::string,int>} is wrappable (as a STL map 
-%of wrappable types keyed by strings), and finally 
-%\texttt{std::vector< std::map<std::string,int> >} is wrappable 
-%(as an STL container of wrappable types).
 
 \subsection{R to C++ : as}
 
@@ -488,12 +455,12 @@ function arguments, nodes of dotted pair lists and language calls and more.
 
 \section{Function calls}
 
-\begin{figure*}[t]
+\begin{table*}[t]
   \begin{minipage}[t]{0.465\linewidth}
     \centering{\underline{Environment: Using the \pkg{Rcpp} API}}
     \begin{example}
 Environment stats("package:stats");
-Function rnorm = stats.get("rnorm");
+Function rnorm = stats["rnorm"];
 return rnorm(10, Named("sd", 100.0) );
     \end{example}
   \end{minipage}
@@ -543,7 +510,7 @@ return res ;
   \end{minipage}
   \caption{\pkg{Rcpp} versus the R API: Four ways of calling \code{rnorm(10, sd=100)} in C / C++}
   \label{fig:rnormCode}
-\end{figure*}
+\end{table*}
 
 The next example shows how to use \pkg{Rcpp} to emulate the R code
 \code{rnorm( 10L, sd=100.0)}.
@@ -580,8 +547,6 @@ is used implicitely to convert \code{10} and \code{100}
 into R integer vectors. It should be noted that this 
 version involves a potentially expensive implicit lookup in the search path
 to find the \code{rnorm} function. 
-% [Romain] should we quote luke's : http://www.cs.uiowa.edu/~luke/R/bytecode.html
-% [Dirk]   space constraints....
 
 For comparison, we also version using the standard R API.
 % 
@@ -730,11 +695,6 @@ overcome this problem, \pkg{Rcpp} uses the \code{Rcpp::Evaluator}
 class to evaluate en expression with an R-level \code{tryCatch}
 block. The error, if any, that occurs while evaluating the 
 function is then translated in terms of an C++ exception. 
-
-% example ?
-% [Dirk] We're running out of space.  In the JSS piece...
-% [Romain] Agreed
-
 
 \section{Performance comparison}
 
