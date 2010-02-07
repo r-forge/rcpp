@@ -508,19 +508,20 @@ UNPROTECT(2) ;
 return res ;
     \end{example}
   \end{minipage}
-  \caption{\pkg{Rcpp} versus the R API: Four ways of calling \code{rnorm(10, sd=100)} in C / C++}
+  \caption{\pkg{Rcpp} versus the R API: Four ways of calling \code{rnorm(10, sd=100)} in C / C++. 
+  We have removed the \code{Rcpp::} prefix from the
+  following examples for readability; this corresponds to adding a statement
+  \texttt{using namespace Rcpp;} in the code}
   \label{fig:rnormCode}
 \end{table*}
 
 The next example shows how to use \pkg{Rcpp} to emulate the R code
 \code{rnorm( 10L, sd=100.0)}.
 %
-As shown in figure~\ref{fig:rnormCode}, the code can be expressed in several
+As shown in table~\ref{fig:rnormCode}, the code can be expressed in several
 ways in either \pkg{Rcpp} or the standard R API. The first version shows the
 use of the \code{Environment} and \code{Function} classes by
-\pkg{Rcpp}.\footnote{We have removed the \code{Rcpp::} prefix from the
-  following examples for readability; this corresponds to adding a statement
-  \texttt{using namespace Rcpp;} in the code}.
+\pkg{Rcpp}.
 %
 %\begin{example}
 %Environment stats("package:stats");
@@ -542,13 +543,13 @@ manage calls (LANGSXP).
 %\end{example}
 %
 In this version, we first create a call to the symbol "rnorm" and
-evaluate the call in the global environment. In both cases, \code{wrap}
+evaluate the call\footnote{It should be noted that using a symbol name
+involves a potentially expensive implicit lookup in the search path
+to find the \code{rnorm} function.} in the global environment. In both cases, \code{wrap}
 is used implicitely to convert \code{10} and \code{100} 
-into R integer vectors. It should be noted that this 
-version involves a potentially expensive implicit lookup in the search path
-to find the \code{rnorm} function. 
+into R integer vectors. 
 
-For comparison, we also version using the standard R API.
+For comparison, we also show both versions using the standard R API.
 % 
 %The first example using the actual \code{rnorm} function translates to 
 %
