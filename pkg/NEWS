@@ -104,7 +104,7 @@
     	sense then one can insert a Bar directly into the environment. 
     	Foo foo = env["x"] ;  /* as<Foo> is used */
 	Bar bar ;
-	env["y"] = bar ;      /* wrap<Foo> is used */    	
+	env["y"] = bar ;      /* wrap<Bar> is used */    	
 
     o	Environment::assign becomes a template and also uses wrap to 
     	create a suitable SEXP
