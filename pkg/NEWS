@@ -49,6 +49,8 @@
     	on C++0x. It is now possible to call a function with up to 
     	5 templated arguments (candidate for implicit wrap)
     	
+    o	added support for 64-bit Windows (thanks to Brian Ripley and Uwe Ligges)
+	
 0.7.4	2010-01-30
 
     o	matrix matrix-like indexing using operator() for all vector 
