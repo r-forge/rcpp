@@ -30,7 +30,25 @@
     o 	The methods RObject::asFoo are deprecated and will be removed
     	in the next version. The alternative is to use as<Foo>.
 
-
+    o	The method RObject::slot can now be used to get or set the 
+    	associated slot. This is one more example of the proxy pattern
+    	
+    o	Rcpp::VectorBase gains a names() method that allows getting/setting
+    	the names of a vector. This is yet another example of the 
+    	proxy pattern.
+    	
+    o	Rcpp::DottedPair gains templated operator<< and operator>> that 
+    	allow wrap and push_back or wrap and push_front of an object
+    	
+    o	Rcpp::DottedPair, Rcpp::Language, Rcpp::Pairlist are less
+    	dependent on C++0x features. They gain constructors with up
+    	to 5 templated arguments. 5 was choosed arbitrarily and might 
+    	be updated upon request.
+    	
+    o	function calls by the Rcpp::Function class is less dependent
+    	on C++0x. It is now possible to call a function with up to 
+    	5 templated arguments (candidate for implicit wrap)
+    	
 0.7.4	2010-01-30
 
     o	matrix matrix-like indexing using operator() for all vector 
