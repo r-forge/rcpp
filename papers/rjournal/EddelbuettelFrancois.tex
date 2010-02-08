@@ -213,7 +213,7 @@ its underlying \code{SEXP} as a resource.
 The constructor of the \code{RObject} class takes 
 the necessary measures to guarantee that the underlying \code{SEXP}
 is protected from the garbage collector, and the destructor
-assumes the responsability to withdraw that protection. 
+assumes the responsibility to withdraw that protection. 
 
 By assuming the entire responsability of garbage collection, \code{Rcpp}
 relieves the programmer from writing boiler plate code to manage
@@ -411,7 +411,7 @@ The converters offered by \code{wrap} and \code{as} provide a very
 useful framework to implement the logic of the code in terms of C++ 
 data structures and then explicitely convert data back to R. 
 
-In addition, the converters are also used implicitely
+In addition, the converters are also used implicitly
 in various places in the \code{Rcpp} API. 
 Consider the following code that uses the \code{Rcpp::Environment} class to 
 interchange data between C++ and R.
@@ -551,9 +551,9 @@ updated just like any other R package using \textsl{e.g.} the
 \code{update.packages()} for upgrades.  So even though R / C++ interfacing
 would otherwise require source code, the \pkg{Rcpp} library is always provided
 ready for use as a pre-built library through the CRAN package
-mechanism.\footnote{This presumes a platform for which prebuild binaries a
+mechanism.\footnote{This presumes a platform for which prebuild binaries are
   provided. \pkg{Rcpp} is available in binary form for Windows and OS X users from
-  CRAN, and a \code{.deb} package for Debian and Ubuntu users. For other systems, the
+  CRAN, and as a \code{.deb} package for Debian and Ubuntu users. For other systems, the
   \pkg{Rcpp} library is automatically built from source during installation
   or upgrades.}
 
