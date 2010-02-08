@@ -1,12 +1,18 @@
+2010-02-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.7.5
+
+	* debian/*: Similarly updated for new release to Debian
+
 2010-02-07  Romain Francois <francoisromain@free.fr>
 
 	* src/RcppSexp.h: class RcppSexp removed (was deprecated)
 
 	* src/Rcpp/*.h: defaults copy constructors and assignment
-	operators have been added for all classes extending RObject. 
+	operators have been added for all classes extending RObject.
 	Otherwise the compiler generates default versions that circumvent
 	the garbage collection management
-	
+
 2010-02-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/examples/functionCallback/newApiExamples.r: Added simpler
