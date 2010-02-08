@@ -4,9 +4,9 @@
     o 	wrap has been much improved. wrappable types now are :
     	- primitive types : int, double, Rbyte, Rcomplex, float, bool
     	- std::string
-    	- STL-like containers which have iterators over wrappable types:
+    	- STL containers which have iterators over wrappable types:
     	  (e.g. std::vector<T>, std::deque<T>, std::list<T>, etc ...). 
-    	- STL-like maps keyed by std::string, e.g std::map<std::string,T>
+    	- STL maps keyed by std::string, e.g std::map<std::string,T>
     	- classes that have implicit conversion to SEXP
     	- classes for which the wrap template if fully or partly specialized
     	This allows composition, so for example this class is wrappable: 
