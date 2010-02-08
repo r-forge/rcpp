@@ -103,8 +103,6 @@ addition to the literature, but is beyond the scope of this article.
 \section{Classic Rcpp API}
 \label{sec:classic_rcpp}
 
-% [Romain] should this be earliest instead of earlier
-% [Dirk] Does it really matter as we only compare two things (Classic,New) ?
 The core focus of \pkg{Rcpp}---particularly for the earlier API described in
 this section---has always been on allowing the programmer to add C++-based
 functions. We use this term in the standard mathematical sense of providing
@@ -538,12 +536,7 @@ among its over one hundred and fifty unit tests.
 
 Extending R with compiled code also needs to address how to reliably compile,
 link and load the code.  While using a package is preferable in the long run,
-%it may be too rigid a framework for quick explorations.
-it may be too involved for for quick explorations.
-% [Romain] it may be a too heavy framework ?
-% [Dirk] no this work. Will check with my English speaking wife :)
-% [Dirk] how is 'rigid'? Or how about 'it may be too involved ...' as above
-An alternative is
+it may be too involved for for quick explorations. An alternative is
 provided by the \pkg{inline} package \citep{cran:inline} which compiles,
 links and loads a C, C++ or Fortran function---directly from the R prompt
 using a simple function \code{cfunction}.  It was recently extended to work
@@ -571,9 +564,6 @@ for compilation and linking.  So internally, \pkg{inline} makes uses of the
 two functions \code{Rcpp:::CxxFlags()} and \code{Rcpp:::LdFlags()} that
 provide this information (and which are also used by \code{Makevars} files of
 other packages).  Here, however, all this is done behind the scenes 
-% and the user need not worry about compiler or linker options or settings.
-% [Romain] need not worrying ?
-% [Dirk] Good to me, will check -- how is this?
 without the need for explicitly setting compiler or linker options.
 
 The convolution example provided above can be rewritten for use by
