@@ -166,4 +166,35 @@ test.CharacterVector.Dimension.constructor <- function(){
 		msg = "CharacterVector( Dimension(2,3,4))" )
 }
 
-
+test.CharacterVector.iterator <- function(){
+	funx <- cfunction(signature(x = "character"), '
+		CharacterVector letters(x) ;
+		std::string res ;
+		CharacterVector::iterator first = letters.begin() ;
+		CharacterVector::iterator last = letters.end() ;
+		while( first != last ){
+			res += *first ;
+			++first ;
+		}
+		return wrap(res) ;
+	;
+		', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	checkEquals( 
+		funx(letters), 
+		paste(letters, collapse=""), 
+		msg = "CharacterVector::iterator explicit looping" )
+	
+	funx <- cfunction(signature(x = "character"), '
+		CharacterVector letters(x) ;
+		std::string res( 
+			std::accumulate( 
+				letters.begin(), letters.end(), std::string() ) ) ;
+		return wrap(res) ;
+	;
+		', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	checkEquals( 
+		funx(letters), 
+		paste(letters, collapse=""), 
+		msg = "CharacterVector::iterator using std::accumulate" )
+	
+}

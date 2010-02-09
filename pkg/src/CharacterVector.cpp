@@ -61,13 +61,20 @@ CharacterVector::CharacterVector( const Dimension& dims): VectorBase(){
 CharacterVector::StringProxy::StringProxy(CharacterVector& v, int i) :
 	parent(v), index(i){}
 
+CharacterVector::StringProxy::StringProxy(const StringProxy& other) :
+	parent(other.parent), index(other.index){}
+
 CharacterVector::StringProxy::operator SEXP() const{
 	return STRING_ELT( parent, index ) ;
 }
 
-CharacterVector::StringProxy::operator char*() const {
-	return const_cast<char*>( CHAR(STRING_ELT( parent, index )) );
+CharacterVector::StringProxy::operator const char*() const {
+	return /*const_cast<char*>*/( CHAR(STRING_ELT( parent, index )) );
 }
+
+// CharacterVector::StringProxy::operator std::string() const {
+// 	return std::string( CHAR(STRING_ELT( parent, index )) );
+// }
 
 CharacterVector::StringProxy& CharacterVector::StringProxy::operator=( const StringProxy& rhs){
 	SET_STRING_ELT( parent, index, STRING_ELT( rhs.parent, rhs.index) ) ;
@@ -112,6 +119,74 @@ CharacterVector::StringProxy CharacterVector::operator()( const size_t& i) throw
 
 CharacterVector::StringProxy CharacterVector::operator()( const size_t& i, const size_t&j ) throw(index_out_of_bounds,not_a_matrix){
 	return StringProxy(*this, offset(i,j) ) ;
+}
+
+/* iterator  */
+
+CharacterVector::iterator::iterator(CharacterVector& object, int index_ ) : 
+	proxy(object,index_) {};
+
+CharacterVector::iterator& CharacterVector::iterator::operator++(){
+	proxy.move(1) ;
+	return *this ;
+}
+
+CharacterVector::iterator& CharacterVector::iterator::operator++(int){
+	proxy.move(1) ;
+	return *this ;
+}
+
+CharacterVector::iterator& CharacterVector::iterator::operator--(){
+	proxy.move(-1) ;
+	return *this ;
+}
+
+CharacterVector::iterator& CharacterVector::iterator::operator--(int){
+	proxy.move(-1) ;
+	return *this ;
+}
+
+CharacterVector::iterator CharacterVector::iterator::operator+( difference_type n) const{
+	return iterator( proxy.parent, proxy.index+n) ;    
+}
+
+CharacterVector::iterator CharacterVector::iterator::operator-( difference_type n) const{
+	return iterator( proxy.parent, proxy.index-n) ;
+}
+
+CharacterVector::iterator& CharacterVector::iterator::operator+=(difference_type n) {
+	proxy.move(n) ;
+	return *this ;
+}
+
+CharacterVector::iterator& CharacterVector::iterator::operator-=(difference_type n) {
+	proxy.move(-n) ;
+	return *this ;
+}
+
+CharacterVector::iterator::reference CharacterVector::iterator::operator*(){
+	return proxy ;
+}
+
+CharacterVector::iterator::pointer CharacterVector::iterator::operator->(){
+	return &proxy ;
+}
+
+bool CharacterVector::iterator::operator==( const CharacterVector::iterator& y){
+	return ( this->proxy.index == y.proxy.index ) && ( this->proxy.parent == y.proxy.parent );
+}
+
+bool CharacterVector::iterator::operator!=( const CharacterVector::iterator& y){
+	return ( this->proxy.index != y.proxy.index ) || ( this->proxy.parent != y.proxy.parent );
+}
+
+CharacterVector::iterator::difference_type CharacterVector::iterator::operator-(
+		const CharacterVector::iterator& y ){
+	return y.proxy.index - this->proxy.index ;
+}
+
+std::string operator+( const std::string& x, const CharacterVector::StringProxy& y ){
+	return x + static_cast<const char*>(y) ;
 }
 
 } // namespace 
