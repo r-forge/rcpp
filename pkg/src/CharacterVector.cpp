@@ -180,6 +180,31 @@ bool CharacterVector::iterator::operator!=( const CharacterVector::iterator& y){
 	return ( this->proxy.index != y.proxy.index ) || ( this->proxy.parent != y.proxy.parent );
 }
 
+bool CharacterVector::iterator::operator<( const iterator& other){
+	/* TODO: deal with the case where this os not iterating over the 
+	         same character vector */
+	return proxy.index < other.proxy.index ;
+}
+
+bool CharacterVector::iterator::operator>( const iterator& other){
+	/* TODO: deal with the case where this os not iterating over the 
+	         same character vector */
+	return proxy.index > other.proxy.index ;
+}
+
+bool CharacterVector::iterator::operator<=( const iterator& other){
+	/* TODO: deal with the case where this os not iterating over the 
+	         same character vector */
+	return proxy.index <= other.proxy.index ;
+}
+
+bool CharacterVector::iterator::operator>=( const iterator& other){
+	/* TODO: deal with the case where this os not iterating over the 
+	         same character vector */
+	return proxy.index >= other.proxy.index ;
+}
+
+
 CharacterVector::iterator::difference_type CharacterVector::iterator::operator-(
 		const CharacterVector::iterator& y ){
 	return y.proxy.index - this->proxy.index ;
@@ -189,4 +214,19 @@ std::string operator+( const std::string& x, const CharacterVector::StringProxy&
 	return x + static_cast<const char*>(y) ;
 }
 
+void CharacterVector::StringProxy::swap( StringProxy& other){
+	SEXP tmp = PROTECT( STRING_ELT(parent, index)) ;
+	SET_STRING_ELT( parent, index, STRING_ELT(other.parent, other.index) ) ;
+	SET_STRING_ELT( other.parent, other.index, tmp ) ;
+	UNPROTECT(1) ;
+}
+
 } // namespace 
+
+namespace std{
+	template<> void swap<Rcpp::CharacterVector::StringProxy>( Rcpp::CharacterVector::StringProxy& a, Rcpp::CharacterVector::StringProxy& b){
+	a.swap(b) ;
+}
+} ;
+
+
