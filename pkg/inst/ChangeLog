@@ -1,10 +1,15 @@
+2010-02-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/skeleton/Makevars: Use $R_HOME/bin indirection
+	* inst/skeleton/Makevars.win: Idem
+
 2010-02-09  Romain Francois <romain@r-enthusiasts.com>
 
 	* src/Rcpp/CharacterVector.h: CharacterVector gains a random
-	access iterator, begin() and end() to support STL algorithms. 
+	access iterator, begin() and end() to support STL algorithms.
 	The iterator dereferences to a StringProxy
 
-	* src/Rcpp/RObject.h: remove RObject::asFoo methods which were 
+	* src/Rcpp/RObject.h: remove RObject::asFoo methods which were
 	deprecated in Rcpp 0.7.5. The alternative is to use Rcpp::as<Foo>
 
 2010-02-08  Dirk Eddelbuettel  <edd@debian.org>
