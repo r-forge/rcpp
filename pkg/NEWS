@@ -1,5 +1,5 @@
 
-0.7.5	(under development)
+0.7.5	2010-08-02
 
     o 	wrap has been much improved. wrappable types now are :
     	- primitive types : int, double, Rbyte, Rcomplex, float, bool
