@@ -100,6 +100,9 @@ public:
 		friend std::ostream& operator<<(std::ostream& os, const StringProxy& proxy);
 		
 		friend class iterator ;
+		
+		void swap( StringProxy& other ) ;
+		
 	private:
 		CharacterVector& parent; 
 		int index ;
@@ -133,6 +136,11 @@ public:
 		
 		bool operator==( const iterator& y) ;
 		bool operator!=( const iterator& y) ;
+		bool operator<( const iterator& other ) ;
+		bool operator>( const iterator& other ) ;
+		bool operator<=( const iterator& other ) ;
+		bool operator>=( const iterator& other ) ;
+		
 		difference_type operator-(const iterator& y) ;
 		
 	private:
@@ -268,7 +276,12 @@ typedef CharacterVector StringVector ;
 
 std::string operator+( const std::string& x, const CharacterVector::StringProxy& y ) ;
 
-
 } // namespace
+
+namespace std{
+	template<> void swap<Rcpp::CharacterVector::StringProxy>(Rcpp::CharacterVector::StringProxy& a, Rcpp::CharacterVector::StringProxy& b) ;
+}
+
+
 
 #endif

@@ -198,3 +198,18 @@ test.CharacterVector.iterator <- function(){
 		msg = "CharacterVector::iterator using std::accumulate" )
 	
 }
+
+test.CharacterVector.reverse <- function(){
+	funx <- cfunction(signature(x = "character"), '
+		CharacterVector y(x) ;
+		std::reverse( y.begin(), y.end() ) ;
+		return y ;
+	;
+		', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	x <- c("foo", "bar", "bling")
+	funx(x)
+	checkEquals( x, c("bling", "bar", "foo"), msg = "reverse" )
+	funx(x)
+	checkEquals( x, c("foo", "bar", "bling"), msg = "reverse" )
+}
+
