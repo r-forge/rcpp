@@ -29,84 +29,90 @@
 
 namespace Rcpp{
 
-template <int RTYPE> 
-class SEXP_Vector : public VectorBase {
+class SEXP_Vector_Base : public VectorBase {
 public:
 	
-	/* much inspired from item 30 of more effective C++ */
+	class iterator ;
+	
 	class Proxy {
 	public:
-		Proxy( SEXP_Vector& v, size_t i ) : parent(v), index(i) {}
+		Proxy( SEXP_Vector_Base& v, size_t i ) ;
 		
-		/* lvalue uses */
-		Proxy& operator=(const Proxy& rhs){
-			SET_VECTOR_ELT( parent, index, VECTOR_ELT( rhs.parent, rhs.index) ) ;
-			return *this ;
-		}
+		Proxy& operator=(SEXP rhs) ; 
 		
-		Proxy& operator=(SEXP rhs){
-			SET_VECTOR_ELT( parent, index, rhs ) ;
-			return *this ;
-		}
+		Proxy& operator=(const Proxy& rhs) ;
 		
 		template <typename T>
 		Proxy& operator=( const T& rhs){
-			SET_VECTOR_ELT( parent, index, wrap(rhs) ) ;
+			set( wrap(rhs) ) ;
 			return *this; 
 		}
 		
+		inline operator SEXP() const { return get() ; }
 		template <typename U> operator U(){
-			SEXP xx = VECTOR_ELT( parent, index) ;
-			return as<U>( xx ) ;
+			return as<U>( get() ) ;
 		}
 		
+		void swap(Proxy& other) ;
+		
+		friend class iterator ;
+	private:
+		SEXP_Vector_Base& parent; 
+		size_t index ;
+		void move(int n) ;
+		void set(SEXP x) ;
+		SEXP get() const ;
+	} ;
+
+	class iterator {
+	public:
+		typedef Proxy& reference ;
+		typedef Proxy* pointer ;
+		typedef int difference_type ;
+		typedef Proxy value_type;
+		typedef std::random_access_iterator_tag iterator_category ;
+		
+		iterator( SEXP_Vector_Base& object, int index );
+		
+		inline iterator& operator++(){ proxy.move(1) ; return *this; }
+		inline iterator& operator++(int){ proxy.move(1) ; return *this; }
+		
+		inline iterator& operator--() { proxy.move(-1) ; return *this; }
+		inline iterator& operator--(int) { proxy.move(-1) ; return *this; }
+		                    
+		inline iterator operator+(difference_type n) const { return iterator( proxy.parent, proxy.index + n ) ; }
+		inline iterator operator-(difference_type n) const { return iterator( proxy.parent, proxy.index - n ) ; }
+		
+		inline iterator& operator+=(difference_type n) { proxy.move(n) ; return *this; }
+		inline iterator& operator-=(difference_type n) { proxy.move(-n) ; return *this; }
+
+		inline reference operator*() { return proxy ; }
+		inline pointer operator->(){ return &proxy ; }
+		
+		inline bool operator==( const iterator& y) { return this->proxy.index == y.proxy.index && this->proxy.parent == y.proxy.parent; }
+		inline bool operator!=( const iterator& y) { return this->proxy.index != y.proxy.index || this->proxy.parent != y.proxy.parent; }
+		inline bool operator< ( const iterator& y) { return this->proxy.index <  y.proxy.index ; }
+		inline bool operator> ( const iterator& y) { return this->proxy.index >  y.proxy.index ; }
+		inline bool operator<=( const iterator& y) { return this->proxy.index <= y.proxy.index ; }
+		inline bool operator>=( const iterator& y) { return this->proxy.index >= y.proxy.index ; }
+		
+		inline difference_type operator-(const iterator& y) { return this->proxy.index - y.proxy.index ; }
 		
 	private:
-		SEXP_Vector& parent; 
-		size_t index ;
-	} ;
-
-	SEXP_Vector(): VectorBase(){}
+		Proxy proxy ;
+	};
 	
-	SEXP_Vector(const SEXP_Vector& other) : VectorBase(other.asSexp()) {} ;
-	
-	SEXP_Vector& operator=(const SEXP_Vector& other){
-		setSEXP( other.asSexp() ) ;
-		return *this ;
-	}
-	
-	SEXP_Vector(SEXP x) : VectorBase() {
-		SEXP y = r_cast<RTYPE>(x) ;
-		setSEXP( y );
-	}
-	
-	SEXP_Vector(const size_t& size) : VectorBase(){
-		setSEXP( Rf_allocVector( RTYPE, size ) ) ;
-	}
-	
-	SEXP_Vector(const Dimension& dims) : VectorBase(){
-		setSEXP( Rf_allocVector( RTYPE, dims.prod() ) ) ;
-		if( dims.size() > 1) attr( "dim" ) = dims ;
-	}
-
-	template <typename InputIterator>
-	SEXP_Vector(InputIterator first, InputIterator last) : VectorBase() {
-		assign( first, last ) ;
-	}
-	
-#ifdef HAS_INIT_LISTS
-	SEXP_Vector( std::initializer_list<SEXP> list) : VectorBase(){
-		assign( list.begin(), list.end() ) ;
-	} ;
-#endif
+	SEXP_Vector_Base() ; 
 	
 	const Proxy operator[]( int i ) const throw(index_out_of_bounds){
-		return Proxy(const_cast<SEXP_Vector<RTYPE>&>(*this), offset(i)) ;
+		return Proxy(const_cast<SEXP_Vector_Base&>(*this), offset(i)) ;
 	}
 	Proxy operator[]( int i ) throw(index_out_of_bounds){
 		return Proxy(*this, offset(i) ) ; 
 	}
-
+	
+	inline iterator begin() { return iterator(*this, 0) ; }
+	inline iterator end() { return iterator(*this, size() ) ; }
 	
 	Proxy operator()( const size_t& i) throw(index_out_of_bounds){
 		return Proxy(*this, offset(i) ) ;
@@ -115,28 +121,65 @@ public:
 		return Proxy(*this, offset(i,j) ) ;
 	}
 	
-	friend class Proxy; 
+	friend class Proxy;
+	friend class iterator ;
+	
+} ;
+
+template <int RTYPE>
+class SEXP_Vector : public SEXP_Vector_Base{
+public:
+	SEXP_Vector() : SEXP_Vector_Base(){} ; 
+	
+	SEXP_Vector(const SEXP_Vector& other) : SEXP_Vector_Base(){
+		setSEXP( other.asSexp() ) ;
+	} ;
+	
+	SEXP_Vector& operator=(const SEXP_Vector& other){
+		setSEXP( other.asSexp() ) ;
+		return *this ;
+	}
+	
+	SEXP_Vector(SEXP x) : SEXP_Vector_Base() {
+		SEXP y = r_cast<RTYPE>(x) ;
+		setSEXP( y );
+	}
+	
+	SEXP_Vector(const size_t& size) : SEXP_Vector_Base(){
+		setSEXP( Rf_allocVector( RTYPE, size ) ) ;
+	}
+	
+	SEXP_Vector(const Dimension& dims) : SEXP_Vector_Base(){
+		setSEXP( Rf_allocVector( RTYPE, dims.prod() ) ) ;
+		if( dims.size() > 1) attr( "dim" ) = dims ;
+	}
+
+	template <typename InputIterator>
+	SEXP_Vector(InputIterator first, InputIterator last) : SEXP_Vector_Base() {
+		assign( first, last ) ;
+	}
+	
+#ifdef HAS_INIT_LISTS
+	SEXP_Vector( std::initializer_list<SEXP> list) : SEXP_Vector_Base(){
+		assign( list.begin(), list.end() ) ;
+	} ;
+#endif
 	
 	template <typename InputIterator>
 	void assign( InputIterator first, InputIterator last){
-		size_t size = std::distance( first, last );
-		SEXP x = PROTECT( Rf_allocVector( RTYPE, size ) ) ;
-		SEXP y = R_NilValue ; /* -Wall */
-		for( size_t i=0; i<size ; i++, ++first){
-			/* this is where the actual type of InputIterator matters */
-			y = *first ; /* as long as *first can implicitely convert to SEXP, we're good to go */
-			SET_VECTOR_ELT( x, i, y ) ;
-		}
-		setSEXP( x ) ;
-		UNPROTECT( 1 ); /* x */
+		setSEXP( r_cast<RTYPE>( wrap( first, last) ) ) ;
 	}
+
 	
-} ;
+}   ;
 
 typedef SEXP_Vector<VECSXP> GenericVector ;
 typedef GenericVector List ;
 
-
 } //namespace Rcpp
+
+namespace std {
+	template<> void swap( Rcpp::SEXP_Vector_Base::Proxy& a, Rcpp::SEXP_Vector_Base::Proxy& b) ;
+}
 
 #endif

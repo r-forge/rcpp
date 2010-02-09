@@ -120,4 +120,24 @@ test.List.Dimension.constructor <- function(){
 		msg = "List( Dimension(2,3,4))" )
 }
 
+test.List.iterator <- function(){
+	
+	cpp_lapply <- cfunction(signature(x = "list", g = "function" ), '
+		Function fun(g) ;
+		List input(x) ;
+		List output( input.size() ) ;
+		std::transform( input.begin(), input.end(), output.begin(), fun ) ;
+		output.names() = input.names() ;
+		return output ;
+	
+	', Rcpp = TRUE, includes = "using namespace Rcpp;"  )
+	
+	data <- list( x = letters, y = LETTERS, z = 1:4 )
+	checkEquals( 
+		cpp_lapply( data, length ), 
+		list( x = 26L, y = 26L, z = 4L), 
+		msg = "c++ version of lapply" )
+	
+	
+}
 
