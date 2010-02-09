@@ -5,6 +5,19 @@
 
 2010-02-09  Romain Francois <romain@r-enthusiasts.com>
 
+	* src/Rcpp/SEXP_Vector.h: The functionality of SEXP_Vector
+	that was independent of the template parameter was factored out
+	into a new base class SEXP_Vector_Base. This follows the advice 
+	of item 44 of Effective C++.
+	
+	* src/Rcpp/SEXP_Vector.h: SEXP_Vector_Base::iterator is introduced
+	as well as methods begin() and end() to support use of stl 
+	algorithms on lists.
+	
+	* inst/unitTests/runit.GenericVector.R: new unit test for
+	testing SEXP_Vector_Base::iterator and illustrating a c++
+	version of lapply using std::transform
+
 	* src/Rcpp/CharacterVector.h: CharacterVector gains a random
 	access iterator, begin() and end() to support STL algorithms.
 	The iterator dereferences to a StringProxy
