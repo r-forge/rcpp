@@ -207,6 +207,25 @@ public:
 		return insert_sexp( iterator(*this,index), object.getSEXP() , true, object.getTag() ) ;
 	}
 	
+	iterator erase( iterator position ){
+		erase_single( position.index() ) ;
+		return position ;
+	}
+	iterator erase( int index ){
+		erase_single(index) ;
+		return iterator(*this,index) ;
+	}
+	
+	iterator erase( iterator first, iterator last){
+		erase_range(first.index(), last.index() ) ;
+		return first ;
+	}
+	
+	iterator erase( int first, int last){
+		erase_range(first, last ) ;
+		return iterator( *this, first ) ;
+	}
+	
 private:
 	
 	/* 
@@ -233,7 +252,68 @@ private:
 			push_middle_sexp( 0, t, named, name ) ;
 		}
 	}
+	
+	void erase_single( int index ){
+		if( index >= size() || index < 0 ) throw RObject::index_out_of_bounds() ;
+		
+		R_len_t n = size() ;
+		SEXP x = PROTECT( Rf_allocVector( RTYPE, n-1 ) ) ;
+		R_len_t i=0 ;
+		for( ; i<index; i++){
+			SET_VECTOR_ELT( x, i, VECTOR_ELT(m_sexp, i ) ) ;
+		}
+		i++; /* skip the one we don't want */
+		for( ; i<n; i++){
+			SET_VECTOR_ELT( x, i-1, VECTOR_ELT(m_sexp, i ) ) ;
+		}
+		SEXP names = RCPP_GET_NAMES( m_sexp ) ;
+		if( names != R_NilValue ){
+			SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n-1) );
+			for( i=0; i<index; i++){
+				SET_STRING_ELT( x_names, i, STRING_ELT(names, i ) ) ;
+			}
+			i++ ; /* skip */
+			for( ; i<n; i++){
+				SET_STRING_ELT( x_names, i-1, STRING_ELT(names, i ) ) ;
+			}
+			Rf_setAttrib( x, Rf_install("names"), x_names );
+			UNPROTECT(1) ; /* x_names */
+		} 
+		setSEXP( x ); 
+		UNPROTECT(1) ; /* x */
+	}
+	
+	void erase_range( int first, int last ){
+		if( first > last ) throw std::range_error("invalid range") ;
+		if( last >= size() || first < 0 ) throw RObject::index_out_of_bounds() ;
+		
+		int range_size = last - first + 1 ;
+		R_len_t n = size() ;
+		SEXP x = PROTECT( Rf_allocVector( RTYPE, n - range_size ) ) ;
+		R_len_t i=0 ;
+		for( ; i<first; i++){
+			SET_VECTOR_ELT( x, i, VECTOR_ELT(m_sexp, i ) ) ;
+		}
+		for( i=last+1; i<n; i++){
+			SET_VECTOR_ELT( x, i-range_size, VECTOR_ELT(m_sexp, i ) ) ;
+		}
+		SEXP names = RCPP_GET_NAMES( m_sexp ) ;
+		if( names != R_NilValue ){
+			SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n-range_size) );
+			for( i=0; i<first; i++){
+				SET_STRING_ELT( x_names, i, STRING_ELT(names, i ) ) ;
+			}
+			for( i=last+1; i<n; i++){
+				SET_STRING_ELT( x_names, i-range_size, STRING_ELT(names, i ) ) ;
+			}
+			Rf_setAttrib( x, Rf_install("names"), x_names );
+			UNPROTECT(1) ; /* x_names */
+		} 
+		setSEXP( x ); 
+		UNPROTECT(1) ; /* x */
+	}
 
+	
 	void push_middle_sexp( int index, SEXP t, bool named, const std::string& name ){
 		if( index > size() || index < 0 ) throw RObject::index_out_of_bounds() ;
 		PROTECT(t) ; /* just in case */
