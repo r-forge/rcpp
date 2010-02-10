@@ -187,6 +187,15 @@ public:
 
 private:
 	
+	/* 
+	   FIXME: this currently loses the attributes of the
+	   current object, but then append in R also does. 
+	   
+	   It is probably not safe to just copy the attributes as is, 
+	   as they could for example relate to dimensions or dimnames, etc ...
+	   
+	   not sure what to do
+	   */
 	void push_back_sexp( SEXP t, bool named, const std::string& name ){
 		if( isNULL() ){ 
 			set_single( t, named, name );
