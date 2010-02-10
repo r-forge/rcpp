@@ -218,6 +218,11 @@ private:
 				SET_STRING_ELT(x_names, i, Rf_mkChar(name.c_str()) ) ;
 				Rf_setAttrib( x, Rf_install("names"), x_names );
 				UNPROTECT(1) ; /* x_names */
+			} else if(named){
+				SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
+				SET_STRING_ELT(x_names, n, Rf_mkChar(name.c_str()) ) ;
+				Rf_setAttrib( x, Rf_install("names"), x_names );
+				UNPROTECT(1) ; /* x_names */
 			}
 			setSEXP( x ); 
 			UNPROTECT(1) ; /* x */
@@ -243,6 +248,11 @@ private:
 				for( i=0; i<n; i++){
 					SET_STRING_ELT( x_names, i+1, STRING_ELT(names, i ) ) ;
 				}
+				SET_STRING_ELT(x_names, 0, Rf_mkChar(name.c_str()) ) ;
+				Rf_setAttrib( x, Rf_install("names"), x_names );
+				UNPROTECT(1) ; /* x_names */
+			} else if(named){
+				SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
 				SET_STRING_ELT(x_names, 0, Rf_mkChar(name.c_str()) ) ;
 				Rf_setAttrib( x, Rf_install("names"), x_names );
 				UNPROTECT(1) ; /* x_names */
