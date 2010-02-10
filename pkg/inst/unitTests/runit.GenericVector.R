@@ -185,4 +185,19 @@ test.List.push.front <- function(){
 		msg = "List.push_front" )
 }
 
+test.List.insert <- function(){
+	
+	funx <- cfunction( signature(x = "list"), 
+	'
+	List list(x) ;
+	list.insert( list.begin(), 10 ) ;
+	list.insert( list.end(), Named("foo", "bar" ) ) ;
+	return list ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	d <- list( x = 1:10, y = letters[1:10] )
+	res <- funx( d )
+	checkEquals( res,
+		list( 10L, x = 1:10, y = letters[1:10], foo = "bar" ), 
+		msg = "List.insert" )
+}
 

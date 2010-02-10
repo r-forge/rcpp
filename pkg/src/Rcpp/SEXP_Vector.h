@@ -98,6 +98,8 @@ public:
 		
 		inline difference_type operator-(const iterator& y) { return this->proxy.index - y.proxy.index ; }
 		
+		inline int index(){ return proxy.index ; }
+		
 	private:
 		Proxy proxy ;
 	};
@@ -166,15 +168,17 @@ public:
 	
 	template <typename InputIterator>
 	void assign( InputIterator first, InputIterator last){
+		/* FIXME: we might not need the wrap if the object already 
+		          has the appropriate length */
 		setSEXP( r_cast<RTYPE>( wrap( first, last) ) ) ;
 	}
 	
 	template <typename WRAPPABLE>
 	void push_back( const WRAPPABLE& t){
-		push_back_sexp( wrap(t), "" ) ;
+		push_back_sexp( wrap(t), false, "" ) ;
 	}
 	void push_back( const Named& t){
-		push_back_sexp( t.getSEXP() , t.getTag() ) ;
+		push_back_sexp( t.getSEXP() , true, t.getTag() ) ;
 	}
 
 	template <typename WRAPPABLE>
@@ -185,6 +189,24 @@ public:
 		push_front_sexp( t.getSEXP() , true, t.getTag() ) ;
 	}
 
+	template <typename WRAPPABLE>
+	iterator insert( iterator position, const WRAPPABLE& object ){
+		return insert_sexp( position, wrap(object), false, "" ) ;
+	}
+	
+	template <typename WRAPPABLE>
+	iterator insert( int index, const WRAPPABLE& object){
+		return insert_sexp( iterator(*this,index), wrap(object), false, "" ) ;
+	}
+	
+	iterator insert( iterator position, const Named& object ){
+		return insert_sexp( position, object.getSEXP() , true, object.getTag() ) ;
+	}
+	
+	iterator insert( int index, const Named& object){
+		return insert_sexp( iterator(*this,index), object.getSEXP() , true, object.getTag() ) ;
+	}
+	
 private:
 	
 	/* 
@@ -200,32 +222,7 @@ private:
 		if( isNULL() ){ 
 			set_single( t, named, name );
 		} else {
-			/* not sure we can avoid the copy. R does the same
-			   with lengthgets@builtin.c */
-			R_len_t n = size() ;
-			SEXP x = PROTECT( Rf_allocVector( RTYPE, n+1 ) ) ;
-			R_len_t i=0 ;
-			for( ; i<n; i++){
-				SET_VECTOR_ELT( x, i, VECTOR_ELT(m_sexp, i ) ) ;
-			}
-			SET_VECTOR_ELT( x, i, t ) ;
-			SEXP names = RCPP_GET_NAMES( m_sexp ) ;
-			if( names != R_NilValue ){
-				SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
-				for( i=0; i<n; i++){
-					SET_STRING_ELT( x_names, i, STRING_ELT(names, i ) ) ;
-				}
-				SET_STRING_ELT(x_names, i, Rf_mkChar(name.c_str()) ) ;
-				Rf_setAttrib( x, Rf_install("names"), x_names );
-				UNPROTECT(1) ; /* x_names */
-			} else if(named){
-				SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
-				SET_STRING_ELT(x_names, n, Rf_mkChar(name.c_str()) ) ;
-				Rf_setAttrib( x, Rf_install("names"), x_names );
-				UNPROTECT(1) ; /* x_names */
-			}
-			setSEXP( x ); 
-			UNPROTECT(1) ; /* x */
+			push_middle_sexp( size(), t, named, name ) ;
 		}
 	}
 	
@@ -233,35 +230,47 @@ private:
 		if( isNULL() ){ 
 			set_single( t, named, name );
 		} else {
-			/* not sure we can avoid the copy. R does the same
-			   with lengthgets@builtin.c */
-			R_len_t n = size() ;
-			SEXP x = PROTECT( Rf_allocVector( RTYPE, n+1 ) ) ;
-			R_len_t i=0 ;
-			SET_VECTOR_ELT( x, 0, t ) ;
-			for(i=0 ; i<n; i++){
-				SET_VECTOR_ELT( x, i+1, VECTOR_ELT(m_sexp, i ) ) ;
-			}
-			SEXP names = RCPP_GET_NAMES( m_sexp ) ;
-			if( names != R_NilValue ){
-				SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
-				for( i=0; i<n; i++){
-					SET_STRING_ELT( x_names, i+1, STRING_ELT(names, i ) ) ;
-				}
-				SET_STRING_ELT(x_names, 0, Rf_mkChar(name.c_str()) ) ;
-				Rf_setAttrib( x, Rf_install("names"), x_names );
-				UNPROTECT(1) ; /* x_names */
-			} else if(named){
-				SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
-				SET_STRING_ELT(x_names, 0, Rf_mkChar(name.c_str()) ) ;
-				Rf_setAttrib( x, Rf_install("names"), x_names );
-				UNPROTECT(1) ; /* x_names */
-			}
-			setSEXP( x ); 
-			UNPROTECT(1) ; /* x */
+			push_middle_sexp( 0, t, named, name ) ;
 		}
 	}
 
+	void push_middle_sexp( int index, SEXP t, bool named, const std::string& name ){
+		if( index > size() || index < 0 ) throw RObject::index_out_of_bounds() ;
+		PROTECT(t) ; /* just in case */
+		
+		R_len_t n = size() ;
+		SEXP x = PROTECT( Rf_allocVector( RTYPE, n+1 ) ) ;
+		R_len_t i=0 ;
+		for( ; i<index; i++){
+			SET_VECTOR_ELT( x, i, VECTOR_ELT(m_sexp, i ) ) ;
+		}
+		SET_VECTOR_ELT( x, i, t ) ;
+		for( ; i<n; i++){
+			SET_VECTOR_ELT( x, i+1, VECTOR_ELT(m_sexp, i ) ) ;
+		}
+		SEXP names = RCPP_GET_NAMES( m_sexp ) ;
+		if( names != R_NilValue ){
+			SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
+			for( i=0; i<index; i++){
+				SET_STRING_ELT( x_names, i, STRING_ELT(names, i ) ) ;
+			}
+			SET_STRING_ELT( x_names, i, Rf_mkChar(name.c_str()) ) ;
+			for( ; i<n; i++){
+				SET_STRING_ELT( x_names, i+1, STRING_ELT(names, i ) ) ;
+			}
+			Rf_setAttrib( x, Rf_install("names"), x_names );
+			UNPROTECT(1) ; /* x_names */
+		} else if(named){
+			SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
+			SET_STRING_ELT(x_names, index, Rf_mkChar(name.c_str()) ) ;
+			Rf_setAttrib( x, Rf_install("names"), x_names );
+			UNPROTECT(1) ; /* x_names */
+		}
+		setSEXP( x ); 
+		UNPROTECT(2) ; /* t, x */
+	}
+
+	
 	void set_single( SEXP t, bool named, const std::string& name ){
 		SEXP x = PROTECT( Rf_allocVector( RTYPE, 1) );
 		SET_VECTOR_ELT( x, 0, t ) ;
@@ -273,6 +282,13 @@ private:
 		setSEXP( x ) ;
 		UNPROTECT(1) ;
 	}
+	
+	iterator insert_sexp( iterator position, SEXP x, bool named, const std::string& name){
+		push_middle_sexp(position.index(), x, named, name ) ;
+		/* iterators are lazy, so they stay valid */
+		return position ;
+	}
+	
 }   ;
 
 typedef SEXP_Vector<VECSXP> GenericVector ;
