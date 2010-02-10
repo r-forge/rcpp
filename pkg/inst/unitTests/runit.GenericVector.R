@@ -138,6 +138,18 @@ test.List.iterator <- function(){
 		list( x = 26L, y = 26L, z = 4L), 
 		msg = "c++ version of lapply" )
 	
+}
+
+test.List.name.indexing <- function(){
 	
+	funx <- cfunction( signature(x = "data.frame"), 
+	'
+	List df(x) ;
+	IntegerVector df_x = df["x"] ;
+	int res = std::accumulate( df_x.begin(), df_x.end(), 0 ) ;
+	return wrap(res);
+	', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	d <- data.frame( x = 1:10, y = letters[1:10] )
+	checkEquals( funx( d ), sum(1:10), msg = "List names based indexing" )
 }
 

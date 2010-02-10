@@ -1,3 +1,19 @@
+2010-02-10  Romain Francois <romain@r-enthusiasts.com>
+
+	* src/Rcpp/VectorBase.h: VectorBase gains a version of 
+	offset to support retrieving the offset of a given name of a
+	vector: offset( const std::string& name)
+	
+	* src/Rcpp/SimpleVector.h : uses the new offset to perform
+	names based indexing (FR #808)
+	* src/Rcpp/SEXP_Vector.h: same
+	* src/Rcpp/CharacterVector.h: same
+	
+	* inst/unitTests/runit.GenericVector.R: unit tests for names
+	based indexing
+	* inst/unitTests/runit.IntegerVector.R: same
+	* inst/unitTests/runit.CharacterVector.R: same
+
 2010-02-09  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/skeleton/Makevars: Use $R_HOME/bin indirection

@@ -213,3 +213,14 @@ test.CharacterVector.reverse <- function(){
 	checkEquals( x, c("foo", "bar", "bling"), msg = "reverse" )
 }
 
+test.CharacterVector.names.indexing <- function(){
+	funx <- cfunction(signature(x = "character"), '
+		CharacterVector y(x) ;
+		std::string foo( y["foo"] ) ;
+		return wrap(foo) ;
+	;', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	x <- c( foo = "foo", bar = "bar" )
+	checkEquals( funx(x), "foo", msg = "CharacterVector names based indexing" )
+}
+
+

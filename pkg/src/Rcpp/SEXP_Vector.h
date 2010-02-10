@@ -104,22 +104,21 @@ public:
 	
 	SEXP_Vector_Base() ; 
 	
-	const Proxy operator[]( int i ) const throw(index_out_of_bounds){
+	inline const Proxy operator[]( int i ) const throw(index_out_of_bounds){
 		return Proxy(const_cast<SEXP_Vector_Base&>(*this), offset(i)) ;
 	}
-	Proxy operator[]( int i ) throw(index_out_of_bounds){
+	inline Proxy operator[]( int i ) throw(index_out_of_bounds){
 		return Proxy(*this, offset(i) ) ; 
 	}
 	
+	const Proxy operator[]( const std::string& name) const ; 
+	Proxy operator[](const std::string& name) ;
+    	
 	inline iterator begin() { return iterator(*this, 0) ; }
 	inline iterator end() { return iterator(*this, size() ) ; }
 	
-	Proxy operator()( const size_t& i) throw(index_out_of_bounds){
-		return Proxy(*this, offset(i) ) ;
-	}
-	Proxy operator()( const size_t& i, const size_t& j) throw(index_out_of_bounds,not_a_matrix){
-		return Proxy(*this, offset(i,j) ) ;
-	}
+	Proxy operator()( const size_t& i) throw(index_out_of_bounds) ; 
+	Proxy operator()( const size_t& i, const size_t& j) throw(index_out_of_bounds,not_a_matrix) ;
 	
 	friend class Proxy;
 	friend class iterator ;
