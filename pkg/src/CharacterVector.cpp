@@ -68,8 +68,8 @@ CharacterVector::StringProxy::operator SEXP() const{
 	return STRING_ELT( parent, index ) ;
 }
 
-CharacterVector::StringProxy::operator const char*() const {
-	return /*const_cast<char*>*/( CHAR(STRING_ELT( parent, index )) );
+CharacterVector::StringProxy::operator /*const*/ char*() const {
+	return const_cast<char*>( CHAR(STRING_ELT( parent, index )) );
 }
 
 // CharacterVector::StringProxy::operator std::string() const {
@@ -109,9 +109,18 @@ const CharacterVector::StringProxy CharacterVector::operator[](int i) const thro
 	return StringProxy(const_cast<CharacterVector&>(*this), offset(i) ) ;
 }                                          
 
+CharacterVector::StringProxy CharacterVector::operator[](const std::string& name) throw(index_out_of_bounds) {
+	return StringProxy(*this, offset(name) ) ;
+}
+
+const CharacterVector::StringProxy CharacterVector::operator[](const std::string& name) const throw(index_out_of_bounds){
+	return StringProxy(const_cast<CharacterVector&>(*this), offset(name) ) ;
+}                                          
+
 CharacterVector::StringProxy CharacterVector::operator[](int i) throw(index_out_of_bounds) {
 	return StringProxy(*this, offset(i) ) ;
 }
+
 
 CharacterVector::StringProxy CharacterVector::operator()( const size_t& i) throw(index_out_of_bounds){
 	return StringProxy(*this, offset(i) ) ;

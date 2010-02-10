@@ -91,7 +91,7 @@ public:
 		 * element this proxy refers to and convert it to a 
 		 * C string
 		 */
-		operator const char*() const ;
+		operator /*const */ char*() const ;
 		
 		/**
 		 * Prints the element this proxy refers to to an 
@@ -226,6 +226,9 @@ public:
 	 * The proxy can then be used to get or set the undelting value
 	 */
 	StringProxy operator[]( int i ) throw(index_out_of_bounds);
+
+	const StringProxy operator[]( const std::string& name) const throw(index_out_of_bounds); 
+	StringProxy operator[]( const std::string& name ) throw(index_out_of_bounds);
 
 	friend class StringProxy;
 	
