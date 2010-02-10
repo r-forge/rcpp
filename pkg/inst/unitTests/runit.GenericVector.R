@@ -153,3 +153,36 @@ test.List.name.indexing <- function(){
 	checkEquals( funx( d ), sum(1:10), msg = "List names based indexing" )
 }
 
+test.List.push.back <- function(){
+	
+	funx <- cfunction( signature(x = "list"), 
+	'
+	List list(x) ;
+	list.push_back( 10 ) ;
+	list.push_back( Named( "foo", "bar" ) ) ;
+	return list ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	d <- list( x = 1:10, y = letters[1:10] )
+	res <- funx( d )
+	checkEquals( res,
+		list( x = 1:10, y = letters[1:10], 10L, foo = "bar" ), 
+		msg = "List.push_back" )
+}
+
+test.List.push.front <- function(){
+	
+	funx <- cfunction( signature(x = "list"), 
+	'
+	List list(x) ;
+	list.push_front( 10 ) ;
+	list.push_front( Named( "foo", "bar" ) ) ;
+	return list ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	d <- list( x = 1:10, y = letters[1:10] )
+	res <- funx( d )
+	checkEquals( res,
+		list( foo = "bar", 10L, x = 1:10, y = letters[1:10] ), 
+		msg = "List.push_front" )
+}
+
+

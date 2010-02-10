@@ -168,8 +168,92 @@ public:
 	void assign( InputIterator first, InputIterator last){
 		setSEXP( r_cast<RTYPE>( wrap( first, last) ) ) ;
 	}
-
 	
+	template <typename WRAPPABLE>
+	void push_back( const WRAPPABLE& t){
+		push_back_sexp( wrap(t), "" ) ;
+	}
+	void push_back( const Named& t){
+		push_back_sexp( t.getSEXP() , t.getTag() ) ;
+	}
+
+	template <typename WRAPPABLE>
+	void push_front( const WRAPPABLE& t){
+		push_front_sexp( wrap(t), false, "" ) ;
+	}
+	void push_front( const Named& t){
+		push_front_sexp( t.getSEXP() , true, t.getTag() ) ;
+	}
+
+private:
+	
+	void push_back_sexp( SEXP t, bool named, const std::string& name ){
+		if( isNULL() ){ 
+			set_single( t, named, name );
+		} else {
+			/* not sure we can avoid the copy. R does the same
+			   with lengthgets@builtin.c */
+			R_len_t n = size() ;
+			SEXP x = PROTECT( Rf_allocVector( RTYPE, n+1 ) ) ;
+			R_len_t i=0 ;
+			for( ; i<n; i++){
+				SET_VECTOR_ELT( x, i, VECTOR_ELT(m_sexp, i ) ) ;
+			}
+			SET_VECTOR_ELT( x, i, t ) ;
+			SEXP names = RCPP_GET_NAMES( m_sexp ) ;
+			if( names != R_NilValue ){
+				SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
+				for( i=0; i<n; i++){
+					SET_STRING_ELT( x_names, i, STRING_ELT(names, i ) ) ;
+				}
+				SET_STRING_ELT(x_names, i, Rf_mkChar(name.c_str()) ) ;
+				Rf_setAttrib( x, Rf_install("names"), x_names );
+				UNPROTECT(1) ; /* x_names */
+			}
+			setSEXP( x ); 
+			UNPROTECT(1) ; /* x */
+		}
+	}
+	
+	void push_front_sexp( SEXP t, bool named, const std::string& name ){
+		if( isNULL() ){ 
+			set_single( t, named, name );
+		} else {
+			/* not sure we can avoid the copy. R does the same
+			   with lengthgets@builtin.c */
+			R_len_t n = size() ;
+			SEXP x = PROTECT( Rf_allocVector( RTYPE, n+1 ) ) ;
+			R_len_t i=0 ;
+			SET_VECTOR_ELT( x, 0, t ) ;
+			for(i=0 ; i<n; i++){
+				SET_VECTOR_ELT( x, i+1, VECTOR_ELT(m_sexp, i ) ) ;
+			}
+			SEXP names = RCPP_GET_NAMES( m_sexp ) ;
+			if( names != R_NilValue ){
+				SEXP x_names = PROTECT( Rf_allocVector( STRSXP, n+1) );
+				for( i=0; i<n; i++){
+					SET_STRING_ELT( x_names, i+1, STRING_ELT(names, i ) ) ;
+				}
+				SET_STRING_ELT(x_names, 0, Rf_mkChar(name.c_str()) ) ;
+				Rf_setAttrib( x, Rf_install("names"), x_names );
+				UNPROTECT(1) ; /* x_names */
+			}
+			setSEXP( x ); 
+			UNPROTECT(1) ; /* x */
+		}
+	}
+
+	void set_single( SEXP t, bool named, const std::string& name ){
+		SEXP x = PROTECT( Rf_allocVector( RTYPE, 1) );
+		SET_VECTOR_ELT( x, 0, t ) ;
+		if( named ){
+			SEXP names = PROTECT( Rf_mkString( name.c_str() ) ) ;
+			Rf_setAttrib( x, Rf_install("names"), names) ;
+			UNPROTECT(1) ; /* names */
+		}
+		setSEXP( x ) ;
+		UNPROTECT(1) ;
+	}
 }   ;
 
 typedef SEXP_Vector<VECSXP> GenericVector ;
