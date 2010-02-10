@@ -2,10 +2,10 @@
 
 	* src/Rcpp/SEXP_Vector.h: SEXP_Vector (and therefore 
 	ExpressionVector and GenericVector, a.k.a List) gain 
-	methods push_front and push_back that are templated and 
+	methods push_front, push_back and insert that are templated and 
 	use the implicit wrap idiom to add an element to the front
-	or to the back of the list, pushing other elements. Internally
-	the SEXP is actually copied. 
+	or, the back or an arbitrary (valid) position of the list, 
+	pushing other elements. Internally the SEXP is actually copied. 
 
 	* src/Rcpp/VectorBase.h: VectorBase gains a version of 
 	offset to support retrieving the offset of a given name of a
