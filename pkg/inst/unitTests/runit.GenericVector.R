@@ -201,3 +201,36 @@ test.List.insert <- function(){
 		msg = "List.insert" )
 }
 
+test.List.erase <- function(){
+	
+	funx <- cfunction( signature(x = "list"), 
+	'
+	List list(x) ;
+	list.erase( list.begin() ) ;
+	return list ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	d <- list( x = 1:10, y = letters[1:10] )
+	res <- funx( d )
+	checkEquals( res,
+		list( y = letters[1:10] ), 
+		msg = "List.erase" )
+}
+
+test.List.erase.range <- function(){
+	
+	funx <- cfunction( signature(x = "list"), 
+	'
+	List list(x) ;
+	list.erase( 0, 1 ) ;
+	return list ;
+	', Rcpp = TRUE, includes = "using namespace Rcpp;" )
+	d <- list( x = 1:10, y = letters[1:10], z = 1:10 )
+	res <- funx( d )
+	checkEquals( res,
+		list( z = 1:10 ), 
+		msg = "List.erase (range version)" )
+}
+
+
+
+
