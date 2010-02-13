@@ -17,7 +17,7 @@
 
     o   Restore Windows build; successfully tested on 32 and 64 bit;
 
-    o   Small fixes to inst/skeleton files for bootstrapping a ackage
+    o   Small fixes to inst/skeleton files for bootstrapping a package
 
     o   RObject::asFoo deprecated in favour of Rcpp::as<Foo>
 
