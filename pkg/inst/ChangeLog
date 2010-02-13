@@ -1,9 +1,9 @@
 2010-02-12  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 0.7.5
+	* DESCRIPTION: Release 0.7.6
 
 	* NEWS: Updated
-	
+
 	* debian/*: Similarly updated for new release to Debian
 
 2010-02-12  Romain Francois <romain@r-enthusiasts.com>
