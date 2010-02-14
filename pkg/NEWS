@@ -1,4 +1,4 @@
-0.7.7	(under development)
+0.7.7	2010-02-14
 
     o	new template classes Rcpp::unary_call and Rcpp::binary_call
     	that facilitates using R language calls together 
