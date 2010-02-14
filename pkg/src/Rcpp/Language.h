@@ -168,7 +168,7 @@ private:
 };
 
 template <typename T, typename OUT = SEXP>
-class unary_call : public std::unary_function<T,SEXP> {
+class unary_call : public std::unary_function<T,OUT> {
 public:
 	unary_call( Language call_ ) : call(call_), proxy(call,1) {}
 	unary_call( Language call_, int index ) : call(call_), proxy(call_,index){}
