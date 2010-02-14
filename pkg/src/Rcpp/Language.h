@@ -109,29 +109,29 @@ Language( const Function& function, const Args&... args) : DottedPair(function, 
 #else
 /* <code-bloat> */
 template <typename T1> 
-Language( const std::string& symbol, const T1& t1) : DottedPair(symbol, t1) {} 
+Language( const std::string& symbol, const T1& t1) : DottedPair(Rf_install(symbol.c_str()), t1) { update() ; } 
 
 template <typename T1, typename T2>
-Language( const std::string& symbol, const T1& t1, const T2& t2) : DottedPair(symbol, t1,t2){}
+Language( const std::string& symbol, const T1& t1, const T2& t2) : DottedPair(Rf_install(symbol.c_str()), t1,t2){ update() ; }
 
 template <typename T1, typename T2, typename T3>
-Language( const std::string& symbol, const T1& t1, const T2& t2, const T3& t3): DottedPair(symbol, t1,t2,t3) {}
+Language( const std::string& symbol, const T1& t1, const T2& t2, const T3& t3): DottedPair(Rf_install(symbol.c_str()), t1,t2,t3) { update() ; }
 
 template <typename T1, typename T2, typename T3, typename T4>
-Language( const std::string& symbol, const T1& t1, const T2& t2, const T3& t3, const T4& t4): DottedPair(symbol, t1,t2,t3,t4){}
+Language( const std::string& symbol, const T1& t1, const T2& t2, const T3& t3, const T4& t4): DottedPair(Rf_install(symbol.c_str()), t1,t2,t3,t4){ update() ;}
 
 
 template <typename T1> 
-Language( const Function& function, const T1& t1) : DottedPair(function, t1) {} 
+Language( const Function& function, const T1& t1) : DottedPair(function, t1) { update() ;} 
 
 template <typename T1, typename T2>
-Language( const Function& function, const T1& t1, const T2& t2) : DottedPair(function, t1,t2){}
+Language( const Function& function, const T1& t1, const T2& t2) : DottedPair(function, t1,t2){update() ;}
 
 template <typename T1, typename T2, typename T3>
-Language( const Function& function, const T1& t1, const T2& t2, const T3& t3): DottedPair(function, t1,t2,t3) {}
+Language( const Function& function, const T1& t1, const T2& t2, const T3& t3): DottedPair(function, t1,t2,t3) {update() ;}
 
 template <typename T1, typename T2, typename T3, typename T4>
-Language( const Function& function, const T1& t1, const T2& t2, const T3& t3, const T4& t4): DottedPair(function, t1,t2,t3,t4){}
+Language( const Function& function, const T1& t1, const T2& t2, const T3& t3, const T4& t4): DottedPair(function, t1,t2,t3,t4){ update() ;}
 /* </code-bloat> */
 #endif	
 	
@@ -149,23 +149,40 @@ Language( const Function& function, const T1& t1, const T2& t2, const T3& t3, co
 	 * sets the function
 	 */
 	void setFunction( const Function& function) ;
-	
+
 	/**
 	 * eval this call in the global environment
 	 */
 	SEXP eval() ;
-	
+
 	/**
 	 * eval this call in the requested environment
 	 */
 	SEXP eval(SEXP env) ;
-	
+
 	~Language() ;
-	
-private:	
+
+private:
 	virtual void update() ; 
-		
+
 };
+
+template <typename T>
+class unary_call : public std::unary_function<T,SEXP> {
+public:
+	unary_call( Language call_ ) : call(call_), proxy(call,1) {}
+	unary_call( Language call_, int index ) : call(call_), proxy(call_,index){}
+	
+	SEXP operator()( const T& object ){
+		proxy = object ;
+		return call.eval() ;
+	}
+	
+private:
+	Language call ;
+	Language::Proxy proxy ;
+} ;
+
 
 } // namespace Rcpp
 
