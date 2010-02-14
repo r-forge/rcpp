@@ -597,6 +597,61 @@ conversion. Also in this version, the vector \code{xab} is not
 initialized because the constructor already performs initialization
 to match the behaviour of the R function \code{numeric}.
 
+\section{Using STL algorithms}
+
+% This is taken from :
+% http://www.cplusplus.com/reference/algorithm/
+
+The C++ Standard Template Library (STL) offers a wide range of 
+generic algorithms designed to be used on 
+range of elements. A range is any sequence of objects that 
+can be accessed through iterators or pointers. 
+
+All \pkg{Rcpp} classes representing vectors (including lists)
+can produce ranges through their member functions \code{begin()}
+and \code{end()}, effectively supporting iterating over element 
+of an R vector. 
+
+The following code illustrates how \pkg{Rcpp} might be used
+to emulate a 
+simpler\footnote{The version of lapply does not include usage of the
+ellipsis (\code{...}). Other constructs in \pkg{Rcpp} can be
+used to emulate \code{lapply} more closely. } version of \code{lapply}. 
+
+% [Romain] does the code need comments ?
+\begin{example}
+cpp_lapply <- cfunction(
+	signature(data="list", fun = "function"), '
+  Rcpp::List input(data); 
+  Rcpp::Function f(fun) ;
+  Rcpp::List output(input.size());
+  std::transform( 
+  	input.begin(), input.end(), 
+  	output.begin(), 
+  	f ) ;
+  output.names() = input.names() ;
+  return output ;
+', Rcpp = TRUE )
+\end{example}
+
+We can then use this to calculate the summary of each 
+column of the \code{faithful} dataset. 
+% [Romain] Does this need a reference or is this common knowledge
+%          ?faithful has a reference
+
+\begin{example}
+> cpp_lapply( faithful, summary )
+$eruptions
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.600   2.163   4.000   3.488   4.454   5.100 
+
+$waiting
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   43.0    58.0    76.0    70.9    82.0    96.0 
+\end{example}
+
+
+
 \section{Error handling}
 
 Code that uses both R and C++ has to deal with two concurrent
