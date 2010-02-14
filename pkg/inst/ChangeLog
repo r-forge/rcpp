@@ -4,11 +4,12 @@
 	constructors taking a std::string did not explicitely 
 	create a symbol, so the created calls were wrong. 
 
-	* src/Rcpp/Language.h: new template class Rcpp::unary_call
-	to allow use of Language objects in stl algorithms.
+	* src/Rcpp/Language.h: new template classes Rcpp::unary_call
+	and Rcpp::binary_call to allow use of Language objects 
+	in STL algorithms.
 
 	* inst/unitTests/runit.Language.R: unit test and example 
-	of using unary_call
+	of using unary_call and binary_call
 
 2010-02-12  Dirk Eddelbuettel  <edd@debian.org>
 

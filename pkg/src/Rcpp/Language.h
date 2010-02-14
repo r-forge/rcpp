@@ -170,7 +170,7 @@ private:
 template <typename T, typename OUT = SEXP>
 class unary_call : public std::unary_function<T,OUT> {
 public:
-	unary_call( Language call_ ) : call(call_), proxy(call,1) {}
+	unary_call( Language call_ ) : call(call_), proxy(call_,1) {}
 	unary_call( Language call_, int index ) : call(call_), proxy(call_,index){}
 	
 	OUT operator()( const T& object ){
@@ -181,6 +181,24 @@ public:
 private:
 	Language call ;
 	Language::Proxy proxy ;
+} ;
+
+template <typename T1, typename T2, typename OUT = SEXP>
+class binary_call : public std::binary_function<T1,T2,OUT> {
+public:
+	binary_call( Language call_ ) : call(call_), proxy1(call_,1), proxy2(call_,2) {}
+	binary_call( Language call_, int index1, int index2 ) : call(call_), proxy1(call_,index1), proxy2(call_,index2){}
+	
+	OUT operator()( const T1& o1, const T2& o2 ){
+		proxy1 = o1 ;
+		proxy2 = o2 ;
+		return as<OUT>( call.eval() ) ;
+	}
+	
+private:
+	Language call ;
+	Language::Proxy proxy1 ;
+	Language::Proxy proxy2 ;
 } ;
 
 

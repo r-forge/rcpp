@@ -152,4 +152,27 @@ test.Language.unary.call.index <- function(){
 	
 }
 
+test.Language.binary.call <- function(){
+	
+	funx <- cfunction(signature(y1 = "integer", y2 = "integer" ), '
+	
+	Language call( "seq", Named("from", 10 ), Named("to", 0 ) ) ;
+	IntegerVector x1(y1) ;
+	IntegerVector x2(y2) ;
+	List output( x1.size() ) ;
+	std::transform( 
+		x1.begin(), x1.end(), x2.begin(),
+		output.begin(),
+		binary_call<int,int>(call)
+		) ;
+	return output ;
+	', Rcpp = TRUE, verbose = FALSE, includes = "using namespace Rcpp;" )
+	
+	checkEquals( 
+		funx( 1:10, 11:20 ), 
+		lapply( 1:10, function(n) seq(n, n+10) ), 
+		msg = "c++ lapply using calls" )
+	
+}
+
 
