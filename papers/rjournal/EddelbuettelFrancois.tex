@@ -58,7 +58,8 @@ documentation, and new functionality---while retaining the existing
 interface.  This constitutes the `classic \pkg{Rcpp}' interface (described in
 the next section) which will be maintained for the forseeable future.
 
-Yet C++ coding standards continued to evolve. So starting in 2009 the
+Yet C++ coding standards continued to evolve \citep{effectivecplusplus}.
+So starting in 2009 the
 codebase was significantly extended and numerous new features were added.
 Several of these are described below in the section on the `new
 \pkg{Rcpp}' interface. This new API is our current focus, and we intend to
@@ -604,19 +605,19 @@ to match the behaviour of the R function \code{numeric}.
 
 The C++ Standard Template Library (STL) offers a wide range of 
 generic algorithms designed to be used on 
-range of elements. A range is any sequence of objects that 
+ranges of elements. A range is any sequence of objects that 
 can be accessed through iterators or pointers. 
 
-All \pkg{Rcpp} classes representing vectors (including lists)
-can produce ranges through their member functions \code{begin()}
-and \code{end()}, effectively supporting iterating over element 
+All \pkg{Rcpp} classes from the new API 
+representing vectors (including lists) can produce ranges through their
+member functions \code{begin()}
+and \code{end()}, effectively supporting iterating over elements
 of an R vector. 
 
 The following code illustrates how \pkg{Rcpp} might be used
 to emulate a 
-simpler\footnote{The version of lapply does not include usage of the
-ellipsis (\code{...}). Other constructs in \pkg{Rcpp} can be
-used to emulate \code{lapply} more closely. } version of \code{lapply}
+simpler\footnote{The version of \code{lapply} does not include usage of the
+ellipsis (\code{...}).} version of \code{lapply}
 using the \code{transform} algorithm from the STL. 
 
 % [Romain] does the code need comments ?
@@ -637,8 +638,9 @@ cpp_lapply <- cfunction(
 \ \ src, Rcpp = TRUE )
 \end{example}
 
-We can then use this to calculate the summary of each 
+We can then use this to calculate a summary of each 
 column of the \code{faithful} dataset. 
+
 % [Romain] Does this need a reference or is this common knowledge
 %          ?faithful has a reference
 
