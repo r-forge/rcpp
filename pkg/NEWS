@@ -1,3 +1,8 @@
+0.7.7	(under development)
+
+    o	new template class Rcpp::unary_call that facilitates using 
+    	R language calls together with STL algorithms.
+
 0.7.6   2010-02-12
 
     o   SEXP_Vector (and ExpressionVector and GenericVector, a.k.a List) now
@@ -13,7 +18,7 @@
         so that STL algorithms can be applied to Rcpp objects
 
     o   CharacterVector gains a random access iterator, begin() and end() to
-	support STL algorithmsl; iterator dereferences to a StringProxy
+	support STL algorithms; iterator dereferences to a StringProxy
 
     o   Restore Windows build; successfully tested on 32 and 64 bit;
 
