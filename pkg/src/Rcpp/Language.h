@@ -167,15 +167,15 @@ private:
 
 };
 
-template <typename T>
+template <typename T, typename OUT = SEXP>
 class unary_call : public std::unary_function<T,SEXP> {
 public:
 	unary_call( Language call_ ) : call(call_), proxy(call,1) {}
 	unary_call( Language call_, int index ) : call(call_), proxy(call_,index){}
 	
-	SEXP operator()( const T& object ){
+	OUT operator()( const T& object ){
 		proxy = object ;
-		return call.eval() ;
+		return as<OUT>( call.eval() ) ;
 	}
 	
 private:
