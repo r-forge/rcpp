@@ -1,7 +1,8 @@
 0.7.7	(under development)
 
-    o	new template class Rcpp::unary_call that facilitates using 
-    	R language calls together with STL algorithms.
+    o	new template classes Rcpp::unary_call and Rcpp::binary_call
+    	that facilitates using R language calls together 
+    	with STL algorithms.
     	
     o	fixed a bug in Language constructors taking a string as their
     	first argument. The created call was wrong.
