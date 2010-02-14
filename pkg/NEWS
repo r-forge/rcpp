@@ -2,6 +2,9 @@
 
     o	new template class Rcpp::unary_call that facilitates using 
     	R language calls together with STL algorithms.
+    	
+    o	fixed a bug in Language constructors taking a string as their
+    	first argument. The created call was wrong.
 
 0.7.6   2010-02-12
 
