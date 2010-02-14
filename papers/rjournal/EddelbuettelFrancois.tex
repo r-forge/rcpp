@@ -616,12 +616,12 @@ The following code illustrates how \pkg{Rcpp} might be used
 to emulate a 
 simpler\footnote{The version of lapply does not include usage of the
 ellipsis (\code{...}). Other constructs in \pkg{Rcpp} can be
-used to emulate \code{lapply} more closely. } version of \code{lapply}. 
+used to emulate \code{lapply} more closely. } version of \code{lapply}
+using the \code{transform} algorithm from the STL. 
 
 % [Romain] does the code need comments ?
 \begin{example}
-cpp_lapply <- cfunction(
-	signature(data="list", fun = "function"), '
+src <- '
   Rcpp::List input(data); 
   Rcpp::Function f(fun) ;
   Rcpp::List output(input.size());
@@ -631,7 +631,10 @@ cpp_lapply <- cfunction(
   	f ) ;
   output.names() = input.names() ;
   return output ;
-', Rcpp = TRUE )
+  '
+cpp_lapply <- cfunction(
+\ \ signature(data="list", fun = "function"), 
+\ \ src, Rcpp = TRUE )
 \end{example}
 
 We can then use this to calculate the summary of each 
