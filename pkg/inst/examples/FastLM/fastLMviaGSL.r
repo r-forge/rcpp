@@ -26,7 +26,6 @@ suppressMessages(library(Rcpp))
 suppressMessages(library(inline))
 
 lmViaGSL <- function() {
-    ## a really simple C program calling three functions from the GSL
     src <- '
 
     SEXP rl = R_NilValue;

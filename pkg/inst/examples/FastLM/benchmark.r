@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 #
-# A faster lm() replacement based on Armadillo
+# Comparison benchmark
 #
 # This improves on the previous version using GNU GSL
 #
@@ -54,13 +54,11 @@ lmViaArmadillo <- function() {
         arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X);
         //arma::colvec stderrest = sqrt(arma::diagview(covmat));
 
-        RcppMatrix<double> CovMat(k, k);
+        RcppVector<double> StdErr(k);
         RcppVector<double> Coef(k);
         for (int i = 0; i < k; i++) {
             Coef(i) = coef(i);
-            for (int j = 0; j < k; j++) {
-                CovMat(i,j) = covmat(i,j);
-            }
+            StdErr(i) = covmat(i,i);
         }
         //Rcpp::NumericVector coefr(k);
         //Rcpp::NumericVector stderrestr(k);
@@ -71,7 +69,7 @@ lmViaArmadillo <- function() {
 
         RcppResultSet rs;
         rs.add("coef", Coef);
-        rs.add("covmat", CovMat);
+        rs.add("stderr", StdErr);
 
         rl = rs.getReturnList();
 
@@ -95,30 +93,84 @@ lmViaArmadillo <- function() {
                      libargs="-larmadillo")
 }
 
-checkLmViaArmadillo <- function(y, X) {
-    fun <- lmViaArmadillo()
-    res <- fun(y, X)
-    fit <- lm(y ~ X - 1)
-    rc <- all.equal( res[[1]], as.numeric(coef(fit))) &
-          all.equal( res[[2]], matrix(as.numeric(vcov(fit)),ncol=10,byrow=FALSE))
-    invisible(rc)
-}
+lmViaGSL <- function() {
+    src <- '
 
-timeLmViaArmadillo <- function(y, X, N) {
-    fun <- lmViaArmadillo();
-    meantime <- mean(replicate(N, system.time(fun(y, X))["elapsed"]), trim=0.05)
-}
+    SEXP rl = R_NilValue;
+    char *exceptionMesg = NULL;
 
+    try {
+        RcppVectorView<double> Yr(Ysexp);
+        RcppMatrixView<double> Xr(Xsexp);
+
+        int i,j,n = Xr.dim1(), k = Xr.dim2();
+        double chisq;
+
+        gsl_matrix *X = gsl_matrix_alloc (n, k);
+        gsl_vector *y = gsl_vector_alloc (n);
+        gsl_vector *c = gsl_vector_alloc (k);
+        gsl_matrix *cov = gsl_matrix_alloc (k, k);
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < k; j++)
+                gsl_matrix_set (X, i, j, Xr(i,j));
+            gsl_vector_set (y, i, Yr(i));
+        }
+
+        gsl_multifit_linear_workspace *work = gsl_multifit_linear_alloc (n, k);
+        gsl_multifit_linear (X, y, c, cov, &chisq, work);
+        gsl_multifit_linear_free (work);
+
+        RcppVector<double> StdErr(k);
+        RcppVector<double> Coef(k);
+        for (i = 0; i < k; i++) {
+            Coef(i) = gsl_vector_get(c,i);
+            StdErr(i) = gsl_matrix_get(cov,i,i);
+        }
+        gsl_matrix_free (X);
+        gsl_vector_free (y);
+        gsl_vector_free (c);
+        gsl_matrix_free (cov);
+
+        RcppResultSet rs;
+        rs.add("coef", Coef);
+        rs.add("stderr", StdErr);
+
+        rl = rs.getReturnList();
+
+    } catch(std::exception& ex) {
+        exceptionMesg = copyMessageToR(ex.what());
+    } catch(...) {
+        exceptionMesg = copyMessageToR("unknown reason");
+    }
+    if (exceptionMesg != NULL)
+        Rf_error(exceptionMesg);
+    return rl;
+    '
+
+    ## turn into a function that R can call
+    ## compileargs redundant on Debian/Ubuntu as gsl headers are found anyway
+    fun <- cfunction(signature(Ysexp="numeric", Xsexp="numeric"),
+                     src,
+                     includes="#include <gsl/gsl_multifit.h>",
+                     Rcpp=TRUE,
+                     cppargs="-I/usr/include",
+                     libargs="-lgsl -lgslcblas")
+}
 
 set.seed(42)
-n <- 5000
+n <- 100
 k <- 9
 X <- cbind( rep(1,n), matrix(rnorm(n*k), ncol=k) )
 truecoef <- 1:(k+1)
 y <- as.numeric(X %*% truecoef + rnorm(n))
 
-N <- 100
+N <- 500
 
-stopifnot(checkLmViaArmadillo(y, X))
-mt <- timeLmViaArmadillo(y, X, N)
-cat("Armadillo: Running", N, "simulations yields (trimmed) mean time", mt, "\n")
+lmgsl <- lmViaGSL()
+lmarma <- lmViaArmadillo()
+
+tlm <- mean(replicate(N, system.time( lmfit <- lm(y ~ X - 1) )["elapsed"]), trim=0.05)
+tlmfit <- mean(replicate(N, system.time(lmfitfit <- lm.fit(X, y))["elapsed"]), trim=0.05)
+tlmgsl <- mean(replicate(N, system.time(lmgsl(y, X))["elapsed"]), trim=0.05)
+tlmarma <- mean(replicate(N, system.time(lmarma(y, X))["elapsed"]), trim=0.05)
+print(c(tlm, tlmfit, tlmgsl, tlmarma))
