@@ -92,13 +92,12 @@ lmViaGSL <- function() {
 }
 
 checkLmViaGSL <- function(y, X) {
-    fun <- lmViaGSL();
-    cat("Running lm via GSL\n")
+    fun <- lmViaGSL()
     res <- fun(y, X)
-    print(cbind(res[[1]], sqrt(diag(res[[2]]))))
-    cat("Running lm()\n")
-    print(summary(lm(y ~ X - 1)))
-    invisible(NULL)
+    fit <- lm(y ~ X - 1)
+    rc <- all.equal( res[[1]], as.numeric(coef(fit))) &
+          all.equal( res[[2]], matrix(as.numeric(vcov(fit)),ncol=10,byrow=FALSE))
+    invisible(rc)
 }
 
 timeLmViaGSL <- function(y, X, N) {
@@ -115,6 +114,6 @@ y <- as.numeric(X %*% truecoef + rnorm(n))
 
 N <- 100
 
-#checkLmViaGSL(y, X)
+stopifnot(checkLmViaGSL(y, X))
 mt <- timeLmViaGSL(y, X, N)
 cat("GSL: Running", N, "simulations yields (trimmed) mean time", mt, "\n")

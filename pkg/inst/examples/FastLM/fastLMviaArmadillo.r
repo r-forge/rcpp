@@ -97,13 +97,12 @@ lmViaArmadillo <- function() {
 }
 
 checkLmViaArmadillo <- function(y, X) {
-    fun <- lmViaArmadillo();
-    cat("Running lm via Armadillo\n")
+    fun <- lmViaArmadillo()
     res <- fun(y, X)
-    print(cbind(res[[1]], sqrt(diag(res[[2]]))))
-    cat("Running lm()\n")
-    print(summary(lm(y ~ X - 1)))
-    invisible(NULL)
+    fit <- lm(y ~ X - 1)
+    rc <- all.equal( res[[1]], as.numeric(coef(fit))) &
+          all.equal( res[[2]], matrix(as.numeric(vcov(fit)),ncol=10,byrow=FALSE))
+    invisible(rc)
 }
 
 timeLmViaArmadillo <- function(y, X, N) {
@@ -121,6 +120,6 @@ y <- as.numeric(X %*% truecoef + rnorm(n))
 
 N <- 100
 
-#checkLmViaArmadillo(y, X)
+stopifnot(checkLmViaArmadillo(y, X))
 mt <- timeLmViaArmadillo(y, X, N)
 cat("Armadillo: Running", N, "simulations yields (trimmed) mean time", mt, "\n")
