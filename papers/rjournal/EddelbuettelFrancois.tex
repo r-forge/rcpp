@@ -58,12 +58,11 @@ documentation, and new functionality---while retaining the existing
 interface.  This constitutes the `classic \pkg{Rcpp}' interface (described in
 the next section) which will be maintained for the forseeable future.
 
-Yet C++ coding standards continued to evolve \citep{effectivecplusplus}.
-So starting in 2009 the
-codebase was significantly extended and numerous new features were added.
-Several of these are described below in the section on the `new
-\pkg{Rcpp}' interface. This new API is our current focus, and we intend to
-both extend and support it going forward.
+Yet C++ coding standards continued to evolve \citep{meyers:effectivecplusplus}.
+So starting in 2009 the codebase was significantly extended and numerous new
+features were added.  Several of these are described below in the section on
+the `new \pkg{Rcpp}' interface. This new API is our current focus, and we
+intend to both extend and support it going forward.
 
 \subsection{Comparison}
 
@@ -603,16 +602,13 @@ to match the behaviour of the R function \code{numeric}.
 % This is taken from :
 % http://www.cplusplus.com/reference/algorithm/
 
-The C++ Standard Template Library (STL) offers a wide range of 
-generic algorithms designed to be used on 
-ranges of elements. A range is any sequence of objects that 
-can be accessed through iterators or pointers. 
-
-All \pkg{Rcpp} classes from the new API 
-representing vectors (including lists) can produce ranges through their
-member functions \code{begin()}
-and \code{end()}, effectively supporting iterating over elements
-of an R vector. 
+The C++ Standard Template Library (STL) offers a variety of generic
+algorithms designed to be used on ranges of elements
+\citep{plauger_et_al:stlbook}. A range is any sequence of objects that can be
+accessed through iterators or pointers.  All \pkg{Rcpp} classes from the new
+API representing vectors (including lists) can produce ranges through their
+member functions \code{begin()} and \code{end()}, effectively supporting
+iterating over elements of an R vector.
 
 The following code illustrates how \pkg{Rcpp} might be used
 to emulate a 
@@ -638,8 +634,8 @@ cpp_lapply <- cfunction(
 \ \ src, Rcpp = TRUE )
 \end{example}
 
-We can then use this to calculate a summary of each 
-column of the \code{faithful} dataset. 
+We can use this to calculate a summary of each 
+column of the \code{faithful} dataset included with R.
 
 % [Romain] Does this need a reference or is this common knowledge
 %          ?faithful has a reference
@@ -714,7 +710,7 @@ of the classic \pkg{Rcpp} interface such as the templated
 library to hold the data, requiring explicit copies of the data 
 from R to C++ and back.
 
-In this section, we illustrate how to take advantage of \code{Rcpp} to get
+Here we illustrate how to take advantage of \code{Rcpp} to get
 the best of both worlds. The classic \pkg{Rcpp} translation of the convolve example from
 \cite{R:exts} appears twice above where the second example showed the use
 with the new API.
@@ -730,7 +726,7 @@ with pointer arithmetics, which is a built-in operation as opposed to
 calling the \code{operator[]} on a user-defined class which has to 
 pay the price of object encapsulation.
 
-Modelled after containers of the C++ standard template library, 
+Modelled after containers of the C++ STL,
 the \code{NumericVector} class provides two member functions \code{begin}
 and \code{end} that can use used to retrieve respectively 
 the pointer to the first and past-to-end elements of the underlying array.
