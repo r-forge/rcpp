@@ -1,3 +1,10 @@
+0.7.8   (under development)
+
+    o	New examples for 'fast lm' using compiled code: 
+        - using GNU GSL and a C interface
+        - using Armadillo (http://arma.sf.net) and a C++ interface
+        Armadillo is seen as faster for lack of extra copying
+
 0.7.7	2010-02-14
 
     o	new template classes Rcpp::unary_call and Rcpp::binary_call

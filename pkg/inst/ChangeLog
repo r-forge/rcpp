@@ -1,6 +1,12 @@
+2010-02-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/examples/FastLM: New example directory with two 'fast lm'
+	  implementations using, respectively, GNU GSL (in C) and Armadillo
+	  (in C++); Armadillo is seen as faster for lack of extra copying
+
 2010-02-14  Romain Francois <romain@r-enthusiasts.com>
 
-	* src/Rcpp/Language.h: accepting Function in unary_call and 
+	* src/Rcpp/Language.h: accepting Function in unary_call and
 	binary_call to support STL algorithms using R functions.
 
 2010-02-14  Dirk Eddelbuettel  <edd@debian.org>
