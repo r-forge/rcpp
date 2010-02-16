@@ -27,60 +27,36 @@ suppressMessages(library(inline))
 lmViaArmadillo <- function() {
     src <- '
 
-    SEXP rl = R_NilValue;
-    char *exceptionMesg = NULL;
+    Rcpp::NumericVector yr(Ysexp);
+    Rcpp::NumericVector Xr(Xsexp);
+    std::vector<int> dims = Xr.attr("dim") ;
+    int n = dims[0];
+    int k = dims[1];
+    // use advanced armadillo constructors:
 
-    try {
-        Rcpp::NumericVector yr(Ysexp);
-	Rcpp::NumericVector Xr(Xsexp);
-        std::vector<int> dims = Xr.attr("dim") ;
-        int n = dims[0];
-        int k = dims[1];
-        // use advanced armadillo constructors:
+    arma::mat X(Xr.begin(), n, k, false);
+    arma::colvec y(yr.begin(), yr.size());
 
-        arma::mat X(Xr.begin(), n, k, false);
-        arma::colvec y(yr.begin(), yr.size());
+    //std::cout << ay << std::endl;
+    //std::cout << aX << std::endl;
 
-        //std::cout << ay << std::endl;
-        //std::cout << aX << std::endl;
+    arma::colvec coef = solve(X, y);
+    //std::cout << coef << std::endl;
 
-        arma::colvec coef = solve(X, y);
-        //std::cout << coef << std::endl;
+    // compute std. error of the coefficients
+    arma::colvec resid = y - X*coef;
+    double rss  = trans(resid)*resid;
+    double sig2 = rss/(n-k);
+    arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X);
 
-        // compute std. error of the coefficients
-        arma::colvec resid = y - X*coef;
-        double rss  = trans(resid)*resid;
-        double sig2 = rss/(n-k);
-        arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X);
-        //arma::colvec stderrest = sqrt(arma::diagview(covmat));
-
-        RcppVector<double> StdErr(k);
-        RcppVector<double> Coef(k);
-        for (int i = 0; i < k; i++) {
-            Coef(i) = coef(i);
-            StdErr(i) = covmat(i,i);
-        }
-        //Rcpp::NumericVector coefr(k);
-        //Rcpp::NumericVector stderrestr(k);
-        //for (int i=0; i<k; i++) {
-        //    coefr[i]      = coef[i];
-        //    stderrestr[i] = stderrestr[i];
-        //}
-
-        RcppResultSet rs;
-        rs.add("coef", Coef);
-        rs.add("stderr", StdErr);
-
-        rl = rs.getReturnList();
-
-    } catch(std::exception& ex) {
-        exceptionMesg = copyMessageToR(ex.what());
-    } catch(...) {
-        exceptionMesg = copyMessageToR("unknown reason");
+    Rcpp::NumericVector coefr(k), stderrestr(k);
+    for (int i=0; i<k; i++) {
+        coefr[i]      = coef[i];
+        stderrestr[i] = sqrt(covmat(i,i));
     }
-    if (exceptionMesg != NULL)
-        Rf_error(exceptionMesg);
-    return rl;
+
+    Rcpp::Pairlist res(Rcpp::Named( "coef", coefr), Rcpp::Named( "stderr", stderrestr));
+    return res;
     '
 
     ## turn into a function that R can call
@@ -96,55 +72,38 @@ lmViaArmadillo <- function() {
 lmViaGSL <- function() {
     src <- '
 
-    SEXP rl = R_NilValue;
-    char *exceptionMesg = NULL;
+    RcppVectorView<double> Yr(Ysexp);
+    RcppMatrixView<double> Xr(Xsexp);
 
-    try {
-        RcppVectorView<double> Yr(Ysexp);
-        RcppMatrixView<double> Xr(Xsexp);
+    int i,j,n = Xr.dim1(), k = Xr.dim2();
+    double chisq;
 
-        int i,j,n = Xr.dim1(), k = Xr.dim2();
-        double chisq;
-
-        gsl_matrix *X = gsl_matrix_alloc (n, k);
-        gsl_vector *y = gsl_vector_alloc (n);
-        gsl_vector *c = gsl_vector_alloc (k);
-        gsl_matrix *cov = gsl_matrix_alloc (k, k);
-        for (i = 0; i < n; i++) {
-            for (j = 0; j < k; j++)
-                gsl_matrix_set (X, i, j, Xr(i,j));
-            gsl_vector_set (y, i, Yr(i));
-        }
-
-        gsl_multifit_linear_workspace *work = gsl_multifit_linear_alloc (n, k);
-        gsl_multifit_linear (X, y, c, cov, &chisq, work);
-        gsl_multifit_linear_free (work);
-
-        RcppVector<double> StdErr(k);
-        RcppVector<double> Coef(k);
-        for (i = 0; i < k; i++) {
-            Coef(i) = gsl_vector_get(c,i);
-            StdErr(i) = gsl_matrix_get(cov,i,i);
-        }
-        gsl_matrix_free (X);
-        gsl_vector_free (y);
-        gsl_vector_free (c);
-        gsl_matrix_free (cov);
-
-        RcppResultSet rs;
-        rs.add("coef", Coef);
-        rs.add("stderr", StdErr);
-
-        rl = rs.getReturnList();
-
-    } catch(std::exception& ex) {
-        exceptionMesg = copyMessageToR(ex.what());
-    } catch(...) {
-        exceptionMesg = copyMessageToR("unknown reason");
+    gsl_matrix *X = gsl_matrix_alloc (n, k);
+    gsl_vector *y = gsl_vector_alloc (n);
+    gsl_vector *c = gsl_vector_alloc (k);
+    gsl_matrix *cov = gsl_matrix_alloc (k, k);
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < k; j++)
+            gsl_matrix_set (X, i, j, Xr(i,j));
+        gsl_vector_set (y, i, Yr(i));
     }
-    if (exceptionMesg != NULL)
-        Rf_error(exceptionMesg);
-    return rl;
+
+    gsl_multifit_linear_workspace *work = gsl_multifit_linear_alloc (n, k);
+    gsl_multifit_linear (X, y, c, cov, &chisq, work);
+    gsl_multifit_linear_free (work);
+
+    Rcpp::NumericVector coefr(k), stderrestr(k);
+    for (i = 0; i < k; i++) {
+        coefr(i) = gsl_vector_get(c,i);
+        stderrestr(i) = gsl_matrix_get(cov,i,i);
+    }
+    gsl_matrix_free (X);
+    gsl_vector_free (y);
+    gsl_vector_free (c);
+    gsl_matrix_free (cov);
+
+    Rcpp::Pairlist res(Rcpp::Named( "coef", coefr), Rcpp::Named( "stderr", stderrestr));
+    return res;
     '
 
     ## turn into a function that R can call
