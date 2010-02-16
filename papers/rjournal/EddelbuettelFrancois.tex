@@ -27,7 +27,7 @@ in R. Combining R and C++ is not a new idea, so we start with
 a short review of other approaches and give some historical
 background on the development of \pkg{Rcpp}.
 
-The current version of \pkg{Rcpp} combines two distincts
+The current version of \pkg{Rcpp} combines two distinct
 APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since 
 the first version of \pkg{Rcpp}. The second API, enclosed in the 
 \code{Rcpp} C++ namespace is a newer codebase which we started to develop
@@ -56,7 +56,7 @@ releases, using the initial name \pkg{Rcpp}, started in November 2008. These
 already included an improved build and distribution process, additional
 documentation, and new functionality---while retaining the existing
 interface.  This constitutes the `classic \pkg{Rcpp}' interface (described in
-the next section) which will be maintained for the forseeable future.
+the next section) which will be maintained for the foreseeable future.
 
 Yet C++ coding standards continued to evolve \citep{meyers:effectivecplusplus}.
 So starting in 2009 the codebase was significantly extended and numerous new
@@ -97,7 +97,7 @@ recently introduced a few new ideas yet decided to break with the
 `classic \pkg{Rcpp}' API.
 
 A critical comparison of these packages that addresses relevant aspects such
-API features, performance, useability and documentation would be a welcome
+API features, performance, usability and documentation would be a welcome
 addition to the literature, but is beyond the scope of this article.
 
 \section{Classic Rcpp API}
@@ -215,7 +215,7 @@ the necessary measures to guarantee that the underlying \code{SEXP}
 is protected from the garbage collector, and the destructor
 assumes the responsibility to withdraw that protection. 
 
-By assuming the entire responsability of garbage collection, \code{Rcpp}
+By assuming the entire responsibility of garbage collection, \code{Rcpp}
 relieves the programmer from writing boiler plate code to manage
 the protection stack with \code{PROTECT} and \code{UNPROTECT} macros.
 
@@ -365,7 +365,7 @@ specialized.
 One example for the specialisation of the templated \code{wrap} function is
 provided in \pkg{RInside} \citep{cran:rinside} by \code{vector< vector<
   double > >} and \code{vector< vector< int > >} which are used for
-representating numeric matrices.
+representing numeric matrices.
 
 Wrappability of an object type is resolved at compile time using 
 modern techniques of template meta programming and class traits.
@@ -409,7 +409,7 @@ structures to third-party types.
 
 The converters offered by \code{wrap} and \code{as} provide a very 
 useful framework to implement the logic of the code in terms of C++ 
-data structures and then explicitely convert data back to R. 
+data structures and then explicitly convert data back to R. 
 
 In addition, the converters are also used implicitly
 in various places in the \code{Rcpp} API. 
@@ -551,7 +551,7 @@ updated just like any other R package using \textsl{e.g.} the
 \code{update.packages()} for upgrades.  So even though R / C++ interfacing
 would otherwise require source code, the \pkg{Rcpp} library is always provided
 ready for use as a pre-built library through the CRAN package
-mechanism.\footnote{This presumes a platform for which prebuild binaries are
+mechanism.\footnote{This presumes a platform for which pre-built binaries are
   provided. \pkg{Rcpp} is available in binary form for Windows and OS X users from
   CRAN, and as a \code{.deb} package for Debian and Ubuntu users. For other systems, the
   \pkg{Rcpp} library is automatically built from source during installation
@@ -595,7 +595,7 @@ directly passed to types \code{Rcpp::NumericVector}, and that the return
 vector is automatically converted to a \code{SEXP} type through implicit
 conversion. Also in this version, the vector \code{xab} is not 
 initialized because the constructor already performs initialization
-to match the behaviour of the R function \code{numeric}.
+to match the behavior of the R function \code{numeric}.
 
 \section{Using STL algorithms}
 
@@ -690,7 +690,7 @@ too big
 
 R currently does not offer C-level mechanisms to deal with errors. To 
 overcome this problem, \pkg{Rcpp} uses the \code{Rcpp::Evaluator}
-class to evaluate en expression with an R-level \code{tryCatch}
+class to evaluate an expression with an R-level \code{tryCatch}
 block. The error, if any, that occurs while evaluating the 
 function is then translated in terms of an C++ exception. 
 
@@ -718,7 +718,7 @@ with the new API.
 The implementation of the \code{operator[]} is designed as 
 efficiently as possible, using both inlining and caching, 
 but even this implementation is still less efficient than the 
-reference C imlementation described in \cite{R:exts}.
+reference C implementation described in \cite{R:exts}.
 
 In order to achieve maximum efficiency, the reference implementation
 extracts the underlying array pointer \code{double*} and works 
@@ -810,7 +810,7 @@ using member functions and operators directly related to the type
 of object being used, therefore reducing the level of expertise
 required to master the various functions and macros offered by the
 internal R API. The classes assume the entire 
-responsability of garbage collection of objects, relieving the 
+responsibility of garbage collection of objects, relieving the 
 programmer from book-keeping operations with the protection stack 
 and enabling him/her to focus on the underlying problem. 
 
@@ -819,7 +819,7 @@ Data interchange between R and C++ code---performed by the \code{wrap} and
 of C++ data structures and facilitates use of modern libraries such as the
 standard template library and its containers and algorithms. The
 \code{wrap()} and \code{as()} template functions are extensible by design and
-can be used either explicitely or implicitely throughout the API.
+can be used either explicitly or implicitly throughout the API.
 By using only thin wrappers around \code{SEXP} objects, 
 the footprint of the \code{Rcpp} API is very lightweight, and does not 
 induces a significant performance price. 
