@@ -2,7 +2,8 @@
 #
 # Comparison benchmark
 #
-# This improves on the previous version using GNU GSL
+# This shows how Armadillo improves on the previous version using GNU GSL,
+# and how both are doing better than lm.fit()
 #
 # Copyright (C) 2010 Dirk Eddelbuettel and Romain Francois
 #
@@ -21,100 +22,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
-suppressMessages(library(Rcpp))
-suppressMessages(library(inline))
-
-lmViaArmadillo <- function() {
-    src <- '
-
-    Rcpp::NumericVector yr(Ysexp);
-    Rcpp::NumericVector Xr(Xsexp);
-    std::vector<int> dims = Xr.attr("dim") ;
-    int n = dims[0];
-    int k = dims[1];
-    // use advanced armadillo constructors:
-
-    arma::mat X(Xr.begin(), n, k, false);
-    arma::colvec y(yr.begin(), yr.size());
-
-    //std::cout << ay << std::endl;
-    //std::cout << aX << std::endl;
-
-    arma::colvec coef = solve(X, y);
-    //std::cout << coef << std::endl;
-
-    // compute std. error of the coefficients
-    arma::colvec resid = y - X*coef;
-    double rss  = trans(resid)*resid;
-    double sig2 = rss/(n-k);
-    arma::mat covmat = sig2 * arma::inv(arma::trans(X)*X);
-
-    Rcpp::NumericVector coefr(k), stderrestr(k);
-    for (int i=0; i<k; i++) {
-        coefr[i]      = coef[i];
-        stderrestr[i] = sqrt(covmat(i,i));
-    }
-
-    Rcpp::Pairlist res(Rcpp::Named( "coef", coefr), Rcpp::Named( "stderr", stderrestr));
-    return res;
-    '
-
-    ## turn into a function that R can call
-    ## compileargs redundant on Debian/Ubuntu as gsl headers are found anyway
-    fun <- cfunction(signature(Ysexp="numeric", Xsexp="numeric"),
-                     src,
-                     includes="#include <armadillo>",
-                     Rcpp=TRUE,
-                     cppargs="-I/usr/include",
-                     libargs="-larmadillo")
-}
-
-lmViaGSL <- function() {
-    src <- '
-
-    RcppVectorView<double> Yr(Ysexp);
-    RcppMatrixView<double> Xr(Xsexp);
-
-    int i,j,n = Xr.dim1(), k = Xr.dim2();
-    double chisq;
-
-    gsl_matrix *X = gsl_matrix_alloc (n, k);
-    gsl_vector *y = gsl_vector_alloc (n);
-    gsl_vector *c = gsl_vector_alloc (k);
-    gsl_matrix *cov = gsl_matrix_alloc (k, k);
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < k; j++)
-            gsl_matrix_set (X, i, j, Xr(i,j));
-        gsl_vector_set (y, i, Yr(i));
-    }
-
-    gsl_multifit_linear_workspace *work = gsl_multifit_linear_alloc (n, k);
-    gsl_multifit_linear (X, y, c, cov, &chisq, work);
-    gsl_multifit_linear_free (work);
-
-    Rcpp::NumericVector coefr(k), stderrestr(k);
-    for (i = 0; i < k; i++) {
-        coefr(i) = gsl_vector_get(c,i);
-        stderrestr(i) = gsl_matrix_get(cov,i,i);
-    }
-    gsl_matrix_free (X);
-    gsl_vector_free (y);
-    gsl_vector_free (c);
-    gsl_matrix_free (cov);
-
-    Rcpp::Pairlist res(Rcpp::Named( "coef", coefr), Rcpp::Named( "stderr", stderrestr));
-    return res;
-    '
-
-    ## turn into a function that R can call
-    ## compileargs redundant on Debian/Ubuntu as gsl headers are found anyway
-    fun <- cfunction(signature(Ysexp="numeric", Xsexp="numeric"),
-                     src,
-                     includes="#include <gsl/gsl_multifit.h>",
-                     Rcpp=TRUE,
-                     cppargs="-I/usr/include",
-                     libargs="-lgsl -lgslcblas")
-}
+source("lmArmadillo.R")
+source("lmGSL.R")
 
 set.seed(42)
 n <- 100
@@ -125,8 +34,8 @@ y <- as.numeric(X %*% truecoef + rnorm(n))
 
 N <- 500
 
-lmgsl <- lmViaGSL()
-lmarma <- lmViaArmadillo()
+lmgsl <- lmGSL()
+lmarma <- lmArmadillo()
 
 tlm <- mean(replicate(N, system.time( lmfit <- lm(y ~ X - 1) )["elapsed"]), trim=0.05)
 tlmfit <- mean(replicate(N, system.time(lmfitfit <- lm.fit(X, y))["elapsed"]), trim=0.05)
