@@ -8,10 +8,12 @@
 \abstract{The \pkg{Rcpp} package simplifies integrating C++ code with R. It
   provides a consistent C++ class hierarchy that maps various types of R
   objects (vectors, functions, environments, ...) to dedicated C++
-  classes. Data interchange between R and C++ is managed by simple, flexible
-  and extensible concepts. C++ code can be compiled, linked and loaded on the
-  fly.  \pkg{Rcpp} substantially lowers the barrier for programmers
-  wanting to combine compiled C++ code with R.}
+  classes. Object interchange between R and C++ is managed by
+  simple, flexible and extensible concepts which include broad support for
+  C++ STL idioms. C++ code can be compiled, linked and loaded on the fly.
+  Flexible error and exception code handling is provided.  \pkg{Rcpp}
+  substantially lowers the barrier for programmers wanting to combine
+  C++ code with R.}
 
 \section{Introduction} 
 
@@ -20,7 +22,7 @@ describes in detail the ways to augment R with compiled code,
 focussing mostly on C code. The R API described in Writing R Extensions is
 based on a set of functions and macros operating on \code{SEXP}, the internal
 representation of R objects.
-
+%
 In this article, we discuss the functionality of the \pkg{Rcpp}
 package, which we believe simplifies dramatically the usage of C++ code
 in R. Combining R and C++ is not a new idea, so we start with
@@ -86,7 +88,10 @@ unclear how much usage these packages are seeing beyond their own authors.
 CXXR \citep{runnalls09:cxxr} comes to this topic from the other side: 
 its aim is to completely refactor R on a stronger C++ foundation. 
 CXXR is therefore concerned with all aspects of the R interpreter,
-REPL loop, threading---and object interchange between R and C++ is but one part.
+REPL loop, threading---and object interchange between R and C++ is but one
+part. A similar approach is discussed by \cite{templelang09:modestproposal}
+who suggests making low-level internals extensible by package developers in
+order to facilitate extending \R.
 %
 Another slightly different angle is offered by
 \cite{templelang09:rgcctranslationunit} who uses compiler output for
