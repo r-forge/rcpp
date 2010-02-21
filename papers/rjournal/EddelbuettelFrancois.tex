@@ -136,7 +136,7 @@ classic \pkg{Rcpp} API:
 \begin{example}
 #include <Rcpp.h>
 
-RcppExport SEXP convolve2cpp(SEXP a, SEXP b) \{
+RcppExport SEXP convolve2cpp(SEXP a,SEXP b) \{
   RcppVector<double> xa(a);
   RcppVector<double> xb(b);
   int nab = xa.size() + xb.size() - 1;
@@ -384,7 +384,7 @@ std::map< std::string, int > m1;
 std::map< std::string, int > m2;
 
 m1["foo"] = 1; m1["bar"] = 2;
-m2["foo"] = 1; m2["bar"] = 2; m2["bling"] = 3;
+m2["foo"] = 1; m2["bar"] = 2; m2["baz"] = 3;
 
 v.push_back( m1) ;
 v.push_back( m2) ;
@@ -396,7 +396,7 @@ result of this R statement:
 
 \begin{example}
 list( c( bar = 2L, foo = 1L) , 
-      c( bar = 2L, bling = 3L, foo = 1L) )
+      c( bar = 2L, baz = 3L, foo = 1L) )
 \end{example}
 
 \subsection{R to C++ : as}
@@ -464,7 +464,7 @@ function arguments, nodes of dotted pair lists and language calls and more.
     \begin{example}
 Environment stats("package:stats");
 Function rnorm = stats["rnorm"];
-return rnorm(10, Named("sd", 100.0) );
+return rnorm(10, Named("sd", 100.0));
     \end{example}
   \end{minipage}
   \begin{minipage}{0.06\linewidth}
@@ -474,15 +474,15 @@ return rnorm(10, Named("sd", 100.0) );
     \centering{\underline{Environment: Using the R API}}
     \begin{example}
 SEXP stats = PROTECT( 
-\ \ R_FindNamespace( mkString("stats") ) );
+\ \ R_FindNamespace( mkString("stats")));
 SEXP rnorm = PROTECT( 
-\ \ findVarInFrame( stats, install("rnorm") ) );
+\ \ findVarInFrame( stats, install("rnorm")));
 SEXP call  = PROTECT( 
 \ \ LCONS( rnorm, 
 \ \ \ \ CONS(ScalarInteger(10), 
-\ \ \ \ \ \ CONS(ScalarReal(100.0), R_NilValue))));
+\ \ \ \ \ \ CONS(ScalarReal(100.0),R_NilValue))));
 SET_TAG( CDDR(call), install("sd") );
-SEXP res = PROTECT( eval( call, R_GlobalEnv));
+SEXP res = PROTECT(eval(call, R_GlobalEnv));
 UNPROTECT(4) ;
 return res ;
     \end{example}
@@ -492,7 +492,7 @@ return res ;
   \begin{minipage}[t]{0.465\linewidth}
     \centering{\underline{Language: Using the \pkg{Rcpp} API}}
     \begin{example}
-Language call("rnorm", 10, Named("sd", 100.0));
+Language call("rnorm",10,Named("sd",100.0));
 return call.eval();
     \end{example}
   \end{minipage}
@@ -505,9 +505,9 @@ return call.eval();
 SEXP call  = PROTECT( 
 \ \ LCONS( install("rnorm"), 
 \ \ \ \ CONS(ScalarInteger(10), 
-\ \ \ \ \ \ CONS(ScalarReal(100.0), R_NilValue))));
+\ \ \ \ \ \ CONS(ScalarReal(100.0),R_NilValue))));
 SET_TAG( CDDR(call), install("sd") ) ;
-SEXP res = PROTECT( eval( call, R_GlobalEnv));
+SEXP res = PROTECT(eval(call, R_GlobalEnv));
 UNPROTECT(2) ;
 return res ;
     \end{example}
@@ -648,12 +648,12 @@ column of the \code{faithful} dataset included with R.
 \begin{example}
 > cpp_lapply( faithful, summary )
 $eruptions
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.600   2.163   4.000   3.488   4.454   5.100 
+ Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+1.600   2.163   4.000   3.488   4.454   5.100 
 
 $waiting
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   43.0    58.0    76.0    70.9    82.0    96.0 
+ Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 43.0    58.0    76.0    70.9    82.0    96.0 
 \end{example}
 
 
@@ -677,7 +677,7 @@ and installs its own terminate handler which translates C++
 exceptions into R conditions. The following code gives an illustration. 
 
 \begin{example}
-> fun <- cfunction( signature( x = "integer" ), '
+> fun <- cfunction(signature(x = "integer"),'
 +  int dx = as<int>(x) ;
 +   if( dx > 10 ) 
 +      throw std::range_error("too big") ;
@@ -740,7 +740,7 @@ We can revisit the code to take advantage of this feature :
 \begin{example}
 #include <Rcpp.h>
 
-RcppExport SEXP convolve4cpp(SEXP a, SEXP b) \{
+RcppExport SEXP convolve4cpp(SEXP a, SEXP b)\{
     Rcpp::NumericVector xa(a);
     Rcpp::NumericVector xb(b);
     int n_xa = xa.size() ;
