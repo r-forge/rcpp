@@ -1,0 +1,74 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.top {
+			width: 100%;
+		}
+		
+		.sidebar {
+			border: 1px dotted red;
+			width: 100px;
+		}
+		
+		.full {
+			border: 1px solid black;
+			width: 100%;
+			height: 100%;
+		}
+		.center{
+			border : 1px solid black ;
+			}
+			
+		.section{
+			border : none ;
+			}	
+			
+	</ui:style>
+
+	<g:DockLayoutPanel unit='EM'>
+		<g:north size='3'>
+			<g:HorizontalPanel styleName="{style.top}">
+				<g:Label>Rcpp Online Documentation</g:Label>
+			</g:HorizontalPanel>
+
+		</g:north>
+		<g:west size='20'>
+
+			<g:StackLayoutPanel unit="EM" ui:field="stacks">
+				
+				<g:stack>
+					<g:header size='3'>Vectors</g:header>
+					<g:Tree ui:field="vectors_tree"></g:Tree>
+				</g:stack>
+				
+				<g:stack>
+					<g:header size='3'>Data interchange</g:header>
+					<g:Label>...</g:Label>
+				</g:stack>
+				
+				<g:stack>
+					<g:header size='3'>Other classes</g:header>
+					<g:Label>...</g:Label>
+				</g:stack>
+
+				<g:stack>
+					<g:header size='3'>Package development</g:header>
+					<g:Label>....</g:Label>
+				</g:stack>
+
+				<g:stack>
+					<g:header size='3'>Links</g:header>
+					<g:Label>.....</g:Label>
+				</g:stack>
+				
+			</g:StackLayoutPanel>
+		</g:west>
+		
+		<g:center>
+			<g:SimplePanel ui:field="content"> </g:SimplePanel>
+		</g:center>
+
+	</g:DockLayoutPanel>
+
+</ui:UiBinder> 
