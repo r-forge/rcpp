@@ -9,3 +9,4 @@ Maintainer: Romain Francois <romain@r-enthusiasts.com>
 Description: Base 64 encoder/decoder
 License: GPL (>=2)
 LazyLoad: yes
+URL: http://romainfrancois.blog.free.fr/index.php?category/R-package/base64
