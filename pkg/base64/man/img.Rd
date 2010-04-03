@@ -39,7 +39,7 @@ img(file, Rd = FALSE, alt = "image" )
 The html code
 }
 \references{
-Wikipedia entry for data uri	
+	Wikipedia entry for data uri \url{http://en.wikipedia.org/wiki/Data_URI_scheme}
 }
 
 \author{
