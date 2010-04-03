@@ -28,11 +28,12 @@ This creates html code to embed a png file into an html document.
 }
 
 \usage{
-img(file, Rd = FALSE)
+img(file, Rd = FALSE, alt = "image" )
 }
 \arguments{
   \item{file}{png file to translate into a data uri}
   \item{Rd}{if TRUE, extra markup is added to facilitate inclusion of the image in an Rd file}
+  \item{alt}{alternate text}
 }
 \value{
 The html code
