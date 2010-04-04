@@ -19,9 +19,9 @@ LazyLoad: \tab yes\cr
 }
 }
 \author{
- Romain Francois and Dirk Eddelbuettel
+ Romain Francois
 
-Maintainer: Romain and Dirk <RomainAndDirk@r-enthusiasts.com>
+Maintainer: Romain Francois <romain@r-enthusiasts.com>
 }
 \references{
 	GSL: Gnu scientific library: \url{http://www.gnu.org/software/gsl/}
