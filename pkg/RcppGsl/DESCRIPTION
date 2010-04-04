@@ -8,4 +8,4 @@ Maintainer: Romain Francois <romain@r-enthusiasts.com>
 Description: glue between Rcpp and gsl
 License: GPL (>=2)
 LazyLoad: yes
-Depends: Rcpp (>= 0.7.11)
+Depends: Rcpp (>= 0.7.11.2)
