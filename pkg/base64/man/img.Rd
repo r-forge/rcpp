@@ -8,14 +8,14 @@ This creates html code to embed a png file into an html document.
 }
 
 \details{
-\if{html}{
-	The following graph is embedded in the document using the \code{img} function	
+The following graph is embedded in the document using the \code{img} function	
 	
+\ifelse{html}{
 \Sexpr[stage=render,results=rd,echo=FALSE]{
-	library( base64 )
-	library( grDevices )
-	library( graphics )
-	library( stats )
+	# library( base64 )
+	# library( grDevices )
+	# library( graphics )
+	# library( stats )
 	
 	pngfile <- tempfile()
 	png( pngfile, width = 600, height = 400 )
@@ -23,7 +23,7 @@ This creates html code to embed a png file into an html document.
 	dev.off()
 	img( pngfile, Rd = TRUE )
 }
-}
+}{}
 
 }
 
