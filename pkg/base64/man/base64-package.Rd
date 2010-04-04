@@ -12,8 +12,8 @@ Base64 encoder/decoder
 \tabular{ll}{
 Package: \tab base64\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2010-04-03\cr
+Version: \tab 1.1\cr
+Date: \tab 2010-04-04\cr
 License: \tab GPL (>=2)\cr
 LazyLoad: \tab yes\cr
 }

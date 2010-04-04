@@ -25,7 +25,7 @@ The following graph is embedded in the document using the \code{img} function
 	img( pngfile, Rd = TRUE )
 	
 	}
-}{ image not available in this format }
+}{ (only when rendered in html) }
 
 }
 
