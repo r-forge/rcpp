@@ -1,4 +1,4 @@
-pkg <- "RcppArmadillo"
+pkg <- "RcppGsl"
 
 if(require("RUnit", quietly = TRUE)) {
 
