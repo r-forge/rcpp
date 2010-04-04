@@ -1,8 +1,6 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
-//
 // RcppGsl.h: Rcpp/gsl glue
 //
-// Copyright (C)  2010 Dirk Eddelbuettel and Romain Francois
+// Copyright (C)  2010 Romain Francois
 //
 // This file is part of RcppGsl.
 //
