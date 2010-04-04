@@ -10,20 +10,22 @@ This creates html code to embed a png file into an html document.
 \details{
 The following graph is embedded in the document using the \code{img} function	
 	
-\ifelse{html}{
-\Sexpr[stage=render,results=rd,echo=FALSE]{
-	# library( base64 )
-	# library( grDevices )
-	# library( graphics )
-	# library( stats )
+\ifelse{html}{ 
+	\Sexpr[results=rd, echo=FALSE]{
+	 
+	library( base64 )
+	library( grDevices )
+	library( graphics )
+	library( stats )
 	
 	pngfile <- tempfile()
 	png( pngfile, width = 600, height = 400 )
 	plot( 1:100, rnorm(100), pch = 21, bg = "red", cex = 2 )
 	dev.off()
 	img( pngfile, Rd = TRUE )
-}
-}{}
+	
+	}
+}{ image not available in this format }
 
 }
 
