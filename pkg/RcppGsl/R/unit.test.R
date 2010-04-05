@@ -17,12 +17,12 @@
 
 test <- function( output = if( file.exists( "/tmp" ) ) "/tmp" else getwd() ){
 	if( !file.exists( output ) ){ stop( "output directory does not exist" ) }
-	
+
 	Rscript <- file.path( R.home( component = "bin" ), "Rscript" )
 	if( .Platform$OS.type == "windows" ){
 		Rscript <- sprintf( "%s.exe", Rscript )
 	}
-	test.script <- system.file( "unitTests", "runTests.R", package = "RcppGsl" )
+	test.script <- system.file( "unitTests", "runTests.R", package = "RcppGSL" )
 	cmd <- sprintf( '"%s" "%s" --output=%s', Rscript, test.script, output )
 	system( cmd )
 }
