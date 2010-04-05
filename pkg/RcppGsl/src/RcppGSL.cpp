@@ -1,4 +1,4 @@
-#include <RcppGsl.h>
+#include <RcppGSL.h>
 
 extern "C" SEXP test_gsl_vector(){
 	gsl_vector * x = gsl_vector_alloc (10);
