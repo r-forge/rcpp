@@ -1,0 +1,54 @@
+\documentclass[11pt]{article}
+\usepackage{url}
+\usepackage{vmargin}
+\setpapersize{USletter}
+\setmarginsrb{1in}{1in}{1in}{1in}{0pt}{0mm}{0pt}{0mm}
+\usepackage{charter}
+
+\newcommand{\proglang}[1]{\textsf{#1}}
+\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+
+\author{
+Romain Fran\c{c}ois\\ {\small \url{romain@r-enthusiasts.com} } \and
+Dirk Eddelbuettel\\ {\small \url{edd@debian.org} }
+}
+
+\title{\pkg{Rcpp}: Seamless \proglang{R} and \proglang{C++} integration}
+\date{Submitted to \textsl{Rmetrics 2010}}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\begin{abstract}
+  \addtolength{\parskip}{\baselineskip} 	% add a little vertical space
+  \noindent % no ident for first paragraph
+  The \pkg{Rcpp} package simplifies integrating \proglang{C++} code with
+  \proglang{R}. It provides a consistent \proglang{C++} class hierarchy that
+  maps various types of \proglang{R} objects (vectors, functions,
+  environments, ...) to dedicated \proglang{C++} classes. Object interchange
+  between \proglang{R} and \proglang{C++} is managed by simple, flexible and
+  extensible concepts which include broad support for popular \proglang{C++}
+  idioms from the Standard Template Library (STL). Using the \pkg{inline}
+  package, \proglang{C++} code can be compiled, linked and loaded on the fly.
+  Flexible error and exception code handling is provided.  \pkg{Rcpp}
+  substantially lowers the barrier for programmers wanting to combine
+  \proglang{C++} code with \proglang{R}.
+  
+  We discuss the features of the new \pkg{Rcpp} API, as introduced in the 
+  \texttt{0.7.*} series of the package and finalized in version \texttt{0.8.0}, 
+  and illustrate uses of the package with several examples, including 
+  simple manipulation of R objects in C++, integration with algorithms
+  from the Standard Template Library, use of the Armadillo C++ linear algebra
+  library through the \pkg{RcppArmadillo} package and mechanisms to simply 
+  and efficiently expose C++ functions and classes to R. 
+  
+  The combination of modern \proglang{C++} together with the interactive
+  environment provided by \proglang{R} creates a very compelling combination
+  for statistical programming.
+  
+  \noindent \textbf{Keywords:} Foreign function interface, 
+  \proglang{R}, \proglang{C++}, Standard Template Library (STL)
+\end{abstract}
+\end{document}
+
