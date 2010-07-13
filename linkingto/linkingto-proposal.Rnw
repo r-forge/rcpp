@@ -1,0 +1,201 @@
+\documentclass[10pt]{article}
+%\VignetteIndexEntry{Rcpp-modules}
+\usepackage{vmargin}
+\setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
+
+\usepackage{color, alltt}
+\usepackage[authoryear,round,longnamesfirst]{natbib}
+\usepackage[colorlinks]{hyperref}
+\definecolor{link}{rgb}{0,0,0.3}	%% next few lines courtesy of RJournal.sty
+\hypersetup{
+    colorlinks,%
+    citecolor=link,%
+    filecolor=link,%
+    linkcolor=link,%
+    urlcolor=link
+}
+
+\newcommand{\proglang}[1]{\textsf{#1}}
+\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+
+\author{Douglas Bates, Dirk Eddelbuettel and Romain Fran\c{c}ois}
+\title{Proposal for extension of the LinkingTo feature}
+
+<<echo=FALSE>>=
+link <- function( f, package, text = f, root = "http://finzi.psych.upenn.edu/R/library/" ){
+	h <- if( missing(package) ) {
+		as.character( help( f ) )
+	} else {
+		as.character( help( f, package = paste( package, sep = "" ) ) )
+	}
+	if( ! length(h) ){
+		sprintf( "\\\\textbf{%s}", f )
+	} else {
+		rx <- "^.*/([^/]*?)/help/(.*?)$"
+		package <- sub( rx, "\\1", h, perl = TRUE )
+		page <- sub( rx, "\\2", h, perl = TRUE )
+		sprintf( "\\\\href{%s%s/html/%s.html}{\\\\texttt{%s}}", root, package, page, text )
+	}
+}
+linkS4class <- function( cl, package, text = cl, root = "http://finzi.psych.upenn.edu/R/library/" ){
+	link( sprintf("%s-class", cl), package, text, root )
+}
+@
+
+\begin{document}
+\maketitle
+
+\abstract{
+  \noindent This document is a proposal for extending the role of the 
+  \texttt{LinkingTo} directive of \proglang{R} package \texttt{DESCRIPTION}
+  files. Currently \texttt{LinkingTo} facilitates access of header files of 
+  one package from another package, but linking to shared or static libraries
+  provided by other packages does not have dedicated support apart from 
+  documentation notes in section 5.8 of \cite{R:exts}. 
+}
+
+\section{Motivation}
+
+The ability to include compiled code in R packages is a great way to 
+leverage performance of compiled languages such as \proglang{C++}
+while keeping the flexibility of \proglang{R}. Adding compiled code is
+straightforward --- and properly documented in \cite{R:exts} --- when 
+this involves only one package. 
+
+The \texttt{R\_RegisterCCallable} / \texttt{R\_GetCCallable} mechanism
+allows compiled code from one package to invoke a compiled function 
+from another package by means of function pointers. The packages 
+\texttt{Matrix}/\texttt{lme4} provide an example of the mechanism. 
+The mechanism does not involve actual linking since essentially it 
+is a way to pass function pointers from one package to another. This requires
+a lot of discipline from both packages and lacks of flexibility, one has to 
+expose/retrieve each function. This quickly becomes unusable in C++ where 
+actual linking would be preferable. 
+
+\cite{R:exts} also includes material on how to link against a library 
+included in another package, although the document seems to discourage 
+users to do it, because of portability subtleties. 
+
+\section{State of the art}
+
+\subsection{What does the current LinkingTo does}
+
+\texttt{LinkingTo} facilitates retrieving the header files of one package
+(the target package) and sets the appropriate compiler flags so that 
+another package (the client package) can use the declarations therein. 
+
+Assuming the source package \texttt{packA} distributes its headers 
+in the \texttt{inst/include} directory, then having the following line 
+in the client package \texttt{packB} : 
+
+\begin{verbatim}
+LinkingTo: packA
+\end{verbatim}
+
+will add the appropriate \texttt{-I} flag when compiling source files
+of \texttt{packB}.
+
+\subsection{Compiling against target package library}
+
+Because \pkg{Rcpp} essentially consists of a \proglang{C++} library and R does not 
+offer explicit support for cross package linking, \pkg{Rcpp} package has been 
+using its own mechanism for client packages to link against its library.
+
+The mechanism used by \pkg{Rcpp} consists of : 
+\begin{itemize}
+\item create a dynamic library \texttt{lib[/arch]/libRcpp.dylib} in addition 
+to the shared object \texttt{libs[/arch]/Rcpp.so} that \proglang{R} 
+automatically makes
+\item create a static library \texttt{lib[/arch]/libRcpp.a}
+\item provide the \proglang{R} function \texttt{Rcpp:::LdFlags} to generate the suitable
+flags for linking against the dynamic or static library. 
+\end{itemize}
+
+A package that wishes to use the classes of \pkg{Rcpp} then has to : 
+
+\begin{itemize}
+\item locate the headers of \pkg{Rcpp}, which is straightforward thanks to 
+the use of \texttt{LinkingTo: Rcpp}
+\item link against the library by adding this line in the \texttt{Makevars}
+file
+\end{itemize}
+
+\begin{verbatim}
+PKG_LIBS = $(shell $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()" )
+\end{verbatim}
+
+and this line in the \texttt{Makevars.win} file for Windows: 
+
+\begin{verbatim}
+PKG_LIBS = $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "Rcpp:::LdFlags()")
+\end{verbatim}
+
+This works, and is tested as part of \pkg{Rcpp} unit tests, but we believe
+that it could be made easier by extending the role played by the \texttt{LinkingTo}
+directive. We believe client package should only have to use \texttt{LinkingTo} 
+to both find the headers and link against the library. The rest of this document 
+discusses the proposed extension for \texttt{LinkingTo}. 
+
+
+
+\section{Compiled library}
+
+By the current implementation, compiled code from the target package may only 
+be realistically used from itself. This isolates compiled code and delegates
+abstraction to the R level. This is not sufficient for packages such as 
+\pkg{Rcpp} which aim to provide \proglang{C++}-level abstractions. 
+
+\subsection{ProvidesDynamicLibrary}
+
+The shared object that is made as part of the compilation of the 
+\texttt{src} directory of an \pkg{R} package is not necessarilly 
+a dynamic library on all platforms, and is not named appropriately for being useful
+to the linker. 
+
+We propose a new \texttt{DESCRIPTION} directive that specifies if a 
+dynamic library, suitably named, should also be created in the \texttt{libs}
+directory. 
+
+\begin{verbatim}
+ProvidesDynamicLibrary: yes
+\end{verbatim}
+
+When set to \texttt{yes} (the default being \texttt{f	alse}), the directive
+\texttt{ProvidesDynamicLibrary} would take appropriate actions to create a
+dynamic library in the \texttt{libs} directory. On platforms where it makes 
+sense, this might only create a symbolic link between the usual shared object 
+and the dynamic library.
+
+\subsection{ProvidesStaticLibrary}
+
+Similarly, the \texttt{ProvidesStaticLibrary} directive would be used
+to trigger generation of a static library. 
+
+\begin{verbatim}
+ProvidesStaticLibrary: yes
+\end{verbatim}
+
+\subsection{LinkingTo}
+
+The \texttt{LinkingTo} flag should be extended to honour the 
+\texttt{ProvidesDynamicLibrary} and \texttt{ProvidesStaticLibrary} directives
+of the target package. 
+
+More precisely, if package \texttt{packB} has this line in its \texttt{DESCRIPTION}
+file :
+
+\begin{verbatim}
+LinkingTo: packA
+\end{verbatim}
+
+Then the DESCRIPTION directives of \pkg{packA} should be checked, and if 
+\pkg{packA} declares that it provides a library, the corresponding platform 
+specific flags should be generated so that the shared object of the 
+\pkg{packB} package links against the appropriate library.
+
+
+\bibliographystyle{abbrvnat}
+\bibliography{Rcpp}
+
+\end{document}
+
