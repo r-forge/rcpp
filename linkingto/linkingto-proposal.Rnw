@@ -1,5 +1,4 @@
 \documentclass[10pt]{article}
-%\VignetteIndexEntry{Rcpp-modules}
 \usepackage{vmargin}
 \setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
 
@@ -20,27 +19,6 @@
 
 \author{Douglas Bates, Dirk Eddelbuettel and Romain Fran\c{c}ois}
 \title{Proposal for extension of the LinkingTo feature}
-
-<<echo=FALSE>>=
-link <- function( f, package, text = f, root = "http://finzi.psych.upenn.edu/R/library/" ){
-	h <- if( missing(package) ) {
-		as.character( help( f ) )
-	} else {
-		as.character( help( f, package = paste( package, sep = "" ) ) )
-	}
-	if( ! length(h) ){
-		sprintf( "\\\\textbf{%s}", f )
-	} else {
-		rx <- "^.*/([^/]*?)/help/(.*?)$"
-		package <- sub( rx, "\\1", h, perl = TRUE )
-		page <- sub( rx, "\\2", h, perl = TRUE )
-		sprintf( "\\\\href{%s%s/html/%s.html}{\\\\texttt{%s}}", root, package, page, text )
-	}
-}
-linkS4class <- function( cl, package, text = cl, root = "http://finzi.psych.upenn.edu/R/library/" ){
-	link( sprintf("%s-class", cl), package, text, root )
-}
-@
 
 \begin{document}
 \maketitle
@@ -145,41 +123,34 @@ be realistically used from itself. This isolates compiled code and delegates
 abstraction to the R level. This is not sufficient for packages such as 
 \pkg{Rcpp} which aim to provide \proglang{C++}-level abstractions. 
 
-\subsection{ProvidesDynamicLibrary}
+\subsection{ProvidesLibrary}
 
 The shared object that is made as part of the compilation of the 
 \texttt{src} directory of an \pkg{R} package is not necessarilly 
-a dynamic library on all platforms, and is not named appropriately for being useful
-to the linker. 
+a dynamic library on all platforms, and is not named appropriately 
+for being useful to the linker. 
 
 We propose a new \texttt{DESCRIPTION} directive that specifies if a 
 dynamic library, suitably named, should also be created in the \texttt{libs}
 directory. 
 
 \begin{verbatim}
-ProvidesDynamicLibrary: yes
+ProvidesLibrary: yes
 \end{verbatim}
 
 When set to \texttt{yes} (the default being \texttt{f	alse}), the directive
 \texttt{ProvidesDynamicLibrary} would take appropriate actions to create a
 dynamic library in the \texttt{libs} directory. On platforms where it makes 
 sense, this might only create a symbolic link between the usual shared object 
-and the dynamic library.
+and the dynamic library. 
 
-\subsection{ProvidesStaticLibrary}
-
-Similarly, the \texttt{ProvidesStaticLibrary} directive would be used
-to trigger generation of a static library. 
-
-\begin{verbatim}
-ProvidesStaticLibrary: yes
-\end{verbatim}
+For platforms where static linking is preferrable, the directive will trigger 
+generation of a static library from all the compiled objects.
 
 \subsection{LinkingTo}
 
 The \texttt{LinkingTo} flag should be extended to honour the 
-\texttt{ProvidesDynamicLibrary} and \texttt{ProvidesStaticLibrary} directives
-of the target package. 
+\texttt{ProvidesLibrary} directives of the target package. 
 
 More precisely, if package \texttt{packB} has this line in its \texttt{DESCRIPTION}
 file :
