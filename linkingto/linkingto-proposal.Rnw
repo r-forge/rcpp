@@ -165,6 +165,79 @@ specific flags should be generated so that the shared object of the
 \pkg{packB} package links against the appropriate library.
 
 
+\section{Implementation}
+
+To compile the content of the \texttt{src} directory, R invokes \texttt{make}
+with several source files as seen on this extract from the 
+\texttt{.shlib\_internal} function in \texttt{install.R} (in package \texttt{tools}). 
+
+<<eval=FALSE>>=
+site <- file.path(p0(R.home("etc"), rarch), "Makevars.site")
+makefiles <-
+    c(file.path(p0(R.home("etc"), rarch), "Makeconf"),
+      if(file.exists(site)) site,
+      file.path(R.home("share"), "make",
+                if (WINDOWS) "winshlib.mk" else "shlib.mk"))
+@
+               
+The \texttt{Makeconf} sets all the flags relevant for the current platform and
+sub architecture. 
+
+The \texttt{shlib.mk} file defines the target for the shared library of the package: 
+
+<<lang=make>>=
+## ${R_HOME}/share/make/shlib.mk
+
+all: $(SHLIB)
+
+$(SHLIB): $(OBJECTS)
+	@if test  "z$(OBJECTS)" != "z"; then \
+	  echo $(SHLIB_LINK) -o $@ $(OBJECTS) $(ALL_LIBS); \
+	  $(SHLIB_LINK) -o $@ $(OBJECTS) $(ALL_LIBS); \
+	fi
+
+.PHONY: all shlib-clean
+
+shlib-clean:
+	@rm -rf .libs _libs
+	@rm -f $(OBJECTS)
+@
+                        
+Similarly on windows, the \texttt{winshlib.mk} file : 
+
+<<lang=make>>=
+## ${R_HOME}/share/make/winshlib.mk
+
+all: $(SHLIB)
+
+BASE = $(shell basename $(SHLIB) .dll)
+
+## do it with explicit rules as packages might add dependencies to this target
+## (attempts to do this GNUishly failed for parallel makes,
+## but we do want the link targets echoed)
+$(SHLIB): $(OBJECTS)
+	@if test "z$(OBJECTS)" != "z"; then \
+	  if test -e "$(BASE)-win.def"; then \
+	    echo $(SHLIB_LD) -shared $(DLLFLAGS) -o $@ $(BASE)-win.def $(OBJECTS) $(ALL_LIBS); \
+	    $(SHLIB_LD) -shared $(DLLFLAGS) -o $@ $(BASE)-win.def $(OBJECTS) $(ALL_LIBS); \
+	  else \
+	    echo EXPORTS > tmp.def; \
+	    $(NM) $^ | $(SED) -n 's/^.* [BCDRT] _/ /p' >> tmp.def; \
+	    echo $(SHLIB_LD) -shared $(DLLFLAGS) -o $@ tmp.def $(OBJECTS) $(ALL_LIBS); \
+	    $(SHLIB_LD) -shared $(DLLFLAGS) -o $@ tmp.def $(OBJECTS) $(ALL_LIBS); \
+	    $(RM) tmp.def; \
+	  fi \
+	fi
+
+.PHONY: all shlib-clean
+shlib-clean:
+	@rm -f $(OBJECTS)
+@
+
+% so we need to provide modifications of these files so that they
+% build also a dynamic lib and a static lib
+
+
 \bibliographystyle{abbrvnat}
 \bibliography{Rcpp}
 
