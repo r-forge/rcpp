@@ -24,47 +24,47 @@
 \maketitle
 
 \abstract{
-  \noindent This document is a proposal for extending the role of the 
+  \noindent This document is a proposal for extending the role of the
   \texttt{LinkingTo} directive of \proglang{R} package \texttt{DESCRIPTION}
-  files. Currently \texttt{LinkingTo} facilitates access of header files of 
+  files. Currently \texttt{LinkingTo} facilitates access of header files of
   one package from another package, but linking to shared or static libraries
-  provided by other packages does not have dedicated support apart from 
-  documentation notes in section 5.8 of \cite{R:exts}. 
+  provided by other packages does not have dedicated support apart from
+  documentation notes in section 5.8 of \cite{R:exts}.
 }
 
 \section{Motivation}
 
-The ability to include compiled code in R packages is a great way to 
+The ability to include compiled code in R packages is a great way to
 leverage performance of compiled languages such as \proglang{C++}
 while keeping the flexibility of \proglang{R}. Adding compiled code is
-straightforward --- and properly documented in \cite{R:exts} --- when 
-this involves only one package. 
+straightforward --- and properly documented in \cite{R:exts} --- when
+this involves only one package.
 
 The \texttt{R\_RegisterCCallable} / \texttt{R\_GetCCallable} mechanism
-allows compiled code from one package to invoke a compiled function 
-from another package by means of function pointers. The packages 
-\texttt{Matrix}/\texttt{lme4} provide an example of the mechanism. 
-The mechanism does not involve actual linking since essentially it 
+allows compiled code from one package to invoke a compiled function
+from another package by means of function pointers. The packages
+\texttt{Matrix}/\texttt{lme4} provide an example of the mechanism.
+The mechanism does not involve actual linking since essentially it
 is a way to pass function pointers from one package to another. This requires
-a lot of discipline from both packages and lacks of flexibility, one has to 
-expose/retrieve each function. This quickly becomes unusable in C++ where 
-actual linking would be preferable. 
+a lot of discipline from both packages and lacks of flexibility, one has to
+expose/retrieve each function. This quickly becomes unusable in C++ where
+actual linking would be preferable.
 
-\cite{R:exts} also includes material on how to link against a library 
-included in another package, although the document seems to discourage 
-users to do it, because of portability subtleties. 
+\cite{R:exts} also includes material on how to link against a library
+included in another package, although the document seems to discourage
+users to do it, because of portability subtleties.
 
 \section{State of the art}
 
 \subsection{What does the current LinkingTo does}
 
 \texttt{LinkingTo} facilitates retrieving the header files of one package
-(the target package) and sets the appropriate compiler flags so that 
-another package (the client package) can use the declarations therein. 
+(the target package) and sets the appropriate compiler flags so that
+another package (the client package) can use the declarations therein.
 
-Assuming the source package \texttt{packA} distributes its headers 
-in the \texttt{inst/include} directory, then having the following line 
-in the client package \texttt{packB} : 
+Assuming the source package \texttt{packA} distributes its headers
+in the \texttt{inst/include} directory, then having the following line
+in the client package \texttt{packB} :
 
 \begin{verbatim}
 LinkingTo: packA
@@ -75,24 +75,24 @@ of \texttt{packB}.
 
 \subsection{Compiling against target package library}
 
-Because \pkg{Rcpp} essentially consists of a \proglang{C++} library and R does not 
-offer explicit support for cross package linking, \pkg{Rcpp} package has been 
+Because \pkg{Rcpp} essentially consists of a \proglang{C++} library and R does not
+offer explicit support for cross package linking, \pkg{Rcpp} package has been
 using its own mechanism for client packages to link against its library.
 
-The mechanism used by \pkg{Rcpp} consists of : 
+The mechanism used by \pkg{Rcpp} consists of :
 \begin{itemize}
-\item create a dynamic library \texttt{lib[/arch]/libRcpp.dylib} in addition 
-to the shared object \texttt{libs[/arch]/Rcpp.so} that \proglang{R} 
+\item create a dynamic library \texttt{lib[/arch]/libRcpp.dylib} in addition
+to the shared object \texttt{libs[/arch]/Rcpp.so} that \proglang{R}
 automatically makes
 \item create a static library \texttt{lib[/arch]/libRcpp.a}
 \item provide the \proglang{R} function \texttt{Rcpp:::LdFlags} to generate the suitable
-flags for linking against the dynamic or static library. 
+flags for linking against the dynamic or static library.
 \end{itemize}
 
-A package that wishes to use the classes of \pkg{Rcpp} then has to : 
+A package that wishes to use the classes of \pkg{Rcpp} then has to :
 
 \begin{itemize}
-\item locate the headers of \pkg{Rcpp}, which is straightforward thanks to 
+\item locate the headers of \pkg{Rcpp}, which is straightforward thanks to
 the use of \texttt{LinkingTo: Rcpp}
 \item link against the library by adding this line in the \texttt{Makevars}
 file
@@ -102,7 +102,7 @@ file
 PKG_LIBS = $(shell $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()" )
 \end{verbatim}
 
-and this line in the \texttt{Makevars.win} file for Windows: 
+and this line in the \texttt{Makevars.win} file for Windows:
 
 \begin{verbatim}
 PKG_LIBS = $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "Rcpp:::LdFlags()")
@@ -110,47 +110,68 @@ PKG_LIBS = $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "Rcpp:::LdFlags()
 
 This works, and is tested as part of \pkg{Rcpp} unit tests, but we believe
 that it could be made easier by extending the role played by the \texttt{LinkingTo}
-directive. We believe client package should only have to use \texttt{LinkingTo} 
-to both find the headers and link against the library. The rest of this document 
-discusses the proposed extension for \texttt{LinkingTo}. 
+directive. We believe client package should only have to use \texttt{LinkingTo}
+to both find the headers and link against the library. The rest of this document
+discusses the proposed extension for \texttt{LinkingTo}.
 
 
 
 \section{Compiled library}
 
-By the current implementation, compiled code from the target package may only 
+By the current implementation, compiled code from the target package may only
 be realistically used from itself. This isolates compiled code and delegates
-abstraction to the R level. This is not sufficient for packages such as 
-\pkg{Rcpp} which aim to provide \proglang{C++}-level abstractions. 
+abstraction to the R level. This is not sufficient for packages such as
+\pkg{Rcpp} which aim to provide \proglang{C++}-level abstractions.
 
 \subsection{ProvidesLibrary}
 
-The shared object that is made as part of the compilation of the 
-\texttt{src} directory of an \pkg{R} package is not necessarilly 
-a dynamic library on all platforms, and is not named appropriately 
-for being useful to the linker. 
+The shared object that is made as part of the compilation of the
+\texttt{src} directory of an \pkg{R} package is not necessarilly
+a dynamic library on all platforms, and is not named appropriately
+for being useful to the linker.
 
-We propose a new \texttt{DESCRIPTION} directive that specifies if a 
+We propose a new \texttt{DESCRIPTION} directive that specifies if a
 dynamic library, suitably named, should also be created in the \texttt{libs}
-directory. 
+directory.
 
 \begin{verbatim}
 ProvidesLibrary: yes
 \end{verbatim}
 
-When set to \texttt{yes} (the default being \texttt{f	alse}), the directive
+When set to \texttt{yes} (the default being \texttt{false}), the directive
 \texttt{ProvidesDynamicLibrary} would take appropriate actions to create a
-dynamic library in the \texttt{libs} directory. On platforms where it makes 
-sense, this might only create a symbolic link between the usual shared object 
-and the dynamic library. 
+dynamic library in the \texttt{libs} directory. On platforms where it makes
+sense, this might only create a symbolic link between the usual shared object
+and the dynamic library.
 
-For platforms where static linking is preferrable, the directive will trigger 
+For platforms where static linking is preferrable, the directive will trigger
 generation of a static library from all the compiled objects.
+
+Alternatively, a more appropriate if somewhat more disruptive change in
+behaviour could also be contemplated. The issue is that the linker generally
+wants a library from a package \texttt{foo} to be named \texttt{libfoo.dll}
+whereas R currently uses \texttt{foo.dll} (on Windows). So when a package has the
+\texttt{ProvidesLibrary: yes}  field set, the following changes could be made:
+\begin{enumerate}
+\item The resulting library will be prefixed with string \texttt{lib},
+  e.g.~the Rcpp package would create \texttt{libRcpp.so} (on Linux).
+\item The code in R that loads a package will check for
+  \texttt{ProvidesLibrary: yes} and prefix the library name before dynamic
+  loading.
+\item The code in other package that is generated by LinkingTo: will
+  similarly be prefixed by \texttt{lib} for the actualy linking statement.
+\item Other parts of R that would need updating would also be updates.
+\end{enumerate}
+The principal benefit of this approach is that the dual copies (which are even
+identical) of a given library (one for R itself, one for the system linker)
+would be avoided.
+
+\end{enumerate}
 
 \subsection{LinkingTo}
 
-The \texttt{LinkingTo} flag should be extended to honour the 
-\texttt{ProvidesLibrary} directives of the target package. 
+The \texttt{LinkingTo} flag should be extended to honour the
+\texttt{ProvidesLibrary} directives of the target package.
 
 More precisely, if package \texttt{packB} has this line in its \texttt{DESCRIPTION}
 file :
@@ -159,17 +180,17 @@ file :
 LinkingTo: packA
 \end{verbatim}
 
-Then the DESCRIPTION directives of \pkg{packA} should be checked, and if 
-\pkg{packA} declares that it provides a library, the corresponding platform 
-specific flags should be generated so that the shared object of the 
+Then the DESCRIPTION directives of \pkg{packA} should be checked, and if
+\pkg{packA} declares that it provides a library, the corresponding platform
+specific flags should be generated so that the shared object of the
 \pkg{packB} package links against the appropriate library.
 
 
 \section{Implementation}
 
 To compile the content of the \texttt{src} directory, R invokes \texttt{make}
-with several source files as seen on this extract from the 
-\texttt{.shlib\_internal} function in \texttt{install.R} (in package \texttt{tools}). 
+with several source files as seen on this extract from the
+\texttt{.shlib\_internal} function in \texttt{install.R} (in package \texttt{tools}).
 
 <<eval=FALSE>>=
 site <- file.path(p0(R.home("etc"), rarch), "Makevars.site")
@@ -179,11 +200,11 @@ makefiles <-
       file.path(R.home("share"), "make",
                 if (WINDOWS) "winshlib.mk" else "shlib.mk"))
 @
-               
-The \texttt{Makeconf} sets all the flags relevant for the current platform and
-sub architecture. 
 
-The \texttt{shlib.mk} file defines the target for the shared library of the package: 
+The \texttt{Makeconf} sets all the flags relevant for the current platform and
+sub architecture.
+
+The \texttt{shlib.mk} file defines the target for the shared library of the package:
 
 <<lang=make>>=
 ## ${R_HOME}/share/make/shlib.mk
@@ -202,8 +223,8 @@ shlib-clean:
 	@rm -rf .libs _libs
 	@rm -f $(OBJECTS)
 @
-                        
-Similarly on windows, the \texttt{winshlib.mk} file : 
+
+Similarly on windows, the \texttt{winshlib.mk} file :
 
 <<lang=make>>=
 ## ${R_HOME}/share/make/winshlib.mk
