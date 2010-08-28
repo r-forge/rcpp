@@ -157,15 +157,17 @@ RcppExport SEXP convolve2cpp(SEXP a,SEXP b) \{
 We can highlight several aspects. First, only a single header file
 \code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
 \code{SEXP} types, a third is returned.  Third, both inputs are converted to
-templated\footnote{C++ templates allow functions or classes to be written
-  somewhat independently from the template parameter. The actual class is
-  instantiated by the compiler by replacing occurrences of the templated
-  parameter(s). A simple example would be a templated function
-  \texttt{abs(T)} which returns the negative of the template argument $T$
-  when $T<0$ and $T$ otherwise. While the source code is written with a
-  `templated' type $T$, the compiler will create a concrete instance using an
-  \texttt{int} or \texttt{double} type dependent on the context is which the
-  code is called.}  C++ vector types, here a standard \code{double} type is
+templated.
+% \footnote{C++ templates allow functions or classes to be written
+%   somewhat independently from the template parameter. The actual class is
+%   instantiated by the compiler by replacing occurrences of the templated
+%   parameter(s). A simple example would be a templated function
+%   \texttt{abs(T)} which returns the negative of the template argument $T$
+%   when $T<0$ and $T$ otherwise. While the source code is written with a
+%   `templated' type $T$, the compiler will create a concrete instance using an
+%   \texttt{int} or \texttt{double} type dependent on the context is which the
+%   code is called.}  
+C++ vector types, here a standard \code{double} type is
 used to create a vector of doubles from the template type.  Fourth, the
 usefulness of these classes can be seen when we query the vectors directly
 for their size---using the \code{size()} member function---in order to
@@ -583,20 +585,20 @@ new function \code{fun} based on the C++ code in \code{src} where we also
 switched from the classic \pkg{Rcpp} API to the new one:
 
 \begin{example}
-src <- '
-  Rcpp::NumericVector xa(a);
-  Rcpp::NumericVector xb(b);
-  int n_xa = xa.size(), n_xb = xb.size();
-
-  Rcpp::NumericVector xab(n_xa + n_xb - 1);
-  for (int i = 0; i < n_xa; i++)
-    for (int j = 0; j < n_xb; j++)
-       xab[i + j] += xa[i] * xb[j];
-  return xab;
-'
-fun <- cfunction( 
-\ \ \ \	signature(a="numeric", b="numeric"), 
-\ \ \ \	src, Rcpp=TRUE)
+> src <- '
++   Rcpp::NumericVector xa(a);
++   Rcpp::NumericVector xb(b);
++   int n_xa = xa.size(), n_xb = xb.size();
++ 
++   Rcpp::NumericVector xab(n_xa + n_xb - 1);
++   for (int i = 0; i < n_xa; i++)
++     for (int j = 0; j < n_xb; j++)
++        xab[i + j] += xa[i] * xb[j];
++   return xab;
++ '
+> fun <- cfunction( 
++ \ \ \ \	signature(a="numeric", b="numeric"), 
++ \ \ \ \	src, Rcpp=TRUE)
 \end{example}
 
 The main difference to the previous solution is that the input parameters are
@@ -627,20 +629,20 @@ using the \code{transform} algorithm from the STL.
 
 % [Romain] does the code need comments ?
 \begin{example}
-src <- '
-  Rcpp::List input(data); 
-  Rcpp::Function f(fun) ;
-  Rcpp::List output(input.size());
-  std::transform( 
-  	input.begin(), input.end(), 
-  	output.begin(), 
-  	f ) ;
-  output.names() = input.names() ;
-  return output ;
-  '
-cpp_lapply <- cfunction(
-\ \ signature(data="list", fun = "function"), 
-\ \ src, Rcpp = TRUE )
+> src <- '
++   Rcpp::List input(data); 
++   Rcpp::Function f(fun) ;
++   Rcpp::List output(input.size());
++   std::transform( 
++   	input.begin(), input.end(), 
++   	output.begin(), 
++   	f ) ;
++   output.names() = input.names() ;
++   return output ;
++   '
+> cpp_lapply <- cfunction(
++ \ \ signature(data="list", fun = "function"), 
++ \ \ src, Rcpp = TRUE )
 \end{example}
 
 We can use this to calculate a summary of each 
