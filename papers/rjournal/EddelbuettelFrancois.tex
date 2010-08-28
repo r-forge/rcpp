@@ -576,18 +576,19 @@ mechanism.\footnote{This presumes a platform for which pre-built binaries are
   or upgrades.}
 
 The library and header files provided by \pkg{Rcpp} for use by other packages
-are installed along with the \pkg{Rcpp} package making it possible for
-\pkg{Rcpp} to provide the appropriate \code{-I} and \code{-L} switches needed
-for compilation and linking.  So internally, \pkg{inline} makes uses of the
-two functions \code{Rcpp:::CxxFlags()} and \code{Rcpp:::LdFlags()} that
-provide this information (and which are also used by \code{Makevars} files of
-other packages).  Here, however, all this is done behind the scenes 
-without the need for explicitly setting compiler or linker options.
+are installed along with the \pkg{Rcpp} package. The \code{LinkingTo: Rcpp}
+directive in the DESCRIPTION file lets R compute the location of the header
+file. The \pkg{Rcpp} provides appropriate information for the \code{-L}
+switch needed for linking via the function \code{Rcpp:::LdFlags()} that
+provide this information. It can be used by \code{Makevars} files of other
+packages, and \pkg{inline} makes use of it internally so that all of this is
+done behind the scenes without the need for explicitly setting compiler or
+linker options.
 
 The convolution example provided above can be rewritten for use by
 \pkg{inline} as shown below.  The function body is provided by the character
 variable \code{src}, the function header is defined by the argument
-\code{signature}---and we only need to enable \code{Rcpp=TRUE} to obtain a
+\code{signature}---and we only need to enable \code{plugin="Rcpp"} to obtain a
 new function \code{fun} based on the C++ code in \code{src} where we also
 switched from the classic \pkg{Rcpp} API to the new one:
 
