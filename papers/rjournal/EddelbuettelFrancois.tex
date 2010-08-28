@@ -558,11 +558,10 @@ link and load the code.  While using a package is preferable in the long run,
 it may be too involved for quick explorations. An alternative is
 provided by the \pkg{inline} package \citep{cran:inline} which compiles,
 links and loads a C, C++ or Fortran function---directly from the R prompt
-using a simple function \code{cfunction}.  It was recently extended to work
-with \pkg{Rcpp} by allowing for the use of additional header files and
-libraries. This works particularly well with the \pkg{Rcpp} package where
-headers and the library are automatically found if the appropriate option
-\code{Rcpp} to \texttt{cfunction} is set to \code{TRUE}.
+using a simple function \code{cxxfunction}.  It provides an extension which
+works particularly well with \pkg{Rcpp} via so-called `plugins' which provide
+information about additional header file and
+library locations. 
 
 The use of \pkg{inline} is possible as \pkg{Rcpp} can be installed and
 updated just like any other R package using \textsl{e.g.} the
@@ -604,9 +603,9 @@ switched from the classic \pkg{Rcpp} API to the new one:
 +        xab[i + j] += xa[i] * xb[j];
 +   return xab;
 + '
-> fun <- cfunction( 
+> fun <- cxxfunction( 
 + \ \ \ \	signature(a="numeric", b="numeric"), 
-+ \ \ \ \	src, Rcpp=TRUE)
++ \ \ \ \	src, plugin="Rcpp")
 \end{example}
 
 The main difference to the previous solution is that the input parameters are
@@ -648,9 +647,9 @@ using the \code{transform} algorithm from the STL.
 +   output.names() = input.names();
 +   return output;
 +   '
-> cpp_lapply <- cfunction(
+> cpp_lapply <- cxxfunction(
 + \ \ signature(data="list", fun = "function"), 
-+ \ \ src, Rcpp = TRUE )
++ \ \ src, plugin="Rcpp")
 \end{example}
 
 We can use this to calculate a summary of each 
@@ -691,12 +690,12 @@ and installs its own terminate handler which translates C++
 exceptions into R conditions. The following code gives an illustration. 
 
 \begin{example}
-> fun <- cfunction(signature(x = "integer"),'
+> fun <- cxxfunction(signature(x = "integer"), '
 +  int dx = as<int>(x);
 +   if( dx > 10 ) 
 +      throw std::range_error("too big") ;
 +   return wrap(dx*dx);
-+ ', Rcpp = TRUE, 
++ ', plugin="Rcpp", 
 +  includes = "using namespace Rcpp;" )
 > tryCatch( fun(12), 
 + "std::range_error" = function(e){
