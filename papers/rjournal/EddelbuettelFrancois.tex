@@ -29,11 +29,16 @@ in R. Combining R and C++ is not a new idea, so we start with
 a short review of other approaches and give some historical
 background on the development of \pkg{Rcpp}.
 
-The current version of \pkg{Rcpp} combines two distinct
-APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since 
-the first version of \pkg{Rcpp}. The second API, enclosed in the 
-\code{Rcpp} C++ namespace, is a newer codebase which we started to develop
-more recently. This article 
+% [romain] : removing this paragraph from the introduction. 
+%            The article is about today's Rcpp, the only place where the classic
+%            api should be is in the hist(e|o)rical section. 
+%
+% The current version of \pkg{Rcpp} combines two distinct
+% APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since 
+% the first version of \pkg{Rcpp}. The second API, enclosed in the 
+% \code{Rcpp} C++ namespace, is a newer codebase which we started to develop
+% more recently. 
+This article 
 highlights some of the key design and implementation choices: 
 lightweight encapsulation of R objects in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between 
@@ -56,8 +61,8 @@ Given the continued use of the package, Eddelbuettel decided to revitalize it. N
 releases, using the initial name \pkg{Rcpp}, started in November 2008. These
 already included an improved build and distribution process, additional
 documentation, and new functionality---while retaining the existing
-interface.  This constitutes the `classic \pkg{Rcpp}' interface (described in
-the next section) which will be maintained for the foreseeable future.
+interface.  This constitutes the `classic \pkg{Rcpp}' interface 
+(not described in this article) which will be maintained for the foreseeable future.
 
 Yet C++ coding standards continued to evolve \citep{meyers:effectivecplusplus}.
 In 2009, Eddelbuettel and Fran\c{c}ois started to significantly extend the codebase and numerous new
@@ -66,6 +71,10 @@ the `new \pkg{Rcpp}' interface, as well as in the seven vignettes included
 with the package. This new API is our current focus, and we
 intend to both extend and support it in future development of the package.
 %% TODO Should we talk about RcppExamples and/or RcppArmadillo here?
+% [romain] I don't like the word "New" anymore. Was certainly appropriate in 
+%          february, but no longer is now.
+%          Furthermore, I don't think we did extend the codebase per se, we rather
+%          started more or less from scratch. I'd like something like "Rcpp was redesigned" ...
 
 \subsection{Comparison}
 
@@ -106,6 +115,7 @@ Lastly, the \pkg{cxxPack} package \citep{cran:cxxPack} builds on top of
 %API features, performance, usability and documentation would be a welcome
 %addition to the literature, but is beyond the scope of this article.
 
+% FIXME: this section is now irrelevant. it needs to go. 
 \section{Classic Rcpp API}
 \label{sec:classic_rcpp}
 
