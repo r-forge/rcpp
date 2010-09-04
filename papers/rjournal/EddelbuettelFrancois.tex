@@ -32,17 +32,24 @@ background on the development of \pkg{Rcpp}.
 % [romain] : removing this paragraph from the introduction. 
 %            The article is about today's Rcpp, the only place where the classic
 %            api should be is in the hist(e|o)rical section. 
+% [dirk] :   the classix API will be supported, is the past of Rcpp and may
+%            as well be mentioned. We have nothing to hide
+%            please see the next paragraph where I now talk about classic
+%            but also note deprecated and link to the recommended new API
+
+%The current version of 
+The \pkg{Rcpp} package combines two distinct
+APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since 
+the first version of \pkg{Rcpp}. While still contained in the package to
+ensure compatibility, its use is otherwise deprecated. All new development should
+use the newer and richer second API. It is enclosed in the \code{Rcpp} C++ 
+namespace, and corresponds to the newer redesigned codebase. 
+% which we started to develop more recently. -- [dirk] start no longer recent
 %
-% The current version of \pkg{Rcpp} combines two distinct
-% APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since 
-% the first version of \pkg{Rcpp}. The second API, enclosed in the 
-% \code{Rcpp} C++ namespace, is a newer codebase which we started to develop
-% more recently. 
-This article 
-highlights some of the key design and implementation choices: 
-lightweight encapsulation of R objects in C++ classes, automatic
-garbage collection strategy, code inlining, data interchange between 
-R and C++ and error handling. 
+This article highlights some of the key design and implementation choices of
+the new API: lightweight encapsulation of R objects in C++ classes, automatic
+garbage collection strategy, code inlining, data interchange between R and
+C++ and error handling.
 
 Several examples are included to illustrate the benefits of using \pkg{Rcpp}
 as opposed to the traditional R API. Many more examples are available within
@@ -65,16 +72,25 @@ interface.  This constitutes the `classic \pkg{Rcpp}' interface
 (not described in this article) which will be maintained for the foreseeable future.
 
 Yet C++ coding standards continued to evolve \citep{meyers:effectivecplusplus}.
-In 2009, Eddelbuettel and Fran\c{c}ois started to significantly extend the codebase and numerous new
-features were added.  Several of these are described below in the section on
-the `new \pkg{Rcpp}' interface, as well as in the seven vignettes included
-with the package. This new API is our current focus, and we
-intend to both extend and support it in future development of the package.
+In 2009, Eddelbuettel and Fran\c{c}ois started a significant redesign of the
+codebase which added numerous new features.  Several of these are described
+below in the section on the \pkg{Rcpp} API interface, as well as in the
+seven vignettes included with the package. This new API is our current focus,
+and we intend to both extend and support it in future development of the
+package. 
 %% TODO Should we talk about RcppExamples and/or RcppArmadillo here?
 % [romain] I don't like the word "New" anymore. Was certainly appropriate in 
 %          february, but no longer is now.
-%          Furthermore, I don't think we did extend the codebase per se, we rather
-%          started more or less from scratch. I'd like something like "Rcpp was redesigned" ...
+%          Furthermore, I don't think we did extend the codebase per se, 
+%          we rather started more or less from scratch. I'd like something
+%          like "Rcpp was redesigned" ... 
+% [dirk]   'new' should stay as we have the term consistently to contrast
+%          with 'classic'. We support both APIs, we need labels for both
+%          'new' and 'classic' work
+%          OTOH "Rcpp was redesigned" could work instead of 'extend'
+%          I gave it a spin above (and sorry about the reindent)
+%          [ minutes later ] 
+%          ok, one 'new' is gone above as the corresponding section title is gone
 
 \subsection{Comparison}
 
@@ -83,7 +99,7 @@ published reference is probably \cite{batesdebroy01:cppclasses}.
 An unpublished paper by \cite{javagailemanly07:r_cpp} expresses several ideas
 that are close to some of our approaches, though not yet fully fleshed out.
 %
-The \pkg{Rserve} package \citep{cran:Rserve} was another early approach,
+The \pkg{Rserve} package \citep{urbanek2003:rserve,cran:Rserve} was another early approach,
 going back to 2002. On the server side, \pkg{Rserve} translates R data
 structures into a binary serialization format and uses TCP/IP for
 transfer. On the client side, objects are reconstructed as instances of Java
@@ -94,7 +110,7 @@ The packages \pkg{rcppbind} \citep{liang08:rcppbind}, \pkg{RAbstraction}
 \citep{armstrong09:RObjects} are all implemented using C++ templates.
 However, neither has matured to the point of a CRAN release and it is
 unclear how much usage these packages are seeing beyond their own authors.
-
+%
 CXXR \citep{runnalls09:cxxr} comes to this topic from the other side: 
 its aim is to completely refactor R on a stronger C++ foundation. 
 CXXR is therefore concerned with all aspects of the R interpreter,
@@ -102,12 +118,12 @@ REPL, threading---and object interchange between R and C++ is but one
 part. A similar approach is discussed by \cite{templelang09:modestproposal}
 who suggests making low-level internals extensible by package developers in
 order to facilitate extending \R.
-
+%
 Another slightly different angle is offered by
 \cite{templelang09:rgcctranslationunit} who uses compiler output for
 references on the code in order to add bindings and wrappers.
 %
-Lastly, the \pkg{cxxPack} package \citep{cran:cxxPack} builds on top of
+The \pkg{cxxPack} package \citep{cran:cxxPack} builds on top of
 \pkg{Rcpp} and adds a small collection of diverse functions.
 
 %DE: Removed per editor  
@@ -115,8 +131,14 @@ Lastly, the \pkg{cxxPack} package \citep{cran:cxxPack} builds on top of
 %API features, performance, usability and documentation would be a welcome
 %addition to the literature, but is beyond the scope of this article.
 
-% FIXME: this section is now irrelevant. it needs to go. 
-\section{Classic Rcpp API}
+% [romain] FIXME: this section is now irrelevant. it needs to go. 
+% [dirk]   the first two paragraphs are generic and still true for the new
+%          API (irrespective of the fact that it does more too)
+%          Maybe we make it a 'subsection' and part of the 'Introduction'
+%          section?
+
+%\section{Classic Rcpp API}
+\subsection{Rcpp Use Cases}  % or some such
 \label{sec:classic_rcpp}
 
 The core focus of \pkg{Rcpp}---particularly for the earlier API described in
@@ -138,37 +160,39 @@ functions provided by other libraries. The use resembles the first case: data
 and parameters are passed via \pkg{Rcpp} to a function set-up to call code
 from an external library.  
 
-An illustration can be provided using the time-tested example of a
-convolution of two vectors. This example is shown in sections 5.2 (for the
-\code{.C()} interface) and 5.9 (for the \code{.Call()} interface) of 'Writing
-R Extensions' \citep{R:exts}. We have rewritten it here using classes of the
-classic \pkg{Rcpp} API:
+TODO: Wrap this this so that it ties in better with what follows
 
-\begin{example}
-#include <Rcpp.h>
+% An illustration can be provided using the time-tested example of a
+% convolution of two vectors. This example is shown in sections 5.2 (for the
+% \code{.C()} interface) and 5.9 (for the \code{.Call()} interface) of 'Writing
+% R Extensions' \citep{R:exts}. We have rewritten it here using classes of the
+% classic \pkg{Rcpp} API:
 
-RcppExport SEXP convolve2cpp(SEXP a,SEXP b) \{
-  RcppVector<double> xa(a);
-  RcppVector<double> xb(b);
-  int nab = xa.size() + xb.size() - 1;
+% \begin{example}
+% #include <Rcpp.h>
 
-  RcppVector<double> xab(nab);
-  for (int i = 0; i < nab; i++) xab(i) = 0.0;
+% RcppExport SEXP convolve2cpp(SEXP a,SEXP b) \{
+%   RcppVector<double> xa(a);
+%   RcppVector<double> xb(b);
+%   int nab = xa.size() + xb.size() - 1;
 
-  for (int i = 0; i < xa.size(); i++)
-    for (int j = 0; j < xb.size(); j++) 
-       xab(i + j) += xa(i) * xb(j);
+%   RcppVector<double> xab(nab);
+%   for (int i = 0; i < nab; i++) xab(i) = 0.0;
 
-  RcppResultSet rs;
-  rs.add("ab", xab);
-  return rs.getReturnList();
-\}
-\end{example}
+%   for (int i = 0; i < xa.size(); i++)
+%     for (int j = 0; j < xb.size(); j++) 
+%        xab(i + j) += xa(i) * xb(j);
 
-We can highlight several aspects. First, only a single header file
-\code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
-\code{SEXP} types, a third is returned.  Third, both inputs are converted to
-templated.
+%   RcppResultSet rs;
+%   rs.add("ab", xab);
+%   return rs.getReturnList();
+% \}
+% \end{example}
+
+% We can highlight several aspects. First, only a single header file
+% \code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
+% \code{SEXP} types, a third is returned.  Third, both inputs are converted to
+% templated.
 % \footnote{C++ templates allow functions or classes to be written
 %   somewhat independently from the template parameter. The actual class is
 %   instantiated by the compiler by replacing occurrences of the templated
@@ -178,27 +202,28 @@ templated.
 %   `templated' type $T$, the compiler will create a concrete instance using an
 %   \texttt{int} or \texttt{double} type dependent on the context is which the
 %   code is called.}  
-C++ vector types, here a standard \code{double} type is
-used to create a vector of doubles from the template type.  Fourth, the
-usefulness of these classes can be seen when we query the vectors directly
-for their size---using the \code{size()} member function---in order to
-reserve a new result type of appropriate length whereas use based on C arrays
-would have required additional parameters for the length of vectors $a$ and
-$b$, leaving open the possibility of mismatches between the actual length and
-the length reported by the programmer.  Fifth, the computation itself is
-straightforward embedded looping just as in the original examples in the
-'Writing R Extensions' manual \citep{R:exts}.  Sixth, a return type
-(\code{RcppResultSet}) is prepared as a named object which is then converted
-to a list object that is returned.  We should note that the
-\code{RcppResultSet} supports the return of numerous (named) objects which
-can also be of different types.
+% C++ vector types, here a standard \code{double} type is
+% used to create a vector of doubles from the template type.  Fourth, the
+% usefulness of these classes can be seen when we query the vectors directly
+% for their size---using the \code{size()} member function---in order to
+% reserve a new result type of appropriate length whereas use based on C arrays
+% would have required additional parameters for the length of vectors $a$ and
+% $b$, leaving open the possibility of mismatches between the actual length and
+% the length reported by the programmer.  Fifth, the computation itself is
+% straightforward embedded looping just as in the original examples in the
+% 'Writing R Extensions' manual \citep{R:exts}.  Sixth, a return type
+% (\code{RcppResultSet}) is prepared as a named object which is then converted
+% to a list object that is returned.  We should note that the
+% \code{RcppResultSet} supports the return of numerous (named) objects which
+% can also be of different types.
 
-We argue that this usage is already much easier to read, write and debug than the
-C macro-based approach supported by R itself. Possible performance issues and
-other potential limitations will be discussed throughout the article and
-reviewed at the end.
+% We argue that this usage is already much easier to read, write and debug than the
+% C macro-based approach supported by R itself. Possible performance issues and
+% other potential limitations will be discussed throughout the article and
+% reviewed at the end.
 
-\section{New \pkg{Rcpp} API}
+%\section{New \pkg{Rcpp} API}
+\section{The \pkg{Rcpp} API}
 \label{sec:new_rcpp}
 
 More recently, the \pkg{Rcpp} API has been dramatically extended, leading to a 
@@ -209,6 +234,49 @@ This redesign of \code{Rcpp} was also motivated by the needs of other
 projects such as \code{RInside}  \citep{cran:rinside} for easy embedding 
 of R in a C++ applications and \code{RProtoBuf} \citep{cran:rprotobuf} 
 that interfaces with the protocol buffers library. 
+
+\subsection{A First Example}
+
+\begin{example}
+#include <Rcpp.h>
+
+RcppExport SEXP convolve3cpp(SEXP a, SEXP b){
+    Rcpp::NumericVector xa(a);
+    Rcpp::NumericVector xb(b);
+    int n_xa = xa.size(), n_xb = xb.size();
+    int nab = n_xa + n_xb - 1;
+    Rcpp::NumericVector xab(nab);
+
+    for (int i = 0; i < n_xa; i++)
+        for (int j = 0; j < n_xb; j++) 
+            xab[i + j] += xa[i] * xb[j];
+
+    return xab ;
+}
+\end{example}
+
+We can highlight several aspects. First, only a single header file
+\code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
+\code{SEXP} types, a third is returned.  Third, both inputs are 
+converted to C++ vector types provided by \pkg{Rcpp} (and we have more to day about these
+conversions below).  Fourth, the
+usefulness of these classes can be seen when we query the vectors directly
+for their size---using the \code{size()} member function---in order to
+reserve a new result type of appropriate length whereas use based on C arrays
+would have required additional parameters for the length of vectors $a$ and
+$b$, leaving open the possibility of mismatches between the actual length and
+the length reported by the programmer.  Fifth, the computation itself is
+straightforward embedded looping just as in the original examples in the
+'Writing R Extensions' manual \citep{R:exts}.  Sixth, the return conversion
+is also automatic from the \code{NumericVector} to the \code{SEXP} type.
+
+We argue that this usage is much easier to read, write and debug than the
+C macro-based approach supported by R itself. %Possible performance issues and
+%other potential limitations will be discussed throughout the article and
+%reviewed at the end.
+
+% [dirk]  TODO maybe another sentence to tie into the next segment
+
 
 \subsection{Rcpp Class hierarchy}
 
