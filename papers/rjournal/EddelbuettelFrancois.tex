@@ -37,6 +37,7 @@ background on the development of \pkg{Rcpp}.
 %            please see the next paragraph where I now talk about classic
 %            but also note deprecated and link to the recommended new API
 % [romain] : alright
+% [dirk] :   great, will remove discussion in next revision
 
 %The current version of 
 The \pkg{Rcpp} package combines two distinct
@@ -63,7 +64,8 @@ the package, both as explicit examples and as part of the numerous unit tests.
 in early 2006. Several releases (all by Samperi) followed in quick succession
 under the name \pkg{Rcpp}. The package was then renamed to
 \pkg{RcppTemplate}; several more releases followed during 2006 under the new
-name.  However, no new releases were made during 2007 or 2008.
+name.  However, no new releases were made during 2007 or 2008. It briefly
+reappeared and the end of 2009 only to be withdrawn yet again. 
 
 Given the continued use of the package, Eddelbuettel decided to revitalize it. New
 releases, using the initial name \pkg{Rcpp}, started in November 2008. These
@@ -93,6 +95,7 @@ package.
 %          [ minutes later ] 
 %          ok, one 'new' is gone above as the corresponding section title is gone
 % [romain] fine
+% [dirk]   good, will clean out discussion here too
 
 \subsection{Comparison}
 
@@ -125,9 +128,10 @@ Another slightly different angle is offered by
 \cite{templelang09:rgcctranslationunit} who uses compiler output for
 references on the code in order to add bindings and wrappers.
 %
-The \pkg{cxxPack} package \citep{cran:cxxPack} builds on top of
-\pkg{Rcpp} and adds a small collection of diverse functions.
+% The \pkg{cxxPack} package \citep{cran:cxxPack} builds on top of
+% \pkg{Rcpp} and adds a small collection of diverse functions.
 % [romain] So what ? Is this the mention you want to remove ? Go right ahead !
+% [dirk]   Done!!
 
 %DE: Removed per editor  
 %A critical comparison of these packages that addresses relevant aspects such
@@ -166,6 +170,11 @@ from an external library.
 
 % TODO: Wrap this this so that it ties in better with what follows
 % [romain] : should this section be merged with the next one. It looks odd on its own.
+% [dirk]   : yes but 'Rcpp Use Cases' is the end of the Introduction, whereas
+%            what follows is a new section.  But if you can find a nice way
+%            to combine them ... go for it.
+
+
 
 \section{The \pkg{Rcpp} API}
 \label{sec:new_rcpp}
@@ -195,7 +204,7 @@ RcppExport SEXP convolve3cpp(SEXP a, SEXP b){
         for (int j = 0; j < n_xb; j++) 
             xab[i + j] += xa[i] * xb[j];
 
-    return xab ;
+    return xab;
 }
 \end{example}
 
@@ -213,6 +222,7 @@ reserve a new result type of appropriate length
 % the length reported by the programmer.
 % [romain] : hmmm. There is no need for extra parameters if you use .Call
 %            with the R API. I don't think the point is valid.
+% [dirk]     Nice catch ctach
 and with the use of the 
 \verb|operator[]| to extract and set individual elements of the vector. 
 Fifth, the computation itself is
@@ -314,7 +324,7 @@ C++.
 Using the \code{Rcpp::NumericVector} class, the code can be rewritten: 
 
 \begin{example}
-Rcpp::NumericVector ab(2) ;
+Rcpp::NumericVector ab(2);
 ab[0] = 123.45;
 ab[1] = 67.89;
 \end{example}
@@ -337,6 +347,7 @@ the \code{operator[]}.
 % [romain] I'm trading this for the use of create, as this always works 
 %          so that we don't confuse readers because if you have gcc 4.4
 %          you don't get this automatically, you have to enable it, etc ...
+% [dirk]   Nicely done!
 
 The snippet can also be written more concisely using the \code{create}
 static member function of the \code{NumericVector} class: 
@@ -349,6 +360,7 @@ Rcpp::NumericVector ab =
 It should be noted that although the copy constructor of the 
 \code{NumericVector} class is used, it does not imply copies of the 
 underlying array, only the \code{SEXP} is copied. 
+% [dirk]  Huh?  But so there is a copy?
 
 \subsection{Character vectors}
 
@@ -421,7 +433,8 @@ fully specialized.
 Wrappability of an object type is resolved at compile time using 
 modern techniques of template meta programming and class traits. The 
 \code{Rcpp-extending} vignette discusses in depth how to extend \code{wrap}
-to third party types and the \pkg{RcppArmadillo} features several examples.
+to third-party types. The \pkg{RcppArmadillo} package
+\citep{cran:rcpparmadillo} features several examples.
 
 The following code snippet illustrates that the design allows
 composition:
@@ -453,7 +466,7 @@ The reversed conversion is implemented by variations of the
 \code{Rcpp::as} template whose signature is:
 \begin{example}
 template <typename T> 
-T as(SEXP x) throw(not_compatible) ;
+T as(SEXP x) throw(not_compatible);
 \end{example}
 
 It offers less flexibility and currently
@@ -542,8 +555,8 @@ SEXP call  = PROTECT(
 \ \ \ \ \ \ CONS(ScalarReal(100.0),R_NilValue))));
 SET_TAG( CDDR(call), install("sd") );
 SEXP res = PROTECT(eval(call, R_GlobalEnv));
-UNPROTECT(4) ;
-return res ;
+UNPROTECT(4);
+return res;
     \end{example}
   \end{minipage}
 
@@ -592,8 +605,9 @@ For comparison, we also show both versions using the standard R API.
 This example illustrates that the \pkg{Rcpp} API permits us to work with code
 that is easier to read, write and maintain. More examples are available as
 part of the documentation included in the \pkg{Rcpp} package, as well as
-among its over one hundred and ninety unit tests.
+among its over seven hundred and seventy unit tests.
 % TODO: bump this up to the current test count
+% [dirk] done, good catch
 
 \section{Using code `inline'}
 \label{sec:inline}
@@ -667,6 +681,7 @@ new function \code{fun} based on the C++ code in \code{src}:
 
 % [romain] hmmmm. we do now have sapply and lapply. I think we should mention
 %                 them here.
+% [dirk]  sure, what to give it a go?
 
 % This is taken from :
 % http://www.cplusplus.com/reference/algorithm/
@@ -705,7 +720,7 @@ using the \code{transform} algorithm from the STL.
 We can use this to calculate a summary of each 
 column of the \code{faithful} dataset included with R.
 
-% [Romain] Does this need a reference or is this common knowledge
+% [romain] Does this need a reference or is this common knowledge
 %          ?faithful has a reference
 
 \begin{example}
@@ -730,10 +745,10 @@ systems to work together.
 \subsection{C++ exceptions in R}
 
 The internals of the R condition mechanism and the implementation of 
-C++ exceptions are both based on a layer above posix jumps. These layers 
+C++ exceptions are both based on a layer above POSIX jumps. These layers 
 both assume total control over the call stack and should not be used together
 without extra precaution. \pkg{Rcpp} contains facilities to combine both systems
-so that a C++ exception is caught and recycled into the R condition 
+so that C++ exceptions are caught and recycled into the R condition 
 mechanism. 
 
 \pkg{Rcpp} defines the \code{BEGIN\_RCPP} and \code{END\_RCPP} macros that should 
@@ -744,8 +759,8 @@ RcppExport SEXP fun( SEXP x )\{
 BEGIN_RCPP
     int dx = Rcpp::as<int>(x);
     if( dx > 10 ) 
-        throw std::range_error("too big") ;
-    return Rcpp::wrap( dx * dx) ; 
+        throw std::range_error("too big");
+    return Rcpp::wrap( dx * dx); 
 END_RCPP
 \}
 \end{example}
@@ -758,12 +773,13 @@ RcppExport SEXP fun( SEXP x )\{
     try\{
         int dx = Rcpp::as<int>(x);
         if( dx > 10 ) 
-            throw std::range_error("too big") ;
-        return Rcpp::wrap( dx * dx) ; 
+            throw std::range_error("too big");
+        return Rcpp::wrap( dx * dx); 
     \} catch( std::exception& __ex__ )\{ 
-        forward_exception_to_r( __ex__ ) ;
+        forward_exception_to_r( __ex__ );
     \} catch(...)\{ 
-        ::Rf_error( "c++ exception (unknown reason)" ) ;
+        ::Rf_error( "c++ exception "
+                    "(unknown reason)" );
     \}
 \}
 \end{example}
@@ -882,6 +898,11 @@ are summarized in the table below:
     \caption{Performance for convolution example}
   \end{center}
 \end{table}
+
+% [dirk]  so what do we want to show here?   I like our new table, I
+%         particularly like the difference between R API "naive" (which does
+%         pretty badly !!) and the highly optimised one.  We do look good.
+%         So we toss Classic, and I guess we also toss Sugar for now?
 
 The first implementation, using the traditional R API, unsurprisingly 
 appears to be the most efficient. It takes advantage of pointer 
