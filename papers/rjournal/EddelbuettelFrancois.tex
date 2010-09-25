@@ -138,6 +138,7 @@ from an external library.
 % [dirk]   : also, we could call this 'vertical' mode and use 'horizontal'
 %            below but I can't recall if you hate or love that language
 % [romain] : I just don't speak it. 
+% [dirk]   : ok then we won't 
 
 \section{The \pkg{Rcpp} API}
 \label{sec:new_rcpp}
@@ -170,8 +171,6 @@ RcppExport SEXP convolve3cpp(SEXP a, SEXP b){
     return xab;
 }
 \end{example}
-% [dirk]   : shall we change the name from convolve3cpp now that we have no 1 or 2?
-% [romain] : it is consistent with the examples in the package
 
 We can highlight several aspects. First, only a single header file
 \code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
@@ -305,6 +304,7 @@ It should be noted that although the copy constructor of the
 underlying array, only the \code{SEXP} is copied. 
 % [dirk]   : Huh?  But so there is a copy?
 % [romain] : yes. a copy of the pointer. 
+% [dirk]   : Indeed! Doh.
 
 \subsection{Character vectors}
 
@@ -538,6 +538,7 @@ return res;
 % [dirk]   : Do we now need to mention sugar as a third case for rnorm()? Footnote ?
 % [romain] : I'd love to, but there is no much space left. we can do sugar in the 
 %            next paper
+% [dirk]   : 100% agreed
 
 The next example shows how to use \pkg{Rcpp} to emulate the R code
 \code{rnorm(10L, sd=100.0)}.
@@ -756,32 +757,21 @@ regular C++ try/catch syntax.
 
 \section{Performance comparison}
 
-% In this section, we illustrate how C++ features may well come with a price
-% in terms of performance. However, as users of \pkg{Rcpp}, we do not need to
-% compromise performance for ease of use.
-
-In this section, we present several ways to leverage \pkg{Rcpp} to 
-rewrite the convolution example from \cite{R:exts}. 
+In this section, we present several different ways to leverage \pkg{Rcpp} to 
+rewrite the convolution example taken from \cite{R:exts}. 
 
 As part of the redesign of \pkg{Rcpp}, data copy is kept to the
-absolute minimum. The \code{RObject} class and all its derived
-classes are just a container for a \code{SEXP}. We let R perform
+absolute minimum: the \code{RObject} class and all its derived
+classes are just a container for a \code{SEXP} object. We let R perform
 all memory management and access data though the macros or functions
 offered by the standard R API. 
-% In contrast, some data structures
-% of the classic \pkg{Rcpp} interface such as the templated 
-% \code{RcppVector} used containers offered by the standard template
-% library to hold the data, requiring explicit copies of the data 
-% from R to C++ and back.
 
-% Here we illustrate how to take advantage of \code{Rcpp} to get
-% the best of both worlds. 
-
-The implementation of the \code{operator[]} is designed as 
-efficiently as possible, using both inlining and caching, 
+The implementation of the \code{operator[]} is designed to be as 
+efficient as possible, using both inlining and caching, 
 but even this implementation is still less efficient than the 
 reference C implementation described in \cite{R:exts}.
 % [dirk]  well not according to our newest tests
+% [dirk]  it really is faster...
 
 \pkg{Rcpp} follows design principles from the STL, and classes such 
 as \code{NumericVector} expose iterators that can be used for 
@@ -789,18 +779,6 @@ iterative scans of the data. Algorithms using iterators are
 usually more efficient than those that operate on objects using the 
 \code{operator[]}. The following version illustrate the use of the
 \code{NumericVector::iterator}. 
-
-% In order to achieve maximum efficiency, the reference implementation
-% extracts the underlying array pointer \code{double*} and works 
-% with pointer arithmetic, which is a built-in operation as opposed to 
-% calling the \code{operator[]} on a user-defined class which has to 
-% pay the price of object encapsulation.
-% 
-% Modelled after containers of the C++ STL,
-% the \code{NumericVector} class provides two member functions \code{begin}
-% and \code{end} that can use used to retrieve respectively 
-% the pointer to the first and past-to-end elements of the underlying array.
-% We can revisit the code to take advantage of this feature : 
 
 \begin{example}
 #include <Rcpp.h>
@@ -810,8 +788,10 @@ RcppExport SEXP convolve4cpp(SEXP a, SEXP b)\{
     int n_xa = xa.size(), n_xb = xb.size();
     Rcpp::NumericVector xab(n_xa + n_xb - 1);
     
-    typedef Rcpp::NumericVector::iterator vec_iterator ;
-    vec_iterator ia = xa.begin(), ib = xb.begin();
+    typedef Rcpp::NumericVector::iterator 
+            vec_iterator;
+    vec_iterator ia = xa.begin(), 
+                 ib = xb.begin();
     vec_iterator iab = xab.begin();
     for (int i = 0; i < n_xa; i++)
         for (int j = 0; j < n_xb; j++) 
@@ -821,20 +801,20 @@ RcppExport SEXP convolve4cpp(SEXP a, SEXP b)\{
 \}
 \end{example}
 
-One of the focus of recent developments of \pkg{Rcpp} is called Rcpp sugar, 
-and aims at providing R-like syntax in C++. A discussion of Rcpp sugar is 
-beyond the scope of this article, but for illustration purposes we have included
+One of the focus of recent developments of \pkg{Rcpp} is called `Rcpp sugar', 
+and aims to provide R-like syntax in C++. A discussion of Rcpp sugar is 
+beyond the scope of this article, but for illustrative purposes we have included
 another version of the convolution algorithm based on Rcpp sugar. 
 
 \begin{example}
 RcppExport SEXP convolve11cpp(SEXP a, SEXP b) \{
-    NumericVector xa(a); int n_xa = xa.size() ;
-    NumericVector xb(b); int n_xb = xb.size() ;
+    NumericVector xa(a); int n_xa = xa.size();
+    NumericVector xb(b); int n_xb = xb.size();
     NumericVector xab(n_xa + n_xb - 1,0.0);
     
     Range r( 0, n_xb-1 );
-    for(int i=0; i<n_xa; i++, r++)
-        xab[ r ] += nona(xa[i]) * nona(xb) ;
+    for (int i=0; i<n_xa; i++, r++)
+        xab[ r ] += nona(xa[i]) * nona(xb);
     return xab ;
 \}
 \end{example}
@@ -843,15 +823,9 @@ Rcpp sugar allows manipulation of entire subset of vectors at once, thanks to
 the \code{Range} class. Rcpp sugar uses techniques such as expression templates, 
 lazy evaluation and loop unrolling to generate very efficient code. 
 The \code{nona} template function marks its argument to indicates that it does 
-not contain any missing value --- an assumption made implicitely by other versions ---
-allowing sugar to compute the individual operations without dealing with 
-missing values. 
-
-We have benchmarked the various implementations by averaging over 5000 calls 
-of each function with \code{a} and \code{b} containing 500 elements
-each.\footnote{The code for this example is contained in the directory
-  \code{inst/examples/ConvolveBenchmarks} in the \pkg{Rcpp} package.} The timings
-are summarized in the table below:
+not contain any missing values---an assumption made implicitly by other 
+versions---allowing sugar to compute the individual operations without having
+to test for missing values. 
 
 \begin{table}[H]
   \begin{center}
@@ -870,12 +844,23 @@ are summarized in the table below:
       \end{tabular}
     \end{small}
     \caption{Performance for convolution example}
+    \label{tab:benchmark}
   \end{center}
 \end{table}
 
+% [dirk]  : I __reallyy_ want the "Naive R API" example as that is how people
+%           _do_ write C/C++ code from R.  And pay a huge penalty.
+
+We have benchmarked the various implementations by averaging over 5000 calls 
+of each function with \code{a} and \code{b} containing 500 elements
+each.\footnote{The code for this example is contained in the directory
+  \code{inst/examples/ConvolveBenchmarks} in the \pkg{Rcpp} package.} The timings
+are summarized in Table~\ref{tab:benchmark}.
+
+
 The first implementation, written in C and using the traditional R API 
-provides out base case. It takes advantage of pointer 
-arithmetics, does not pay the price of C++'s object encapsulation or 
+provides our base case. It takes advantage of pointer 
+arithmetics, but it does not pay the price of C++'s object encapsulation or 
 operator overloading. 
 
 The second implementation---from the (deprecated) classic \pkg{Rcpp} API---is
@@ -889,6 +874,8 @@ at each access that the index is suitable for the object. Finally, \code{xab}
 is converted back to an R object. 
 % [dirk]   : nuke this paragraph, and test?
 % [romain] : I don't want to show its code, but keeping it for reference perhaps
+% [dirk]   : I think we can a) keep the result and b) shorten the discussion
+%            to one sentence.  I would *much rather* talk about the naive R API.
 
 The third implementation---using the more efficient new \pkg{Rcpp} API---is
 already orders of magnitude faster than the preceding solution. Yet it
@@ -904,6 +891,7 @@ better than the base case. Loop unrolling is responsible for the speedup.
 
 % [romain] : what about a "future/recent" developments section that mentions
 %            sugar and modules briefly, and plugs a forthcoming sequel paper.
+% [dirk]   : or just a sentence in the summary ?
 
 \section{Summary}
 
