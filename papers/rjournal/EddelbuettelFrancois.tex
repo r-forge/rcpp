@@ -807,6 +807,8 @@ beyond the scope of this article, but for illustrative purposes we have included
 another version of the convolution algorithm based on Rcpp sugar. 
 
 \begin{example}
+#include <Rcpp.h>
+
 RcppExport SEXP convolve11cpp(SEXP a, SEXP b) \{
     NumericVector xa(a); int n_xa = xa.size();
     NumericVector xb(b); int n_xb = xb.size();
@@ -832,14 +834,14 @@ to test for missing values.
     \begin{small}
       \begin{tabular}{lrr}
         \toprule
-        Implementation & Time in   & Relative \\ 
-                       &  millisec  & to R API \\ 
+        Implementation                    & Time in   & Relative \\ 
+                                          & millisec  & to R API \\ 
         \cmidrule(r){2-3}
-        R API (as benchmark) & 255 & \\
-        \code{RcppVector<double>} & 354 & 13.74 \\
-        \code{NumericVector::operator[]} & 640 & 2.51 \\
-        \code{NumericVector::iterator} & 248 & 0.97 \\
-        Rcpp sugar & 168 & 0.66 \\
+        R API (as benchmark)              &  218       & \\
+        Rcpp sugar                        &  145       & 0.67 \\
+        \code{NumericVector::iterator}    &  217       & 1.00 \\
+        \code{NumericVector::operator[]}  &  282       & 1.29 \\
+        \code{RcppVector<double>}         &  683       & 3.13 \\
         \bottomrule
       \end{tabular}
     \end{small}
@@ -850,44 +852,51 @@ to test for missing values.
 
 % [dirk]  : I __reallyy_ want the "Naive R API" example as that is how people
 %           _do_ write C/C++ code from R.  And pay a huge penalty.
+% [dirk]  : Never mind. I upgraded to a more recent version of convolve7
+%           and it is essentially the same as R API optimised. No story here.
 
 We have benchmarked the various implementations by averaging over 5000 calls 
-of each function with \code{a} and \code{b} containing 500 elements
+of each function with \code{a} and \code{b} containing 200 elements
 each.\footnote{The code for this example is contained in the directory
   \code{inst/examples/ConvolveBenchmarks} in the \pkg{Rcpp} package.} The timings
 are summarized in Table~\ref{tab:benchmark}.
 
-
-The first implementation, written in C and using the traditional R API 
-provides our base case. It takes advantage of pointer 
-arithmetics, but it does not pay the price of C++'s object encapsulation or 
-operator overloading. 
-
-The second implementation---from the (deprecated) classic \pkg{Rcpp} API---is
-clearly behind in terms of efficiency. The difference is mainly 
-caused by the many unnecessary copies that the \code{RcppVector<double>}
-class performs. First, both objects (\code{a} and \code{b})
-are copied into C++ structures (\code{xa} and \code{xb}). 
-Then, the result is constructed as another \code{RcppVector<double>}
-(\code{xab}) that is filled using the \code{operator()} which checks
-at each access that the index is suitable for the object. Finally, \code{xab}
-is converted back to an R object. 
+The first implementation, written in C and using the traditional R API
+provides our base case. It takes advantage of pointer arithmetics, but it
+does not pay the price of C++'s object encapsulation or operator overloading.
+%
+The slowest implementation comes from the (deprecated) classic \pkg{Rcpp} API
+is clearly behind in terms of efficiency. The difference is mainly 
+caused by the many unnecessary copies that the older code 
+%\code{RcppVector<double>} class 
+performs. 
+% First, both objects (\code{a} and \code{b})
+% are copied into C++ structures (\code{xa} and \code{xb}). 
+% Then, the result is constructed as another \code{RcppVector<double>}
+% (\code{xab}) that is filled using the \code{operator()} which checks
+% at each access that the index is suitable for the object. Finally, \code{xab}
+% is converted back to an R object. 
 % [dirk]   : nuke this paragraph, and test?
 % [romain] : I don't want to show its code, but keeping it for reference perhaps
 % [dirk]   : I think we can a) keep the result and b) shorten the discussion
 %            to one sentence.  I would *much rather* talk about the naive R API.
 
-The third implementation---using the more efficient new \pkg{Rcpp} API---is
-already orders of magnitude faster than the preceding solution. Yet it
+The second-slowest solution uses the more efficient new \pkg{Rcpp} API. While
+already orders of magnitude faster than the preceding solution,  it
 illustrates the price of object encapsulation and of calling an overloaded
-\code{operator[]} as opposed to using pointer arithmetics.
+\code{operator[]} as opposed to using direct pointer arithmetics as in the
+reference ase.
 
-The fourth implementation uses iterators rather than indexing. It appears slightly
-more efficient than the base case, mainly because initialization of the values
-leverages the \code{std::fill} algorithm from the STL.
+The next implementation uses iterators rather than indexing. Its performance
+is indistinguishable from the base case. %, mainly because initialization of the values
+%leverages the \code{std::fill} algorithm from the STL.
+This shows that use of C++ does not necessarily imply any performance penalty.
 
-Finally, the last implementation uses Rcpp sugar and performs significantly 
-better than the base case. Loop unrolling is responsible for the speedup. 
+Finally, the fastest implementation uses Rcpp sugar. It performs
+significantly better than the base case: explicit loop unrolling provides
+vectorization at the C++ level which is responsible for this speedup.  This
+shows that careful use of C++ can offer speedups not attainable even in
+efficient C.
 
 % [romain] : what about a "future/recent" developments section that mentions
 %            sugar and modules briefly, and plugs a forthcoming sequel paper.
@@ -895,8 +904,8 @@ better than the base case. Loop unrolling is responsible for the speedup.
 
 \section{Summary}
 
-The \code{Rcpp} package greatly simplifies integration of compiled C++ code
-with R. 
+The \code{Rcpp} package presented here greatly simplifies integration of
+compiled C++ code with R.
 
 The class hierarchy allows manipulation of R data structures in C++ 
 using member functions and operators directly related to the type
