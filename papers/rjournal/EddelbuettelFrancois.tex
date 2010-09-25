@@ -756,22 +756,26 @@ regular C++ try/catch syntax.
 
 \section{Performance comparison}
 
-In this section, we illustrate how C++ features may well come with a price
-in terms of performance. However, as users of \pkg{Rcpp}, we do not need to
-compromise performance for ease of use.
+% In this section, we illustrate how C++ features may well come with a price
+% in terms of performance. However, as users of \pkg{Rcpp}, we do not need to
+% compromise performance for ease of use.
+
+In this section, we present several ways to leverage \pkg{Rcpp} to 
+rewrite the convolution example from \cite{R:exts}. 
 
 As part of the redesign of \pkg{Rcpp}, data copy is kept to the
 absolute minimum. The \code{RObject} class and all its derived
 classes are just a container for a \code{SEXP}. We let R perform
 all memory management and access data though the macros or functions
-offered by the standard R API. In contrast, some data structures
-of the classic \pkg{Rcpp} interface such as the templated 
-\code{RcppVector} used containers offered by the standard template
-library to hold the data, requiring explicit copies of the data 
-from R to C++ and back.
+offered by the standard R API. 
+% In contrast, some data structures
+% of the classic \pkg{Rcpp} interface such as the templated 
+% \code{RcppVector} used containers offered by the standard template
+% library to hold the data, requiring explicit copies of the data 
+% from R to C++ and back.
 
-Here we illustrate how to take advantage of \code{Rcpp} to get
-the best of both worlds. 
+% Here we illustrate how to take advantage of \code{Rcpp} to get
+% the best of both worlds. 
 
 The implementation of the \code{operator[]} is designed as 
 efficiently as possible, using both inlining and caching, 
@@ -779,43 +783,72 @@ but even this implementation is still less efficient than the
 reference C implementation described in \cite{R:exts}.
 % [dirk]  well not according to our newest tests
 
+\pkg{Rcpp} follows design principles from the STL, and classes such 
+as \code{NumericVector} expose iterators that can be used for 
+iterative scans of the data. Algorithms using iterators are 
+usually more efficient than those that operate on objects using the 
+\code{operator[]}. The following version illustrate the use of the
+\code{NumericVector::iterator}. 
 
-In order to achieve maximum efficiency, the reference implementation
-extracts the underlying array pointer \code{double*} and works 
-with pointer arithmetic, which is a built-in operation as opposed to 
-calling the \code{operator[]} on a user-defined class which has to 
-pay the price of object encapsulation.
-
-Modelled after containers of the C++ STL,
-the \code{NumericVector} class provides two member functions \code{begin}
-and \code{end} that can use used to retrieve respectively 
-the pointer to the first and past-to-end elements of the underlying array.
-We can revisit the code to take advantage of this feature : 
+% In order to achieve maximum efficiency, the reference implementation
+% extracts the underlying array pointer \code{double*} and works 
+% with pointer arithmetic, which is a built-in operation as opposed to 
+% calling the \code{operator[]} on a user-defined class which has to 
+% pay the price of object encapsulation.
+% 
+% Modelled after containers of the C++ STL,
+% the \code{NumericVector} class provides two member functions \code{begin}
+% and \code{end} that can use used to retrieve respectively 
+% the pointer to the first and past-to-end elements of the underlying array.
+% We can revisit the code to take advantage of this feature : 
 
 \begin{example}
 #include <Rcpp.h>
 
 RcppExport SEXP convolve4cpp(SEXP a, SEXP b)\{
-    Rcpp::NumericVector xa(a);
-    Rcpp::NumericVector xb(b);
-    int n_xa = xa.size();
-    int n_xb = xb.size();
+    Rcpp::NumericVector xa(a), xb(b);
+    int n_xa = xa.size(), n_xb = xb.size();
     Rcpp::NumericVector xab(n_xa + n_xb - 1);
     
-    double* pa = xa.begin();
-    double* pb = xb.begin();
-    double* pab = xab.begin();
-    int i,j=0; 
-    for (i = 0; i < n_xa; i++)
-        for (j = 0; j < n_xb; j++) 
-            pab[i + j] += pa[i] * pb[j];
+    typedef Rcpp::NumericVector::iterator vec_iterator ;
+    vec_iterator ia = xa.begin(), ib = xb.begin();
+    vec_iterator iab = xab.begin();
+    for (int i = 0; i < n_xa; i++)
+        for (int j = 0; j < n_xb; j++) 
+            iab[i + j] += ia[i] * ib[j];
 
     return xab;
 \}
 \end{example}
 
-We have benchmarked the various implementations by averaging over 1000 calls of each
-function with \code{a} and \code{b} containing 100 elements
+One of the focus of recent developments of \pkg{Rcpp} is called Rcpp sugar, 
+and aims at providing R-like syntax in C++. A discussion of Rcpp sugar is 
+beyond the scope of this article, but for illustration purposes we have included
+another version of the convolution algorithm based on Rcpp sugar. 
+
+\begin{example}
+RcppExport SEXP convolve11cpp(SEXP a, SEXP b) \{
+    NumericVector xa(a); int n_xa = xa.size() ;
+    NumericVector xb(b); int n_xb = xb.size() ;
+    NumericVector xab(n_xa + n_xb - 1,0.0);
+    
+    Range r( 0, n_xb-1 );
+    for(int i=0; i<n_xa; i++, r++)
+        xab[ r ] += nona(xa[i]) * nona(xb) ;
+    return xab ;
+\}
+\end{example}
+
+Rcpp sugar allows manipulation of entire subset of vectors at once, thanks to 
+the \code{Range} class. Rcpp sugar uses techniques such as expression templates, 
+lazy evaluation and loop unrolling to generate very efficient code. 
+The \code{nona} template function marks its argument to indicates that it does 
+not contain any missing value --- an assumption made implicitely by other versions ---
+allowing sugar to compute the individual operations without dealing with 
+missing values. 
+
+We have benchmarked the various implementations by averaging over 5000 calls 
+of each function with \code{a} and \code{b} containing 500 elements
 each.\footnote{The code for this example is contained in the directory
   \code{inst/examples/ConvolveBenchmarks} in the \pkg{Rcpp} package.} The timings
 are summarized in the table below:
@@ -828,10 +861,11 @@ are summarized in the table below:
         Implementation & Time in   & Relative \\ 
                        &  millisec  & to R API \\ 
         \cmidrule(r){2-3}
-        R API (as benchmark) & 32 & \\
-        \code{RcppVector<double>} & 354 & 11.1 \\
-        \code{NumericVector::operator[]} & 52 & 1.6 \\
-        \code{NumericVector::begin} & 33 &  1.0 \\
+        R API (as benchmark) & 255 & \\
+        \code{RcppVector<double>} & 354 & 13.74 \\
+        \code{NumericVector::operator[]} & 640 & 2.51 \\
+        \code{NumericVector::iterator} & 248 & 0.97 \\
+        Rcpp sugar & 168 & 0.66 \\
         \bottomrule
       \end{tabular}
     \end{small}
@@ -839,19 +873,12 @@ are summarized in the table below:
   \end{center}
 \end{table}
 
-% [dirk]   so what do we want to show here?   I like our new table, I
-%          particularly like the difference between R API "naive" (which does
-%          pretty badly !!) and the highly optimised one.  We do look good.
-%          So we toss Classic, and I guess we also toss Sugar for now?
-% [romain] things have changed now. we definitely want the nona version of sugar
-%          I'm not convinced about showing the naive version of R API
+The first implementation, written in C and using the traditional R API 
+provides out base case. It takes advantage of pointer 
+arithmetics, does not pay the price of C++'s object encapsulation or 
+operator overloading. 
 
-The first implementation, using the traditional R API, unsurprisingly 
-appears to be the most efficient. It takes advantage of pointer 
-arithmetics and does not pay the price of object encapsulation. This provides
-our base case.
-
-The second implementation---from the classic \pkg{Rcpp} API---is
+The second implementation---from the (deprecated) classic \pkg{Rcpp} API---is
 clearly behind in terms of efficiency. The difference is mainly 
 caused by the many unnecessary copies that the \code{RcppVector<double>}
 class performs. First, both objects (\code{a} and \code{b})
@@ -860,20 +887,20 @@ Then, the result is constructed as another \code{RcppVector<double>}
 (\code{xab}) that is filled using the \code{operator()} which checks
 at each access that the index is suitable for the object. Finally, \code{xab}
 is converted back to an R object. 
-% [dirk]  nuke this paragraph, and test?
+% [dirk]   : nuke this paragraph, and test?
+% [romain] : I don't want to show its code, but keeping it for reference perhaps
 
 The third implementation---using the more efficient new \pkg{Rcpp} API---is
 already orders of magnitude faster than the preceding solution. Yet it
 illustrates the price of object encapsulation and of calling an overloaded
 \code{operator[]} as opposed to using pointer arithmetics.
 
-Finally, the last implementation comes very close to the base case and shows
-the code using the new API can essentially as fast as the R API base case
-while being easier to write. 
+The fourth implementation uses iterators rather than indexing. It appears slightly
+more efficient than the base case, mainly because initialization of the values
+leverages the \code{std::fill} algorithm from the STL.
 
-% [dirk] TODO Should we talk about sugar? 
-% [dirk] TODO Should we talk about modules?
-% [romain] let's do another paper, or start working on the book
+Finally, the last implementation uses Rcpp sugar and performs significantly 
+better than the base case. Loop unrolling is responsible for the speedup. 
 
 \section{Summary}
 
@@ -895,9 +922,9 @@ of C++ data structures and facilitates use of modern libraries such as the
 standard template library and its containers and algorithms. The
 \code{wrap()} and \code{as()} template functions are extensible by design and
 can be used either explicitly or implicitly throughout the API.
-By using only thin wrappers around \code{SEXP} objects, 
-the footprint of the \code{Rcpp} API is very lightweight, and does not 
-induces a significant performance price. 
+By using only thin wrappers around \code{SEXP} objects and adopting C++
+idioms such as iterators, the footprint of the \code{Rcpp} API 
+is very lightweight, and does not induces a significant performance price. 
 
 The \code{Rcpp} API offers opportunities to dramatically reduce the complexity 
 of code, which should improve code readability, maintainability and reuse.
