@@ -897,28 +897,31 @@ vectorization at the C++ level which is responsible for this speedup.
 
 \section{Recent development}
 
-The \code{Rcpp} package is in active development, and recent work focuses on 
-even better interoperability between R and C++. 
+The \code{Rcpp} package is in active development. Recent work, both the the
+\pkg{Rcpp} packages and in packages such as \pkg{RcppArmadillo}
+\citep*{cran:rcpparmadillo} focuses on even better interoperability between R and C++. 
 % should we plug the next article ... to be continued
 Two main themese are `Rcpp sugar' as well as `Rcpp modules' both of which are
 discussed in vignettes in the package.  
-% Add citations to vignettes ?
+% Add citations of vignettes ?
 
 `Rcpp sugar' brings syntactic
 sugar at the C++ level, including optimized binary operators and many 
 R functions such as \code{ifelse}, \code{sapply}, \code{any}, ... 
 The main technique used in Rcpp sugar is
-expression templates pioneered by the Blitz++ library \cite{Blitz}
+expression templates pioneered by the Blitz++ library \citep{Blitz}
 and adopted since 
-by many projects such as Armadillo \cite{Armadillo}.  Direct vectorised
+by many projects such as Armadillo \citep{Armadillo}.  Direct
 access to most of the d/p/q/r-variants of the statistical distribution
-functions has also been added.
+functions has also been added, enabling the use of expressions such as 
+\code{dnorm(X, m, s)} for a numeric vector $X$ and scalars $m$ and
+$s$. 
 
 `Rcpp modules' allows programmers to expose C++ functions and classes 
 at the R level. This offers access to C++ code from R using even less
 interface code than by writing accessor function. Modules are inspired from
 the \code{Boost.Python} library 
-\cite{Boost:Python} that provides similar functionality for Python. C++ Classes
+\citep{Boost:Python} that provides similar functionality for Python. C++ Classes
 exposed by Rcpp modules are shadowed by reference classes that have been 
 introduced in R 2.12.0. 
 
