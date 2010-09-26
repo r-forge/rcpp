@@ -420,8 +420,8 @@ STL vectors of primitive types  (\code{std::vector<bool>},
 a constructor that takes a \code{SEXP}. In addition \code{as} can 
 be fully or partially specialized to manage conversion of R data 
 structures to third-party types as can be seen for example in the
-\pkg{RcppArmadillo} package.
-
+\pkg{RcppArmadillo} package which eases transfer to R matrices and vectors to
+the optimised data structures in the Armadillo linear algebra library \citep{Armadillo}.
 
 
 \subsection{Implicit use of converters}
@@ -897,11 +897,12 @@ vectorization at the C++ level which is responsible for this speedup.
 
 \section{Recent development}
 
-The \code{Rcpp} package is in active development. Recent work, both the the
-\pkg{Rcpp} packages and in packages such as \pkg{RcppArmadillo}
-\citep*{cran:rcpparmadillo} focuses on even better interoperability between R and C++. 
+The \code{Rcpp} package is in active development. Recent work in the
+\pkg{Rcpp} package and in packages such as \pkg{RcppArmadillo}
+%\citep*{cran:rcpparmadillo} 
+focuses on further improving interoperability between R and C++. 
 % should we plug the next article ... to be continued
-Two main themese are `Rcpp sugar' as well as `Rcpp modules' both of which are
+Two core themes are `Rcpp sugar' as well as `Rcpp modules' both of which are
 discussed in vignettes in the package.  
 % Add citations of vignettes ?
 
@@ -910,12 +911,14 @@ sugar at the C++ level, including optimized binary operators and many
 R functions such as \code{ifelse}, \code{sapply}, \code{any}, ... 
 The main technique used in Rcpp sugar is
 expression templates pioneered by the Blitz++ library \citep{Blitz}
-and adopted since 
-by many projects such as Armadillo \citep{Armadillo}.  Direct
-access to most of the d/p/q/r-variants of the statistical distribution
+and since adopted 
+by projects such as Armadillo \citep{Armadillo}. 
+Access to most of the d/p/q/r-variants of the statistical distribution
 functions has also been added, enabling the use of expressions such as 
 \code{dnorm(X, m, s)} for a numeric vector $X$ and scalars $m$ and
-$s$. 
+$s$. Similarly, and continuing Table~\ref{fig:rnormCode},  the R expression
+\code{rnorm(10L, sd=100)} can now be written in C++ as \code{rnorm(10, 0,
+  100)} where C++ semantics require the second parameter to be used. 
 
 `Rcpp modules' allows programmers to expose C++ functions and classes 
 at the R level. This offers access to C++ code from R using even less
