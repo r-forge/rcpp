@@ -14,7 +14,8 @@
   Flexible error and exception code handling is provided.  \pkg{Rcpp}
   substantially lowers the barrier for programmers wanting to combine
   C++ code with R.}
-% [dirk] should we mention C as well?  
+% [dirk] should we mention C as well?
+% [romain]Êno
 
 \section{Introduction} 
 
@@ -102,11 +103,6 @@ Another slightly different angle is offered by
 \cite{templelang09:rgcctranslationunit} who uses compiler output for
 references on the code in order to add bindings and wrappers.
 
-%DE: Removed per editor  
-%A critical comparison of these packages that addresses relevant aspects such
-%API features, performance, usability and documentation would be a welcome
-%addition to the literature, but is beyond the scope of this article.
-
 \subsection{Rcpp Use Cases}  % or some such
 \label{sec:classic_rcpp}
 
@@ -130,16 +126,6 @@ functions provided by other libraries. The use resembles the first case: data
 and parameters are passed via \pkg{Rcpp} to a function set-up to call code
 from an external library.  
 
-% TODO: Wrap this this so that it ties in better with what follows
-% [romain] : should this section be merged with the next one. It looks odd on its own.
-% [dirk]   : yes but 'Rcpp Use Cases' is the end of the Introduction, whereas
-%            what follows is a new section.  But if you can find a nice way
-%            to combine them ... go for it.
-% [dirk]   : also, we could call this 'vertical' mode and use 'horizontal'
-%            below but I can't recall if you hate or love that language
-% [romain] : I just don't speak it. 
-% [dirk]   : ok then we won't 
-
 \section{The \pkg{Rcpp} API}
 \label{sec:new_rcpp}
 
@@ -157,7 +143,7 @@ that interfaces with the Protocol Buffers library.
 \begin{example}
 #include <Rcpp.h>
 
-RcppExport SEXP convolve3cpp(SEXP a, SEXP b){
+RcppExport SEXP convolve3cpp(SEXP a, SEXP b) \{
     Rcpp::NumericVector xa(a);
     Rcpp::NumericVector xb(b);
     int n_xa = xa.size(), n_xb = xb.size();
@@ -169,7 +155,7 @@ RcppExport SEXP convolve3cpp(SEXP a, SEXP b){
             xab[i + j] += xa[i] * xb[j];
 
     return xab;
-}
+\}
 \end{example}
 
 We can highlight several aspects. First, only a single header file
@@ -302,9 +288,6 @@ Rcpp::NumericVector ab =
 It should be noted that although the copy constructor of the 
 \code{NumericVector} class is used, it does not imply copies of the 
 underlying array, only the \code{SEXP} is copied. 
-% [dirk]   : Huh?  But so there is a copy?
-% [romain] : yes. a copy of the pointer. 
-% [dirk]   : Indeed! Doh.
 
 \subsection{Character vectors}
 
@@ -756,11 +739,11 @@ offered by the standard R API.
 The implementation of the \code{operator[]} is designed to be as 
 efficient as possible, using both inlining and caching, 
 but even this implementation is still less efficient than the 
-reference C implementation described in \cite{R:exts}.
+reference C implementation described in \cite{R:exts}. 
 
 \pkg{Rcpp} follows design principles from the STL, and classes such 
 as \code{NumericVector} expose iterators that can be used for 
-iterative scans of the data. Algorithms using iterators are 
+sequential scans of the data. Algorithms using iterators are 
 usually more efficient than those that operate on objects using the 
 \code{operator[]}. The following version illustrate the use of the
 \code{NumericVector::iterator}. 
@@ -835,20 +818,6 @@ to test for missing values.
   \end{center}
 \end{table}
 
-% [dirk]   : I __reallyy_ want the "Naive R API" example as that is how people
-%            _do_ write C/C++ code from R.  And pay a huge penalty.
-% [dirk]   : Never mind. I upgraded to a more recent version of convolve7
-%            and it is essentially the same as R API optimised. No story here.
-% [romain] : Well... of course. your new convolve7 is exactly the same as 
-%            convolve2, it fetches the pointer just once for each vector.
-%            where as the version you called naive before did fetch the pointer
-%            many times, which involves a function call with conformity checks etc ...
-% [dirk]   : I got tricked by you there when you originally added convolve7
-%            I missed any (non-existing :-) comment in the file saying that
-%            the additional REAL macros were there for a test --- I had
-%            thought this was how it was presented in the manual. It;s not.
-%            I'll revert the example and that closes this (non-)issue. Sorry.
-
 We have benchmarked the various implementations by averaging over 5000 calls 
 of each function with \code{a} and \code{b} containing 200 elements
 each.\footnote{The code for this example is contained in the directory
@@ -863,16 +832,6 @@ The slowest implementation comes from the (deprecated) classic \pkg{Rcpp} API
 is clearly behind in terms of efficiency. The difference is mainly 
 caused by the many unnecessary copies that the older code 
 performs. 
-% [dirk]   : nuke this paragraph, and test?
-% [romain] : I don't want to show its code, but keeping it for reference perhaps
-% [dirk]   : I think we can a) keep the result and b) shorten the discussion
-%            to one sentence.  I would *much rather* talk about the naive R API.
-% [romain] : please make up your mind. you just said above that there was no 
-%            story
-% [dirk]   : two different issues. "No story" is about the the R API being 
-%            dog-slow when used badly. *This* discussion here is about how
-%            much we want to keep about 'classic Rcpp' and I like what we
-%            have now
 
 The second-slowest solution uses the more efficient new \pkg{Rcpp} API. While
 already orders of magnitude faster than the preceding solution,  it
@@ -887,13 +846,6 @@ This shows that use of C++ does not necessarily imply any performance penalty.
 Finally, the fastest implementation uses Rcpp sugar. It performs
 significantly better than the base case: explicit loop unrolling provides
 vectorization at the C++ level which is responsible for this speedup.  
-%This
-%shows that careful use of C++ can offer speedups not attainable even in
-%efficient C.
-% [romain] : the last sentence is a bit strong: one could do the unrolling in C !
-%            I would just remove it. or maybe phrase it differently. Loop unrolling 
-%            is smart, but Rcpp provides the smartness, the user does not have to.
-% [dirk]   : Ok
 
 \section{Recent development}
 
@@ -905,6 +857,7 @@ focuses on further improving interoperability between R and C++.
 Two core themes are `Rcpp sugar' as well as `Rcpp modules' both of which are
 discussed in vignettes in the package.  
 % Add citations of vignettes ?
+% nah
 
 `Rcpp sugar' brings syntactic
 sugar at the C++ level, including optimized binary operators and many 
