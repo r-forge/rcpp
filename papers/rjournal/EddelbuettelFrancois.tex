@@ -456,9 +456,10 @@ global["y"] = map;
 
 In the first part of the example, the code extracts a 
 \code{std::vector<double>} from the global environment. In order to achieve this, 
-the \code{operator[]}  of \code{Environment} uses the proxy pattern to distinguish 
-between left hand side (LHS) and right hand side (RHS) use. 
-% [TODO] : reference (meyers more effective C++ I think?)
+the \code{operator[]}  of \code{Environment} uses the proxy pattern 
+\cite{meyers:moreeffectivecplusplus}
+to distinguish between left hand side (LHS) and right hand side (RHS) use. 
+%
 The output of the operator is an instance of the nested class
 \code{Environment::Binding}, which defines a templated implicit conversion 
 operator that allows a \code{Binding} to be assigned to any type that 
@@ -535,10 +536,6 @@ return res;
   \texttt{using namespace Rcpp;} in the code}
   \label{fig:rnormCode}
 \end{table*}
-% [dirk]   : Do we now need to mention sugar as a third case for rnorm()? Footnote ?
-% [romain] : I'd love to, but there is no much space left. we can do sugar in the 
-%            next paper
-% [dirk]   : 100% agreed
 
 The next example shows how to use \pkg{Rcpp} to emulate the R code
 \code{rnorm(10L, sd=100.0)}.
@@ -618,13 +615,6 @@ new function \code{fun} based on the C++ code in \code{src}:
 
 \section{Using STL algorithms}
 
-% [romain] hmmmm. we do now have sapply and lapply. I think we should mention
-%                 them here.
-% [dirk]  sure, what to give it a go?
-
-% This is taken from :
-% http://www.cplusplus.com/reference/algorithm/
-
 The C++ Standard Template Library (STL) offers a variety of generic
 algorithms designed to be used on ranges of elements
 \citep{plauger_et_al:stlbook}. A range is any sequence of objects that can be
@@ -658,9 +648,6 @@ using the \code{transform} algorithm from the STL.
 
 We can use this to calculate a summary of each 
 column of the \code{faithful} dataset included with R.
-
-% [romain] Does this need a reference or is this common knowledge
-%          ?faithful has a reference
 
 \begin{example}
 > cpp_lapply( faithful, summary )
@@ -770,8 +757,6 @@ The implementation of the \code{operator[]} is designed to be as
 efficient as possible, using both inlining and caching, 
 but even this implementation is still less efficient than the 
 reference C implementation described in \cite{R:exts}.
-% [dirk]  well not according to our newest tests
-% [dirk]  it really is faster...
 
 \pkg{Rcpp} follows design principles from the STL, and classes such 
 as \code{NumericVector} expose iterators that can be used for 
@@ -784,12 +769,12 @@ usually more efficient than those that operate on objects using the
 #include <Rcpp.h>
 
 RcppExport SEXP convolve4cpp(SEXP a, SEXP b)\{
-    Rcpp::NumericVector xa(a), xb(b);
+    NumericVector xa(a), xb(b);
     int n_xa = xa.size(), n_xb = xb.size();
-    Rcpp::NumericVector xab(n_xa + n_xb - 1);
+    NumericVector xab(n_xa + n_xb - 1);
     
-    typedef Rcpp::NumericVector::iterator 
-            vec_iterator;
+    typedef NumericVector::iterator 
+        vec_iterator;
     vec_iterator ia = xa.begin(), 
                  ib = xb.begin();
     vec_iterator iab = xab.begin();
@@ -850,10 +835,14 @@ to test for missing values.
   \end{center}
 \end{table}
 
-% [dirk]  : I __reallyy_ want the "Naive R API" example as that is how people
-%           _do_ write C/C++ code from R.  And pay a huge penalty.
-% [dirk]  : Never mind. I upgraded to a more recent version of convolve7
-%           and it is essentially the same as R API optimised. No story here.
+% [dirk]   : I __reallyy_ want the "Naive R API" example as that is how people
+%            _do_ write C/C++ code from R.  And pay a huge penalty.
+% [dirk]   : Never mind. I upgraded to a more recent version of convolve7
+%            and it is essentially the same as R API optimised. No story here.
+% [romain] : Well... of course. your new convolve7 is exactly the same as 
+%            convolve2, it fetches the pointer just once for each vector.
+%            where as the version you called naive before did fetch the pointer
+%            many times, which involves a function call with conformity checks etc ...
 
 We have benchmarked the various implementations by averaging over 5000 calls 
 of each function with \code{a} and \code{b} containing 200 elements
@@ -868,18 +857,13 @@ does not pay the price of C++'s object encapsulation or operator overloading.
 The slowest implementation comes from the (deprecated) classic \pkg{Rcpp} API
 is clearly behind in terms of efficiency. The difference is mainly 
 caused by the many unnecessary copies that the older code 
-%\code{RcppVector<double>} class 
 performs. 
-% First, both objects (\code{a} and \code{b})
-% are copied into C++ structures (\code{xa} and \code{xb}). 
-% Then, the result is constructed as another \code{RcppVector<double>}
-% (\code{xab}) that is filled using the \code{operator()} which checks
-% at each access that the index is suitable for the object. Finally, \code{xab}
-% is converted back to an R object. 
 % [dirk]   : nuke this paragraph, and test?
 % [romain] : I don't want to show its code, but keeping it for reference perhaps
 % [dirk]   : I think we can a) keep the result and b) shorten the discussion
 %            to one sentence.  I would *much rather* talk about the naive R API.
+% [romain] : please make up your mind. you just said above that there was no 
+%            story
 
 The second-slowest solution uses the more efficient new \pkg{Rcpp} API. While
 already orders of magnitude faster than the preceding solution,  it
@@ -888,8 +872,7 @@ illustrates the price of object encapsulation and of calling an overloaded
 reference ase.
 
 The next implementation uses iterators rather than indexing. Its performance
-is indistinguishable from the base case. %, mainly because initialization of the values
-%leverages the \code{std::fill} algorithm from the STL.
+is indistinguishable from the base case. 
 This shows that use of C++ does not necessarily imply any performance penalty.
 
 Finally, the fastest implementation uses Rcpp sugar. It performs
@@ -897,10 +880,9 @@ significantly better than the base case: explicit loop unrolling provides
 vectorization at the C++ level which is responsible for this speedup.  This
 shows that careful use of C++ can offer speedups not attainable even in
 efficient C.
-
-% [romain] : what about a "future/recent" developments section that mentions
-%            sugar and modules briefly, and plugs a forthcoming sequel paper.
-% [dirk]   : or just a sentence in the summary ?
+% [romain] : the last sentence is a bit strong: one could do the unrolling in C !
+%            I would just remove it. or maybe phrase it differently. Loop unrolling 
+%            is smart, but Rcpp provides the smartness, the user does not have to.
 
 \section{Summary}
 
@@ -928,6 +910,24 @@ is very lightweight, and does not induces a significant performance price.
 
 The \code{Rcpp} API offers opportunities to dramatically reduce the complexity 
 of code, which should improve code readability, maintainability and reuse.
+
+The \code{Rcpp} package is in active development, and recent work focuses on 
+even better interoperability between R and C++. 
+% should we plug the next article ... to be continued
+
+`Rcpp sugar' brings syntactic
+sugar at the C++ level, including optimized binary operators and many 
+R functions such as \code{ifelse}, \code{sapply}, \code{any}, ... 
+The main technique used in Rcpp sugar is
+expression templates pioneered by the Blitz++ library \cite{Blitz}
+and adopted since
+by many projects such as Armadillo \cite{Armadillo,}. 
+
+`Rcpp modules' allows programmers to expose C++ functions and classes 
+at the R level. Modules are inspired from the \code{Boost.Python} library
+\cite{Boost:Python} that provides similar functionality for Python. C++ Classes
+exposed by Rcpp modules are shadowed by reference classes that have been 
+introduced in R 2.12.0. 
 
 \bibliography{EddelbuettelFrancois}
 
