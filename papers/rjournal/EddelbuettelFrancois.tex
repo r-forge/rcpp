@@ -440,7 +440,7 @@ global["y"] = map;
 In the first part of the example, the code extracts a 
 \code{std::vector<double>} from the global environment. In order to achieve this, 
 the \code{operator[]}  of \code{Environment} uses the proxy pattern 
-\cite{meyers:moreeffectivecplusplus}
+\citep{meyers:moreeffectivecplusplus}
 to distinguish between left hand side (LHS) and right hand side (RHS) use. 
 %
 The output of the operator is an instance of the nested class
@@ -825,16 +825,16 @@ each.\footnote{The code for this example is contained in the directory
 are summarized in Table~\ref{tab:benchmark}.
 
 The first implementation, written in C and using the traditional R API
-provides our base case. It takes advantage of pointer arithmetics, but it
+provides our base case. It takes advantage of pointer arithmetics, therefore
 does not pay the price of C++'s object encapsulation or operator overloading.
 %
-The slowest implementation comes from the (deprecated) classic \pkg{Rcpp} API
-is clearly behind in terms of efficiency. The difference is mainly 
+The slowest implementation comes from the (deprecated) classic \pkg{Rcpp} API. 
+It is clearly behind in terms of efficiency. The difference is mainly 
 caused by the many unnecessary copies that the older code 
 performs. 
 
 The second-slowest solution uses the more efficient new \pkg{Rcpp} API. While
-already orders of magnitude faster than the preceding solution,  it
+already orders of magnitude faster than the preceding solution, it
 illustrates the price of object encapsulation and of calling an overloaded
 \code{operator[]} as opposed to using direct pointer arithmetics as in the
 reference ase.
@@ -855,7 +855,7 @@ The \code{Rcpp} package is in active development. Recent work in the
 focuses on further improving interoperability between R and C++. 
 % should we plug the next article ... to be continued
 Two core themes are `Rcpp sugar' as well as `Rcpp modules' both of which are
-discussed in vignettes in the package.  
+discussed in their dedicated vignettes in the package.  
 % Add citations of vignettes ?
 % nah
 
