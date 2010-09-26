@@ -843,6 +843,11 @@ to test for missing values.
 %            convolve2, it fetches the pointer just once for each vector.
 %            where as the version you called naive before did fetch the pointer
 %            many times, which involves a function call with conformity checks etc ...
+% [dirk]   : I got tricked by you there when you originally added convolve7
+%            I missed any (non-existing :-) comment in the file saying that
+%            the additional REAL macros were there for a test --- I had
+%            thought this was how it was presented in the manual. It;s not.
+%            I'll revert the example and that closes this (non-)issue. Sorry.
 
 We have benchmarked the various implementations by averaging over 5000 calls 
 of each function with \code{a} and \code{b} containing 200 elements
@@ -864,6 +869,10 @@ performs.
 %            to one sentence.  I would *much rather* talk about the naive R API.
 % [romain] : please make up your mind. you just said above that there was no 
 %            story
+% [dirk]   : two different issues. "No story" is about the the R API being 
+%            dog-slow when used badly. *This* discussion here is about how
+%            much we want to keep about 'classic Rcpp' and I like what we
+%            have now
 
 The second-slowest solution uses the more efficient new \pkg{Rcpp} API. While
 already orders of magnitude faster than the preceding solution,  it
@@ -877,12 +886,42 @@ This shows that use of C++ does not necessarily imply any performance penalty.
 
 Finally, the fastest implementation uses Rcpp sugar. It performs
 significantly better than the base case: explicit loop unrolling provides
-vectorization at the C++ level which is responsible for this speedup.  This
-shows that careful use of C++ can offer speedups not attainable even in
-efficient C.
+vectorization at the C++ level which is responsible for this speedup.  
+%This
+%shows that careful use of C++ can offer speedups not attainable even in
+%efficient C.
 % [romain] : the last sentence is a bit strong: one could do the unrolling in C !
 %            I would just remove it. or maybe phrase it differently. Loop unrolling 
 %            is smart, but Rcpp provides the smartness, the user does not have to.
+% [dirk]   : Ok
+
+\section{Recent development}
+
+The \code{Rcpp} package is in active development, and recent work focuses on 
+even better interoperability between R and C++. 
+% should we plug the next article ... to be continued
+Two main themese are `Rcpp sugar' as well as `Rcpp modules' both of which are
+discussed in vignettes in the package.  
+% Add citations to vignettes ?
+
+`Rcpp sugar' brings syntactic
+sugar at the C++ level, including optimized binary operators and many 
+R functions such as \code{ifelse}, \code{sapply}, \code{any}, ... 
+The main technique used in Rcpp sugar is
+expression templates pioneered by the Blitz++ library \cite{Blitz}
+and adopted since 
+by many projects such as Armadillo \cite{Armadillo}.  Direct vectorised
+access to most of the d/p/q/r-variants of the statistical distribution
+functions has also been added.
+
+`Rcpp modules' allows programmers to expose C++ functions and classes 
+at the R level. This offers access to C++ code from R using even less
+interface code than by writing accessor function. Modules are inspired from
+the \code{Boost.Python} library 
+\cite{Boost:Python} that provides similar functionality for Python. C++ Classes
+exposed by Rcpp modules are shadowed by reference classes that have been 
+introduced in R 2.12.0. 
+
 
 \section{Summary}
 
@@ -910,24 +949,6 @@ is very lightweight, and does not induces a significant performance price.
 
 The \code{Rcpp} API offers opportunities to dramatically reduce the complexity 
 of code, which should improve code readability, maintainability and reuse.
-
-The \code{Rcpp} package is in active development, and recent work focuses on 
-even better interoperability between R and C++. 
-% should we plug the next article ... to be continued
-
-`Rcpp sugar' brings syntactic
-sugar at the C++ level, including optimized binary operators and many 
-R functions such as \code{ifelse}, \code{sapply}, \code{any}, ... 
-The main technique used in Rcpp sugar is
-expression templates pioneered by the Blitz++ library \cite{Blitz}
-and adopted since
-by many projects such as Armadillo \cite{Armadillo,}. 
-
-`Rcpp modules' allows programmers to expose C++ functions and classes 
-at the R level. Modules are inspired from the \code{Boost.Python} library
-\cite{Boost:Python} that provides similar functionality for Python. C++ Classes
-exposed by Rcpp modules are shadowed by reference classes that have been 
-introduced in R 2.12.0. 
 
 \bibliography{EddelbuettelFrancois}
 
