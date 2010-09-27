@@ -35,7 +35,7 @@ The \pkg{Rcpp} package combines two distinct
 APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since 
 the first version of \pkg{Rcpp}. While still contained in the package to
 ensure compatibility, its use is otherwise deprecated. All new development should
-use the newer and richer second API. It is enclosed in the \code{Rcpp} C++ 
+use the newer and richer second API. It is enclosed in the \pkg{Rcpp} C++ 
 namespace, and corresponds to the newer redesigned codebase. 
 This article highlights some of the key design and implementation choices of
 the new API: lightweight encapsulation of R objects in C++ classes, automatic
@@ -135,7 +135,7 @@ years of \pkg{Rcpp} deployment, needs from other projects, knowledge
 of the internal R API, as well as current C++ design approaches. 
 This redesign of \pkg{Rcpp} was also motivated by the needs of other 
 projects such as \pkg{RInside}  \citep{cran:rinside} for easy embedding 
-of R in a C++ applications and \code{RProtoBuf} \citep{cran:rprotobuf} 
+of R in a C++ applications and \pkg{RProtoBuf} \citep{cran:rprotobuf} 
 that interfaces with the Protocol Buffers library. 
 
 \subsection{A First Example}
@@ -205,7 +205,7 @@ the necessary measures to guarantee that the underlying \code{SEXP}
 is protected from the garbage collector, and the destructor
 assumes the responsibility to withdraw that protection. 
 
-By assuming the entire responsibility of garbage collection, \code{Rcpp}
+By assuming the entire responsibility of garbage collection, \pkg{Rcpp}
 relieves the programmer from writing boiler plate code to manage
 the protection stack with \code{PROTECT} and \code{UNPROTECT} macros.
 
@@ -847,17 +847,13 @@ Finally, the fastest implementation uses Rcpp sugar. It performs
 significantly better than the base case: explicit loop unrolling provides
 vectorization at the C++ level which is responsible for this speedup.  
 
-\section{Recent development}
+\section{On-going development}
 
-The \code{Rcpp} package is in active development. Recent work in the
-\pkg{Rcpp} package and in packages such as \pkg{RcppArmadillo}
-%\citep*{cran:rcpparmadillo} 
+\pkg{Rcpp} is in very active development: Current work in the
+package (and in packages such as \pkg{RcppArmadillo})
 focuses on further improving interoperability between R and C++. 
-% should we plug the next article ... to be continued
 Two core themes are `Rcpp sugar' as well as `Rcpp modules' both of which are
-discussed in their dedicated vignettes in the package.  
-% Add citations of vignettes ?
-% nah
+discussed in specific vignettes in the package.  
 
 `Rcpp sugar' brings syntactic
 sugar at the C++ level, including optimized binary operators and many 
@@ -884,7 +880,7 @@ introduced in R 2.12.0.
 
 \section{Summary}
 
-The \code{Rcpp} package presented here greatly simplifies integration of
+The \pkg{Rcpp} package presented here greatly simplifies integration of
 compiled C++ code with R.
 
 The class hierarchy allows manipulation of R data structures in C++ 
@@ -903,10 +899,10 @@ standard template library and its containers and algorithms. The
 \code{wrap()} and \code{as()} template functions are extensible by design and
 can be used either explicitly or implicitly throughout the API.
 By using only thin wrappers around \code{SEXP} objects and adopting C++
-idioms such as iterators, the footprint of the \code{Rcpp} API 
+idioms such as iterators, the footprint of the \pkg{Rcpp} API 
 is very lightweight, and does not induces a significant performance price. 
 
-The \code{Rcpp} API offers opportunities to dramatically reduce the complexity 
+The \pkg{Rcpp} API offers opportunities to dramatically reduce the complexity 
 of code, which should improve code readability, maintainability and reuse.
 
 \bibliography{EddelbuettelFrancois}
