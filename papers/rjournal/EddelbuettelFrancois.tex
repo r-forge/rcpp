@@ -35,8 +35,8 @@ The \pkg{Rcpp} package combines two distinct
 APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since 
 the first version of \pkg{Rcpp}. While still contained in the package to
 ensure compatibility, its use is otherwise deprecated. All new development should
-use the newer and richer second API. It is enclosed in the \pkg{Rcpp} C++ 
-namespace, and corresponds to the newer redesigned codebase. 
+use the richer second API. It is enclosed in the \pkg{Rcpp} C++ 
+namespace, and corresponds to the redesigned codebase. 
 This article highlights some of the key design and implementation choices of
 the new API: lightweight encapsulation of R objects in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between R and
@@ -54,8 +54,7 @@ in early 2006. Several releases (all by Samperi) followed in quick succession
 under the name \pkg{Rcpp}. The package was then renamed to
 \pkg{RcppTemplate}; several more releases followed during 2006 under the new
 name.  However, no new releases were made during 2007, 2008 or most of
-2009. Following a few brief updates in late 2009, it was withdrawn from CRAN
-for good.
+2009. Following a few updates in late 2009, it has since been withdrawn from CRAN.
 
 Given the continued use of the package, Eddelbuettel decided to revitalize it. New
 releases, using the initial name \pkg{Rcpp}, started in November 2008. These
@@ -90,10 +89,10 @@ The packages \pkg{rcppbind} \citep{liang08:rcppbind}, \pkg{RAbstraction}
 \citep{armstrong09:RObjects} are all implemented using C++ templates.
 However, neither has matured to the point of a CRAN release and it is
 unclear how much usage these packages are seeing beyond their own authors.
-%
-CXXR \citep{runnalls09:cxxr} comes to this topic from the other side: 
+
+\pkg{CXXR} \citep{runnalls09:cxxr} comes to this topic from the other side: 
 its aim is to completely refactor R on a stronger C++ foundation. 
-CXXR is therefore concerned with all aspects of the R interpreter,
+\pkg{CXXR} is therefore concerned with all aspects of the R interpreter,
 REPL, threading---and object interchange between R and C++ is but one
 part. A similar approach is discussed by \cite{templelang09:modestproposal}
 who suggests making low-level internals extensible by package developers in
@@ -129,11 +128,11 @@ from an external library.
 \section{The \pkg{Rcpp} API}
 \label{sec:new_rcpp}
 
-More recently, the \pkg{Rcpp} API has been dramatically extended, leading to a 
-complete redesign, based on the usage experience of several 
+More recently, the \pkg{Rcpp} API has been redesigned and extended, 
+based on the usage experience of several 
 years of \pkg{Rcpp} deployment, needs from other projects, knowledge 
 of the internal R API, as well as current C++ design approaches. 
-This redesign of \pkg{Rcpp} was also motivated by the needs of other 
+The new features in \pkg{Rcpp} were also motivated by the needs of other 
 projects such as \pkg{RInside}  \citep{cran:rinside} for easy embedding 
 of R in a C++ applications and \pkg{RProtoBuf} \citep{cran:rprotobuf} 
 that interfaces with the Protocol Buffers library. 
@@ -171,12 +170,11 @@ and with the use of the
 Fifth, the computation itself is
 straightforward embedded looping just as in the original examples in the
 'Writing R Extensions' manual \citep{R:exts}.  Sixth, the return conversion
-is also automatic from the \code{NumericVector} to the \code{SEXP} type.
+from the \code{NumericVector} to the \code{SEXP} type is also automatic.
 
-We argue that this usage is much easier to read, write and debug than the
+We argue that this \pkg{Rcpp}-based usage is much easier to read, write and debug than the
 C macro-based approach supported by R itself. 
 
-% [dirk]  TODO maybe another sentence to tie into the next segment
 
 
 \subsection{Rcpp Class hierarchy}
@@ -190,8 +188,8 @@ The most important aspect of the \code{RObject} class is that it is
 a very thin wrapper around the \code{SEXP} it encapsulates. The 
 \code{SEXP} is indeed the only data member of an \code{RObject}. The 
 \code{RObject} class does not interfere with the way R manages its 
-memory, does not perform copies of the object into a suboptimal 
-C++ representation, but instead merely acts as a proxy to the 
+memory and does not perform copies of the object into a suboptimal 
+C++ representation. Instead, it merely acts as a proxy to the 
 object it encapsulates so that methods applied to the \code{RObject}
 instance are relayed back to the \code{SEXP} in terms of the standard
 R API.
@@ -213,7 +211,7 @@ The \code{RObject} class defines a set of member functions applicable
 to any R object, regardless of its type. This ranges from 
 querying properties of the object (\texttt{isNULL}, \texttt{isObject}, 
 \texttt{isS4}), management of the attributes 
-(\texttt{attributeNames}, \texttt{hasAttribute}, \texttt{attr}) and 
+(\texttt{attributeNames}, \texttt{hasAttribute}, \texttt{attr}) to 
 handling of slots\footnote{The member functions that deal with slots
 are only applicable on S4 objects; otherwise an exception is thrown.} 
 (\texttt{hasSlot}, \texttt{slot}).
@@ -223,16 +221,16 @@ are only applicable on S4 objects; otherwise an exception is thrown.}
 Internally, an R object must have one type amongst the set of 
 predefined types, commonly referred to as SEXP types. The `R Internals'
 manual \citep{R:ints} documents these various types. 
-\pkg{Rcpp} associates a dedicated C++ class for most SEXP types, 
+\pkg{Rcpp} associates a dedicated C++ class for most SEXP types, and
 therefore only exposes functionality that is relevant to the R object
 that it encapsulates.
 
 For example \code{Rcpp::Environment} contains 
 member functions to manage objects in the associated environment. 
-Similarly, classes related to vectors (\code{IntegerVector}, \code{NumericVector}, 
+Similarly, classes related to vectors---\code{IntegerVector}, \code{NumericVector}, 
 \code{RawVector}, \code{LogicalVector}, \code{CharacterVector}, 
-\code{GenericVector} (also known as \code{List}) and \code{ExpressionVector}) 
-expose functionality to extract and set values from the vectors.
+\code{GenericVector} (also known as \code{List}) and 
+\code{ExpressionVector}---expose functionality to extract and set values from the vectors.
 
 The following sub-sections present typical uses of \pkg{Rcpp} classes in
 comparison with the same code expressed using functions of the R API.
@@ -287,7 +285,7 @@ Rcpp::NumericVector ab =
 
 It should be noted that although the copy constructor of the 
 \code{NumericVector} class is used, it does not imply copies of the 
-underlying array, only the \code{SEXP} is copied. 
+underlying array, only the \code{SEXP} (\textsl{i.e.} a simple pointer) is copied. 
 
 \subsection{Character vectors}
 
@@ -410,7 +408,7 @@ the optimised data structures in the Armadillo linear algebra library \citep{Arm
 \subsection{Implicit use of converters}
 
 The converters offered by \code{wrap} and \code{as} provide a very 
-useful framework to implement the logic of the code in terms of C++ 
+useful framework to implement code logic in terms of C++ 
 data structures and then explicitly convert data back to R. 
 
 In addition, the converters are also used implicitly
@@ -514,9 +512,8 @@ return res;
     \end{example}
   \end{minipage}
   \caption{\pkg{Rcpp} versus the R API: Four ways of calling \code{rnorm(10L, sd=100)} in C / C++. 
-  We have removed the \code{Rcpp::} prefix from the
-  examples for readability; this corresponds to adding a directive
-  \texttt{using namespace Rcpp;} in the code}
+  We have removed the \code{Rcpp::} prefix for readability; this corresponds to adding a directive
+  \texttt{using namespace Rcpp;} in the code.}
   \label{fig:rnormCode}
 \end{table*}
 
@@ -544,7 +541,7 @@ link and load the code.  While using a package is preferable in the long run,
 it may be too involved for quick explorations. An alternative is
 provided by the \pkg{inline} package \citep{cran:inline} which compiles,
 links and loads a C, C++ or Fortran function---directly from the R prompt
-using a simple function \code{cxxfunction}.  It provides an extension which
+using simple functions \code{cfunction} and \code{cxxfunction}.  The latter provides an extension which
 works particularly well with \pkg{Rcpp} via so-called `plugins' which provide
 information about additional header file and
 library locations. 
@@ -871,7 +868,7 @@ $s$. Similarly, and continuing Table~\ref{fig:rnormCode},  the R expression
 
 `Rcpp modules' allows programmers to expose C++ functions and classes 
 at the R level. This offers access to C++ code from R using even less
-interface code than by writing accessor function. Modules are inspired from
+interface code than by writing accessor function. Modules are inspired by
 the \code{Boost.Python} library 
 \citep{Boost:Python} that provides similar functionality for Python. C++ Classes
 exposed by Rcpp modules are shadowed by reference classes that have been 
@@ -895,12 +892,12 @@ and enabling him/her to focus on the underlying problem.
 Data interchange between R and C++ code---performed by the \code{wrap} and
 \code{as} template functions---allows the programmer to write logic in terms
 of C++ data structures and facilitates use of modern libraries such as the
-standard template library and its containers and algorithms. The
+Standard Template Library and its containers and algorithms. The
 \code{wrap()} and \code{as()} template functions are extensible by design and
 can be used either explicitly or implicitly throughout the API.
 By using only thin wrappers around \code{SEXP} objects and adopting C++
 idioms such as iterators, the footprint of the \pkg{Rcpp} API 
-is very lightweight, and does not induces a significant performance price. 
+is very lightweight, and does not induce a significant performance price. 
 
 The \pkg{Rcpp} API offers opportunities to dramatically reduce the complexity 
 of code, which should improve code readability, maintainability and reuse.
