@@ -105,7 +105,7 @@ references on the code in order to add bindings and wrappers.
 
 The core focus of \pkg{Rcpp} has always been on allowing the 
 programmer to add C++-based functions. 
-We use this term in the standard mathematical sense of providing
+Here, we use `function' in the standard mathematical sense of providing
 results (output) given a set of parameters or data (input). 
 This was
 facilitated from the earliest releases using C++ classes for receiving
@@ -132,7 +132,7 @@ years of \pkg{Rcpp} deployment, needs from other projects, knowledge
 of the internal R API, as well as current C++ design approaches. 
 The new features in \pkg{Rcpp} were also motivated by the needs of other 
 projects such as \pkg{RInside}  \citep{cran:rinside} for easy embedding 
-of R in a C++ applications and \pkg{RProtoBuf} \citep{cran:rprotobuf} 
+of R in C++ applications and \pkg{RProtoBuf} \citep{cran:rprotobuf} 
 that interfaces with the Protocol Buffers library. 
 
 \subsection{A First Example}
@@ -157,7 +157,7 @@ RcppExport SEXP convolve3cpp(SEXP a, SEXP b) \{
 
 We can highlight several aspects. First, only a single header file
 \code{Rcpp.h} is needed to use the \pkg{Rcpp} API.  Second, given two
-\code{SEXP} types, a third is returned.  Third, both inputs are 
+arguments of type \code{SEXP}, a third is returned.  Third, both inputs are 
 converted to C++ vector types provided by \pkg{Rcpp} (and we have more to say about these
 conversions below).  Fourth, the
 usefulness of these classes can be seen when we query the vectors directly
@@ -211,7 +211,7 @@ querying properties of the object (\texttt{isNULL}, \texttt{isObject},
 \texttt{isS4}), management of the attributes 
 (\texttt{attributeNames}, \texttt{hasAttribute}, \texttt{attr}) to 
 handling of slots\footnote{The member functions that deal with slots
-are only applicable on S4 objects; otherwise an exception is thrown.} 
+are only applicable to S4 objects; otherwise an exception is thrown.} 
 (\texttt{hasSlot}, \texttt{slot}).
 
 \subsection{Derived classes}
@@ -231,7 +231,7 @@ Similarly, classes related to vectors---\code{IntegerVector}, \code{NumericVecto
 \code{ExpressionVector}---expose functionality to extract and set values from the vectors.
 
 The following sub-sections present typical uses of \pkg{Rcpp} classes in
-comparison with the same code expressed using functions of the R API.
+comparison with the same code expressed using functions and macros of the R API.
 
 \subsection{Numeric vectors}
 
@@ -248,7 +248,7 @@ UNPROTECT(1);
 \end{example}
 
 Although this is one of the simplest examples in Writing R extensions, 
-it seems verbose and it is not obvious at first sight to understand what is happening.
+it seems verbose and it is not obvious at first sight what is happening.
 Memory is allocated by \code{allocVector}; we must also supply it with
 the type of data (\code{REALSXP}) and the number of elements.  Once
 allocated, the \code{ab} object must be protected from garbage
@@ -266,7 +266,7 @@ ab[1] = 67.89;
 \end{example}
 
 The code contains fewer idiomatic decorations. The \code{NumericVector}
-constructor is given the number of elements the vector contains (2), this
+constructor is given the number of elements the vector contains (2), which
 hides a call to the \code{allocVector} we saw previously. Also hidden is
 protection of the object from garbage collection, which is a behavior that
 \code{NumericVector} inherits from \code{RObject}.  Values are assigned to
@@ -385,7 +385,7 @@ list( c( bar = 2L, foo = 1L) ,
 
 \subsection{R to C++ : as}
 
-The reversed conversion is implemented by variations of the 
+The reverse conversion is implemented by variations of the 
 \code{Rcpp::as} template whose signature is:
 \begin{example}
 template <typename T> 
@@ -399,7 +399,7 @@ STL vectors of primitive types  (\code{std::vector<bool>},
 a constructor that takes a \code{SEXP}. In addition \code{as} can 
 be fully or partially specialized to manage conversion of R data 
 structures to third-party types as can be seen for example in the
-\pkg{RcppArmadillo} package which eases transfer to R matrices and vectors to
+\pkg{RcppArmadillo} package which eases transfer of R matrices and vectors to
 the optimised data structures in the Armadillo linear algebra library \citep{Armadillo}.
 
 
@@ -451,7 +451,7 @@ assigned to the requested symbol in the global environment.
 
 The same mechanism is used throughout the API. Examples include access/modification
 of object attributes, slots, elements of generic vectors (lists), 
-function arguments, nodes of dotted pair lists and language calls and more. 
+function arguments, nodes of dotted pair lists, language calls and more. 
 
 \section{Function calls}
 
@@ -557,7 +557,7 @@ mechanism.\footnote{This presumes a platform for which pre-built binaries are
   or upgrades.}
 
 The library and header files provided by \pkg{Rcpp} for use by other packages
-are installed along with the \pkg{Rcpp} package. The \code{LinkingTo: Rcpp}
+are installed along with the \pkg{Rcpp} package. The \code{LinkingTo:~Rcpp}
 directive in the DESCRIPTION file lets R compute the location of the header
 file. The \pkg{Rcpp} package provides appropriate information for the \code{-L}
 switch needed for linking via the function \code{Rcpp:::LdFlags()} that
@@ -669,7 +669,7 @@ END_RCPP
 \}
 \end{example}
 
-The macros are simply defined to avoid code repetition, they expand to 
+The macros are simply defined to avoid code repetition. They expand to 
 simple try/catch blocks: 
 
 \begin{example}
@@ -715,7 +715,7 @@ dedicated handlers can be installed on the R side.
 
 R currently does not offer C-level mechanisms to deal with errors. To 
 overcome this problem, \pkg{Rcpp} uses the \code{Rcpp::Evaluator}
-class to evaluate an expression with an R-level \code{tryCatch}
+class to evaluate an expression in an R-level \code{tryCatch}
 block. The error, if any, that occurs while evaluating the 
 function is then translated into an C++ exception that can be dealt with using 
 regular C++ try/catch syntax.
@@ -764,7 +764,7 @@ RcppExport SEXP convolve4cpp(SEXP a, SEXP b)\{
 \}
 \end{example}
 
-One of the focus of recent developments of \pkg{Rcpp} is called `Rcpp sugar', 
+One of the focuses of recent developments of \pkg{Rcpp} is called `Rcpp sugar', 
 and aims to provide R-like syntax in C++. A discussion of Rcpp sugar is 
 beyond the scope of this article, but for illustrative purposes we have included
 another version of the convolution algorithm based on Rcpp sugar. 
@@ -784,7 +784,7 @@ RcppExport SEXP convolve11cpp(SEXP a, SEXP b) \{
 \}
 \end{example}
 
-Rcpp sugar allows manipulation of entire subset of vectors at once, thanks to 
+Rcpp sugar allows manipulation of entire subsets of vectors at once, thanks to 
 the \code{Range} class. Rcpp sugar uses techniques such as expression templates, 
 lazy evaluation and loop unrolling to generate very efficient code. 
 The \code{nona} template function marks its argument to indicates that it does 
@@ -880,7 +880,7 @@ compiled C++ code with R.
 
 The class hierarchy allows manipulation of R data structures in C++ 
 using member functions and operators directly related to the type
-of object being used, therefore reducing the level of expertise
+of object being used, thereby reducing the level of expertise
 required to master the various functions and macros offered by the
 internal R API. The classes assume the entire 
 responsibility of garbage collection of objects, relieving the 
@@ -895,7 +895,7 @@ Standard Template Library and its containers and algorithms. The
 can be used either explicitly or implicitly throughout the API.
 By using only thin wrappers around \code{SEXP} objects and adopting C++
 idioms such as iterators, the footprint of the \pkg{Rcpp} API 
-is very lightweight, and does not induce a significant performance price. 
+is very lightweight, and does not incur a significant performance penalty. 
 
 The \pkg{Rcpp} API offers opportunities to dramatically reduce the complexity
 of code, which should improve code readability, maintainability and reuse.
