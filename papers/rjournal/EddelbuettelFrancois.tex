@@ -747,11 +747,11 @@ usually more efficient than those that operate on objects using the
 #include <Rcpp.h>
 
 RcppExport SEXP convolve4cpp(SEXP a, SEXP b)\{
-    NumericVector xa(a), xb(b);
+    Rcpp::NumericVector xa(a), xb(b);
     int n_xa = xa.size(), n_xb = xb.size();
-    NumericVector xab(n_xa + n_xb - 1);
+    Rcpp::NumericVector xab(n_xa + n_xb - 1);
     
-    typedef NumericVector::iterator 
+    typedef Rcpp::NumericVector::iterator 
         vec_iterator;
     vec_iterator ia = xa.begin(), 
                  ib = xb.begin();
@@ -773,13 +773,15 @@ another version of the convolution algorithm based on Rcpp sugar.
 #include <Rcpp.h>
 
 RcppExport SEXP convolve11cpp(SEXP a, SEXP b) \{
-    NumericVector xa(a); int n_xa = xa.size();
-    NumericVector xb(b); int n_xb = xb.size();
-    NumericVector xab(n_xa + n_xb - 1,0.0);
+    Rcpp::NumericVector xa(a); 
+    Rcpp::NumericVector xb(b); 
+    int n_xa = xa.size(), n_xb = xb.size();
+    Rcpp::NumericVector xab(n_xa+n_xb-1,0.0);
     
-    Range r( 0, n_xb-1 );
+    Rcpp::Range r( 0, n_xb-1 );
     for (int i=0; i<n_xa; i++, r++)
-        xab[ r ] += nona(xa[i]) * nona(xb);
+        xab[ r ] += Rcpp::nona(xa[i]) 
+                    * Rcpp::nona(xb);
     return xab ;
 \}
 \end{example}
