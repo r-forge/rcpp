@@ -19,7 +19,7 @@
 
 R is an extensible system. The `Writing R Extensions' manual \citep{R:exts}
 describes in detail how to augment R with compiled code,
-focussing mostly on the C language. The R API described in `Writing R Extensions' is
+focusing mostly on the C language. The R API described in `Writing R Extensions' is
 based on a set of functions and macros operating on \code{SEXP}, the internal
 representation of R objects.
 %
@@ -34,7 +34,7 @@ APIs. The first---which we call `classic \pkg{Rcpp} API'---exists since
 the first version of \pkg{Rcpp}. While still contained in the package to
 ensure compatibility, its use is otherwise deprecated. All new development should
 use the richer second API. It is enclosed in the \pkg{Rcpp} C++ 
-namespace, and corresponds to the redesigned codebase. 
+namespace, and corresponds to the redesigned code base. 
 This article highlights some of the key design and implementation choices of
 the new API: lightweight encapsulation of R objects in C++ classes, automatic
 garbage collection strategy, code inlining, data interchange between R and
@@ -63,7 +63,7 @@ interface.  This constitutes the `classic \pkg{Rcpp}' interface
 
 Yet C++ coding standards continued to evolve \citep{meyers:effectivecplusplus}.
 In 2009, Eddelbuettel and Fran\c{c}ois started a significant redesign of the
-codebase which added numerous new features.  Several of these are described
+code base which added numerous new features.  Several of these are described
 below in the section on the \pkg{Rcpp} API interface, as well as in the
 eight vignettes included with the package. This new API is our current focus,
 and we intend to both extend and support it in future development of the
@@ -625,7 +625,7 @@ using the \code{transform} algorithm from the STL.
 \end{example}
 
 We can use this to calculate a summary of each 
-column of the \code{faithful} dataset included with R.
+column of the \code{faithful} data set included with R.
 
 \begin{example}
 > cpp_lapply( faithful, summary )
@@ -689,7 +689,7 @@ RcppExport SEXP fun( SEXP x )\{
 \end{example}
 
 Using \code{BEGIN\_RCPP} and \code{END\_RCPP} --- or the expanded versions ---
-guarantess that the stack is first unwound in terms of C++ exceptions, before 
+guarantees that the stack is first unwound in terms of C++ exceptions, before 
 the problem is converted to the standard R error management system (\code{Rf\_error}).
 
 The \code{forward\_exception\_to\_r} function uses run-time type information to 
@@ -832,7 +832,7 @@ The second-slowest solution uses the more efficient new \pkg{Rcpp} API. While
 already orders of magnitude faster than the preceding solution, it
 illustrates the price of object encapsulation and of calling an overloaded
 \code{operator[]} as opposed to using direct pointer arithmetics as in the
-reference ase.
+reference case.
 
 The next implementation uses iterators rather than indexing. Its performance
 is indistinguishable from the base case. 
@@ -900,7 +900,7 @@ is very lightweight, and does not induce a significant performance price.
 The \pkg{Rcpp} API offers opportunities to dramatically reduce the complexity
 of code, which should improve code readability, maintainability and reuse.
 
-\section{Acknowledgements}
+\section{Acknowledgments}
 
 Detailed comments and suggestions by an editor as well as two anonymous referees
 are gratefully acknowledged.  We are also thankful for code contributions by
