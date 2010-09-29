@@ -788,7 +788,7 @@ RcppExport SEXP convolve11cpp(SEXP a, SEXP b)\{
 Rcpp sugar allows manipulation of entire subsets of vectors at once, thanks to 
 the \code{Range} class. Rcpp sugar uses techniques such as expression templates, 
 lazy evaluation and loop unrolling to generate very efficient code. 
-The \code{nona} template function marks its argument to indicates that it does 
+The \code{noNA} template function marks its argument to indicates that it does 
 not contain any missing values---an assumption made implicitly by other 
 versions---allowing sugar to compute the individual operations without having
 to test for missing values. 
