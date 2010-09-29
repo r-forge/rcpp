@@ -310,7 +310,7 @@ Using the \code{Rcpp::CharacterVector} class, we can express the same
 code more concisely:
 
 \begin{example}
-CharacterVector ab(2);
+Rcpp::CharacterVector ab(2);
 ab[0] = "foo";
 ab[1] = "bar";
 \end{example}
@@ -772,16 +772,15 @@ another version of the convolution algorithm based on Rcpp sugar.
 \begin{example}
 #include <Rcpp.h>
 
-RcppExport SEXP convolve11cpp(SEXP a, SEXP b) \{
-    Rcpp::NumericVector xa(a); 
-    Rcpp::NumericVector xb(b); 
+RcppExport SEXP convolve11cpp(SEXP a, SEXP b)\{
+    Rcpp::NumericVector xa(a), xb(b); 
     int n_xa = xa.size(), n_xb = xb.size();
     Rcpp::NumericVector xab(n_xa+n_xb-1,0.0);
     
     Rcpp::Range r( 0, n_xb-1 );
     for (int i=0; i<n_xa; i++, r++)
-        xab[ r ] += Rcpp::nona(xa[i]) 
-                    * Rcpp::nona(xb);
+        xab[ r ] += Rcpp::noNA(xa[i]) * 
+                    Rcpp::noNA(xb);
     return xab ;
 \}
 \end{example}
