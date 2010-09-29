@@ -1,279 +1,279 @@
-@String{CRAN = "http://cran.r-project.org/" }
+@String{CRAN = "http://CRAN.R-Project.org/" }
 @String{manuals = CRAN # "doc/manuals/" }
 @String{RCoreTeam = "{R Development Core Team}" }
 @String{RFoundation = "R Foundation for Statistical Computing" }
+@String{R-Forge = "http://R-Forge.R-Project.org/" }
 
-@Book{Abrahams+Gurtovoy:2004,
-  author =		 {David Abrahams and Aleksey Gurtovoy},
-  title =		 {{C++} {T}emplate {M}etaprogramming: Concepts, Tools
-                  and Techniques from {B}oost and Beyond},
-  publisher =	 {Addison-Wesley},
-  year =		 2004,
-  address =		 {Boston}
+@manual{Abrahams+Grosse-Kunstleve:2003:Boost.Python,
+  author =	 { David Abrahams and Ralf W. Grosse-Kunstleve },
+  organization = "Boost Consulting",
+  title =	 "Building Hybrid Systems with Boost.Python",
+  year =	 2003,
+  url =		 "http://www.boostpro.com/writing/bpl.pdf"
 }
 
-@TechReport{Armadillo,
-  author =		 {Conrad Sanderson},
-  title =		 {{Armadillo}: {An} open source {C++} Algebra Library
+@Book{Abrahams+Gurtovoy:2004:TemplateMetaprogramming,
+  author =	 {David Abrahams and Aleksey Gurtovoy},
+  title =	 {{C++} {T}emplate {M}etaprogramming: Concepts, Tools
+                  and Techniques from {B}oost and Beyond},
+  publisher =	 {Addison-Wesley},
+  year =	 2004,
+  address =	 {Boston}
+}
+
+@Manual{Armstrong:2009:RAbstraction,
+  title =	 {{RAbstraction}: {C++} abstraction for {R} objects},
+  author =	 {Whit Armstrong},
+  year =	 2009,
+  note =	 {Code repository last updated July 22, 2009.},
+  url =		 {http://github.com/armstrtw/rabstraction}
+}
+
+@Manual{Armstrong:2009:RObjects,
+  title =	 {{RObjects}: {C++} wrapper for R objects (a better
+                  implementation of {RAbstraction}},
+  author =	 {Whit Armstrong},
+  year =	 2009,
+  note =	 {Code repository last updated November 28, 2009.},
+  url =		 {http://github.com/armstrtw/RObjects}
+}
+
+@InProceedings{Bates+DebRoy:2001:C++Classes,
+  author =	 {Douglas M. Bates and Saikat DebRoy},
+  title =	 {{C++} Classes for {R} Objects},
+  booktitle =	 {Proceedings of the 2nd International Workshop on
+                  Distributed Statistical Computing (DSC 2001)},
+  year =	 2001,
+  editor =	 {Kurt Hornik and Friedrich Leisch},
+  address =	 {TU Vienna, Austria}
+}
+
+@Manual{CRAN:RInside,
+  title =	 {RInside: C++ classes to embed R in C++ applications},
+  author =	 {Dirk Eddelbuettel and Romain Fran\c{c}ois},
+  year =	 2010,
+  note =	 {R package version 0.2.3},
+  url =		 CRAN # "package=RInside"
+}
+
+@Manual{CRAN:RProtoBuf,
+  title =	 {RProtoBuf: R Interface to the Protocol Buffers API},
+  author =	 {Romain Fran\c{c}ois and Dirk Eddelbuettel},
+  year =	 2010,
+  note =	 {R package version 0.2.0},
+  url =		 CRAN # "/package=RProtoBuf"
+}
+
+@Manual{CRAN:RQuantLib,
+  title =	 {RQuantLib: {R} interface to the {QuantLib} library},
+  author =	 {Dirk Eddelbuettel and Khanh Nguyen},
+  year =	 2010,
+  note =	 {R package version 0.3.4},
+  url =		 CRAN # "/package=RQuantLib"
+}
+
+@Manual{CRAN:RcppArmadillo,
+  title =	 {RcppArmadillo: Rcpp integration for Armadillo
+                  templated linear algebra library},
+  author =	 {Romain Fran\c{c}ois and Dirk Eddelbuettel and
+                  Douglas Bates},
+  year =	 2010,
+  note =	 {R package version 0.2.7},
+  url =		 CRAN # "/package=RcppArmadillo"
+}
+
+@Manual{CRAN:RcppExamples,
+  title =	 {RcppExamples: Examples using {Rcpp} to interface {R}
+                  and {C++}},
+  author =	 {Dirk Eddelbuettel and Romain Fran\c{c}ois},
+  year =	 2010,
+  note =	 {R package version 0.1.1},
+  url =		 CRAN # "/package=RcppExamples"
+}
+
+@Manual{CRAN:Rserve,
+  title =	 {Rserve: Binary R server},
+  author =	 {Simon Urbanek},
+  year =	 2010,
+  note =	 {R package version 0.6-2},
+  url =		 CRAN # "/package=Rserve"
+}
+
+@Manual{CRAN:cxxPack,
+  title =	 {cxxpack: {R/C++} Tools for Literate Statistical
+                  Practice},
+  author =	 {Dominick Samperi},
+  year =	 2010,
+  note =	 {R package version 7.0.6},
+  url =		 CRAN # "/package=cxxPack"
+}
+
+@Manual{CRAN:inline,
+  title =	 {inline: Inline C, C++, Fortran function calls from
+                  R},
+  author =	 {Oleg Sklyar and Duncan Murdoch and Mike Smith and
+                  Dirk Eddelbuettel and Romain Fran\c{c}ois},
+  year =	 2010,
+  note =	 {R package version 0.3.6},
+  url =		 CRAN # "/package=inline"
+}
+
+@Unpublished{Java+Gaile+Manly:2007:RCpp,
+  author =	 {James J. Java and Daniel P. Gaile and Kenneth
+                  E. Manly},
+  title =	 {{R/Cpp}: Interface Classes to Simplify Using {R}
+                  Objects in {C++} Extensions},
+  note =	 {Unpublished manuscript, University at Buffalo},
+  url =
+                  {http://sphhp.buffalo.edu/biostat/research/techreports/UB_Biostatistics_TR0702.pdf},
+  month =	 {July},
+  year =	 2007
+}
+
+@Manual{Liang:2008:rcppbind,
+  title =	 {rcppbind: {A} template library for R/C++ developers},
+  author =	 {Gang Liang},
+  year =	 2008,
+  note =	 {R package version 1.0},
+  url =		 R-Forge # "/projects/rcppbind"
+}
+
+@book{Meyers:1995:MoreEffectiveC++,
+  author =	 {Scott Meyers},
+  title =	 {More Effective C++: 35 New Ways to Improve Your
+                  Programs and Designs},
+  year =	 1995,
+  isbn =	 {020163371X},
+  publisher =	 {Addison-Wesley Longman Publishing Co., Inc.},
+  address =	 {Boston, MA, USA},
+}
+
+@book{Meyers:2001:EffectiveSTL,
+  author =	 {Scott Meyers},
+  title =	 {Effective STL: 50 specific ways to improve your use
+                  of the standard template library},
+  year =	 2001,
+  isbn =	 {0-201-74962-9},
+  publisher =	 {Addison-Wesley Longman Ltd.},
+  address =	 {Essex, UK},
+}
+
+@book{Meyers:2005:EffectiveC++,
+  author =	 {Scott Meyers},
+  title =	 {Effective C++: 55 Specific Ways to Improve Your
+                  Programs and Designs},
+  year =	 2005,
+  isbn =	 {978-0321334879},
+  publisher =	 {Addison-Wesley Professional},
+  edition =	 {Third},
+}
+
+@Book{Plauger+Et+Al:2000:STL,
+  author =	 {P.J. Plauger and Alexander Stepanov and Meng Lee and
+                  David R. Musser},
+  title =	 {The {C++} Standard Template Library},
+  publisher =	 {Prentice Hall PTR},
+  year =	 2000,
+  isbn =	 {978-0134376332},
+}
+
+@manual{R:Extensions,
+  author =	 RCoreTeam,
+  organization = RFoundation,
+  address =	 {Vienna, Austria},
+  year =	 2010,
+  title =	 "Writing R extensions",
+  url =		 manuals # "R-exts.html"
+}
+
+@manual{R:Internals,
+  author =	 RCoreTeam,
+  organization = RFoundation,
+  address =	 {Vienna, Austria},
+  year =	 2010,
+  title =	 "R internals",
+  url =		 manuals # "R-ints.html"
+}
+
+@InProceedings{Runnalls:2009:CXXR,
+  author =	 {Andrew Runnalls},
+  title =	 {Aspects of {CXXR} internals},
+  booktitle =	 {Directions in Statistical Computing},
+  address =	 {University of Copenhagen, Denmark},
+  year =	 2009
+}
+
+@Manual{Samperi:2009:RcppTemplate,
+  title =	 {RcppTemplate: Rcpp {R/C++} Object Mapping Library
+                  and Package Template},
+  author =	 {Dominick Samperi},
+  year =	 2009,
+  note =	 {(Archived) R package version 6.1},
+  url =          CRAN # "/src/contrib/Archive/RcppTemplate"
+}
+
+@TechReport{Sanderson:2010:Armadillo,
+  author =	 {Conrad Sanderson},
+  title =	 {{Armadillo}: {An} open source {C++} Algebra Library
                   for Fast Prototyping and Computationally Intensive
                   Experiments },
   institution =	 {{NICTA}},
-  year =		 2010,
-  url =			 "http://arma.sf.net"
+  year =	 2010,
+  url =		 "http://arma.sf.net"
 }
 
-@inproceedings{Blitz,
-  author =		 {Todd L. Veldhuizen},
-  title =		 {Arrays in {Blitz++}},
-  booktitle =	 {ISCOPE '98: Proceedings of the Second International
-                  Symposium on Computing in Object-Oriented Parallel
-                  Environments},
-  isbn =		 {3-540-65387-2},
-  year =		 1998,
-  pages =		 {223--230},
-  publisher =	 {Springer-Verlag},
-  address =		 {London, UK},
-}
-
-@manual{Boost:Python,
-  author =		 { David Abrahams and Ralf W. Grosse-Kunstleve },
-  organization = "Boost Consulting",
-  title =		 "Building Hybrid Systems with Boost.Python",
-  year =		 2003,
-  url =			 "http://www.boostpro.com/writing/bpl.pdf"
-}
-
-@manual{R:exts,
-  author =		 RCoreTeam,
-  organization = RFoundation,
-  address =		 {Vienna, Austria},
-  year =		 2010,
-  title =		 "Writing R extensions",
-  url =			 manuals # "R-exts.html"
-}
-
-@manual{R:ints,
-  author =		 RCoreTeam,
-  organization = RFoundation,
-  address =		 {Vienna, Austria},
-  year =		 2010,
-  title =		 "R internals",
-  url =			 manuals # "R-ints.html"
-}
-
-@Book{Vandevoorde+Josuttis:2003,
-  author =		 {David Vandevoorde and Nicolai M. Josuttis},
-  title =		 {{C++} {T}emplates: The Complete Guide},
-  publisher =	 {Addison-Wesley},
-  year =		 2003,
-  address =		 {Boston}
-}
-
-@Manual{armstrong09:RAbstraction,
-  title =		 {{RAbstraction}: {C++} abstraction for {R} objects},
-  author =		 {Whit Armstrong},
-  year =		 2009,
-  note =		 {Code repository last updated July 22, 2009.},
-  url =			 {http://github.com/armstrtw/rabstraction}
-}
-
-@Manual{armstrong09:RObjects,
-  title =		 {{RObjects}: {C++} wrapper for R objects (a better
-                  implementation of {RAbstraction}},
-  author =		 {Whit Armstrong},
-  year =		 2009,
-  note =		 {Code repository last updated November 28, 2009.},
-  url =			 {http://github.com/armstrtw/RObjects}
-}
-
-@InProceedings{batesdebroy01:cppclasses,
-  author =		 {Douglas M. Bates and Saikat DebRoy},
-  title =		 {{C++} Classes for {R} Objects},
-  booktitle =	 {Proceedings of the 2nd International Workshop on
-                  Distributed Statistical Computing (DSC 2001)},
-  year =		 2001,
-  editor =		 {Kurt Hornik and Friedrich Leisch},
-  address =		 {TU Vienna, Austria}
-}
-
-@Manual{cran:Rserve,
-  title =		 {Rserve: Binary R server},
-  author =		 {Simon Urbanek},
-  year =		 2010,
-  note =		 {R package version 0.6-2},
-  url =			 {http://www.rforge.net/Rserve/},
-}
-
-@Manual{cran:cxxPack,
-  title =		 {cxxpack: {R/C++} Tools for Literate Statistical
-                  Practice},
-  author =		 {Dominick Samperi},
-  year =		 2010,
-  note =		 {R package version 7.0.6},
-  url =			 {http://CRAN.R-project.org/package=cxxPack},
-}
-
-@Manual{cran:inline,
-  title =		 {inline: Inline C, C++, Fortran function calls from
-                  R},
-  author =		 {Oleg Sklyar and Duncan Murdoch and Mike Smith and
-                  Dirk Eddelbuettel and Romain Fran\c{c}ois},
-  year =		 2010,
-  note =		 {R package version 0.3.6},
-  url =			 {http://CRAN.R-project.org/package=inline},
-}
-
-@Manual{cran:rcpparmadillo,
-  title =		 {RcppArmadillo: Rcpp integration for Armadillo
-                  templated linear algebra library},
-  author =		 {Romain Fran\c{c}ois and Dirk Eddelbuettel and
-                  Douglas Bates},
-  year =		 2010,
-  note =		 {R package version 0.2.7},
-  url =			 {http://CRAN.R-project.org/package=RcppArmadillo}
-}
-
-@Manual{cran:rcppexamples,
-  title =		 {RcppExamples: Examples using {Rcpp} to interface {R}
-                  and {C++}},
-  author =		 {Dirk Eddelbuettel and Romain Fran\c{c}ois},
-  year =		 2010,
-  note =		 {R package version 0.1.1},
-  url =			 {http://CRAN.R-project.org/package=RcppExamples}
-}
-
-@Manual{cran:rinside,
-  title =		 {RInside: C++ classes to embed R in C++ applications},
-  author =		 {Dirk Eddelbuettel and Romain Fran\c{c}ois},
-  year =		 2010,
-  note =		 {R package version 0.2.3},
-  url =			 {http://CRAN.R-project.org/package=RInside}
-}
-
-@Manual{cran:rprotobuf,
-  title =		 {RProtoBuf: R Interface to the Protocol Buffers API},
-  author =		 {Romain Fran\c{c}ois and Dirk Eddelbuettel},
-  year =		 2010,
-  note =		 {R package version 0.2.0},
-  url =			 {http://CRAN.R-project.org/package=RProtoBuf}
-}
-
-@Manual{cran:rquantlib,
-  title =		 {RQuantLib: {R} interface to the {QuantLib} library},
-  author =		 {Dirk Eddelbuettel and Khanh Nguyen},
-  year =		 2010,
-  note =		 {R package version 0.3.4},
-  url =			 {http://CRAN.R-project.org/package=RQuantLib}
-}
-
-@Unpublished{javagailemanly07:r_cpp,
-  author =		 {James J. Java and Daniel P. Gaile and Kenneth
-                  E. Manly},
-  title =		 {{R/Cpp}: Interface Classes to Simplify Using {R}
-                  Objects in {C++} Extensions},
-  note =		 {Unpublished manuscript, University at Buffalo},
-  url =
-                  {http://sphhp.buffalo.edu/biostat/research/techreports/UB_Biostatistics_TR0702.pdf},
-  month =		 {July},
-  year =		 2007
-}
-
-@Manual{liang08:rcppbind,
-  title =		 {rcppbind: {A} template library for R/C++ developers},
-  author =		 {Gang Liang},
-  year =		 2008,
-  note =		 {R package version 1.0},
-  url =			 {http://r-forge.r-project.org/projects/rcppbind/}
-}
-
-@book{meyers:effectivecplusplus,
-  author =		 {Scott Meyers},
-  title =		 {Effective C++: 55 Specific Ways to Improve Your
-                  Programs and Designs},
-  year =		 2005,
-  isbn =		 {978-0321334879},
-  publisher =	 {Addison-Wesley Professional},
-  edition =		 {Third},
-}
-
-@book{meyers:effectivestl,
-  author =		 {Scott Meyers},
-  title =		 {Effective STL: 50 specific ways to improve your use
-                  of the standard template library},
-  year =		 2001,
-  isbn =		 {0-201-74962-9},
-  publisher =	 {Addison-Wesley Longman Ltd.},
-  address =		 {Essex, UK},
-}
-
-@book{meyers:moreeffectivecplusplus,
-  author =		 {Scott Meyers},
-  title =		 {More Effective C++: 35 New Ways to Improve Your
-                  Programs and Designs},
-  year =		 1995,
-  isbn =		 {020163371X},
-  publisher =	 {Addison-Wesley Longman Publishing Co., Inc.},
-  address =		 {Boston, MA, USA},
-}
-
-@Book{plauger_et_al:stlbook,
-  author =		 {P.J. Plauger and Alexander Stepanov and Meng Lee and
-                  David R. Musser},
-  title =		 {The {C++} Standard Template Library},
-  publisher =	 {Prentice Hall PTR},
-  year =		 2000,
-  isbn =		 {978-0134376332},
-}
-
-@InProceedings{runnalls09:cxxr,
-  author =		 {Andrew Runnalls},
-  title =		 {Aspects of {CXXR} internals},
-  booktitle =	 {Directions in Statistical Computing},
-  address =		 {University of Copenhagen, Denmark},
-  year =		 2009
-}
-
-@Manual{samperi09:rcpptemplate,
-  title =		 {RcppTemplate: Rcpp {R/C++} Object Mapping Library
-                  and Package Template},
-  author =		 {Dominick Samperi},
-  year =		 2009,
-  note =		 {(Archived) R package version 6.1},
-  url =
-                  {http://CRAN.R-project.org/src/contrib/Archive/RcppTemplate}
-}
-
-@Article{templelang09:modestproposal,
-  author =		 {Duncan {Temple Lang}},
-  title =		 {A modest proposal: an approach to making the
+@Article{TempleLang:2009:ModestProposal,
+  author =	 {Duncan {Temple Lang}},
+  title =	 {A modest proposal: an approach to making the
                   internal {R} system extensible},
-  journal =		 {Computational Statistics},
-  year =		 2009,
-  volume =		 24,
-  number =		 2,
-  pages =		 {271-281},
-  month =		 {May}
+  journal =	 {Computational Statistics},
+  year =	 2009,
+  volume =	 24,
+  number =	 2,
+  pages =	 {271-281},
+  month =	 {May}
 }
 
-@Article{templelang09:rgcctranslationunit,
-  author =		 {Duncan {Temple Lang}},
-  title =		 {Working with meta-data from {C/C++} code in {R}: the
+@Article{TempleLang:2009:RGCCTranslationUnit,
+  author =	 {Duncan {Temple Lang}},
+  title =	 {Working with meta-data from {C/C++} code in {R}: the
                   {RGCCTranslationUnit} package},
-  journal =		 {Computational Statistics},
-  year =		 2009,
-  volume =		 24,
-  number =		 2,
-  pages =		 {283-293},
-  month =		 {May}
+  journal =	 {Computational Statistics},
+  year =	 2009,
+  volume =	 24,
+  number =	 2,
+  pages =	 {283-293},
+  month =	 {May}
 }
 
-@InProceedings{urbanek2003:rserve,
-  author =		 {Simon Urbanek},
-  title =		 {{Rserve}: A Fast Way to Provide {R} Functionality to
+@InProceedings{Urbanek:2003:Rserve,
+  author =	 {Simon Urbanek},
+  title =	 {{Rserve}: A Fast Way to Provide {R} Functionality to
                   Applications},
   booktitle =	 {Proceedings of the 3rd International Workshop on
                   Distributed Statistical Computing (DSC 2003)},
-  year =		 2003,
-  editor =		 {Kurt Hornik and Friedrich Leisch and Achim Zeileis},
-  address =		 {TU Vienna, Austria}
+  year =	 2003,
+  editor =	 {Kurt Hornik and Friedrich Leisch and Achim Zeileis},
+  address =	 {TU Vienna, Austria}
+}
+
+@Book{Vandevoorde+Josuttis:2003:Templates,
+  author =	 {David Vandevoorde and Nicolai M. Josuttis},
+  title =	 {{C++} {T}emplates: The Complete Guide},
+  publisher =	 {Addison-Wesley},
+  year =	 2003,
+  address =	 {Boston}
+}
+
+@inproceedings{Veldhuizen:1998:Blitz,
+  author =	 {Todd L. Veldhuizen},
+  title =	 {Arrays in {Blitz++}},
+  booktitle =	 {ISCOPE '98: Proceedings of the Second International
+                  Symposium on Computing in Object-Oriented Parallel
+                  Environments},
+  isbn =	 {3-540-65387-2},
+  year =	 1998,
+  pages =	 {223--230},
+  publisher =	 {Springer-Verlag},
+  address =	 {London, UK},
 }
