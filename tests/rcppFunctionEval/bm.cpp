@@ -30,6 +30,7 @@ RcppExport double evaluate3(long *l_nfeval, double *param, int i_D,
  			    const Rcpp::Function & fun, const Rcpp::Environment & env);
 RcppExport double evaluate4(long *l_nfeval, double *param, int i_D,
 			    const Rcpp::Function & fun, const Rcpp::Environment & env);
+RcppExport double evaluate5(long & l_nfeval, Rcpp::NumericVector & par, SEXP fcall, SEXP env);
 
 RcppExport SEXP benchmarkEvals(SEXP bmS, SEXP parS, SEXP funS, SEXP envS) {
     
@@ -40,7 +41,7 @@ RcppExport SEXP benchmarkEvals(SEXP bmS, SEXP parS, SEXP funS, SEXP envS) {
     Rcpp::NumericVector x(parS);
 
     Timer t;
-    double v1 = 0, v2 = 0, v3 = 0, v4 = 0;
+    double v1 = 0, v2 = 0, v3 = 0, v4 = 0, v5 = 0;
     t.Start();
     for (int i=0; i<nsim; i++)
 	v1 = evaluate1(&neval, x.begin(), x.size(), funS, envS);
@@ -74,8 +75,15 @@ RcppExport SEXP benchmarkEvals(SEXP bmS, SEXP parS, SEXP funS, SEXP envS) {
     t.Stop();
     double t4 = t.ElapsedTime();
 
+    t.Reset();
+    neval = 0;
+    t.Start();
+    for (int i=0; i<nsim; i++)
+	v5 = evaluate5(neval, x, fun, env);
+    t.Stop();
+    double t5 = t.ElapsedTime();
 
-    return Rcpp::DataFrame::create(Rcpp::Named("times", Rcpp::NumericVector::create(t1, t2, t3, t4)),
-				   Rcpp::Named("values", Rcpp::NumericVector::create(v1, v2, v3, v4)));
+    return Rcpp::DataFrame::create(Rcpp::Named("times", Rcpp::NumericVector::create(t1, t2, t3, t4, t5)),
+				   Rcpp::Named("values", Rcpp::NumericVector::create(v1, v2, v3, v4, v5)));
 
 }
