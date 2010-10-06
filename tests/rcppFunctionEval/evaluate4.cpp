@@ -1,6 +1,10 @@
  
 #include <Rcpp.h>
 
+// similar to evaluate1 from DEoptim but with Rcpp objects for function 
+// and environment in the signature too, plus funcall.eval(env) 
+// -- still considerably slower
+
 RcppExport double evaluate4(long *l_nfeval, 
 			    double *param, int i_D,
 			    const Rcpp::Function & fun, const Rcpp::Environment & env)
