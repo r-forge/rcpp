@@ -1,7 +1,8 @@
 
 #include <Rcpp.h>
 
-/*------General functions-----------------------------------------*/
+// similar to evaluate1 from DEoptim but with Rcpp objects for function 
+// and environment -- considerably slower
 
 RcppExport double evaluate2(long *l_nfeval, 
 			    double *param, int i_D,
