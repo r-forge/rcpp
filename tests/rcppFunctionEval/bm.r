@@ -9,8 +9,8 @@ genroseFunction <- function(x) {
 
 dyn.load("bm.so")
 res <-.Call("benchmarkEvals",
-            list("nsim"=5000),		# bmpar list
-            rep(1,2),			# parameter vec.
+            list("nsim"=50000),		# bmpar list
+            rep(1.0, 50L),		# parameter vec.
             genroseFunction,		# function
             new.env())			# environment
 
