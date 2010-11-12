@@ -1,0 +1,17 @@
+Package: RcppParDE
+Version: 0.1.0
+Title: Global optimization by differential evolution in C++ using OpenMP parallel computing
+Author: Dirk Eddelbuettel extending DEoptim (by David Ardia, Katharine Mullen,
+  Brian Peterson, Joshua Ulrich) which itself is based on DE-Engine (by Rainer Storn)
+Maintainer: Dirk Eddelbuettel <edd@debian.org>
+Description: This package provides an efficient C++ based implementation of the
+  DEoptim function which performs global optimization by differential evolution. 
+  It builds on RcppDE package which aims to show that "easier, shorter,
+  faster: pick any three" is achievable when moving code from plain old C to
+  modern C++ --- and attempts to reap further gains by using parallel
+  execution using the OpenMP framework for multithreaded computing on
+  multicore systems.
+License: GPL (>= 2)
+Depends: Rcpp, RcppArmadillo (>= 0.2.8)
+Suggests: inline, DEoptim
+LinkingTo: Rcpp, RcppArmadillo
