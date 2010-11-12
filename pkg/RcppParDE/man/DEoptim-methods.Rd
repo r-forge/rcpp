@@ -53,6 +53,7 @@
   URL \url{http://ssrn.com/abstract=1584905}
 }
 \examples{
+\dontrun{
   ## Rosenbrock Banana function
   ## The function has a global minimum f(x) = 0 at the point (0,0).  
   ## Note that the vector of parameters to be optimized must be the first 
@@ -103,7 +104,7 @@
   dev.new()
   plot(outDEoptim, plot.type = "bestvalit", type = 'b')
 
-\dontrun{
+  \dontrun{
   ## an example with a normal mixture model: requires package mvtnorm
   library(mvtnorm)
 
@@ -137,6 +138,7 @@
   ## the intermediate populations indicate the bi-modality of the function
   dev.new()
   plot(outDEoptim, plot.type = "storepop")
+  }
 }
 }
 \keyword{methods}

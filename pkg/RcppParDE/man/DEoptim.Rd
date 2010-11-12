@@ -11,7 +11,9 @@ DEoptim(fn, lower, upper, control = DEoptim.control(), env, ...)
 \arguments{
   \item{fn}{the function to be optimized (minimized). The function should have as its first 
     argument the vector of real-valued parameters to optimize, and return a scalar real result. \code{NA} 
-    and \code{NaN} values are not allowed.}
+    and \code{NaN} values are not allowed.  \code{fn} can also been
+    external pointer object encapsulating a C/C++-level function pointer
+    to a compiled functions.}
   \item{lower, upper}{two vectors specifying scalar real lower and upper bounds on each parameter to be optimized, so that the i-th element 
     of \code{lower} and \code{upper} applied to the i-th parameter. The implementation searches
     between \code{lower} and \code{upper} for the global optimum (minimum) of \code{fn}.}
@@ -223,6 +225,7 @@ DEoptim(fn, lower, upper, control = DEoptim.control(), env, ...)
   for alternative optimization algorithms.
 }
 \examples{
+  \dontrun{
   ## Rosenbrock Banana function
   ## The function has a global minimum f(x) = 0 at the point (0,0).  
   ## Note that the vector of parameters to be optimized must be the first 
@@ -269,6 +272,7 @@ DEoptim(fn, lower, upper, control = DEoptim.control(), env, ...)
 
   DEoptim(Wild, lower = -50, upper = 50,
           control = DEoptim.control(NP = 50))
+  }
 }
 \keyword{nonlinear}
 \keyword{optimize}
