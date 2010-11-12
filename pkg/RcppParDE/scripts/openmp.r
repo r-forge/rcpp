@@ -21,13 +21,6 @@ Rastrigin <- function(x) {
 }
 
 
-
-#maxIt <- 500                           # not excessive but so that we get some run-time on simple problems
-#n <- 40
-
-maxIt <- 500
-n <- 20
-
 inc <- 'double genrose(SEXP xs) {
                 Rcpp::NumericVector x(xs);
                 int n = x.size();
@@ -73,8 +66,12 @@ src.xptr <- 'std::string fstr = Rcpp::as<std::string>(funname);
                  '
 
 create_xptr <- cxxfunction(signature(funname="character"), body=src.xptr, inc=inc, plugin="Rcpp")
-xptr <- create_xptr("wild")
-func <- Wild
+xptr <- create_xptr("rastrigin")
+func <- Rastrigin
+#maxIt <- 500                           # not excessive but so that we get some run-time on simple problems
+#n <- 40
+maxIt <- 1000
+n <- 20
 
 set.seed(42)
 print(system.time( {
