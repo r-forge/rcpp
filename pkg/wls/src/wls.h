@@ -1,5 +1,5 @@
-#ifndef Irwls_H
-#define Irwls_H
+#ifndef wls_H
+#define wls_H
 
 #include <RcppArmadillo.h>
 

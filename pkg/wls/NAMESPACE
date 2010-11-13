@@ -1,4 +1,4 @@
-useDynLib(Irwls)
+useDynLib(wls)
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, Module)
 importClassesFrom( Rcpp, "C++Object", "C++Class", "Module" )
