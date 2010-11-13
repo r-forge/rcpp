@@ -1,5 +1,5 @@
-require(Irwls)
-irwls <- mIrwls$cppIrwls
+require(wls)
+irwls <- mwls$cppWls
 set.seed(400)
 y = rnorm(10)
 x = rnorm(10)

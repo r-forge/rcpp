@@ -1,11 +1,14 @@
 
-#include "Irwls.h"
+#include "wls.h"
 
 using namespace Rcpp ;
 
-class Irwls{
+class Wls{
 public:
-    Irwls(SEXP xr, SEXP yr) {
+
+    Wls() {}
+
+    Wls(SEXP xr, SEXP yr) {
 	x = NumericMatrix(xr);
 	y = NumericVector(yr);
 	xw = NumericVector(x.nrow()*x.ncol());
@@ -53,12 +56,12 @@ private:
 
 };
 
-RCPP_MODULE(mIrwls) {
+RCPP_MODULE(mwls) {
 
-class_<Irwls>( "cppIrwls" )
-
+class_<Wls>( "cppWls" )
+    .default_constructor()
     .constructor(init_2<NumericMatrix,NumericVector>())
-    .method("fit", &Irwls::fit)
+    .method("fit", &Wls::fit)
     ;
 
 }
