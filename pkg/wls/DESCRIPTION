@@ -13,4 +13,4 @@ License: GPL(>=2)
 LazyLoad: yes
 Depends: Rcpp (>= 0.8.7.1), RcppArmadillo (>= 0.2.8), methods
 LinkingTo: Rcpp, RcppArmadillo
-SystemRequirements: GNU make
+
