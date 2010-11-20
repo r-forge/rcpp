@@ -7,27 +7,21 @@
 // and based on DE-Engine v4.0, Rainer Storn, 2004  
 // (http://www.icsi.berkeley.edu/~storn/DeWin.zip)
 
-#ifdef USE_OPENMP
 #include <RcppArmadillo.h>	// declarations for both Rcpp and RcppArmadillo offering Armadillo classes
 #include <omp.h>		// OpenMP for compiler-generated multithreading
 #include "evaluate.h"		// simple function evaluation framework
+#include <google/profiler.h>
 
 void permute(int ia_urn2[], int i_urn2_depth, int i_NP, int i_avoid, int ia_urntmp[]);
 
-inline double drndu(void) {
-#ifdef USE_OPENMP
+inline double drndu(void) {	// simple wrapper around double uniform_random() to make it indepedent of R
     return arma::randu();
-#else
-    return ::unif_rand();
-#endif
+    // return ::unif_rand();
 }
 
-inline int irndu(const double val) {
-#ifdef USE_OPENMP
+inline int irndu(const double val) {	// simple wrapper around int uniform_random() to make it indepedent of R
     return static_cast<int>(arma::randu() * val);
-#else
-    return static_cast<int>(::unif_rand() * val);
-#endif
+    // return static_cast<int>(::unif_rand() * val);
 }
 
 void devol(double VTR, double f_weight, double f_cross, int i_bs_flag,
@@ -40,7 +34,7 @@ void devol(double VTR, double f_weight, double f_cross, int i_bs_flag,
            arma::mat &d_pop, Rcpp::List &d_storepop, arma::mat & d_bestmemit, arma::colvec & d_bestvalit,
            int & i_iterations, double i_pPct, long & l_nfeval) {
 
-    //ProfilerStart("/tmp/RcppDE.prof");
+    ProfilerStart("/tmp/RcppParDE.prof");
     Rcpp::DE::EvalBase *ev = NULL; 		// pointer to abstract base class
     if (TYPEOF(fcall) == EXTPTRSXP) { 		// non-standard mode: we are being passed an external pointer
 	ev = new Rcpp::DE::EvalCompiled(fcall); // so assign a pointer using external pointer in fcall SEXP
@@ -112,6 +106,7 @@ void devol(double VTR, double f_weight, double f_cross, int i_bs_flag,
 	    rsort_with_index( temp_oldC.memptr(), sortIndex.begin(), i_NP );  	// to use sortIndex later 
 	}
 
+	omp_set_num_threads(1); //FIXME!!
 #pragma omp parallel for shared(ia_urn2,ta_oldP,ta_newP,ta_newC,t_tmpP,ia_urntmp) schedule(static,1)
 	for (int i = 0; i < i_NP; i++) {	// ----start of loop through ensemble------------------------
 
@@ -293,6 +288,5 @@ void devol(double VTR, double f_weight, double f_cross, int i_bs_flag,
     i_iterations = i_iter;    
     l_nfeval = ev->getNbEvals();
     //PutRNGstate();   
-    // ProfilerStop();
+    ProfilerStop();
 }
-#endif

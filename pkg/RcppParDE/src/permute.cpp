@@ -7,7 +7,6 @@
 // and based on DE-Engine v4.0, Rainer Storn, 2004  
 // (http://www.icsi.berkeley.edu/~storn/DeWin.zip)
 
-#ifdef USE_OPENMP
 #include <RcppArmadillo.h>	// declarations for both Rcpp and RcppArmadillo offering Armadillo classes
 #include <omp.h>		// OpenMP for compiler-generated multithreading
 
@@ -47,4 +46,3 @@ void permute(int ia_urn2[], int i_urn2_depth, int i_NP, int i_avoid, int ia_urn1
     }
     //PutRNGstate();
 }
-#endif

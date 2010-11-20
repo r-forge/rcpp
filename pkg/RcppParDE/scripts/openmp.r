@@ -66,12 +66,14 @@ src.xptr <- 'std::string fstr = Rcpp::as<std::string>(funname);
                  '
 
 create_xptr <- cxxfunction(signature(funname="character"), body=src.xptr, inc=inc, plugin="Rcpp")
-xptr <- create_xptr("rastrigin")
-func <- Rastrigin
+#xptr <- create_xptr("genrose")
+#func <- Genrose
+xptr <- create_xptr("wild")
+func <- Wild
 #maxIt <- 500                           # not excessive but so that we get some run-time on simple problems
 #n <- 40
 maxIt <- 1000
-n <- 20
+n <- 40
 
 set.seed(42)
 print(system.time( {
