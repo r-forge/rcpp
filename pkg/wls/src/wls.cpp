@@ -6,7 +6,7 @@ using namespace Rcpp ;
 class Wls{
 public:
 
-    Wls() {}
+    //  Wls() {}
 
     Wls(SEXP xr, SEXP yr) {
 	x = NumericMatrix(xr);
@@ -59,7 +59,7 @@ private:
 RCPP_MODULE(mwls) {
 
 class_<Wls>( "cppWls" )
-    .default_constructor()
+    // .default_constructor()
     .constructor(init_2<NumericMatrix,NumericVector>())
     .method("fit", &Wls::fit)
     ;
