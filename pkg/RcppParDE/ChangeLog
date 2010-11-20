@@ -1,0 +1,5 @@
+2010-11-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* Created separate package RcppParDE by copying the OpenMP related
+	code out of the existing RcppDE package -- around svn rev 2429
+
