@@ -7,8 +7,8 @@ RCPP_MODULE(RcppModels) {
 
 class_<Irwls>( "Irwls" )
 
-    .default_constructor()
-    .constructor(init_2<NumericMatrix,NumericVector>())
+    .constructor()
+    .constructor<NumericMatrix,NumericVector>()
 
     .field_readonly("x", &Irwls::x)
     .field_readonly("y", &Irwls::y)
@@ -20,8 +20,8 @@ using namespace glm;
     
 class_<glmFamily>("glmFamily")
 
-    .default_constructor()
-    .constructor(init_1<List>())
+    .constructor()
+    .constructor<List>()
 
     .method("linkFun",  &glmFamily::linkFun)
     .method("linkInv",  &glmFamily::linkInv)
@@ -32,10 +32,10 @@ class_<glmFamily>("glmFamily")
 
 class_<lmResp>("lmResp")
 
-    .default_constructor()
-    .constructor(init_1<NumericVector>())
-    .constructor(init_2<NumericVector,NumericVector>())
-    .constructor(init_3<NumericVector,NumericVector,NumericVector>())
+    .constructor()
+    .constructor<NumericVector>()
+    .constructor<NumericVector,NumericVector>()
+    .constructor<NumericVector,NumericVector,NumericVector>()
 
     .property("mu",      &lmResp::mu)
     .property("offset",  &lmResp::offset)
@@ -52,11 +52,11 @@ class_<lmResp>("lmResp")
 
 class_<glmResp>("glmResp")
 
-    .default_constructor()
-    .constructor(init_2<List,NumericVector>())
-    .constructor(init_3<List,NumericVector,NumericVector>())
-    .constructor(init_4<List,NumericVector,NumericVector,NumericVector>())
-    .constructor(init_5<List,NumericVector,NumericVector,NumericVector,NumericVector>())
+    .constructor()
+    .constructor<List,NumericVector>()
+    .constructor<List,NumericVector,NumericVector>()
+    .constructor<List,NumericVector,NumericVector,NumericVector>()
+    .constructor<List,NumericVector,NumericVector,NumericVector,NumericVector>()
  
     .property("eta",         &glmResp::eta)   
     .property("mu",          &glmResp::mu)
@@ -78,9 +78,9 @@ class_<glmResp>("glmResp")
 
 class_<predMod>("predMod")
 
-    .default_constructor()
-    .constructor(init_1<int>())
-    .constructor(init_1<NumericVector>())
+    .constructor()
+    .constructor<int>()
+    .constructor<NumericVector>()
  
 // For some reason this doesn't work.
 //    .property("coef0", &predMod::coef0, &predMod::setCoef0)   
@@ -89,9 +89,9 @@ class_<predMod>("predMod")
 
 class_<densePred>("densePred")
 
-    .default_constructor()
-    .constructor(init_1<NumericMatrix>())
-    .constructor(init_2<NumericMatrix, NumericVector>())
+    .constructor()
+    .constructor<NumericMatrix>()
+    .constructor<NumericMatrix, NumericVector>()
 
     .property("coef0", &densePred::coef0)
     .property("delta", &densePred::delta)

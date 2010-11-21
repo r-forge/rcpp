@@ -60,7 +60,7 @@ RCPP_MODULE(mwls) {
 
 class_<Wls>( "cppWls" )
     // .default_constructor()
-    .constructor(init_2<NumericMatrix,NumericVector>())
+    .constructor<NumericMatrix,NumericVector>()
     .method("fit", &Wls::fit)
     ;
 
