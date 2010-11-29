@@ -3,10 +3,10 @@
 \alias{patches}
 \docType{package}
 \title{
-Collection of hot pacthes for R
+Collection of hot patches for R
 }
 \description{
-Collection of hot pacthes for R
+Collection of hot patches for R
 }
 \details{
 \tabular{ll}{

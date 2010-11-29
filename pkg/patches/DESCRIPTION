@@ -1,11 +1,11 @@
 Package: patches
 Type: Package
-Title: Collection of hot pacthes for R
+Title: Collection of hot patches for R
 Version: 0.0
 Date: 2010-11-29
 Author: Romain Francois
 Maintainer: Romain Francois <romain@r-enthusiasts.com>
-Description: Collection of hot pacthes for R. At the moment the 
+Description: Collection of hot patches for R. At the moment the 
     package installs a faster version of base::sequence back into the 
     base namespace
 License: GPL (>= 2.0)
