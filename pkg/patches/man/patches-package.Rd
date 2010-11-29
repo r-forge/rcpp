@@ -19,7 +19,11 @@ LazyLoad: \tab yes\cr
 }
 
 A faster version of \link[base]{sequence} is installed
-in the base namespace when patches loads. 
+in the base namespace when patches loads. The patch is based on a variation 
+of the code submitted to R-devel in this thread 
+\url{http://article.gmane.org/gmane.comp.lang.r.devel/26157}
+
+More patches will be added
 
 }
 \author{

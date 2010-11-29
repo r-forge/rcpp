@@ -1,7 +1,5 @@
 # -*- mode: R; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 #
-# zzz.R: install the patches
-#
 # Copyright (C) 2010	Romain Francois
 #
 # This file is part of patches.
@@ -19,17 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with patches.  If not, see <http://www.gnu.org/licenses/>.
 
-hijack <- function(name, value, namespace = "base" ){
-	namespace <- asNamespace( namespace )
-	unlockBinding( name, namespace )
-	assign( name, value, envir = namespace )
-	lockBinding(name, namespace )
-}
+x <- 1:10000
+cat( "base::sequence : \n" )
+system.time( sequence( x ) )
 
-
-.onLoad <- function(libname, pkgname){
-	m <- Module( "patches" )
-	hijack( "sequence", m$sequence )
-}    
+cat( "after loading patches :\n" )
+require( patches )
+system.time( sequence(x) )
 
 
