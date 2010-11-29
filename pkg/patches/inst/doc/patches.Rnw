@@ -1,0 +1,51 @@
+\documentclass[10pt]{article}
+%\VignetteIndexEntry{patches}
+\usepackage{vmargin}
+\setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
+
+\usepackage{color, alltt}
+\usepackage[authoryear,round,longnamesfirst]{natbib}
+\usepackage[colorlinks]{hyperref}
+\definecolor{link}{rgb}{0,0,0.3}	%% next few lines courtesy of RJournal.sty
+\hypersetup{
+    colorlinks,%
+    citecolor=link,%
+    filecolor=link,%
+    linkcolor=link,%
+    urlcolor=link
+}
+
+\newcommand{\proglang}[1]{\textsf{#1}}
+\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+
+<<echo=FALSE,results=hide>>=
+prettyVersion <- packageDescription("patches")$Version
+prettyDate <- format(Sys.Date(), "%B %e, %Y")
+@
+
+\author{Romain Fran\c{c}ois}
+\title{Collection of hot patches for R}
+\date{\pkg{patches} version \Sexpr{prettyVersion} as of \Sexpr{prettyDate}}
+
+\begin{document}
+\maketitle
+
+\abstract{
+  \noindent
+  The \pkg{patches} package includes a collection of hot patches for R. 
+}
+
+\section{sequence}
+
+The \texttt{sequence} function in base R is currently implemented as: 
+
+<<echo=FALSE>>=
+function(nvec) unlist(lapply(nvec, seq_len))
+@
+
+This results in a number of avoidable memory allocations that the version from 
+\pkg{patches} avoids. The file \texttt{examples/sequence.R} shows the benefits 
+of the patch. 
+
+\end{document}
+
