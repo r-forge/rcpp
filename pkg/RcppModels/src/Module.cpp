@@ -5,24 +5,23 @@ using namespace Rcpp;
 
 RCPP_MODULE(RcppModels) {
 
-class_<Irwls>( "Irwls" )
+// class_<Irwls>( "Irwls" )
 
-    .constructor()
-    .constructor<NumericMatrix,NumericVector>()
+//     .constructor<NumericMatrix,NumericVector>()
 
-    .field_readonly("x", &Irwls::x)
-    .field_readonly("y", &Irwls::y)
+//     .field_readonly("x", &Irwls::x)
+//     .field_readonly("y", &Irwls::y)
 
-    .method("fit", &Irwls::fit)
-    ;
+//     .method("fit", &Irwls::fit)
+//     ;
 
 using namespace glm;
     
 class_<glmFamily>("glmFamily")
 
-    .constructor()
     .constructor<List>()
 
+    .property("family", &glmFamily::fam)
     .method("linkFun",  &glmFamily::linkFun)
     .method("linkInv",  &glmFamily::linkInv)
     .method("muEta",    &glmFamily::muEta)
@@ -32,7 +31,6 @@ class_<glmFamily>("glmFamily")
 
 class_<lmResp>("lmResp")
 
-    .constructor()
     .constructor<NumericVector>()
     .constructor<NumericVector,NumericVector>()
     .constructor<NumericVector,NumericVector,NumericVector>()
@@ -52,52 +50,75 @@ class_<lmResp>("lmResp")
 
 class_<glmResp>("glmResp")
 
-    .constructor()
+//    .constructor()
     .constructor<List,NumericVector>()
     .constructor<List,NumericVector,NumericVector>()
     .constructor<List,NumericVector,NumericVector,NumericVector>()
     .constructor<List,NumericVector,NumericVector,NumericVector,NumericVector>()
  
-    .property("eta",         &glmResp::eta)   
-    .property("mu",          &glmResp::mu)
-    .property("offset",      &glmResp::offset)
-    .property("sqrtXwt",     &glmResp::sqrtXwt)
-    .property("sqrtrwt",     &glmResp::sqrtrwt)
-    .property("weights",     &glmResp::weights)
-    .property("wtres",       &glmResp::wtres)
-    .property("y",           &glmResp::y)
-    .property("wrss",        &glmResp::wrss)
-    .property("wrkResids",   &glmResp::wrkResids)
+    .property("devResid",    &glmResp::devResid,
+	    "deviance residuals")
+    .property("eta",         &glmResp::eta,
+	      "current value of the linear predictor")
+    .property("family",      &glmResp::family,
+	      "name of the glm family")
+    .property("link",        &glmResp::link,
+	      "name of the glm link")
+    .property("mu",          &glmResp::mu,
+	      "current value of the mean vector")
+    .property("muEta",       &glmResp::muEta,
+	      "current value of d mu/d eta")
+    .property("offset",      &glmResp::offset,
+	      "offset vector - const")
+    .property("residDeviance", &glmResp::residDeviance,
+	      "sum of the deviance residuals")
+    .property("sqrtXwt",     &glmResp::sqrtXwt,
+	      "square root of the weights applied to the model matrix")
+    .property("sqrtrwt",     &glmResp::sqrtrwt,
+	      "square root of the weights applied to the residuals")
+    .property("sqrtWrkWt",     &glmResp::sqrtrwt,
+	      "square root of the weights applied to the working response")
+    .property("weights",     &glmResp::weights,
+	      "prior weights - const")
+    .property("variance",    &glmResp::variance,
+	      "current (unscaled) variances")
+    .property("wtres",       &glmResp::wtres,
+	      "current value of the weighted residuals")
+    .property("wrss",        &glmResp::wrss,
+	      "weighted residual sum of squares")
+    .property("wrkResids",   &glmResp::wrkResids,
+	      "working residuals - on the eta scale")
+    .property("wrkResp",     &glmResp::wrkResp,
+	      "working response - on the eta scale")
+    .property("y",           &glmResp::y,
+	      "numeric response vector - const")
 
-    .method("devResid",      &glmResp::devResid)
-    .method("residDeviance", &glmResp::residDeviance)
-    .method("updateMu",      &glmResp::updateMu)
-    .method("updateWts",     &glmResp::updateWts)
-    .method("wrkResids",     &glmResp::wrkResids)
-    ;
-
-class_<predMod>("predMod")
-
-    .constructor()
-    .constructor<int>()
-    .constructor<NumericVector>()
- 
-// For some reason this doesn't work.
-//    .property("coef0", &predMod::coef0, &predMod::setCoef0)   
-    .property("coef0", &predMod::coef0)
+    .method("updateMu",      &glmResp::updateMu,
+	    "update mu and derived quantities from a new value of eta")
+    .method("updateWts",     &glmResp::updateWts,
+	    "update the residual and X weights.")
     ;
 
 class_<densePred>("densePred")
 
-    .constructor()
     .constructor<NumericMatrix>()
     .constructor<NumericMatrix, NumericVector>()
 
-    .property("coef0", &densePred::coef0)
-    .property("delta", &densePred::delta)
-    .property("X",     &densePred::X)
+    .property("coef",  &densePred::coef,
+	      "last coefficient vector evaluated")
+    .property("coef0", &densePred::coef0, &densePred::setCoef0,
+	      "base coefficient vector")
+    .property("delta", &densePred::delta,
+	      "increment in coefficient vector")
+    .property("X",     &densePred::X,
+	      "dense model matrix")
 
-    .method("gamma",   &densePred::gamma)
+    .method("gamma",   &densePred::gamma,
+	    "evaluate delta from Xwts and wtres; return eta for full step factor")
+    .method("dgamma",  &densePred::dgamma,
+	    "return eta for specified step factor")
+    .method("installCoef0", &densePred::installCoef0,
+	    "install the current coef as coef0 for the next step")
     ;
 
 }

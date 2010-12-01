@@ -11,12 +11,12 @@
 }
 \details{
   \tabular{ll}{
-Package: \tab RcppModels\cr
-Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2010-11-20\cr
-License: \tab GPL (>= 2)
-LazyLoad: \tab yes\cr
+    Package: \tab RcppModels\cr
+    Type: \tab Package\cr
+    Version: \tab 0.1.0\cr
+    Date: \tab 2010-11-30\cr
+    License: \tab GPL (>= 2)\cr
+    LazyLoad: \tab yes\cr
   }
 }
 \author{

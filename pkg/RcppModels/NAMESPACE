@@ -1,3 +1,13 @@
 useDynLib(RcppModels)
+import(Rcpp)
+export(
+       densePred
+       , fastGlm
+       , glmFamily
+       , glmResp
+       , lmResp
+       )
+# exportPattern("^[^\\.]")
+
 
 	

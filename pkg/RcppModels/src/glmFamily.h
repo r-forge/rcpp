@@ -12,13 +12,16 @@ namespace glm {
 		     double(*)(double,double,double)> drmap;
 
     class glmFamily {
-	std::string family, link; // as in the R glm family
+	std::string d_family, d_link; // as in the R glm family
 	Rcpp::List           lst; // original list from R
     public:
 
-	glmFamily();
+//	glmFamily();
 
-	glmFamily(Rcpp::List);
+	glmFamily(Rcpp::List) throw (std::runtime_error);
+
+	const std::string& fam() const {return d_family;}
+	const std::string& lnk() const {return d_link;}
 
 	// initialize the associative arrays of scalar functions
 	void initMaps();
