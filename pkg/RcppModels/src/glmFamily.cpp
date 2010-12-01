@@ -62,25 +62,25 @@ namespace glm {
 	    varFuncs["poisson"]          = &identf; // x
     }
     
-    glmFamily::glmFamily() {
-	if (!lnks.count("identity")) initMaps();
-    }
+    // glmFamily::glmFamily() {
+    // 	if (!lnks.count("identity")) initMaps();
+    // }
 	
-    glmFamily::glmFamily(List ll) : lst(ll) {
+    glmFamily::glmFamily(List ll) throw (std::runtime_error)
+	: lst(ll) {
 	if (as<string>(lst.attr("class")) != "family")
-	    Rf_error("glmFamily only from list of (S3) class \"family\"");
-	
-	CharacterVector fam = lst["family"], llink = lst["link"];
-	char *pt = fam[0]; family = string(pt);
-	pt = llink[0]; link = string(pt);
+	    throw std::runtime_error("glmFamily requires a list of (S3) class \"family\"");
+	CharacterVector ff = lst["family"], lnk = lst["link"];
+	d_family = as<std::string>(ff);
+	d_link = as<std::string>(lnk);
 
 	if (!lnks.count("identity")) initMaps();
     }
 
     Rcpp::NumericVector
     glmFamily::linkFun(Rcpp::NumericVector const &mu) const {
-	if (lnks.count(link)) {	// sapply the known scalar function
-	    return NumericVector::import_transform(mu.begin(), mu.end(), lnks[link]);
+	if (lnks.count(d_link)) {	// sapply the known scalar function
+	    return NumericVector::import_transform(mu.begin(), mu.end(), lnks[d_link]);
 	} else {		// use the R function
 	    Function linkfun = ((const_cast<glmFamily*>(this))->lst)["linkfun"];
 	    // The const_cast is needed so that this member function
@@ -92,8 +92,8 @@ namespace glm {
     
     Rcpp::NumericVector
     glmFamily::linkInv(Rcpp::NumericVector const &eta) const {
-	if (linvs.count(link)) {
-	    return NumericVector::import_transform(eta.begin(), eta.end(), linvs[link]);
+	if (linvs.count(d_link)) {
+	    return NumericVector::import_transform(eta.begin(), eta.end(), linvs[d_link]);
 	} else {
 	    Function linkinv = ((const_cast<glmFamily*>(this))->lst)["linkinv"];
 	    return linkinv(eta);
@@ -102,8 +102,8 @@ namespace glm {
     
     Rcpp::NumericVector
     glmFamily::muEta(Rcpp::NumericVector const &eta) const {
-	if (muEtas.count(link)) {
-	    return NumericVector::import_transform(eta.begin(), eta.end(), muEtas[link]);
+	if (muEtas.count(d_link)) {
+	    return NumericVector::import_transform(eta.begin(), eta.end(), muEtas[d_link]);
 	}
 	Function mu_eta = ((const_cast<glmFamily*>(this))->lst)["mu.eta"];
 	return mu_eta(eta);
@@ -111,8 +111,8 @@ namespace glm {
     
     Rcpp::NumericVector
     glmFamily::variance(Rcpp::NumericVector const &mu) const {
-	if (varFuncs.count(link)) {
-	    return NumericVector::import_transform(mu.begin(), mu.end(), varFuncs[link]);
+	if (varFuncs.count(d_link)) {
+	    return NumericVector::import_transform(mu.begin(), mu.end(), varFuncs[d_link]);
 	}
 	Function vv = ((const_cast<glmFamily*>(this))->lst)["variance"];
 	return vv(mu);
@@ -122,8 +122,8 @@ namespace glm {
     glmFamily::devResid(Rcpp::NumericVector const &mu,
 			Rcpp::NumericVector const &weights,
 			Rcpp::NumericVector const &y) const {
-	if (devRes.count(family)) {
-	    double (*f)(double, double, double) = devRes[family];
+	if (devRes.count(d_family)) {
+	    double (*f)(double, double, double) = devRes[d_family];
 	    int nobs = mu.size();
 	    NumericVector ans(nobs);
 	    double *mm = mu.begin(), *ww = weights.begin(),

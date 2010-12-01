@@ -3,19 +3,19 @@
 #include <Rcpp.h>
 #include "glmFamily.h"
 
-class Irwls{
-public:
-    const Rcpp::NumericMatrix x;
-    const Rcpp::NumericVector y;
-    arma::mat X;
-    arma::vec Y;
-    Rcpp::NumericVector wrt;
+// class Irwls{
+// public:
+//     const Rcpp::NumericMatrix x;
+//     const Rcpp::NumericVector y;
+//     arma::mat X;
+//     arma::vec Y;
+//     Rcpp::NumericVector wrt;
     
-    Irwls() {}
+//     Irwls() {}
     
-    Irwls(Rcpp::NumericMatrix, Rcpp::NumericVector); 
-    arma::vec fit(Rcpp::NumericVector);
-};
+//     Irwls(Rcpp::NumericMatrix, Rcpp::NumericVector); 
+//     arma::vec fit(Rcpp::NumericVector);
+// };
 
 namespace glm {
     class lmResp {
@@ -49,7 +49,7 @@ namespace glm {
 	
     class glmResp : public lmResp {
     public:
-	glmResp() {}
+//	glmResp() {}
 	glmResp(Rcpp::List, Rcpp::NumericVector y)
 	    throw (std::runtime_error);
 	glmResp(Rcpp::List, Rcpp::NumericVector y,
@@ -75,14 +75,19 @@ namespace glm {
 	const Rcpp::NumericVector&   weights() const {return d_weights;}
 	const Rcpp::NumericVector&     wtres() const {return d_wtres;}
 	const Rcpp::NumericVector&         y() const {return d_y;}
+	const std::string&            family() const {return d_fam.fam();}
+	const std::string&              link() const {return d_fam.lnk();}
 //	double                      deviance() const;
 	double                 residDeviance() const;
 	double                      updateMu(const Rcpp::NumericVector&);
 	double                     updateWts();
 	double                          wrss() const {return d_wrss;}
 	Rcpp::NumericVector         devResid() const;
+	Rcpp::NumericVector            muEta() const;
+        Rcpp::NumericVector        sqrtWrkWt() const;
+	Rcpp::NumericVector         variance() const;
         Rcpp::NumericVector        wrkResids() const;
-
+        Rcpp::NumericVector          wrkResp() const;
     protected:
 	glmFamily d_fam;
 	const Rcpp::NumericVector d_n;
@@ -91,15 +96,18 @@ namespace glm {
 
     class predMod {
     protected:
-	Rcpp::NumericVector d_coef0, d_delta;
-	arma::vec a_coef0, a_delta;
+	Rcpp::NumericVector d_coef, d_coef0, d_delta;
+	arma::vec a_coef, a_coef0, a_delta;
     public:
-	predMod() {}
 	predMod(int);
 	predMod(Rcpp::NumericVector);
+
 	const Rcpp::NumericVector& delta() const {return d_delta;}
 	const Rcpp::NumericVector& coef0() const {return d_coef0;}
-	void  setCoef0(Rcpp::NumericVector);
+
+	void installCoef0();
+	void setCoef0(const Rcpp::NumericVector&)
+	    throw (std::runtime_error);
     };
 
     class densePred : predMod {
@@ -107,15 +115,20 @@ namespace glm {
 	Rcpp::NumericMatrix d_X;
 	arma::mat a_X;
     public:
-	densePred() {}
 	densePred(Rcpp::NumericMatrix) throw (std::runtime_error);
 	densePred(Rcpp::NumericMatrix, Rcpp::NumericVector)
 	    throw (std::runtime_error);
 
 	const Rcpp::NumericMatrix&     X() const {return d_X;}
-	const arma::mat&              aX() const {return a_X;}
-	const Rcpp::NumericVector& delta() const {return d_delta;}
+	const arma::mat&              aX() const {return a_X;}	
+	const Rcpp::NumericVector&  coef() const {return d_coef;}
 	const Rcpp::NumericVector& coef0() const {return d_coef0;}
+	const Rcpp::NumericVector& delta() const {return d_delta;}
+	void installCoef0();
+	void setCoef0(const Rcpp::NumericVector&)
+	    throw (std::runtime_error);
+// Choose better names than gamma and dgamma.  These conflict with
+// gamma functions, gamma distributions, the Gamma family, ...
 	Rcpp::NumericVector gamma(const Rcpp::NumericVector&,
 				  const Rcpp::NumericVector&)
 	    throw (std::runtime_error);

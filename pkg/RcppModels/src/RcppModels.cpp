@@ -2,23 +2,23 @@
 
 using namespace Rcpp;
 
-Irwls::Irwls(Rcpp::NumericMatrix xR, Rcpp::NumericVector yR) :
-    x(xR), y(yR) {
-    int n = x.nrow(), p = x.ncol();
-    if (y.size() != n)
-	throw std::runtime_error("incompatible dimensions");
-    X = arma::mat(x.begin(), n, p, false, true);
-    Y = arma::vec(y.begin(), n, false, true);
-}
+// Irwls::Irwls(Rcpp::NumericMatrix xR, Rcpp::NumericVector yR) :
+//     x(xR), y(yR) {
+//     int n = x.nrow(), p = x.ncol();
+//     if (y.size() != n)
+// 	throw std::runtime_error("incompatible dimensions");
+//     X = arma::mat(x.begin(), n, p, false, true);
+//     Y = arma::vec(y.begin(), n, false, true);
+// }
 
-arma::vec Irwls::fit(Rcpp::NumericVector wR) {
-    int n = x.nrow();
-    if (wR.size() != n)
-	throw std::runtime_error("length(weights) != nrow(X)");
-    wrt = sqrt(wR);
-    arma::vec W(wrt.begin(), n, false, true);
-    return arma::solve(diagmat(W) * X, W % Y);
-}
+// arma::vec Irwls::fit(Rcpp::NumericVector wR) {
+//     int n = x.nrow();
+//     if (wR.size() != n)
+// 	throw std::runtime_error("length(weights) != nrow(X)");
+//     wrt = sqrt(wR);
+//     arma::vec W(wrt.begin(), n, false, true);
+//     return arma::solve(diagmat(W) * X, W % Y);
+// }
 
 namespace glm {
     lmResp::lmResp(Rcpp::NumericVector y)
@@ -116,6 +116,15 @@ namespace glm {
 	return d_fam.devResid(d_mu, d_weights, d_y);
     }
 
+    Rcpp::NumericVector glmResp::muEta() const {
+	return d_fam.muEta(d_eta);
+    }
+
+    Rcpp::NumericVector glmResp::variance() const {
+	return d_fam.variance(d_mu);
+    }
+    
+
     double glmResp::residDeviance() const {
 	return sum(devResid());
     }
@@ -129,8 +138,16 @@ namespace glm {
     }
 
     Rcpp::NumericVector glmResp::wrkResids() const {
-	// This needs to be modified
-	return d_wtres;
+	return (d_y - d_mu)/muEta();
+    }
+
+    Rcpp::NumericVector glmResp::wrkResp() const {
+	return d_eta + wrkResids();
+    }
+
+    Rcpp::NumericVector glmResp::sqrtWrkWt() const {
+	Rcpp::NumericVector me = muEta();
+	return sqrt(d_weights * me * me / variance());
     }
 
     double glmResp::updateMu(const Rcpp::NumericVector& gamma) {
@@ -141,17 +158,30 @@ namespace glm {
     }
     
     predMod::predMod(int p)
-	: d_coef0(p), d_delta(p),
-	  a_coef0(d_coef0.begin(), d_coef0.size(), false, true),
-	  a_delta(d_delta.begin(), d_delta.size(), false, true) {
+	: d_coef(p), d_coef0(p), d_delta(p),
+	  a_coef (d_coef.begin(),  p, false, true),
+	  a_coef0(d_coef0.begin(), p, false, true),
+	  a_delta(d_delta.begin(), p, false, true) {
     }
 
     predMod::predMod(Rcpp::NumericVector coef0)
-	: d_coef0(coef0), d_delta(coef0.size()),
+	: d_coef(coef0.size()), d_coef0(coef0), d_delta(coef0.size()),
+	  a_coef(d_coef.begin(), d_coef.size(), false, true),
 	  a_coef0(d_coef0.begin(), d_coef0.size(), false, true),
 	  a_delta(d_delta.begin(), d_delta.size(), false, true) {
     }
     
+   void predMod::setCoef0(const Rcpp::NumericVector& cc)
+	throw (std::runtime_error) {
+	if (cc.size() != d_coef0.size())
+	    throw std::runtime_error("size mismatch in setCoef0");
+	std::copy(cc.begin(), cc.end(), d_coef0.begin());
+    }
+
+    void predMod::installCoef0() {
+	std::copy(d_coef.begin(), d_coef.end(), d_coef0.begin());
+    }
+
     densePred::densePred(Rcpp::NumericMatrix x)
 	throw (std::runtime_error)
 	: predMod(x.ncol()), d_X(x),
@@ -166,6 +196,18 @@ namespace glm {
 	if (d_coef0.size() != d_X.ncol())
 	    throw std::runtime_error("length(coef0) != ncol(X)");
     }
+
+    void densePred::installCoef0() {
+	std::copy(d_coef.begin(), d_coef.end(), d_coef0.begin());
+    }
+
+   void densePred::setCoef0(const Rcpp::NumericVector& cc)
+	throw (std::runtime_error) {
+	if (cc.size() != d_coef0.size())
+	    throw std::runtime_error("size mismatch in setCoef0");
+	std::copy(cc.begin(), cc.end(), d_coef0.begin());
+    }
+
     
     // Returns the linear predictor from the full step
     Rcpp::NumericVector
@@ -178,8 +220,10 @@ namespace glm {
 		std::runtime_error("length(xwts) or length(wtres) != nrow(X)");
 	arma::vec a_xwts = arma::vec(xwts.begin(), n, false, true),
 	    a_wtres = arma::vec(wtres.begin(), n, false, true);
-	a_delta = solve(diagmat(a_xwts) * a_X, a_wtres);
-	return NumericVector(wrap(a_X * (a_coef0 + a_delta)));
+	arma::vec tmp = solve(diagmat(a_xwts) * a_X, a_wtres);
+	std::copy(tmp.begin(), tmp.end(), a_delta.begin());
+	d_coef = d_coef0 + d_delta;
+	return NumericVector(wrap(a_X * a_coef));
     }
     
     // Returns the linear predictor from a step of fac

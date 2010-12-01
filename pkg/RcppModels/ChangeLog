@@ -1,0 +1,27 @@
+2010-11-30  Douglas Bates  <bates@stat.wisc.edu>
+
+	* src/Module.cpp: definition of the Rcpp module
+
+	* src/glmFamily.cpp, src/glmFamily.h: A class representing a glm
+	family.
+
+	* src/RcppModels.cpp, src/RcppModels.h: Classes for linear and
+	generalized linear response modules and for dense predictor
+	modules.
+
+	* tests/pois.R: An example from Dobson.  The Gauss-Newton version
+	of IRLS is currently being done by hand.  This will change.
+
+	* man/RccpModels-package.Rd: initial package documentation
+
+	* inst/unitTests: installed unit tests of some of the glmFamily
+	methods.
+
+	* R/fastGlm.R (fastGlm): draft glm function using C++Class
+	instances. Have not yet added the Gauss-Newton steps but do have
+	one fixed-point step.
+
+	* R/zzz.R (.onLoad): populate the namespace with module contents
+
+	* DESCRIPTION, NAMESPACE: initial release
+

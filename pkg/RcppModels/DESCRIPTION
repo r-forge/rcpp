@@ -1,13 +1,14 @@
 Package: RcppModels
 Type: Package
 Title: Classes for linear and generalized linear and nonlinear models
-Version: 1.0
-Date: 2010-11-20
+Version: 0.1.0
+Date: 2010-11-30
 Author: Douglas Bates, John Chambers, Dirk Eddelbuettel, Romain Francois
 Maintainer: Rcpp-Core <rcpp-core@r-forge.wu-wien.ac.at>
 Description: Provides classes and methods for linear, generalized
   linear and nonlinear models that use linear predictor expressions.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: RcppArmadillo, Rcpp
+Depends: R(>= 2.12.0), Rcpp(>= 0.8.9), RcppArmadillo, methods, 
 LinkingTo: RcppArmadillo, Rcpp
+Suggests: RUnit
