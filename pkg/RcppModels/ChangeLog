@@ -1,3 +1,16 @@
+2010-12-01  Douglas Bates  <bates@stat.wisc.edu>
+
+	* R/fastGlm.R (fastGlm): Perform IRLS iterations before return.
+	Right now these are rather crude (no error checking).  Still need
+	to decide if they should be done in R code or C++ code.  Guess
+	I'll just write it both ways and then decide.
+
+	* tests/pois.R: Added the Gamma examples from McCullagh & Nelder
+
+	* src/glmFamily.h (glm): Corrected the expression for GammaDevRes.
+
+	* DESCRIPTION (Depends): Corrected minor, perhaps benign, typo
+
 2010-11-30  Douglas Bates  <bates@stat.wisc.edu>
 
 	* src/Module.cpp: definition of the Rcpp module
