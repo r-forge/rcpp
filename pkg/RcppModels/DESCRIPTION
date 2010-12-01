@@ -9,6 +9,6 @@ Description: Provides classes and methods for linear, generalized
   linear and nonlinear models that use linear predictor expressions.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: R(>= 2.12.0), Rcpp(>= 0.8.9), RcppArmadillo, methods, 
+Depends: R(>= 2.12.0), Rcpp(>= 0.8.9), RcppArmadillo, methods
 LinkingTo: RcppArmadillo, Rcpp
 Suggests: RUnit

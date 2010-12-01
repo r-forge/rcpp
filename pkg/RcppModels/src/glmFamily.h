@@ -110,9 +110,12 @@ namespace glm {
 	BinomialDevRes(double y, double mu, double wt) {
 	    return 2 * wt * (y_log_y(y, mu) + y_log_y(1 - y, 1 - mu));
 	}
+	static inline double logYMu(double y, double mu) {
+	    return y ? log(y/mu) : 0;
+	}
 	static inline double
 	GammaDevRes   (double y, double mu, double wt) {
-	    return -2 * wt * y_log_y(y, mu) - (y - mu)/mu;
+	    return -2 * wt * (logYMu(y, mu) - (y - mu)/mu);
 	}
 	static inline double
 	GaussianDevRes(double y, double mu, double wt) {

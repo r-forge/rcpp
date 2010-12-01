@@ -1,3 +1,12 @@
+##' Create the response module from the model frame
+##'
+##' Create a glmResp object from the model frame and the glm family.
+##' The initialization of the family as applied to the response takes
+##' place here.
+##' @title Create a glmResp object
+##' @param fr a model frame
+##' @param family a glm family object
+##' @return a glmResp object
 mkRespMod <- function(fr, family)
 {
     N <- n <- nrow(fr)
@@ -31,21 +40,16 @@ fastGlm <-
     function(formula, family, data, weights, subset,
              na.action, start = NULL, etastart, mustart, offset,
              drop.unused.levels = FALSE, doFit = TRUE,
-             control = list(...))
+             control = list(...), ...)
 {
     call <- match.call()
-    if (missing(family)) {
-        family <- NULL
-    } else {
-        if(is.character(family))
-            family <- get(family, mode = "function", envir = parent.frame())
-        if(is.function(family)) family <- family()
-        if(is.null(family$family)) {
-            print(family)
-            stop("'family' not recognized")
-        }
-    }
-    ## extract x, y, etc from the model formula and frame
+    maxit <- if(!is.null(control$maxit)) control$maxit else 8
+                                        # check the family argument
+    if(is.character(family))
+        family <- get(family, mode = "function", envir = parent.frame())
+    if(is.function(family)) family <- family()
+    if(is.null(family$family)) stop("'family' not recognized")
+                                        # create the model frame
     if(missing(data)) data <- environment(formula)
     mf <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data", "subset", "weights", "na.action",
@@ -54,14 +58,22 @@ fastGlm <-
     mf$drop.unused.levels <- TRUE
     mf[[1L]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
-
-    rr <- mkRespMod(mf, family)
+                          # create the response and predictor modules
+    rr <- RcppModels:::mkRespMod(mf, family)
     pp <- new(densePred, model.matrix(formula, mf))
+
     ## one iteration of the fixed-point algorithm to establish
     ## a baseline coefficient vector
     wts <- rr$sqrtWrkWt
     rr$updateMu(pp$gamma(wts, wts * rr$wrkResp))
-    rr$updateWts()
     pp$installCoef0()
+    print(pp$coef0)
+    for (i in seq_len(maxit)) {
+        oldwrss <- rr$updateWts()
+        if ((newwrss <- rr$updateMu(pp$gamma(rr$sqrtXwt, rr$wtres)))
+            < oldwrss) pp$installCoef0()
+        print(pp$coef0)
+        if ((oldwrss - newwrss)/newwrss < 1.e-8) break
+    }
     list(rmod = rr, pmod = pp)
 }
