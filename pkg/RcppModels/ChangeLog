@@ -1,3 +1,14 @@
+2010-12-02  Douglas Bates  <bates@stat.wisc.edu>
+
+	* src/glmFamily.cpp, src/glmFamily.h: cache the Functions in the
+	list.  Transformation methods are now const (without needing a
+	const_cast).
+
+	* DESCRIPTION (Depends): Change Rcpp dependence to >= 0.8.9.2 to
+	ensure that the Function operator() is const.
+
+	* R/zzz.R (.onLoad): Use a less visible name for the environment.
+
 2010-12-01  Douglas Bates  <bates@stat.wisc.edu>
 
 	* R/fastGlm.R (fastGlm): Perform IRLS iterations before return.

@@ -62,60 +62,63 @@ namespace glm {
 	    varFuncs["poisson"]          = &identf; // x
     }
     
-    // glmFamily::glmFamily() {
-    // 	if (!lnks.count("identity")) initMaps();
-    // }
-	
     glmFamily::glmFamily(List ll) throw (std::runtime_error)
-	: lst(ll) {
+	: lst(ll),
+	  // d_family(as<std::string>(wrap(ll["family"]))),
+	  // d_link(as<std::string>(wrap(ll["link"]))),
+// I haven't been able to work out an expression to initialize the
+// Functions from list components.  This is a placeholder until I can
+// do so.
+	  d_devRes("c"), d_linkfun("c"), d_linkinv("c"),
+	  d_muEta("c"), d_variance("c") {
+	  // d_devRes(wrap(ll["dev.resids"])),
+	  // d_linkfun(wrap(ll["linkfun"])),
+	  // d_linkinv(wrap(ll["linkinv"])),
+	  // d_muEta(wrap(ll["mu.eta"])),
+	  // d_variance(wrap(ll["variance"])) {
 	if (as<string>(lst.attr("class")) != "family")
 	    throw std::runtime_error("glmFamily requires a list of (S3) class \"family\"");
-	CharacterVector ff = lst["family"], lnk = lst["link"];
-	d_family = as<std::string>(ff);
-	d_link = as<std::string>(lnk);
+ 	CharacterVector ff = lst["family"], lnk = lst["link"];
+ 	d_family = as<std::string>(ff);
+ 	d_link = as<std::string>(lnk);
+ 	d_linkinv = ll["linkinv"];
+ 	d_linkfun = ll["linkfun"];
+ 	d_muEta = ll["mu.eta"];
+ 	d_variance = ll["variance"];
+ 	d_devRes = ll["dev.resids"];
 
 	if (!lnks.count("identity")) initMaps();
     }
 
+// The following member functions should be declared const but the
+// Function class call method doesn't yet allow that.
+
     Rcpp::NumericVector
     glmFamily::linkFun(Rcpp::NumericVector const &mu) const {
-	if (lnks.count(d_link)) {	// sapply the known scalar function
+	if (lnks.count(d_link))
 	    return NumericVector::import_transform(mu.begin(), mu.end(), lnks[d_link]);
-	} else {		// use the R function
-	    Function linkfun = ((const_cast<glmFamily*>(this))->lst)["linkfun"];
-	    // The const_cast is needed so that this member function
-	    // can be const and also use the extraction of a list
-	    // component. 
-	    return linkfun(mu);
-	}
+	return d_linkfun(mu);
     }
     
     Rcpp::NumericVector
     glmFamily::linkInv(Rcpp::NumericVector const &eta) const {
-	if (linvs.count(d_link)) {
+	if (linvs.count(d_link))
 	    return NumericVector::import_transform(eta.begin(), eta.end(), linvs[d_link]);
-	} else {
-	    Function linkinv = ((const_cast<glmFamily*>(this))->lst)["linkinv"];
-	    return linkinv(eta);
-	}
+	return d_linkinv(eta);
     }
-    
+
     Rcpp::NumericVector
     glmFamily::muEta(Rcpp::NumericVector const &eta) const {
-	if (muEtas.count(d_link)) {
+	if (muEtas.count(d_link))
 	    return NumericVector::import_transform(eta.begin(), eta.end(), muEtas[d_link]);
-	}
-	Function mu_eta = ((const_cast<glmFamily*>(this))->lst)["mu.eta"];
-	return mu_eta(eta);
+	return d_muEta(eta);
     }
     
     Rcpp::NumericVector
     glmFamily::variance(Rcpp::NumericVector const &mu) const {
-	if (varFuncs.count(d_link)) {
+	if (varFuncs.count(d_link))
 	    return NumericVector::import_transform(mu.begin(), mu.end(), varFuncs[d_link]);
-	}
-	Function vv = ((const_cast<glmFamily*>(this))->lst)["variance"];
-	return vv(mu);
+	return d_variance(mu);
     }
     
     Rcpp::NumericVector
@@ -132,8 +135,6 @@ namespace glm {
 		aa[i] = f(yy[i], mm[i], ww[i]);
 	    return ans;
 	}
-	Function devres =
-	    ((const_cast<glmFamily*>(this))->lst)["dev.resids"];
-	return devres(y, mu, weights);
+	return d_devRes(y, mu, weights);
     }
 }
