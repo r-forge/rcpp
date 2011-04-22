@@ -1,0 +1,31 @@
+From: Douglas Bates <bates@stat.wisc.edu>
+To: William Dunlap <wdunlap@tibco.com>
+Cc: r-help@r-project.org, Sunduz Keles <keles@stat.wisc.edu>,
+        rcpp-devel <Rcpp-devel@r-forge.wu-wien.ac.at>,
+        Kevin Ummel <kevinummel@gmail.com>
+Subject: Re: [Rcpp-devel] [R] Find number of elements less than some number:
+ Elegant/fastsolution needed
+Date: Thu, 14 Apr 2011 17:22:53 -0500
+
+My colleague Sunduz Keles once mentioned a similar problem to me.  She
+had a large sample from a reference distribution and a test sample
+(both real-valued in her case) and she wanted, for each element of the
+test sample, the proportion of the reference sample that was less than
+the element.  It's a type of empirical p-value calculation.
+
+I forget the exact sizes of the samples (do you remember, Sunduz?) but
+they were in the tens of thousands or larger.  Solutions in R tended
+to involve comparing every element in the test sample to every element
+in the reference sample but, of course, that is unnecessary.  If you
+sort both samples then you can start the comparisons for a particular
+element of the test sample at the element of the reference sample
+where the last comparison failed.
+
+I was able to write a very short C++ function using the Rcpp package
+that provided about a 1000-fold increase in speed relative to the best
+I could do in R.  I don't have the script on this computer so I will
+post it tomorrow when I am back on the computer at the office.
+
+Apologies for cross-posting to the Rcpp-devel list but I am doing so
+because this might make a good example of the usefulness of Rcpp and
+inline.

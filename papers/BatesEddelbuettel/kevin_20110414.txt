@@ -1,0 +1,62 @@
+From: Kevin Ummel <kevinummel@gmail.com>
+To: r-help@r-project.org
+Subject: [R] Find number of elements less than some number: Elegant/fast
+	solution needed
+Date: Thu, 14 Apr 2011 14:34:44 -0500
+
+Take vector x and a subset y:
+
+x=1:10
+
+y=c(4,5,7,9)
+
+For each value in 'x', I want to know how many elements in 'y' are less than 'x'.
+
+An example would be:
+
+sapply(x,FUN=function(i) {length(which(y<i))})
+ [1] 0 0 0 0 1 2 2 3 3 4
+
+But this solution is far too slow when x and y have lengths in the millions.
+
+I'm certain an elegant (and computationally efficient) solution exists, but I'm in the weeds at this point.
+
+Any help is much appreciated.
+
+Kevin
+
+University of Manchester
+
+
+
+
+
+
+
+
+Take two vectors x and y, where y is a subset of x:
+
+x=1:10
+
+y=c(2,5,6,9)
+
+If y is removed from x, the original x values now have a new placement (index) in the resulting vector (new): 
+
+new=x[-y]
+
+index=1:length(new)
+
+The challenge is: How can I *quickly* and *efficiently* deduce the new 'index' value directly from the original 'x' value -- using only 'y' as an input?
+
+In practice, I have very large matrices containing the 'x' values, and I need to convert them to the corresponding 'index' if the 'y' values are removed.
+
+
+
+
+	[[alternative HTML version deleted]]
+
+______________________________________________
+R-help@r-project.org mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.

@@ -1,0 +1,123 @@
+## From: Christian Gunning <xian@unm.edu>
+## To: rcpp-devel@r-forge.wu-wien.ac.at
+## Cc: rvaradhan@jhmi.edu, Kevin Ummel <kevinummel@gmail.com>,
+##         r-help@r-project.org, Sunduz Keles <keles@stat.wisc.edu>,
+##         William Dunlap <wdunlap@tibco.com>,
+##         "W. Duncan Wadsworth" <w.d.wadsworth@gmail.com>
+## Subject: Re: [Rcpp-devel] [R] Find number of elements less than some number:
+##  Elegant/fastsolution needed
+## Date: Thu, 14 Apr 2011 21:47:22 -0700
+
+## On Thu, Apr 14, 2011 at 7:02 PM,
+## <rcpp-devel-request@r-forge.wu-wien.ac.at> wrote:
+
+## > I was able to write a very short C++ function using the Rcpp package
+## > that provided about a 1000-fold increase in speed relative to the best
+## > I could do in R.  I don't have the script on this computer so I will
+## > post it tomorrow when I am back on the computer at the office.
+## >
+## > Apologies for cross-posting to the Rcpp-devel list but I am doing so
+## > because this might make a good example of the usefulness of Rcpp and
+## > inline.
+
+## And RcppArmadillo, as the case may be.
+
+## This is a cool little problem.  In the examples given, I'd caution
+## people against comparing apples and durian.  The sort(x) is a cost
+## that should be considered *within* each implementation. I used
+## Armadillo to sort (src, f4), and get another 100% worth of speedup
+## that I can't reproducing using R's sort (src1, f1-f3).  If i modify
+## SEXP in-place (and this always confuses me, so I tend to avoid it),
+## I'm seeing an additional ~5-10% speed gain (src2, f5) -- the advantage
+## of this last seems to be primarily in memory-constrained applications.
+
+## On to the code!
+
+src = '
+NumericVector xx_(clone(x)), yy_(clone(y));
+int nxx = xx_.size();
+int nyy = yy_.size();
+arma::vec xx(xx_), yy(yy_);
+yy = sort(yy);
+xx = sort(xx);
+//
+//
+int j = 0; //gt index for yy
+for (int i=0; i < nxx; i++) {
+    while ((j < nyy) && ( xx(i) > yy(j) ) ) {
+        j++;
+    }
+    xx_(i) = j;
+   }
+return (xx_);
+'
+
+src1 = '
+NumericVector xx_(clone(x)), yy_(clone(y));
+// assumes x & y are already sorted
+arma::vec xx(xx_), yy(yy_);
+int nxx = xx.n_elem;
+int nyy = yy.n_elem;
+int j = 0; //gt index for yy
+for (int i=0; i < nxx; i++) {
+    while ((j < nyy) && ( xx(i) > yy(j) ) ) {
+        j++;
+    }
+    xx_(i) = j;
+  }
+return (xx_);
+'
+
+src2 = '
+NumericVector xx_(x), yy_(y);  //kinda scary
+int nxx = xx_.size();
+int nyy = yy_.size();
+arma::vec xx(xx_.begin(), nxx, false), yy(yy_.begin(), nyy, false);
+//really kinda scary
+yy = sort(yy);
+xx = sort(xx);
+//
+//
+int j = 0; //gt index for yy
+for (int i=0; i < nxx; i++) {
+    while ((j < nyy) && ( xx(i) > yy(j) ) ) {
+        j++;
+    }
+    xx_(i) = j;
+}
+return (xx_);
+'
+
+require(inline)
+require(RcppArmadillo)
+f1 <- function(x, y) { sort(length(y) - findInterval(-x, rev(-sort(y))));}
+f2 <- function(x, y) {x = sort(x); length(y) - findInterval(-x, rev(-sort(y)))}
+f3.a <- cxxfunction(signature(x="numeric", y="numeric"), src1,
+plugin='RcppArmadillo')
+f3 <- function(x,y) {
+        x <- sort(x)
+        y <- sort(y)
+        return(f3.a(x,y))
+}
+f4 <- cxxfunction(signature(x="numeric", y="numeric"), src,
+plugin='RcppArmadillo')
+##  danger -- violates R semantics
+f5 <- cxxfunction(signature(x="numeric", y="numeric"), src2,
+plugin='RcppArmadillo')
+
+
+## this is a really ugly test. ygwypf, i suppose :)
+
+for (i in 1:5) {
+  x1 <- x <- rnorm(5e6)
+  y1 <- y <- rnorm(5e6)
+  print( cbind(
+    r1=system.time(r1 <- f1(x,y)),
+    r2=system.time(r2 <- f2(x,y)), r3=system.time(r3 <- f3(x1,y1)),
+    r4 = system.time(r4 <- f4(x,y)), r5 = system.time(r5 <- f5(x,y))
+  ))
+}
+print(all.equal(r1, r2))
+print(all.equal(r1, r3))
+print(all.equal(r1, r4))
+print(all.equal(r1, r5))

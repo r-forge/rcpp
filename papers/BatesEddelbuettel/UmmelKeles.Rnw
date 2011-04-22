@@ -19,7 +19,7 @@
 library(inline)
 library(Rcpp)
 library(rbenchmark)
-@ 
+@
 \begin{document}
 
 Recently a query by Kevin Ummel on the R-help mailing list prompted a
@@ -30,31 +30,31 @@ are less than or equal to it.
 
 There are various ways of doing this.  The original poster used
 <<f1>>=
-f1 <- function(x, y) 
+f1 <- function(x, y)
     sapply(x, function(i) length(which(y < i)))
-@ 
+@
 
 Richard Heiberger and Marc Swartz both suggested
 <<f2>>=
 f2 <- function(x, y)
     colSums(outer(y, x, '<'))
-@ 
+@
 
 Gustavo Carvalho suggested the equivalent of
 <<f3>>=
 f3 <- Vectorize(function(x, y) sum(y < x), "x")
-@ 
+@
 and Bill Dunlap, drawing on his encyclopedic knowledge of S-PLUS and R
 functions, noted that this operation was essential what is done in R's
 findInterval function which uses compiled code implementing a binary search.
 <<f4>>=
 f4 <- function(x, y) length(y) - findInterval(-x, rev(-sort(y)))
-@ 
+@
 
 For large vectors \code{x} and \code{y}, Bill's version is much faster
 than any of the other suggestions which involve comparing each element
 of \code{x} to each elements of \code{y}. Interestingly, the second
-version (\code{f2}), which was suggested by two experience R users,
+version (\code{f2}), which was suggested by two experienced R users,
 can become deadly slow on moderate sized vectors, because of the way
 that the \code{outer} function is implemented.
 
@@ -74,14 +74,14 @@ benchmark(f1(x,y), f2(x,y), f3(x,y), f4(x,y),
           columns=c("test","elapsed","relative"),
           order="relative", replications=10L)
 
-@ 
+@
 
 We will eliminate all but Bill Dunlap's method on this evidence and
 change the rules a bit.  The question posed by Sunduz Keles regarded
 p-values from a test sample relative to a larger reference sample
 
-(From here you can continue with the description on the R-help and
-Rcpp-Devel postings in which I included benchmark timings of various
-versions.)
+%(From here you can continue with the description on the R-help and
+%Rcpp-Devel postings in which I included benchmark timings of various
+%versions.)
 
 \end{document}
