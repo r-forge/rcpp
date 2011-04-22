@@ -1,0 +1,87 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[top=1.2in,left=0.9in,bottom=0.8in]{geometry}
+\usepackage{paralist,mdwlist,amsmath,amsfonts,amsbsy,graphicx,alltt,fancyhdr,Sweave,bm}
+\SweaveOpts{engine=R,eps=FALSE,width=10,height=6.5,strip.white=all,keep.source=TRUE}
+\SweaveOpts{prefix=TRUE,prefix.string=figs/,include=TRUE}
+\setkeys{Gin}{width=0.8\textwidth}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}
+{formatcom={\vspace{-1ex}},fontshape=sl,
+  fontfamily=courier,fontseries=b, fontsize=\small}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}
+{formatcom={\vspace{-2ex}},fontfamily=courier,fontseries=b,fontsize=\small}
+\lhead{\sf Rcpp Example}
+\rhead{\sf 2011-04-22(p. \thepage)}
+\lfoot{}\cfoot{}\rfoot{}
+\pagestyle{fancy}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\R}{\textsf{R}}
+<<initial,echo=FALSE,print=FALSE>>=
+library(inline)
+library(Rcpp)
+library(rbenchmark)
+@ 
+\begin{document}
+
+Recently a query by Kevin Ummel on the R-help mailing list prompted a
+discussion of a problem that boils down to comparing the elements of
+two numeric vectors, \code{x} and \code{y}, and determining for each
+element in one vector the number of elements in the second vector that
+are less than or equal to it.
+
+There are various ways of doing this.  The original poster used
+<<f1>>=
+f1 <- function(x, y) 
+    sapply(x, function(i) length(which(y < i)))
+@ 
+
+Richard Heiberger and Marc Swartz both suggested
+<<f2>>=
+f2 <- function(x, y)
+    colSums(outer(y, x, '<'))
+@ 
+
+Gustavo Carvalho suggested the equivalent of
+<<f3>>=
+f3 <- Vectorize(function(x, y) sum(y < x), "x")
+@ 
+and Bill Dunlap, drawing on his encyclopedic knowledge of S-PLUS and R
+functions, noted that this operation was essential what is done in R's
+findInterval function which uses compiled code implementing a binary search.
+<<f4>>=
+f4 <- function(x, y) length(y) - findInterval(-x, rev(-sort(y)))
+@ 
+
+For large vectors \code{x} and \code{y}, Bill's version is much faster
+than any of the other suggestions which involve comparing each element
+of \code{x} to each elements of \code{y}. Interestingly, the second
+version (\code{f2}), which was suggested by two experience R users,
+can become deadly slow on moderate sized vectors, because of the way
+that the \code{outer} function is implemented.
+
+Even with moderate sized vectors
+<<comp>>=
+set.seed(1)
+x <- rnorm(5000)
+y <- rnorm(20000)
+system.time(a1 <- f1(x, y))
+system.time(a2 <- f2(x, y))
+system.time(a3 <- f3(x, y))
+system.time(a4 <- f4(x, y))
+all.equal(a1, a2)
+all.equal(a1, a3)
+all.equal(a1, a4)
+benchmark(f1(x,y), f2(x,y), f3(x,y), f4(x,y),
+          columns=c("test","elapsed","relative"),
+          order="relative", replications=10L)
+
+@ 
+
+We will eliminate all but Bill Dunlap's method on this evidence and
+change the rules a bit.  The question posed by Sunduz Keles regarded
+p-values from a test sample relative to a larger reference sample
+
+(From here you can continue with the description on the R-help and
+Rcpp-Devel postings in which I included benchmark timings of various
+versions.)
+
+\end{document}
