@@ -10,7 +10,7 @@
 \DefineVerbatimEnvironment{Soutput}{Verbatim}
 {formatcom={\vspace{-2ex}},fontfamily=courier,fontseries=b,fontsize=\small}
 \lhead{\sf Rcpp Example}
-\rhead{\sf 2011-04-22(p. \thepage)}
+\rhead{\sf 2011-04-22 (p. \thepage)}
 \lfoot{}\cfoot{}\rfoot{}
 \pagestyle{fancy}
 \newcommand{\code}[1]{\texttt{\small #1}}
@@ -19,6 +19,8 @@
 library(inline)
 library(Rcpp)
 library(rbenchmark)
+N1 <- 1e5
+N2 <- 1e7
 @
 \begin{document}
 
@@ -34,7 +36,7 @@ f1 <- function(x, y)
     sapply(x, function(i) length(which(y < i)))
 @
 
-Richard Heiberger and Marc Swartz both suggested
+Richard Heiberger and Marc Schwartz both suggested
 <<f2>>=
 f2 <- function(x, y)
     colSums(outer(y, x, '<'))
@@ -46,7 +48,7 @@ f3 <- Vectorize(function(x, y) sum(y < x), "x")
 @
 and Bill Dunlap, drawing on his encyclopedic knowledge of S-PLUS and R
 functions, noted that this operation was essential what is done in R's
-findInterval function which uses compiled code implementing a binary search.
+\code{findInterval} function which uses compiled code implementing a binary search.
 <<f4>>=
 f4 <- function(x, y) length(y) - findInterval(-x, rev(-sort(y)))
 @
@@ -58,11 +60,14 @@ version (\code{f2}), which was suggested by two experienced R users,
 can become deadly slow on moderate sized vectors, because of the way
 that the \code{outer} function is implemented.
 
-Even with moderate sized vectors
-<<comp>>=
+Even with moderate sized vectors [...?...]
+
+<<compPre,print=FALSE,echo=FALSE,results=hide>>=
 set.seed(1)
 x <- rnorm(5000)
 y <- rnorm(20000)
+#x <- rnorm(500)
+#y <- rnorm(2000)
 system.time(a1 <- f1(x, y))
 system.time(a2 <- f2(x, y))
 system.time(a3 <- f3(x, y))
@@ -76,12 +81,134 @@ benchmark(f1(x,y), f2(x,y), f3(x,y), f4(x,y),
 
 @
 
+<<comp>>=
+benchmark(f1(x,y), f2(x,y), f3(x,y), f4(x,y),
+          columns=c("test","elapsed","relative"),
+          order="relative", replications=10L)
+@
+
 We will eliminate all but Bill Dunlap's method on this evidence and
 change the rules a bit.  The question posed by Sunduz Keles regarded
-p-values from a test sample relative to a larger reference sample
-
+$p$-values from a test sample relative to a larger reference sample.
+%
 %(From here you can continue with the description on the R-help and
 %Rcpp-Devel postings in which I included benchmark timings of various
 %versions.)
+%
+% My colleague Sunduz Keles once mentioned a similar problem to me.
+She had a large sample from a reference distribution and a test sample
+(both real-valued in her case) and she wanted, for each element of the
+test sample, the proportion of the reference sample that was less than
+the element.  It's a type of empirical $p$-value calculation.
+
+A first C++ approach uses \code{std::upper\_bound} for unordered $x$:
+<<upperBoundUnOrdered>>=
+## version using std::upper_bound for unordered x
+h <- cxxfunction(signature(x_="numeric", y_="numeric"), '
+{
+    Rcpp::NumericVector x(x_),
+        y = clone(Rcpp::NumericVector(y_));
+    int n = x.size();
+    Rcpp::IntegerVector ans(n);
+    const Rcpp::NumericVector::iterator bb = y.begin(), ee = y.end();
+               // sort (a copy of) the y values for binary search
+    std::sort(bb, ee);
+
+    for (int i = 0; i < n; i++) {
+	ans[i] = std::upper_bound(bb, ee, x[i]) - bb;
+    }
+    return ans;
+}
+', plugin="Rcpp")
+@
+
+
+The next C++ solution assumes $x$ is non-decreasing, and still uses
+\code{std::upper\_bound}:
+
+<<upperBoundOrdered>>=
+## version using std::upper_bound when x is non-decreasing
+j1 <- cxxfunction(signature(x_="numeric", y_="numeric"), '
+{
+    Rcpp::NumericVector x(x_),
+        y = clone(Rcpp::NumericVector(y_));
+    int n = x.size();
+    Rcpp::IntegerVector ans(n);
+    const Rcpp::NumericVector::iterator bb = y.begin(), ee = y.end();
+    Rcpp::NumericVector::iterator mm = y.begin();
+               // sort (a copy of) the y values for binary search
+    std::sort(bb, ee);
+
+    for (int i = 0; i < n; i++) {
+        mm = std::upper_bound(mm, ee, x[i]);
+        ans[i] = mm - bb;
+    }
+    return ans;
+}
+', plugin="Rcpp")
+
+j <- function(x, y) {
+    ord <- order(x)
+    ans <- integer(length(x))
+    ans[ord] <- j1(x[ord], y)
+    ans
+}
+@
+
+The third C++ solution uses a sequential search:
+
+<<seqSearch>>=
+## version using sequential search
+k1 <- cxxfunction(signature(xs_="numeric", y_="numeric", ord_="integer"), '
+{
+    Rcpp::NumericVector xs(xs_),
+        y = clone(Rcpp::NumericVector(y_));
+    int n = xs.size();
+    Rcpp::IntegerVector ord(ord_), ans(n);
+    const Rcpp::NumericVector::iterator bb = y.begin(), ee = y.end();
+    Rcpp::NumericVector::iterator yy = y.begin();
+    double *xp = xs.begin();
+               // sort (a copy of) the y values for binary search
+    std::sort(bb, ee);
+
+    for (int i = 0; i < n && yy < ee; i++, xp++) {
+	while (*xp >= *yy && yy < ee) yy++;
+	ans[ord[i] - 1] = yy - bb;
+    }
+    return ans;
+}
+', plugin="Rcpp")
+
+k <- function(x, y) {
+    ord <- order(x)
+    k1(x[ord], y, ord)
+}
+@
+
+We evaluate all methods on random data of dimension $\Sexpr{N1}$ and
+$\Sexpr{N2}$. We also ensure results are identical.
+
+<<comparison,print=FALSE,echo=FALSE,results=hide>>=
+x <- rnorm(N1)
+yy <- y <- rnorm(N2)
+yy[1] <- y[1]                           # ensure y and yy are distinct
+
+aa <- f4(x, y)
+all.equal(aa, h(x, y))
+all.equal(aa, j(x, y))
+all.equal(aa, k(x, y))
+all.equal(y, yy)                        # check that nothing has changed in y
+
+res <- benchmark(f4(x,y), h(x,y), j(x,y), k(x,y),
+                 order="relative", replications=10,
+                 columns=c("test", "replications", "elapsed", "relative"))
+@
+
+Finally, the timing comparison:
+<<comparisonRes>>=
+res
+@
+
+The three C++ solutions are reasonably close in performances.
 
 \end{document}
