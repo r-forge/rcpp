@@ -1,0 +1,548 @@
+From: Yan Zhou <zhouyan@me.com>
+To: Yan Zhou <zhouyan@me.com>
+Cc: Dirk Eddelbuettel <edd@debian.org>,
+ rcpp-devel <rcpp-devel@lists.r-forge.r-project.org>
+Subject: Re: [Rcpp-devel] Patch for using Rcpp with proper check of TR1/C++11
+ headers
+Date: Mon, 03 Dec 2012 06:11:51 +0000 (GMT)
+
+Hi Dirk,
+
+Here is a more detailed summary of the change and some test results
+
+Things affected by the change
+=============================
+
+* The use of <initializer_list>, <unordered_map> and <unordered_set> header
+* The use C++11 static assert and variadic template
+
+Things work before the change
+=============================
+
+GCC, Clang, Intel, SunPro in C++98 mode
+TR1 headers are used if some macros defined, otherwise ordered map and set are
+used.
+
+Earlier GCC in C++0x mode (up to version 4.6 series)
+
+Things do not work before the change
+====================================
+
+Any compiler with __cplusplus >= 201103L, Clang, Intel, GCC 4.7 with -std=c++0x
+This is due to the fact that Rcpp/sugar/sets.h has the following code
+
+#if __cplusplus >= 201103L
+    #define RCPP_UNORDERED_SET std::unordered_set
+    #define RCPP_UNORDERED_MAP std::unordered_map
+#elif defined(HAS_TR1_UNORDERED_SET)
+    #define RCPP_UNORDERED_SET std::tr1::unordered_set
+    #define RCPP_UNORDERED_MAP std::tr1::unordered_map
+#else
+    #define RCPP_UNORDERED_SET std::set
+    #define RCPP_UNORDERED_MAP std::map
+#endif
+
+while C++11 <unordered_map> and <unordered_set> are not included anywhere
+
+Clang with libc++
+Similar reasons. libc++ does not provide TR1 headers but only C++98 and C++11
+headers
+
+The change
+==========
+
+If the compiler is in a C++0x/11 mode, (-std=c++0x, or -std=c++11), then choose
+<unordered_map> and <unordered_set> if possible. Otherwise choose <map> and
+<set>
+
+If the compiler is in a C++98 mode, (usually the default), then choose
+<tr1/unordered_map> and <tr1/unordered_set> if possible. Otherwise choose <map>
+and <set>
+
+We do not try to choose TR1 headers in C++11 mode. Some testing shows very
+wired errors in this combinations when using intel compilers.
+
+However, the GCC is an exception. Even when in C++11 mode, GCC will always try
+to use TR1 headers instead of C++11 headers. This is for backward
+compatibility, to void breaking of ABI. If this is not desired, remove the
+comment before #define HAS_CXX0X_FLAG in the following (line 107)
+
+...
+#elif defined(__GNUC__)
+    #ifdef __GXX_EXPERIMENTAL_CXX0X__
+        // #define HAS_CXX0X_FLAG
+        #if GCC_VERSION >= 40300
+            // #define HAS_VARIADIC_TEMPLATES
+            #define HAS_STATIC_ASSERT
+        #endif
+    #endif
+#endif
+...
+
+C++11 static assert feature is properly tested for the four
+GOOD_COMPILER_FOR_RCPP.
+
+C++11 variadic templates are disabled for all compilers. This clearly does not
+affect C++98 implementation. In C++11 mode, when this feature is enabled, my
+test results showed some wired error emitted from basename, which was called by
+sourceCppContext. This may need some further investigation. I believe this is
+not due to the change made here. The compilers I tried was Intel icpc 13, GCC
+4.6 and 4.7. They all have the same problem when variadic templates are
+enabled.
+
+C++11 <initializer_list> is also properly tested for each of the four compilers
+
+A small glitch in Rcpp/traits/comparator_type.h is fixed. This is found when
+running the Unit tests with Clang, which somehow is more strict than GCC.
+
+Things work the same way before AND after the change
+=====================================================
+
+The four compilers in C++98 mode
+The ABI shall be unchanged for these situations. At least this is the
+intention, everything depend on Rcpp shall not need to be rebuilt. But maybe
+some carelessness invalidate this claim. More testing on this front are needed.
+
+Things break before still break anyway.
+
+Things work after the change BUT not before
+===========================================
+
+Clang with libc++ in C++98 and C++11 mode, -std=c++98 or -std=c++0x;
+-stdlib=libc++
+
+Intel icpc in C++11 mode, -std=c++0x
+
+GCC 4.7 in C++11 mode, -std=c++0x
+
+Compilers tested
+================
+
+The following are compilers tested, within each paragraph, the first line is
+compiler version and platform. The second and third lines are the C and C++
+compilers and flags used when building R. The R configure script may add
+additional flags like -std=gnu99. Building R only uses the C compiler and C
+flags. However the configure script capture the C++ compiler and flags for use
+when, e.g., R CMD INSTALL Rcpp
+
+All tests are peformed with R 2.15.2 patched
+
+Mac OS X Mountain Lion 10.8.2, Xcode 4.5.2, clang 4.1 (based on LLVM 3.1svn)
+clang
+clang++ -std=c++98 -stdlib=libc++
+
+Mac OS X Mountain Lion 10.8.2, Xcode 4.5.2, clang 4.1 (based on LLVM 3.1svn)
+clang
+clang++ -std=c++11 -stdlib=libc++
+
+Mac OS X Mountain Lion 10.8.2, Xcode 4.5.2, clang 4.1 (based on LLVM 3.1svn)
+clang
+clang++ -std=c++98 -stdlib=libstdc++
+
+Mac OS X Mountain Lion 10.8.2, Xcode 4.5.2, clang 4.1 (based on LLVM 3.1svn)
+clang
+clang++ -std=c++11 -stdlib=libstdc++
+
+The official build of R on Mac OS X use GCC 4.2.1 on Mac OS X Leopard, which is
+a legacy system I don't have access any more.
+
+Ubuntu 12.10 Intel C++ 13.0.1
+icc -std=gnu99 -gcc-name=gcc-4.7 -fp-model strict
+icpc -std=c++98 -gcc-name=gcc-4.7 -gxx-name=g++-4.7 -fp-model strict
+
+Ubuntu 12.10 Intel C++ 13.0.1
+icc -std=gnu99 -gcc-name=gcc-4.7 -fp-model strict
+icpc -std=c++11 -gcc-name=gcc-4.7 -gxx-name=g++-4.7 -fp-model strict
+
+Ubuntu 12.10 GCC 4.7.2
+gcc
+g++ -std=c++98
+
+Ubuntu 12.10 GCC 4.7.2
+gcc
+g++ -std=c++11
+
+Test results
+============
+
+Rcpp Unit Test
+--------------
+
+The following are the Rcpp Unit Test results for the tested compilers above.
+The links are named as platform-C++Compiler-std=Lang.html
+
+http://www.yan-zhou.com/rcppunit/mac-clang++-std=c++98-stdlib=libstdc++.html
+http://www.yan-zhou.com/rcppunit/mac-clang++-std=c++98-stdlib=libc++.html
+http://www.yan-zhou.com/rcppunit/mac-clang++-std=c++11-stdlib=libstdc++.html
+http://www.yan-zhou.com/rcppunit/mac-clang++-std=c++11-stdlib=libc++.html
+http://www.yan-zhou.com/rcppunit/linux-icpc-std=c++98.html
+http://www.yan-zhou.com/rcppunit/linux-icpc-std=c++11.html
+http://www.yan-zhou.com/rcppunit/linux-g++-std=c++98.html
+http://www.yan-zhou.com/rcppunit/linux-g++-std=c++11.html
+
+As shown in those pages, most compilers works well. With Intel Compiler and
+Clang with libc++, in C++11 mode, two tests fails. These may need some further
+investigation. It could be problems with compiler or the code in Rcpp. Either
+way, since these compilers do no work at all previously, I consider this a
+improvement.
+
+Rcpp and RInside examples
+-------------------------
+
+These all works well without any problem as far as I can tell
+
+Packages distributed in Rcpp SVN repository
+-------------------------------------------
+
+RcppCImg, RcppModels cannot compile due to some C++ issues. I believe they are
+not due to the changes as the same error happens when using GCC and a SVN
+version of Rcpp without the changes. RcppParDE has some dependencies I cannot
+find.
+
+When using Clang on Mac OS X without libc++ but using -std=c++11, RcppEigen and
+RcppArmadillo failed to build. However those are due the two libraries made
+some wrong assumption about the existence of some C++11 headers. With clang
+-std=c++11-stdlib=libstdc++ on Mac OS X, __cplusplus test will give the wrong
+impression that C++11 is supported, while the libstdc++ on Mac OS X is still
+the GCC 4.2.1 version, which does not have any C++11 support. These issues
+shall be fixed in the upstream projects rather than within Rcpp.
+
+Other packages build successfully and examples work well.
+
+Packages depend on Rcpp
+-----------------------
+
+There are about 90 such packages. Most of them built well. But more tests are
+needed.
+
+Best,
+
+Yan Zhou
+
+----------------------------------------------------------------------
+Index: pkg/Rcpp/inst/include/RcppCommon.h
+===================================================================
+--- pkg/Rcpp/inst/include/RcppCommon.h	(revision 4055)
++++ pkg/Rcpp/inst/include/RcppCommon.h	(working copy)
+@@ -68,22 +68,6 @@
+ 
+ #ifdef __GNUC__
+     #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+-    #ifdef __GXX_EXPERIMENTAL_CXX0X__
+-        #define HAS_CXX0X
+-        #if GCC_VERSION >= 40300
+-            #define HAS_VARIADIC_TEMPLATES
+-        #endif
+-        #if GCC_VERSION >= 40400
+-            #define HAS_INIT_LISTS
+-        #endif
+-    #endif
+-    // FIXME: [romain] I did not actually check, tr1::unordered_map was 
+-    // probably introduced before GCC 4.2.1
+-    #if GCC_VERSION >= 40201
+-        #define HAS_TR1
+-        #define HAS_TR1_UNORDERED_MAP
+-        #define HAS_TR1_UNORDERED_SET
+-    #endif
+     // g++ 4.5 does not seem to like some of the fast indexing
+     #if GCC_VERSION >= 40500
+         #define IS_GCC_450_OR_LATER
+@@ -97,46 +81,84 @@
+     #endif
+ #endif
+ 
+-// #ifdef __clang__
+-//     #define CLANG_VERSION (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__)
+-//     #if CLANG_VERSION < 30000
+-//         #define IS_EARLIER_THAN_CLANG_300
+-//     #endif
+-//     #if CLANG_VERSION >= 30000
+-//         #define IS_CLANG_300_OR_LATER
+-//     #endif
+-// #endif
+-
+-// This definition was contributed by Yan Zhou
+-#ifdef __clang__
+-    #if !__has_include(<tr1/unordered_map>)
+-        #undef HAS_TR1
+-        #undef HAS_TR1_UNORDERED_MAP
++// Check C++0x features
++#if defined(__INTEL_COMPILER)
++    #if __cplusplus >= 201103L
++        #define HAS_CXX0X_FLAG
++        #if __INTEL_COMPILER >= 1210
++            // #define HAS_VARIADIC_TEMPLATES
++        #endif
++        #if __INTEL_COMPILER >= 1100
++            #define HAS_STATIC_ASSERT
++        #endif
+     #endif
+-    #if !__has_include(<tr1/unordered_set>)
+-        #undef HAS_TR1
+-        #undef HAS_TR1_UNORDERED_SET
++#elif defined(__clang__)
++    #if __cplusplus >= 201103L
++        #define HAS_CXX0X_FLAG
++        #if __has_feature(cxx_variadic_templates)
++            // #define HAS_VARIADIC_TEMPLATES
++        #endif
++        #if __has_feature(cxx_static_assert)
++            #define HAS_STATIC_ASSERT
++        #endif
+     #endif
+-    #if __has_feature(cxx_variadic_templates)
+-        #define HAS_VARIADIC_TEMPLATES
++#elif defined(__GNUC__)
++    #ifdef __GXX_EXPERIMENTAL_CXX0X__
++        // #define HAS_CXX0X_FLAG
++        #if GCC_VERSION >= 40300
++            // #define HAS_VARIADIC_TEMPLATES
++            #define HAS_STATIC_ASSERT
++        #endif
+     #endif
+ #endif
+ 
+-#ifdef __INTEL_COMPILER
+-    // This is based on an email by Alexey Stukalov who tested 
+-    // Intel Compiler 12.0 and states that is does support Cxx0x 
+-    // or even TR1 (by default; maybe there are options?)
+-    // Extended further via patch in email by Yan Zhou
+-    #undef HAS_VARIADIC_TEMPLATES
+-    #include <cmath>
+-    #ifndef __GLIBCXX__
+-    #undef HAS_TR1
+-    #undef HAS_TR1_UNORDERED_MAP
+-    #undef HAS_TR1_UNORDERED_SET
++// Check C++0x headers
++#include <cmath>
++#if defined(__INTEL_COMPILER) || (defined(__GNUC__) && !defined(__clang__))
++    #if defined(__GLIBCXX__) && defined(__GXX_EXPERIMENTAL_CXX0X__)
++        #if __GLIBCXX__ >= 20090421 // GCC 4.4.0
++            #define HAS_CXX0X_UNORDERED_MAP
++            #define HAS_CXX0X_UNORDERED_SET
++            #define HAS_CXX0X_INITIALIZER_LIST
++        #endif
+     #endif
++#elif defined(__clang__)
++    #if __cplusplus >= 201103L
++        #if __has_include(<unordered_map>)
++            #define HAS_CXX0X_UNORDERED_MAP
++        #endif
++        #if __has_include(<unordered_set>)
++            #define HAS_CXX0X_UNORDERED_SET
++        #endif
++        #if __has_include(<initializer_list>)
++            #define HAS_CXX0X_INITIALIZER_LIST
++        #endif
++    #endif
+ #endif
+ 
++// Check TR1 Headers
++#if defined(__INTEL_COMPILER) || (defined(__GNUC__) && !defined(__clang__))
++    #if defined(__GLIBCXX__)
++        #if __GLIBCXX__ >= 20070719 // GCC 4.2.1
++            #define HAS_TR1_UNORDERED_MAP
++            #define HAS_TR1_UNORDERED_SET
++        #endif
++    #endif
++#elif defined(__clang__)
++    #if __cplusplus >= 201103L
++        #if __has_include(<tr1/unordered_map>)
++            #define HAS_TR1_UNORDERED_MAP
++        #endif
++        #if __has_include(<tr1/unordered_set>)
++            #define HAS_TR1_UNORDERED_SET
++        #endif
++    #endif
++#endif
+ 
++#if defined(HAS_TR1_UNORDERED_MAP) && defined(HAS_TR1_UNORDERED_SET)
++#define HAS_TR1
++#endif
++
+ #include <iterator>
+ #include <exception>
+ #include <iostream>
+@@ -156,31 +178,41 @@
+ #include <typeinfo>
+ #include <Rcpp/sprintf.h>
+ 
+-#ifdef HAS_INIT_LISTS
++// Conditionally include headers
++#ifdef HAS_CXX0X_INITIALIZER_LIST
+ #include <initializer_list>
+ #endif
+ 
+-#ifdef HAS_TR1_UNORDERED_MAP
+-#include <tr1/unordered_map>
+-#endif
+-
+-#ifdef HAS_TR1_UNORDERED_SET
+-#include <tr1/unordered_set>
+-#endif
+-
+-
+-#if __cplusplus >= 201103L
+-    #if defined(__GLIBCXX__) && __GLIBCXX__ > 20090421
+-    #include <unordered_map>
+-    #include <unordered_set>
+-    #elif defined(__clang__)
+-        #if __has_include(<unordered_map>)
++#ifdef HAS_CXX0X_FLAG
++    #if defined(HAS_CXX0X_UNORDERED_MAP)
+         #include <unordered_map>
+-        #endif
+-        #if __has_include(<unordered_set>)
++        #define RCPP_UNORDERED_MAP std::unordered_map
++    #else
++        #include <map>
++        #define RCPP_UNORDERED_MAP std::map
++    #endif
++    #if defined(HAS_CXX0X_UNORDERED_SET)
+         #include <unordered_set>
+-        #endif
++        #define RCPP_UNORDERED_SET std::unordered_set
++    #else
++        #include <set>
++        #define RCPP_UNORDERED_SET std::set
+     #endif
++#else
++    #if defined(HAS_TR1_UNORDERED_MAP)
++        #include <tr1/unordered_map>
++        #define RCPP_UNORDERED_MAP std::tr1::unordered_map
++    #else
++        #include <map>
++        #define RCPP_UNORDERED_MAP std::map
++    #endif
++    #if defined(HAS_TR1_UNORDERED_SET)
++        #include <tr1/unordered_set>
++        #define RCPP_UNORDERED_SET std::tr1::unordered_set
++    #else
++        #include <set>
++        #define RCPP_UNORDERED_SET std::set
++    #endif
+ #endif
+ 
+ std::string demangle( const std::string& name) ;
+Index: pkg/Rcpp/inst/include/Rcpp/vector/Vector.h
+===================================================================
+--- pkg/Rcpp/inst/include/Rcpp/vector/Vector.h	(revision 4055)
++++ pkg/Rcpp/inst/include/Rcpp/vector/Vector.h	(working copy)
+@@ -263,7 +263,7 @@
+         RObject::setSEXP( internal::vector_from_string<RTYPE>(st) );
+     }
+ 	
+-#ifdef HAS_INIT_LISTS
++#ifdef HAS_CXX0X_INITIALIZER_LIST
+     Vector( std::initializer_list<init_type> list ) : RObject(){
+         assign( list.begin() , list.end() ) ;
+     }
+Index: pkg/Rcpp/inst/include/Rcpp/sugar/sugar.h
+===================================================================
+--- pkg/Rcpp/inst/include/Rcpp/sugar/sugar.h	(revision 4055)
++++ pkg/Rcpp/inst/include/Rcpp/sugar/sugar.h	(working copy)
+@@ -22,7 +22,6 @@
+ #ifndef RCPP_SUGAR_H
+ #define RCPP_SUGAR_H
+ 
+-#include <Rcpp/sugar/sets.h>
+ #include <Rcpp/sugar/tools/iterator.h>
+ #include <Rcpp/sugar/block/block.h>
+ 
+Index: pkg/Rcpp/inst/include/Rcpp/internal/wrap.h
+===================================================================
+--- pkg/Rcpp/inst/include/Rcpp/internal/wrap.h	(revision 4055)
++++ pkg/Rcpp/inst/include/Rcpp/internal/wrap.h	(working copy)
+@@ -426,7 +426,7 @@
+ template <typename T>
+ inline SEXP wrap_dispatch_unknown_iterable(const T& object, ::Rcpp::traits::false_type){
+ 	// here we know that T is not convertible to SEXP
+-#ifdef HAS_CXX0X
++#ifdef HAS_STATIC_ASSERT
+ 	static_assert( !sizeof(T), "cannot convert type to SEXP" ) ;
+ #else
+ 	// leave the cryptic message
+Index: pkg/Rcpp/inst/include/Rcpp/traits/comparator_type.h
+===================================================================
+--- pkg/Rcpp/inst/include/Rcpp/traits/comparator_type.h	(revision 4055)
++++ pkg/Rcpp/inst/include/Rcpp/traits/comparator_type.h	(working copy)
+@@ -28,7 +28,7 @@
+    
+ class StringCompare {
+ public:
+-    inline bool operator()( SEXP x, SEXP y){
++    inline bool operator()( SEXP x, SEXP y) const {
+         return strcmp( char_nocheck(x), char_nocheck(y) ) < 0 ; 
+     }
+ } ;
+Index: pkg/Rcpp/inst/unitTests/runit.wrap.R
+===================================================================
+--- pkg/Rcpp/inst/unitTests/runit.wrap.R	(revision 4055)
++++ pkg/Rcpp/inst/unitTests/runit.wrap.R	(working copy)
+@@ -142,7 +142,7 @@
+         ## definition of all the tr1 functions at once, appended to existing list
+         g <- list("unordered_map_string_int"=list(
+                   signature(),
+-                  'std::tr1::unordered_map< std::string, int > m ;
++                  'RCPP_UNORDERED_MAP< std::string, int > m ;
+ 	           m["b"] = 100;
+   	           m["a"] = 200;
+   	           m["c"] = 300;
+@@ -150,7 +150,7 @@
+ 
+                   ,"unordered_map_string_double"=list(
+                    signature(),
+-                   'std::tr1::unordered_map<std::string,double> m ;
++                   'RCPP_UNORDERED_MAP<std::string,double> m ;
+ 	            m["b"] = 100;
+   	            m["a"] = 200;
+   	            m["c"] = 300;
+@@ -158,7 +158,7 @@
+ 
+                   ,"unordered_map_string_bool"=list(
+                    signature(),
+-                   'std::tr1::unordered_map<std::string,bool> m ;
++                   'RCPP_UNORDERED_MAP<std::string,bool> m ;
+             	    m["b"] = true;
+               	    m["a"] = false;
+               	    m["c"] = true;
+@@ -167,7 +167,7 @@
+ 
+                   ,"unordered_map_string_Rbyte"=list(
+                    signature(),
+-                   'std::tr1::unordered_map<std::string,Rbyte> m ;
++                   'RCPP_UNORDERED_MAP<std::string,Rbyte> m ;
+ 	            m["b"] = (Rbyte)0;
+   	            m["a"] = (Rbyte)1;
+   	            m["c"] = (Rbyte)2;
+@@ -175,7 +175,7 @@
+ 
+                   ,"unordered_map_string_string"=list(
+                    signature(),
+-                   'std::tr1::unordered_map<std::string,std::string> m ;
++                   'RCPP_UNORDERED_MAP<std::string,std::string> m ;
+ 	            m["b"] = "foo" ;
+   	            m["a"] = "bar" ;
+   	            m["c"] = "bling" ;
+@@ -184,7 +184,7 @@
+ 
+                   ,"unordered_map_string_generic"=list(
+                    signature(),
+-                   'std::tr1::unordered_map< std::string,std::vector<int> > m ;
++                   'RCPP_UNORDERED_MAP< std::string,std::vector<int> > m ;
+ 	            std::vector<int> b; b.push_back(1); b.push_back(2); m["b"] = b ;
+   	            std::vector<int> a; a.push_back(1); a.push_back(2); a.push_back(2); m["a"] = a;
+   	            std::vector<int> c; c.push_back(1); c.push_back(2); c.push_back(2); c.push_back(2); m["c"] = c;
+Index: pkg/Rcpp/src/RcppCommon.cpp
+===================================================================
+--- pkg/Rcpp/src/RcppCommon.cpp	(revision 4055)
++++ pkg/Rcpp/src/RcppCommon.cpp	(working copy)
+@@ -36,7 +36,7 @@
+ #else
+ 	LOGICAL(cap)[0] = FALSE ;
+ #endif
+-#ifdef HAS_INIT_LISTS
++#ifdef HAS_CXX0X_INITIALIZER_LIST
+ 	LOGICAL(cap)[1] = TRUE ;
+ #else
+ 	LOGICAL(cap)[1] = FALSE ;
