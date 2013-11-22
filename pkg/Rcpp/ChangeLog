@@ -1,7 +1,11 @@
+2013-11-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/Rcpp/stats/nt.h: Correct expandion for (d|q|p)nt() function
+
 2013-10-28 Romain Francois <romain@r-enthusiasts.com>
 
         * include/Rcpp/protection/Armor.h : Armor::operator SEXP has to be const
-        for it to work properly with wrap. 
+        for it to work properly with wrap.
 
 2013-10-27  Dirk Eddelbuettel  <edd@debian.org>
 
